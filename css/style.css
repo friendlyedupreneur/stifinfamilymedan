@@ -28,7 +28,7 @@ footer a {
 
 @media screen and (max-width: 600px) {
   .brand-logo {
-    font-size: 1.3rem; /* Ukuran lebih kecil di layar mobile */
+    font-size: 1rem; /* Ukuran lebih kecil di layar mobile */
   }
 }
 
