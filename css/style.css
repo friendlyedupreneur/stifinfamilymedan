@@ -22,6 +22,17 @@ footer a {
   background-color: #0099ff;
 }
 
+.brand-logo {
+  font-size: 2rem; /* Atur ukuran default */
+}
+
+@media screen and (max-width: 600px) {
+  .brand-logo {
+    font-size: 1.3rem; /* Ukuran lebih kecil di layar mobile */
+  }
+}
+
+
 /* ======== SLIDER ======== */
 .slider h3, .slider h5, .clients h3 {
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
