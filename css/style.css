@@ -1,0 +1,520 @@
+/* ======== FONT & SCROLL ======== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+body {
+  font-family: 'Inter', sans-serif;
+  scroll-behavior: smooth;
+  color: #333;
+}
+
+/* ======== NAVBAR & FOOTER ======== */
+nav, footer {
+  background: linear-gradient(45deg, #0c457e, #007acc);
+}
+footer a {
+  color: #fff;
+  text-decoration: underline;
+}
+.btn {
+  background-color: #007acc;
+  border-radius: 8px;
+}
+.btn:hover {
+  background-color: #0099ff;
+}
+
+/* ======== SLIDER ======== */
+.slider h3, .slider h5, .clients h3 {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+  font-weight: 700;
+}
+
+.slider h3 {
+  font-size: 3rem; /* Biar lebih besar dan mencolok */
+}
+
+.slider h5 {
+  font-size: 1.5rem;
+}
+
+/* ======== PARALLAX ======== */
+.parallax-container {
+  height: 40%;
+}
+.parallax img {
+  filter: grayscale(1);
+  opacity: 0.5 !important;
+}
+
+/* ======== STIFIn SECTION ======== */
+#stifin {
+  background: linear-gradient(135deg, #0192f3e5, #03f8ec);
+  color: #fff;
+  padding: 20px 0;
+}
+#stifin .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+#stifin .text-section, #stifin .image-section {
+  margin: 0 auto;
+}
+.description-text {
+  font-size: 20px;
+  line-height: 1.6;
+  margin: 10px auto;
+  max-width: 800px;
+  padding: 0 20px;
+  color: #fff;
+}
+@media (max-width: 768px) {
+  #stifin .container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .description-text {
+    font-size: 18px;
+    padding: 0 15px;
+    color: antiquewhite;
+  }
+}
+
+/* ======== Documentation SECTION ======== */
+#documentation {
+  background: linear-gradient(135deg, #0192f3e5, #03f8ec);
+  color: #fff;
+  padding: 10px 0;
+}
+
+/* ======== ABOUT SECTION ======== */
+#about {
+  padding: 60px 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+#about h3 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+.about-text {
+  font-size: 1.5rem;
+  line-height: 1.8;
+  color: #555;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+@media (max-width: 768px) {
+  #about h3 {
+    font-size: 1.75rem;
+  }
+  .about-text {
+    font-size: 1rem;
+  }
+}
+
+/* ======== SERVICE CARD & COLOR BOX ======== */
+.card-panel, .color-box {
+  border-radius: 15px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-panel:hover, .color-box:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+}
+.color-box {
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 20px;
+}
+
+/* ======== PORTFOLIO ======== */
+img.materialboxed {
+  border-radius: 10px;
+  transition: transform 0.4s ease;
+}
+img.materialboxed:hover {
+  transform: scale(1.05);
+}
+.responsive-img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 20px;
+}
+
+/* ======== HORIZONTAL TABLES ======== */
+.horizontal-tables {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+}
+table {
+  min-width: 300px;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+table th {
+  background-color: #42a5f5;
+  color: white;
+}
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* ======== SCROLLSPY OFFSET ======== */
+.scrollspy {
+  scroll-margin-top: 80px;
+}
+
+.badge-ribbon {
+  position: absolute;
+  top: 10px;
+  right: -40px;
+  background-color: red;
+  color: white;
+  padding: 5px 40px;
+  transform: rotate(45deg);
+  font-weight: bold;
+  font-size: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
+}
+
+/* Warna berbeda sesuai kebutuhan */
+.badge-ribbon.green {
+  background-color: green;
+}
+.badge-ribbon.purple {
+  background-color: purple;
+}
+
+/* AOS akan handle munculnya (fade-down) */
+.badge-ribbon.show {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.badge-ribbon-glow {
+  position: absolute;
+  top: 10px;
+  right: -40px;
+  padding: 5px 40px;
+  transform: rotate(45deg);
+  font-weight: bold;
+  font-size: 12px;
+  color: white;
+  background-color: red;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+  animation: glow 1.5s infinite alternate;
+}
+
+/* Variasi warna */
+.badge-ribbon-glow.green {
+  background-color: green;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+}
+
+.badge-ribbon-glow.purple {
+  background-color: purple;
+  box-shadow: 0 0 10px rgba(128, 0, 128, 0.8);
+}
+
+/* Animasi Glow */
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 1);
+  }
+}
+
+ul.benefit-list {
+  list-style: none; /* Hilangkan bullet */
+  padding-left: 0; /* Hilangkan padding default */
+  margin-top: 20px;
+}
+
+ul.benefit-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Kasih jarak antar benefit */
+  font-size: 1.1rem;
+}
+
+ul.benefit-list li i.material-icons {
+  font-size: 20px; /* Ukuran icon */
+  margin-right: 10px; /* Kasih jarak antara icon dan text */
+  color: #2196f3; /* Biru soft, bisa disesuaikan */
+}
+
+/* Warna background per paket */
+.personal-card {
+  background-color: #e3f2fd;
+  color: #0d47a1; /* Biru gelap untuk teks */
+}
+
+.couple-card {
+  background-color: #e8f5e9;
+  color: #1b5e20; /* Hijau gelap untuk teks */
+}
+
+.family-card {
+  background-color: #f3e5f5;
+  color: #4a148c; /* Ungu gelap untuk teks */
+}
+
+/* Tambahkan efek hover sedikit gelap */
+.personal-card:hover {
+  background-color: #bbdefb;
+}
+
+.couple-card:hover {
+  background-color: #c8e6c9;
+}
+
+.family-card:hover {
+  background-color: #e1bee7;
+}
+
+/* SWIPER CONTAINER */
+.swiper-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 0;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* SWIPER FINAL FIX */
+.swiper-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 0;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.swiper-wrapper {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.swiper-slide {
+  flex-shrink: 0;
+  width: 240px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gallery-card {
+  width: 100%;
+  height: 160px;
+  background: white;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  min-width: 0;
+}
+
+.gallery-card:hover {
+  transform: scale(1.05);
+}
+
+.swiper-button-prev, .swiper-button-next {
+  z-index: 10;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.swiper-button-prev {
+  left: -25px;
+}
+
+.swiper-button-next {
+  right: -25px;
+}
+
+.swiper-button-prev:hover, .swiper-button-next:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* gallery scroll */
+.gallery-scroll {
+  overflow-x: auto;
+  display: flex;
+  gap: 20px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 20px;
+
+  /* Hilangkan scrollbar */
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+.gallery-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Responsive Gallery untuk Mobile */
+@media (max-width: 768px) {
+  .gallery-scroll {
+    gap: 15px; /* Sedikit rapat agar pas di layar kecil */
+    padding: 10px 0;
+  }
+
+  .gallery-card {
+    width: 200px; /* Lebih kecil untuk mobile */
+    height: 130px; /* Tingginya juga proporsional */
+  }
+}
+
+.sticky-register {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+}
+
+.sticky-register a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px; /* Atur tinggi tombol */
+  padding: 0 30px; /* Padding horizontal */
+  border-radius: 30px; /* Biar lebih bulat */
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  background-color: #007acc; /* Warna latar */
+  color: white; /* Warna teks */
+  text-transform: uppercase; /* Kalau mau kapital semua */
+  letter-spacing: 1px;
+}
+
+/* Hover effect */
+.sticky-register a:hover {
+  background-color: #0099ff;
+}
+
+/* Responsif untuk Mobile */
+@media (max-width: 768px) {
+  .sticky-register a {
+    height: 45px;
+    padding: 0 25px;
+    font-size: 14px;
+  }
+}
+
+/* ======== TESTIMONI ======== */
+#testimoni {
+  background: linear-gradient(135deg, #e0f7fa, #fce4ec);
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+#testimoni h3 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Atur area swiper */
+#testimoni .swiper {
+  margin-top: 0px;
+}
+
+/* Slide dan Card */
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Card Styling */
+.card {
+  border-radius: 20px;
+  transition: transform 0.5s;
+  min-height: 300px; /* Stabilkan tinggi card */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Hover effect */
+.card:hover {
+  transform: translateY(-10px);
+}
+
+/* Isi Card */
+.card-content {
+  text-align: center;
+  padding: 20px;
+}
+
+/* Icon Quote */
+.card-content i {
+  font-size: 36px;
+  margin-bottom: 15px;
+  color: #2196f3;
+}
+
+/* Isi Testimoni */
+.card-content p {
+  font-size: 16px; /* Ukuran standar: nyaman dibaca */
+  color: #555;
+  margin: 15px 0 10px 0;
+  line-height: 1.5;
+}
+
+/* Nama User di bawah */
+.card-action {
+  text-align: center;
+}
+
+.card-action span {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+#contact a img:hover {
+  opacity: 0.7;
+  transform: scale(1.1);
+  transition: all 0.3s ease-in-out;
+}
+

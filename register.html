@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Registrasi Tes STIFIn</title>
+  <link rel="stylesheet" href="css/materialize.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f9f9f9;
+      font-family: 'Inter', sans-serif;
+    }
+    .container {
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+    .card-panel {
+      padding: 30px 20px;
+      border-radius: 12px;
+    }
+    .btn-large {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h3 class="center-align" data-aos="fade-down">Form Registrasi Tes STIFIn</h3>
+
+    <div class="card-panel z-depth-3" data-aos="fade-up">
+      <form id="registrationForm">
+
+        <div class="input-field">
+          <i class="material-icons prefix">account_circle</i>
+          <input id="nama" type="text" required>
+          <label for="nama">Nama Lengkap</label>
+        </div>
+
+        <div class="input-field">
+          <i class="material-icons prefix">event</i>
+          <input id="tanggalLahir" type="date" required>
+          <label for="tanggalLahir">Tanggal Lahir</label>
+        </div>
+
+        <div class="input-field">
+          <i class="material-icons prefix">bloodtype</i>
+          <input id="goldar" type="text" required>
+          <label for="goldar">Golongan Darah</label>
+        </div>
+
+        <div class="input-field">
+          <i class="material-icons prefix">phone</i>
+          <input id="nohp" type="tel" required>
+          <label for="nohp">No. HP</label>
+        </div>
+
+        <div class="input-field">
+          <i class="material-icons prefix">person</i>
+          <input id="sosmed" type="text">
+          <label for="sosmed">FB / Instagram</label>
+        </div>
+
+        <div class="input-field">
+          <i class="material-icons prefix">email</i>
+          <input id="email" type="email">
+          <label for="email">Email</label>
+        </div>
+
+        <div class="input-field">
+          <i class="material-icons prefix">home</i>
+          <input id="domisili" type="text" required>
+          <label for="domisili">Domisili</label>
+        </div>
+
+        <div class="input-field">
+          <i class="material-icons prefix">edit</i>
+          <textarea id="harapan" class="materialize-textarea"></textarea>
+          <label for="harapan">Harapan dari Tes STIFIn</label>
+        </div>
+
+        <div class="input-field">
+          <i class="material-icons prefix">schedule</i>
+          <input id="waktuTes" type="text">
+          <label for="waktuTes">Waktu Tes STIFIn (Jam/Hari/Tanggal/Bulan)</label>
+        </div>
+
+        <div class="input-field">
+          <i class="material-icons prefix">location_on</i>
+          <textarea id="lokasiTes" class="materialize-textarea"></textarea>
+          <label for="lokasiTes">Lokasi Tes STIFIn (Alamat Pengiriman Sertifikat)</label>
+        </div>
+
+        <p class="grey-text" style="margin-bottom: 30px;">
+          *Untuk waktu dan lokasi bisa disesuaikan, contoh: di rumah klien/cafe/ruang diskusi/kantor atau tempat nyaman lainnya (sertakan share loc juga yah)
+        </p>
+
+        <div class="center-align">
+          <button type="submit" class="btn-large blue darken-2 waves-effect waves-light">Kirim ke WhatsApp</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+  <script src="js/materialize.min.js"></script>
+  <script>
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nama = document.getElementById('nama').value;
+      const tanggalLahir = document.getElementById('tanggalLahir').value;
+      const goldar = document.getElementById('goldar').value;
+      const nohp = document.getElementById('nohp').value;
+      const sosmed = document.getElementById('sosmed').value;
+      const email = document.getElementById('email').value;
+      const domisili = document.getElementById('domisili').value;
+      const harapan = document.getElementById('harapan').value;
+      const waktuTes = document.getElementById('waktuTes').value;
+      const lokasiTes = document.getElementById('lokasiTes').value;
+
+      const message = `Halo Admin, saya ingin mendaftar Tes STIFIn:\n\n`
+        + `Nama Lengkap: ${nama}\n`
+        + `Tanggal Lahir: ${tanggalLahir}\n`
+        + `Golongan Darah: ${goldar}\n`
+        + `No. HP: ${nohp}\n`
+        + `FB/Instagram: ${sosmed}\n`
+        + `Email: ${email}\n`
+        + `Domisili: ${domisili}\n`
+        + `Harapan Tes STIFIn: ${harapan}\n`
+        + `Waktu Tes: ${waktuTes}\n`
+        + `Lokasi Tes: ${lokasiTes}`;
+
+      const nomorAdmin = '6281238173518'; // Ganti dengan nomor admin
+      const url = `https://wa.me/${nomorAdmin}?text=${encodeURIComponent(message)}`;
+
+      window.open(url, '_blank');
+    });
+  </script>
+</body>
+</html>
