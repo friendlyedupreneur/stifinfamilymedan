@@ -529,3 +529,21 @@ ul.benefit-list li i.material-icons {
   transition: all 0.3s ease-in-out;
 }
 
+/* ======= PROMO APP SECTION ======= */
+.promo-app-section {
+  padding: 50px 20px;
+  background: #f7f9fc;
+  border-top: 2px solid #e0e0e0;
+}
+.promo-app-section img {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 12px;
+}
+.promo-app-section a.btn {
+  background-color: #0c457e;
+}
+.promo-app-section a.btn:hover {
+  background-color: #007acc;
+}
+
+
