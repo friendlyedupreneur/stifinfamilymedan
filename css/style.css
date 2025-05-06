@@ -23,12 +23,12 @@ footer a {
 }
 
 .brand-logo {
-  font-size: 2rem; /* Atur ukuran default */
+  font-size: 2rem;
 }
 
 @media screen and (max-width: 600px) {
   .brand-logo {
-    font-size: 1rem; /* Ukuran lebih kecil di layar mobile */
+    font-size: 1rem;
   }
 }
 
@@ -40,7 +40,7 @@ footer a {
 }
 
 .slider h3 {
-  font-size: 3rem; /* Biar lebih besar dan mencolok */
+  font-size: 3rem;
 }
 
 .slider h5 {
@@ -204,7 +204,6 @@ table tr:nth-child(even) {
   transition: all 0.5s ease-in-out;
 }
 
-/* Warna berbeda sesuai kebutuhan */
 .badge-ribbon.green {
   background-color: green;
 }
@@ -212,7 +211,6 @@ table tr:nth-child(even) {
   background-color: purple;
 }
 
-/* AOS akan handle munculnya (fade-down) */
 .badge-ribbon.show {
   opacity: 1;
   transform: rotate(0deg);
@@ -232,7 +230,7 @@ table tr:nth-child(even) {
   animation: glow 1.5s infinite alternate;
 }
 
-/* Variasi warna */
+
 .badge-ribbon-glow.green {
   background-color: green;
   box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
@@ -402,13 +400,13 @@ ul.benefit-list li i.material-icons {
 /* Responsive Gallery untuk Mobile */
 @media (max-width: 768px) {
   .gallery-scroll {
-    gap: 15px; /* Sedikit rapat agar pas di layar kecil */
+    gap: 15px;
     padding: 10px 0;
   }
 
   .gallery-card {
-    width: 200px; /* Lebih kecil untuk mobile */
-    height: 130px; /* Tingginya juga proporsional */
+    width: 200px; 
+    height: 130px;
   }
 }
 
@@ -424,15 +422,15 @@ ul.benefit-list li i.material-icons {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 50px; /* Atur tinggi tombol */
-  padding: 0 30px; /* Padding horizontal */
-  border-radius: 30px; /* Biar lebih bulat */
+  height: 50px; 
+  padding: 0 30px;
+  border-radius: 30px; 
   font-weight: bold;
   font-size: 16px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  background-color: #007acc; /* Warna latar */
-  color: white; /* Warna teks */
-  text-transform: uppercase; /* Kalau mau kapital semua */
+  background-color: #007acc; 
+  color: white; 
+  text-transform: uppercase; 
   letter-spacing: 1px;
 }
 
@@ -480,7 +478,7 @@ ul.benefit-list li i.material-icons {
 .card {
   border-radius: 20px;
   transition: transform 0.5s;
-  min-height: 300px; /* Stabilkan tinggi card */
+  min-height: 300px; 
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -506,7 +504,7 @@ ul.benefit-list li i.material-icons {
 
 /* Isi Testimoni */
 .card-content p {
-  font-size: 16px; /* Ukuran standar: nyaman dibaca */
+  font-size: 16px;
   color: #555;
   margin: 15px 0 10px 0;
   line-height: 1.5;
