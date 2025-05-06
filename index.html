@@ -88,7 +88,7 @@
     </div>
   </section>
 
-  <!-- STIFIn -->
+  <!-- STIFIn Section -->
   <section id="stifin" class="stifin scrollspy">
     <h3 class="center light">Apa Itu STIFIn?</h3>
     <p class="center-align light description-text" style="margin-bottom: 30px;">
@@ -97,8 +97,7 @@
     </p>
     
     <div class="container">
-      
-      <!-- Bagian Teks -->
+    
       <div class="text-section">
         <div class="row" data-aos="fade-right" data-aos-duration="1000">
           <div class="col s12">
@@ -119,7 +118,6 @@
         </div>
       </div>
   
-      <!-- Bagian Gambar -->
       <div class="image-section center-align" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="50">
         <img src="img/stifin/mesin_kecerdasan_stifin.png" alt="STIFIn Illustration" class="responsive-img" />
       </div>
@@ -198,7 +196,7 @@
     </div>
   </section>
 
- <!-- Documentation Section dengan Scroll Snap -->
+ <!-- Documentation Section -->
 <section id="documentation" class="scrollspy" style="padding: 20px 0; background: linear-gradient(135deg, #0192f3e5, #03f8ec);">
   <div class="container">
     <h3 class="light center grey-text text-darken-3">Dokumentasi</h3>
@@ -405,11 +403,9 @@
         <img src="img/gallery/40.png" style="width: 100%; height: 100%; object-fit: cover;">
       </div>
 
-      <!-- Tambahkan card lain sesuai kebutuhan -->
-
     </div>
 
-    <!-- Tombol Manual (optional) -->
+    <!-- Tombol -->
     <div style="text-align: center; margin-top: 20px;">
       <button onclick="scrollGallery('left')" class="btn blue darken-2" style="margin-right: 10px;">&larr;</button>
       <button onclick="scrollGallery('right')" class="btn blue darken-2">&rarr;</button>
@@ -732,12 +728,8 @@
   <a href="https://instagram.com/za_ru_zi" target="_blank">
     <img src="img/clients/icon-instagram.png" alt="Instagram" style="width:40px; margin: 0 10px;">
   </a>
-  
-<!-- Add this part -->
 
 </div>
-
-
         </div>
       </div>
 
@@ -747,14 +739,14 @@
 
 
 
-  <!-- Sticky Button di Bawah -->
+  <!-- Flying Button -->
 <div class="sticky-register">
   <a href="#paket" class="btn-large blue darken-2 waves-effect waves-light">
     Daftar Sekarang
   </a>
 </div>
 
-<!-- ======= PROMO APP SECTION ======= -->
+<!-- APP SECTION -->
 <section class="promo-app-section" data-aos="fade-up">
   <div class="container">
     <h4 class="center-align" style="margin-bottom: 30px; font-weight: 600;" data-aos="zoom-in">
@@ -799,7 +791,7 @@
     delay: 5000,
     disableOnInteraction: false,
   },
-  effect: 'fade', // Efek fade lebih smooth
+  effect: 'fade',
   fadeEffect: {
     crossFade: true
   },
@@ -808,7 +800,7 @@
 </script>
 
 
-  <!-- Inisialisasi Semua JS -->
+  <!-- JS -->
   <script>
     // Materialize Sidenav
     const sidenav = document.querySelectorAll(".sidenav");
@@ -838,7 +830,7 @@
 
 function scrollGallery(direction) {
   const gallery = document.querySelector('.gallery-scroll');
-  const scrollAmount = 300; // jarak geser tiap klik
+  const scrollAmount = 300;
 
   if (direction === 'left') {
     gallery.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
