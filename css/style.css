@@ -27,7 +27,17 @@ footer a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 70%;
+  display: block;
 }
+}
+
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 
 @media screen and (max-width: 600px) {
   .brand-logo {
@@ -452,6 +462,14 @@ ul.benefit-list li i.material-icons {
     font-size: 14px;
   }
 }
+
+@media screen and (max-width: 600px) {
+  .brand-logo {
+    font-size: 1rem;
+    max-width: 65%; /* Sisakan ruang untuk tombol hamburger */
+  }
+}
+
 
 /* ======== TESTIMONI ======== */
 #testimoni {
