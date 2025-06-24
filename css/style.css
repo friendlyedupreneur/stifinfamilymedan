@@ -24,13 +24,18 @@ footer a {
 
 .brand-logo {
   font-size: 2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media screen and (max-width: 600px) {
   .brand-logo {
     font-size: 1rem;
+    max-width: 70%; /* tambahkan agar tidak tabrakan dengan hamburger */
   }
 }
+
 
 
 /* ======== SLIDER ======== */
