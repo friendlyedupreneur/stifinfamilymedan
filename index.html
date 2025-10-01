@@ -64,6 +64,24 @@
   #promoBar a { background:#fff;color:#0369a1; padding:10px 14px; border-radius:10px; font-weight:800; }
   #promoBar button { background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer }
   @media (max-width:480px){ #promoBar { left:8px; right:8px; } }
+
+  /* Biar pill pas tinggi navbar Materialize */
+.nav-wrapper ul li a.promo-pill{
+  line-height: 1 !important;
+  height: 32px !important;
+  padding: 6px 12px !important;
+  margin: 16px 0 !important;   /* 16 + 32 + 16 = 64 pas */
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center;
+}
+@media (max-width: 992px){
+  .nav-wrapper ul li a.promo-pill{
+    margin: 12px 0 !important;
+    height: 28px !important;
+  }
+}
+
 </style>
 
 </head>
