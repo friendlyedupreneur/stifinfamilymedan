@@ -31,6 +31,41 @@
   <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- OG Promo (optional tapi bagus buat share) -->
+<meta property="og:title" content="Promo Tes STIFIn — 3 Gratis 1">
+<meta property="og:description" content="Periode 1 Okt – 31 Des 2025. Ambil sekarang, sisa kuota terbatas!">
+<meta property="og:image" content="https://stifinfamilymedan.com/og/promo-stifin.jpg">
+<meta property="og:type" content="website">
+
+<!-- Mini style untuk elemen promo -->
+<style>
+  /* Navbar pill */
+  .promo-pill {
+    display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;
+    background:#e0f2fe;color:#0369a1;font-weight:700;border:1px solid rgba(2,132,199,.15);
+  }
+  .promo-pill:hover { background:#dbeafe; }
+  /* Hero promo card */
+  .promo-card {
+    display:block;margin-top:18px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;
+    padding:14px 16px; text-decoration:none; box-shadow:0 8px 24px rgba(2,132,199,.10);
+  }
+  .promo-chip { display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+    border-radius:10px;background:#e0f2fe;color:#0369a1;font-weight:900; }
+  .promo-right { font-weight:800;color:#0284c7; }
+  /* Sticky bottom bar */
+  #promoBar {
+    position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;
+    background:linear-gradient(90deg,#0284c7,#0891b2); color:#fff; border-radius:14px;
+    padding:12px 14px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    box-shadow:0 12px 30px rgba(2,132,199,.35);
+  }
+  #promoBar a { background:#fff;color:#0369a1; padding:10px 14px; border-radius:10px; font-weight:800; }
+  #promoBar button { background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer }
+  @media (max-width:480px){ #promoBar { left:8px; right:8px; } }
+</style>
+
 </head>
 <body id="home" class="scrollspy">
 
@@ -49,6 +84,7 @@
             <li><a href="#home">Home</a></li>
             <li><a href="register.html">Daftar</a></li>
             <li><a href="portfolio.html">Portfolio</a></li>
+             <li><a href="promo-stifin.html" class="promo-pill">🔥 Promo 3 Gratis 1</a></li>
           </ul>
         </div>
       </div>
@@ -60,6 +96,7 @@
     <li><a href="#home">Home</a></li>
     <li><a href="register.html">Daftar</a></li>
     <li><a href="portfolio.html">Portfolio</a></li>
+     <li><a href="promo-stifin.html">🔥 Promo 3 Gratis 1</a></li>
   </ul>
 
       <!-- Slider -->
@@ -88,6 +125,22 @@
       </li>
     </ul>
   </div>
+
+  <!-- PROMO CARD BANNER -->
+<div class="container">
+  <a href="promo-stifin.html" class="promo-card">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <span class="promo-chip">3+1</span>
+      <div style="flex:1;min-width:200px">
+        <div style="font-weight:900;color:#0f172a">Tes STIFIn • Promo 3 Gratis 1</div>
+        <div style="color:#475569;font-size:14px">
+          📅 Periode 1 Okt – 31 Des 2025 • Klik untuk ambil
+        </div>
+      </div>
+      <span class="promo-right">Lihat Promo →</span>
+    </div>
+  </a>
+</div>
 
   <!-- About Section -->
   <section id="about" class="about scrollspy">
@@ -853,6 +906,37 @@ function scrollGallery(direction) {
   }
 }
   </script>
+
+  <!-- STICKY PROMO BAR -->
+<div id="promoBar" role="status" aria-live="polite">
+  <div style="font-weight:900">Promo Tes STIFIn 3 Gratis 1</div>
+  <div style="opacity:.95;">Sisa <span id="promoCount">—</span></div>
+  <a href="promo-stifin.html">Ambil Sekarang</a>
+  <button id="closePromo" aria-label="Tutup">✕</button>
+</div>
+
+<script>
+  (function(){
+    // Countdown hingga 31 Des 2025 23:59:59
+    const end = new Date('2025-12-31T23:59:59').getTime();
+    const el  = document.getElementById('promoCount');
+    const bar = document.getElementById('promoBar');
+    const cls = document.getElementById('closePromo');
+
+    function tick(){
+      const now = Date.now(), d = end - now;
+      if (d <= 0){ el.textContent = 'berakhir'; return; }
+      const day = Math.floor(d / 86400000);
+      const hrs = Math.floor((d % 86400000) / 3600000);
+      el.textContent = `${day}h ${hrs}j`;
+    }
+    tick(); setInterval(tick, 60000); // update per menit
+
+    // Tutup bar (tanpa localStorage biar simpel)
+    cls.addEventListener('click', ()=> bar.style.display='none');
+  })();
+</script>
+
 </body>
 </html>
 
