@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Hubungi Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 420px;
+      margin: 60px auto;
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    p {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #0066ff;
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #004fd4;
+    }
+
+    .note {
+      margin-top: 12px;
+      font-size: 12px;
+      text-align: center;
+      color: #888;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Hubungi Admin</h2>
+    <p>Silakan isi form di bawah ini</p>
+
+    <form
+      action="mailto:admin@stifinfamilymedan.com"
+      method="POST"
+      enctype="text/plain"
+    >
+
+      <label>Nama</label>
+      <input type="text" name="Nama" required>
+
+      <label>Email / No HP</label>
+      <input type="text" name="Kontak" required>
+
+      <label>Pesan</label>
+      <textarea name="Pesan" required></textarea>
+
+      <button type="submit">Kirim Pesan</button>
+    </form>
+
+    <div class="note">
+      Pesan akan dikirim melalui aplikasi email Anda
+    </div>
+  </div>
+
+</body>
+</html>
