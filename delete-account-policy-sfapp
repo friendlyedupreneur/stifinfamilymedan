@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delete Account Policy | STIFIn Family App</title>
+  <meta name="description" content="Kebijakan Penghapusan Akun Aplikasi STIFIn Family." />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.7;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 32px;
+    }
+    h1, h2, h3 { color: #111; }
+    .updated {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 32px 0;
+    }
+    ul { padding-left: 20px; }
+    footer {
+      margin-top: 48px;
+      font-size: 14px;
+      color: #666;
+    }
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .note {
+      background: #f3f6ff;
+      border-left: 4px solid #4c6ef5;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Delete Account Policy</h1>
+    <div class="updated">Terakhir diperbarui: 24 Januari 2026</div>
+
+    <p>
+      Dokumen ini menjelaskan kebijakan dan prosedur penghapusan akun pengguna pada
+      <strong>Aplikasi STIFIn Family</strong>.
+    </p>
+
+    <hr />
+
+    <h2>1. Hak Pengguna</h2>
+    <p>
+      Setiap pengguna STIFIn Family memiliki hak untuk menghapus akun mereka kapan saja
+      sesuai dengan kebijakan yang berlaku.
+    </p>
+
+    <hr />
+
+    <h2>2. Cara Menghapus Akun</h2>
+    <p>Pengguna dapat mengajukan penghapusan akun melalui salah satu cara berikut:</p>
+    <ul>
+      <li>Melalui fitur <strong>Pengaturan Akun → Hapus Akun</strong> di dalam aplikasi (jika tersedia).</li>
+      <li>Menghubungi tim kami melalui email resmi dengan subjek <strong>Permohonan Hapus Akun</strong>.</li>
+    </ul>
+
+    <div class="note">
+      Permohonan penghapusan akun akan diproses maksimal <strong>14 hari kerja</strong>
+      sejak permintaan diterima.
+    </div>
+
+    <hr />
+
+    <h2>3. Data yang Dihapus</h2>
+    <p>Setelah akun dihapus, data berikut akan dihapus secara permanen:</p>
+    <ul>
+      <li>Data akun dan autentikasi</li>
+      <li>Profil pengguna (nama, foto, tipe STIFIn)</li>
+      <li>Progress, XP, level, dan aktivitas pribadi</li>
+    </ul>
+
+    <hr />
+
+    <h2>4. Data yang Dapat Disimpan Sementara</h2>
+    <p>
+      Beberapa data dapat disimpan untuk keperluan hukum atau audit dalam jangka waktu
+      terbatas, seperti:
+    </p>
+    <ul>
+      <li>Log aktivitas sistem</li>
+      <li>Data transaksi atau catatan yang diwajibkan hukum</li>
+    </ul>
+
+    <hr />
+
+    <h2>5. Dampak Penghapusan Akun</h2>
+    <ul>
+      <li>Akun tidak dapat dipulihkan setelah dihapus.</li>
+      <li>Pengguna akan kehilangan akses ke seluruh fitur aplikasi.</li>
+      <li>Data yang telah dihapus tidak dapat dikembalikan.</li>
+    </ul>
+
+    <hr />
+
+    <h2>6. Perubahan Kebijakan</h2>
+    <p>
+      Kebijakan Penghapusan Akun ini dapat diperbarui sewaktu-waktu.
+      Versi terbaru akan selalu tersedia pada halaman ini.
+    </p>
+
+    <hr />
+
+    <h2>7. Kontak</h2>
+    <ul>
+      <li>Website: <a href="https://stifinfamilymedan.com">https://stifinfamilymedan.com</a></li>
+    </ul>
+
+    <footer>
+      <p>
+        Dengan menggunakan Aplikasi STIFIn Family, Anda memahami dan menyetujui
+        Kebijakan Penghapusan Akun ini.
+      </p>
+    </footer>
+  </div>
+
+</body>
+</html>
