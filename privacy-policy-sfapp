@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kebijakan Privasi | STIFIn Family App</title>
+  <meta name="description" content="Kebijakan Privasi Aplikasi STIFIn Family." />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.7;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 32px;
+    }
+    h1, h2, h3 {
+      color: #111;
+    }
+    .updated {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 32px 0;
+    }
+    ul { padding-left: 20px; }
+    footer {
+      margin-top: 48px;
+      font-size: 14px;
+      color: #666;
+    }
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Kebijakan Privasi</h1>
+    <div class="updated">Terakhir diperbarui: 24 Januari 2026</div>
+
+    <p>
+      Kebijakan Privasi ini menjelaskan bagaimana <strong>STIFIn Family</strong> (selanjutnya disebut "kami")
+      mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pribadi pengguna pada
+      <strong>Aplikasi STIFIn Family</strong>.
+    </p>
+
+    <p>
+      Aplikasi STIFIn Family merupakan aplikasi edukasi, komunitas, dan pengembangan diri berbasis
+      konsep STIFIn.
+    </p>
+
+    <hr />
+
+    <h2>1. Informasi yang Kami Kumpulkan</h2>
+
+    <h3>a. Informasi Pribadi</h3>
+    <ul>
+      <li>Nama lengkap</li>
+      <li>Alamat email</li>
+      <li>Nomor telepon</li>
+      <li>Data profil (foto, tipe STIFIn, role)</li>
+    </ul>
+
+    <h3>b. Informasi Aktivitas</h3>
+    <ul>
+      <li>Aktivitas pembelajaran dan komunitas</li>
+      <li>Progress, challenge, XP, dan level</li>
+      <li>Interaksi dalam fitur aplikasi</li>
+    </ul>
+
+    <h3>c. Informasi Teknis</h3>
+    <ul>
+      <li>Jenis perangkat dan sistem operasi</li>
+      <li>Alamat IP dan log aktivitas</li>
+    </ul>
+
+    <hr />
+
+    <h2>2. Cara Kami Menggunakan Informasi</h2>
+    <ul>
+      <li>Menyediakan layanan edukasi dan komunitas STIFIn</li>
+      <li>Mengelola akun dan profil pengguna</li>
+      <li>Menyediakan fitur personalisasi sesuai tipe STIFIn</li>
+      <li>Meningkatkan kualitas aplikasi dan pengalaman pengguna</li>
+      <li>Keamanan dan pencegahan penyalahgunaan</li>
+    </ul>
+
+    <hr />
+
+    <h2>3. Teknologi yang Digunakan</h2>
+    <ul>
+      <li>Firebase Authentication (Email, Google Sign-In, Nomor HP)</li>
+      <li>Firebase Firestore (data pengguna dan aktivitas)</li>
+      <li>Firebase Storage (foto profil dan konten pendukung)</li>
+      <li>Firebase Cloud Messaging (notifikasi)</li>
+    </ul>
+
+    <hr />
+
+    <h2>4. Penyimpanan & Keamanan Data</h2>
+    <p>
+      Kami menerapkan sistem keamanan berbasis autentikasi akun, pembatasan akses berdasarkan peran,
+      serta aturan keamanan database untuk melindungi data pengguna.
+    </p>
+
+    <hr />
+
+    <h2>5. Berbagi Informasi dengan Pihak Ketiga</h2>
+    <p>
+      Kami tidak menjual atau menyewakan data pribadi pengguna.
+      Data hanya digunakan untuk keperluan operasional aplikasi atau jika diwajibkan oleh hukum.
+    </p>
+
+    <hr />
+
+    <h2>6. Hak Pengguna</h2>
+    <ul>
+      <li>Mengakses dan memperbarui data pribadi</li>
+      <li>Meminta penghapusan akun dan data</li>
+      <li>Menghubungi kami terkait privasi dan data</li>
+    </ul>
+
+    <hr />
+
+    <h2>7. Perubahan Kebijakan</h2>
+    <p>
+      Kebijakan Privasi ini dapat diperbarui sewaktu-waktu.
+      Versi terbaru akan selalu tersedia pada halaman ini.
+    </p>
+
+    <hr />
+
+    <h2>8. Hubungi Kami</h2>
+    <ul>
+      <li>Website: <a href="https://stifinfamilymedan.com">https://stifinfamilymedan.com</a></li>
+      <li>Email: <a href="mailto:support@stifinfamily.id">support@stifinfamily.id</a></li>
+    </ul>
+
+    <footer>
+      <p>
+        Dengan menggunakan Aplikasi STIFIn Family, Anda menyetujui Kebijakan Privasi ini.
+      </p>
+    </footer>
+  </div>
+
+</body>
+</html>
