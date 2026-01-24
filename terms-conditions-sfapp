@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Syarat & Ketentuan | STIFIn Family App</title>
+  <meta name="description" content="Syarat dan Ketentuan penggunaan Aplikasi STIFIn Family." />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.7;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 32px;
+    }
+    h1, h2, h3 {
+      color: #111;
+    }
+    .updated {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 32px 0;
+    }
+    ul { padding-left: 20px; }
+    footer {
+      margin-top: 48px;
+      font-size: 14px;
+      color: #666;
+    }
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Syarat & Ketentuan</h1>
+    <div class="updated">Terakhir diperbarui: 24 Januari 2026</div>
+
+    <p>
+      Selamat datang di <strong>Aplikasi STIFIn Family</strong>.
+      Dengan mengakses atau menggunakan aplikasi ini, Anda dianggap telah membaca,
+      memahami, dan menyetujui seluruh Syarat & Ketentuan berikut.
+    </p>
+
+    <hr />
+
+    <h2>1. Definisi</h2>
+    <ul>
+      <li><strong>Aplikasi</strong>: STIFIn Family App.</li>
+      <li><strong>Pengguna</strong>: Setiap individu yang menggunakan aplikasi.</li>
+      <li><strong>Kami</strong>: Pengelola dan pengembang STIFIn Family.</li>
+    </ul>
+
+    <hr />
+
+    <h2>2. Ketentuan Umum Penggunaan</h2>
+    <ul>
+      <li>Pengguna wajib menggunakan aplikasi sesuai hukum dan norma yang berlaku.</li>
+      <li>Dilarang menggunakan aplikasi untuk aktivitas ilegal atau merugikan pihak lain.</li>
+      <li>Kami berhak membatasi atau menghentikan akun jika terjadi pelanggaran.</li>
+    </ul>
+
+    <hr />
+
+    <h2>3. Akun Pengguna</h2>
+    <ul>
+      <li>Pengguna bertanggung jawab atas keamanan akun masing-masing.</li>
+      <li>Informasi akun harus diisi dengan data yang benar dan akurat.</li>
+      <li>Setiap aktivitas yang terjadi melalui akun menjadi tanggung jawab pengguna.</li>
+    </ul>
+
+    <hr />
+
+    <h2>4. Layanan & Konten</h2>
+    <p>
+      STIFIn Family menyediakan layanan edukasi, komunitas, dan pengembangan diri
+      berbasis konsep STIFIn.
+    </p>
+    <ul>
+      <li>Konten bersifat informatif dan edukatif.</li>
+      <li>Hasil atau manfaat dapat berbeda untuk setiap pengguna.</li>
+      <li>Kami dapat mengubah, menambah, atau menghentikan fitur tanpa pemberitahuan.</li>
+    </ul>
+
+    <hr />
+
+    <h2>5. Hak Kekayaan Intelektual</h2>
+    <p>
+      Seluruh konten dalam aplikasi (teks, gambar, logo, desain, dan fitur)
+      merupakan milik STIFIn Family atau pemilik lisensi yang sah.
+    </p>
+    <ul>
+      <li>Dilarang menyalin atau mendistribusikan tanpa izin tertulis.</li>
+      <li>Pelanggaran dapat dikenakan sanksi hukum.</li>
+    </ul>
+
+    <hr />
+
+    <h2>6. Pembatasan Tanggung Jawab</h2>
+    <p>
+      Kami tidak bertanggung jawab atas kerugian langsung maupun tidak langsung
+      yang timbul akibat penggunaan aplikasi.
+    </p>
+
+    <hr />
+
+    <h2>7. Penangguhan & Penghentian Layanan</h2>
+    <p>
+      Kami berhak menangguhkan atau menghentikan layanan secara sementara atau permanen
+      untuk keperluan pemeliharaan atau jika terjadi pelanggaran.
+    </p>
+
+    <hr />
+
+    <h2>8. Perubahan Syarat & Ketentuan</h2>
+    <p>
+      Syarat & Ketentuan ini dapat diperbarui sewaktu-waktu.
+      Versi terbaru akan ditampilkan pada halaman ini.
+    </p>
+
+    <hr />
+
+    <h2>9. Hukum yang Berlaku</h2>
+    <p>
+      Syarat & Ketentuan ini diatur dan ditafsirkan berdasarkan hukum Republik Indonesia.
+    </p>
+
+    <hr />
+
+    <h2>10. Kontak</h2>
+    <ul>
+      <li>Website: <a href="https://stifinfamilymedan.com">https://stifinfamilymedan.com</a></li>
+      <li>Email: <a href="mailto:support@stifinfamily.id">support@stifinfamily.id</a></li>
+    </ul>
+
+    <footer>
+      <p>
+        Dengan menggunakan Aplikasi STIFIn Family, Anda menyetujui Syarat & Ketentuan ini.
+      </p>
+    </footer>
+  </div>
+
+</body>
+</html>
