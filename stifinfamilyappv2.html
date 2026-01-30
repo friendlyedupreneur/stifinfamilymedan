@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Download SFApp V2</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 32px 28px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .logo {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+    }
+
+    p {
+      font-size: 14px;
+      opacity: 0.85;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-download {
+      background: #00e676;
+      color: #003d1f;
+    }
+
+    .btn-download:hover {
+      background: #00c965;
+    }
+
+    .btn-disabled {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      cursor: not-allowed;
+    }
+
+    .note {
+      margin-top: 16px;
+      font-size: 13px;
+      opacity: 0.75;
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 12px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="logo">🚀</div>
+    <h1>SFApp V2</h1>
+    <p>Versi terbaru aplikasi SFApp. Lebih cepat, lebih aman, dan lebih powerful.</p>
+
+    <div id="download-area"></div>
+
+    <div class="note">
+      Pastikan perangkat Android Anda mendukung instalasi dari sumber terpercaya.
+    </div>
+
+    <footer>
+      © 2026 SFApp • All Rights Reserved
+    </footer>
+  </div>
+
+  <script>
+    // ==========================================
+    // GANTI LINK DOWNLOAD DI SINI SAJA 👇
+    // Kosongkan "" jika belum tersedia
+    // ==========================================
+    const DOWNLOAD_URL = "";
+    // contoh:
+    // const DOWNLOAD_URL = "https://domainkamu.com/SFApp_V2.aab";
+
+    const container = document.getElementById("download-area");
+
+    if (DOWNLOAD_URL && DOWNLOAD_URL.trim() !== "") {
+      container.innerHTML = `
+        <a href="${DOWNLOAD_URL}" class="btn btn-download">
+          ⬇️ Download SFApp V2
+        </a>
+      `;
+    } else {
+      container.innerHTML = `
+        <button class="btn btn-disabled" disabled>
+          ⏳ Segera Hadir
+        </button>
+      `;
+    }
+  </script>
+
+</body>
+</html>
