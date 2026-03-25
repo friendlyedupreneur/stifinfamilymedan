@@ -5,24 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sensing Matrix: The Hidden Path</title>
     <style>
-        /* Konfigurasi agar terasa seperti aplikasi native & mencegah scroll */
         html, body {
             margin: 0; padding: 0; width: 100vw; height: 100vh;
             background-color: #1a1a2e; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             overflow: hidden; touch-action: none;
         }
-        h1 { margin: 0 0 10px 0; font-size: 24px; color: #e94560; }
-        p { margin: 0 0 20px 0; font-size: 16px; text-align: center; height: 24px; }
+        h1 { margin: 0; font-size: 28px; color: #e94560; text-transform: uppercase; letter-spacing: 2px;}
+        h2 { margin: 5px 0 10px 0; font-size: 20px; color: #4caf50; }
+        p { margin: 0 0 20px 0; font-size: 16px; text-align: center; height: 24px; font-weight: bold; }
         
         #grid {
             display: grid;
-            grid-template-columns: repeat(4, 70px);
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 20px;
+            /* Ukuran kolom akan diatur via JavaScript */
         }
         .cell {
-            width: 70px; height: 70px;
+            width: 65px; height: 65px;
             background-color: #16213e;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
@@ -30,62 +30,85 @@
             transition: background-color 0.2s, transform 0.1s;
         }
         .cell:active { transform: scale(0.95); }
-        .cell.highlight { background-color: #0f3460; } /* Warna saat hafalan */
-        .cell.correct { background-color: #4caf50; pointer-events: none; } /* Benar */
-        .cell.wrong { background-color: #e94560; pointer-events: none; } /* Salah */
+        .cell.highlight { background-color: #0f3460; box-shadow: inset 0 0 10px rgba(255,255,255,0.2); }
+        .cell.correct { background-color: #4caf50; pointer-events: none; }
+        .cell.wrong { background-color: #e94560; pointer-events: none; }
 
         button {
-            padding: 12px 24px; font-size: 16px; font-weight: bold;
+            padding: 12px 28px; font-size: 16px; font-weight: bold;
             color: #fff; background-color: #e94560;
             border: none; border-radius: 8px; cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: background-color 0.2s;
         }
+        button:hover { background-color: #ff5c77; }
         button:active { transform: translateY(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        button:disabled { background-color: #555; cursor: not-allowed; }
+        button:disabled { background-color: #555; cursor: not-allowed; display: none; }
     </style>
 </head>
 <body>
 
     <h1>Sensing Matrix</h1>
-    <p id="status-text">Tekan Mulai untuk menguji memorimu!</p>
+    <h2 id="level-text">Level 1</h2>
+    <p id="status-text">Siap menguji ketahanan memorimu?</p>
     
     <div id="grid"></div>
-    <button id="start-btn" onclick="startGame()">Mulai Game</button>
+    <button id="start-btn" onclick="initGame()">Mulai Game</button>
 
     <script>
         const grid = document.getElementById('grid');
         const statusText = document.getElementById('status-text');
+        const levelText = document.getElementById('level-text');
         const startBtn = document.getElementById('start-btn');
         
-        const totalCells = 16; // Grid 4x4
-        const patternLength = 5; // Jumlah kotak yang harus dihafal
+        // Pengaturan Awal
+        let level = 1;
+        let gridSize = 3; // Mulai dari 3x3
+        let patternLength = 3; // Menghafal 3 kotak
+        let memoTime = 1500; // Waktu menghafal 1.5 detik
+        
         let pattern = [];
         let playerClicks = [];
         let isPlaying = false;
+        let cells = [];
 
-        // Membuat kotak-kotak grid
-        for (let i = 0; i < totalCells; i++) {
-            const cell = document.createElement('div');
-            cell.classList.add('cell');
-            cell.dataset.index = i;
-            cell.addEventListener('click', handleCellClick);
-            grid.appendChild(cell);
+        function generateGrid() {
+            grid.innerHTML = ''; // Bersihkan grid sebelumnya
+            grid.style.gridTemplateColumns = `repeat(${gridSize}, 65px)`;
+            cells = [];
+            
+            let totalCells = gridSize * gridSize;
+            for (let i = 0; i < totalCells; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.dataset.index = i;
+                cell.addEventListener('click', handleCellClick);
+                grid.appendChild(cell);
+                cells.push(cell);
+            }
         }
 
-        const cells = document.querySelectorAll('.cell');
+        function initGame() {
+            level = 1;
+            gridSize = 3;
+            patternLength = 3;
+            memoTime = 1500;
+            startLevel();
+        }
 
-        function startGame() {
+        function startLevel() {
             startBtn.disabled = true;
             isPlaying = false;
             pattern = [];
             playerClicks = [];
             
-            // Reset warna sel
-            cells.forEach(cell => {
-                cell.className = 'cell';
-            });
+            levelText.innerText = `Level ${level}`;
+            generateGrid();
 
             statusText.innerText = "Hafalkan pola ini...";
+            statusText.style.color = "#fff";
+
+            let totalCells = gridSize * gridSize;
 
             // Membuat pola acak
             while(pattern.length < patternLength) {
@@ -98,12 +121,12 @@
                 cells[index].classList.add('highlight');
             });
 
-            // Hilangkan pola setelah 2 detik dan biarkan pemain menebak
+            // Hilangkan pola dan biarkan pemain menebak
             setTimeout(() => {
                 cells.forEach(cell => cell.classList.remove('highlight'));
-                statusText.innerText = "Giliranmu! Klik " + patternLength + " kotak tadi.";
+                statusText.innerText = `Giliranmu! Temukan ${patternLength} kotak tadi.`;
                 isPlaying = true;
-            }, 2000);
+            }, memoTime);
         }
 
         function handleCellClick(e) {
@@ -111,24 +134,27 @@
             
             const clickedIndex = parseInt(e.target.dataset.index);
             
-            // Mencegah klik kotak yang sama dua kali
-            if(playerClicks.includes(clickedIndex)) return;
+            if(playerClicks.includes(clickedIndex)) return; // Mencegah klik ganda
 
-            playerClicks.push(clickedIndex);
-
-            // Cek apakah tebakan benar
+            // Cek apakah tebakan BENAR
             if (pattern.includes(clickedIndex)) {
                 e.target.classList.add('correct');
+                playerClicks.push(clickedIndex);
                 
-                // Cek kondisi menang
+                // Cek kondisi MENANG LEVEL
                 if (playerClicks.length === patternLength) {
-                    statusText.innerText = "Luar Biasa! Memori Sensing yang kuat.";
-                    endGame();
+                    isPlaying = false;
+                    statusText.innerText = "Sempurna! Bersiap ke level selanjutnya...";
+                    statusText.style.color = "#4caf50";
+                    
+                    setTimeout(nextLevel, 1500); // Lanjut otomatis setelah 1.5 detik
                 }
             } else {
-                // Kondisi kalah
+                // Kondisi KALAH
+                isPlaying = false;
                 e.target.classList.add('wrong');
-                statusText.innerText = "Salah! Ingatanmu meleset. Coba lagi.";
+                statusText.innerText = `Salah! Ingatanmu terputus di Level ${level}.`;
+                statusText.style.color = "#e94560";
                 
                 // Tunjukkan jawaban yang benar
                 pattern.forEach(index => {
@@ -136,16 +162,31 @@
                         cells[index].classList.add('highlight');
                     }
                 });
-                endGame();
+                
+                setTimeout(() => {
+                    startBtn.disabled = false;
+                    startBtn.innerText = "Coba Lagi dari Awal";
+                }, 1000);
             }
         }
 
-        function endGame() {
-            isPlaying = false;
-            startBtn.disabled = false;
-            startBtn.innerText = "Main Lagi";
+        function nextLevel() {
+            level++;
+            
+            // Tingkatkan kesulitan
+            if (level % 2 === 0) {
+                patternLength++; // Tambah jumlah kotak yang dihafal setiap level genap
+            } else {
+                if (gridSize < 6) gridSize++; // Perluas area grid setiap level ganjil (maksimal 6x6)
+            }
+            
+            if (memoTime > 600) memoTime -= 100; // Percepat waktu menghafal
+
+            startLevel();
         }
+
+        // Render grid kosong saat pertama kali halaman dimuat
+        generateGrid();
     </script>
 </body>
 </html>
-
