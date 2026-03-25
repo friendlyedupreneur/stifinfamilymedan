@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Game Maintenance</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #6c5ce7;
+      --secondary-color: #00d2ff;
+      --bg-dark: #0f0f16;
+      --glass-bg: rgba(25, 25, 35, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      /* Latar belakang Grid bergaya Cyberpunk */
+      background-image: 
+        linear-gradient(rgba(108, 92, 231, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108, 92, 231, 0.1) 1px, transparent 1px);
+      background-size: 30px 30px;
+      color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+    }
+
+    /* Efek cahaya ambient di background */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(108,92,231,0.2) 0%, rgba(0,0,0,0) 70%);
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 340px;
+      width: 90%;
+      padding: 35px 25px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(108, 92, 231, 0.3);
+    }
+
+    /* Animasi Radar/Pulse pada Icon */
+    .icon-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 25px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .icon-wrapper::before, .icon-wrapper::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid var(--primary-color);
+      animation: pulse 2s linear infinite;
+      opacity: 0;
+    }
+
+    .icon-wrapper::after {
+      animation-delay: 1s;
+    }
+
+    .icon {
+      font-size: 60px;
+      z-index: 2;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.8));
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.8); opacity: 0.8; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #fff, var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+    }
+
+    p {
+      font-size: 13px;
+      color: #a0a0b5;
+      margin-bottom: 30px;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    .btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, var(--primary-color), #8e7dff);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 92, 231, 0.6);
+      background: linear-gradient(45deg, #8e7dff, var(--primary-color));
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #d1d1e0;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+    }
+
+    .footer {
+      margin-top: 25px;
+      font-size: 10px;
+      color: #55556a;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .highlight {
+      color: var(--secondary-color);
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="icon-wrapper">
+    <div class="icon">🎮</div>
+  </div>
+
+  <h1>System Update</h1>
+
+  <p>
+    Tenang Bos <span class="highlight">😎</span><br>
+    Server sedang di-upgrade untuk pengalaman bermain yang lebih maksimal.<br>
+    Silakan coba sebentar lagi. 🚀
+  </p>
+
+  <button class="btn btn-primary" onclick="retryGame()">
+    <span>🔄</span> Coba Lagi
+  </button>
+
+  <button class="btn btn-secondary" onclick="goBack()">
+    <span>⬅️</span> Kembali
+  </button>
+
+  <div class="footer">
+    TIME App • Smart Learning Experience
+  </div>
+</div>
+
+<script>
+  function retryGame() {
+    // Tambahkan efek loading sebentar sebelum reload
+    const btn = document.querySelector('.btn-primary');
+    btn.innerHTML = '<span>⏳</span> Memuat...';
+    btn.style.opacity = '0.7';
+    
+    setTimeout(() => {
+      location.reload();
+    }, 500);
+  }
+
+  function goBack() {
+    // 🔥 Kirim signal ke Flutter WebView
+    if (window.StifinFamilyapp) {
+      window.StifinFamilyapp.postMessage("exit");
+    } else if (window.flutter_inappwebview) {
+      // Alternatif jika menggunakan inappwebview
+      window.flutter_inappwebview.callHandler('exit');
+    }
+
+    // fallback browser
+    history.back();
+  }
+</script>
+
+</body>
+</html>
