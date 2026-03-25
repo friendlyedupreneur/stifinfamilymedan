@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sensing Matrix: The Hidden Path</title>
+    <style>
+        /* Konfigurasi agar terasa seperti aplikasi native & mencegah scroll */
+        html, body {
+            margin: 0; padding: 0; width: 100vw; height: 100vh;
+            background-color: #1a1a2e; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            overflow: hidden; touch-action: none;
+        }
+        h1 { margin: 0 0 10px 0; font-size: 24px; color: #e94560; }
+        p { margin: 0 0 20px 0; font-size: 16px; text-align: center; height: 24px; }
+        
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(4, 70px);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .cell {
+            width: 70px; height: 70px;
+            background-color: #16213e;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .cell:active { transform: scale(0.95); }
+        .cell.highlight { background-color: #0f3460; } /* Warna saat hafalan */
+        .cell.correct { background-color: #4caf50; pointer-events: none; } /* Benar */
+        .cell.wrong { background-color: #e94560; pointer-events: none; } /* Salah */
+
+        button {
+            padding: 12px 24px; font-size: 16px; font-weight: bold;
+            color: #fff; background-color: #e94560;
+            border: none; border-radius: 8px; cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        button:active { transform: translateY(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        button:disabled { background-color: #555; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <h1>Sensing Matrix</h1>
+    <p id="status-text">Tekan Mulai untuk menguji memorimu!</p>
+    
+    <div id="grid"></div>
+    <button id="start-btn" onclick="startGame()">Mulai Game</button>
+
+    <script>
+        const grid = document.getElementById('grid');
+        const statusText = document.getElementById('status-text');
+        const startBtn = document.getElementById('start-btn');
+        
+        const totalCells = 16; // Grid 4x4
+        const patternLength = 5; // Jumlah kotak yang harus dihafal
+        let pattern = [];
+        let playerClicks = [];
+        let isPlaying = false;
+
+        // Membuat kotak-kotak grid
+        for (let i = 0; i < totalCells; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.dataset.index = i;
+            cell.addEventListener('click', handleCellClick);
+            grid.appendChild(cell);
+        }
+
+        const cells = document.querySelectorAll('.cell');
+
+        function startGame() {
+            startBtn.disabled = true;
+            isPlaying = false;
+            pattern = [];
+            playerClicks = [];
+            
+            // Reset warna sel
+            cells.forEach(cell => {
+                cell.className = 'cell';
+            });
+
+            statusText.innerText = "Hafalkan pola ini...";
+
+            // Membuat pola acak
+            while(pattern.length < patternLength) {
+                let r = Math.floor(Math.random() * totalCells);
+                if(pattern.indexOf(r) === -1) pattern.push(r);
+            }
+
+            // Tampilkan pola ke pemain
+            pattern.forEach(index => {
+                cells[index].classList.add('highlight');
+            });
+
+            // Hilangkan pola setelah 2 detik dan biarkan pemain menebak
+            setTimeout(() => {
+                cells.forEach(cell => cell.classList.remove('highlight'));
+                statusText.innerText = "Giliranmu! Klik " + patternLength + " kotak tadi.";
+                isPlaying = true;
+            }, 2000);
+        }
+
+        function handleCellClick(e) {
+            if (!isPlaying) return;
+            
+            const clickedIndex = parseInt(e.target.dataset.index);
+            
+            // Mencegah klik kotak yang sama dua kali
+            if(playerClicks.includes(clickedIndex)) return;
+
+            playerClicks.push(clickedIndex);
+
+            // Cek apakah tebakan benar
+            if (pattern.includes(clickedIndex)) {
+                e.target.classList.add('correct');
+                
+                // Cek kondisi menang
+                if (playerClicks.length === patternLength) {
+                    statusText.innerText = "Luar Biasa! Memori Sensing yang kuat.";
+                    endGame();
+                }
+            } else {
+                // Kondisi kalah
+                e.target.classList.add('wrong');
+                statusText.innerText = "Salah! Ingatanmu meleset. Coba lagi.";
+                
+                // Tunjukkan jawaban yang benar
+                pattern.forEach(index => {
+                    if(!playerClicks.includes(index)) {
+                        cells[index].classList.add('highlight');
+                    }
+                });
+                endGame();
+            }
+        }
+
+        function endGame() {
+            isPlaying = false;
+            startBtn.disabled = false;
+            startBtn.innerText = "Main Lagi";
+        }
+    </script>
+</body>
+</html>
+
