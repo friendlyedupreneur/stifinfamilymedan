@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Game Maintenance</title>
+  <title>Game Maintenance - STIFIn</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -14,6 +14,13 @@
       --bg-dark: #0f0f16;
       --glass-bg: rgba(25, 25, 35, 0.6);
       --glass-border: rgba(255, 255, 255, 0.1);
+      
+      /* STIFIn Colors */
+      --color-sensing: #ff4757;   /* Merah */
+      --color-thinking: #ced6e0;  /* Silver/Hitam */
+      --color-intuiting: #1e90ff; /* Biru */
+      --color-feeling: #2ed573;   /* Hijau */
+      --color-instinct: #ffa502;  /* Kuning */
     }
 
     * {
@@ -24,7 +31,6 @@
 
     body {
       background-color: var(--bg-dark);
-      /* Latar belakang Grid bergaya Cyberpunk */
       background-image: 
         linear-gradient(rgba(108, 92, 231, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(108, 92, 231, 0.1) 1px, transparent 1px);
@@ -40,7 +46,6 @@
       position: relative;
     }
 
-    /* Efek cahaya ambient di background */
     body::before {
       content: '';
       position: absolute;
@@ -56,7 +61,7 @@
     .container {
       position: relative;
       z-index: 1;
-      max-width: 340px;
+      max-width: 350px;
       width: 90%;
       padding: 35px 25px;
       background: var(--glass-bg);
@@ -67,54 +72,33 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(108, 92, 231, 0.3);
     }
 
-    /* Animasi Radar/Pulse pada Icon */
     .icon-wrapper {
       position: relative;
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 25px auto;
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 20px auto;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    .icon-wrapper::before, .icon-wrapper::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 2px solid var(--primary-color);
-      animation: pulse 2s linear infinite;
-      opacity: 0;
-    }
-
-    .icon-wrapper::after {
-      animation-delay: 1s;
-    }
-
     .icon {
-      font-size: 60px;
+      font-size: 55px;
       z-index: 2;
       animation: float 3s ease-in-out infinite;
       filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.8));
     }
 
-    @keyframes pulse {
-      0% { transform: scale(0.8); opacity: 0.8; }
-      100% { transform: scale(1.5); opacity: 0; }
-    }
-
     @keyframes float {
       0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(5deg); }
+      50% { transform: translateY(-8px) rotate(5deg); }
     }
 
     h1 {
       font-family: 'Orbitron', sans-serif;
       font-size: 20px;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       background: linear-gradient(90deg, #fff, var(--secondary-color));
@@ -126,10 +110,78 @@
     p {
       font-size: 13px;
       color: #a0a0b5;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       line-height: 1.6;
-      font-weight: 300;
     }
+
+    /* --- STIFIn Dock Styles --- */
+    .stifin-dock {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 25px;
+      padding: 0 5px;
+    }
+
+    .stifin-badge {
+      width: 45px;
+      height: 45px;
+      border-radius: 10px;
+      background: rgba(25, 25, 35, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Efek Hover untuk masing-masing tipe STIFIn */
+    .stifin-badge.sensing { color: var(--color-sensing); }
+    .stifin-badge.sensing:hover {
+      background: rgba(255, 71, 87, 0.15);
+      border-color: var(--color-sensing);
+      box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);
+      transform: translateY(-3px);
+    }
+
+    .stifin-badge.thinking { color: var(--color-thinking); }
+    .stifin-badge.thinking:hover {
+      background: rgba(206, 214, 224, 0.15);
+      border-color: var(--color-thinking);
+      box-shadow: 0 0 15px rgba(206, 214, 224, 0.5);
+      transform: translateY(-3px);
+    }
+
+    .stifin-badge.intuiting { color: var(--color-intuiting); }
+    .stifin-badge.intuiting:hover {
+      background: rgba(30, 144, 255, 0.15);
+      border-color: var(--color-intuiting);
+      box-shadow: 0 0 15px rgba(30, 144, 255, 0.5);
+      transform: translateY(-3px);
+    }
+
+    .stifin-badge.feeling { color: var(--color-feeling); }
+    .stifin-badge.feeling:hover {
+      background: rgba(46, 213, 115, 0.15);
+      border-color: var(--color-feeling);
+      box-shadow: 0 0 15px rgba(46, 213, 115, 0.5);
+      transform: translateY(-3px);
+    }
+
+    .stifin-badge.instinct { color: var(--color-instinct); font-size: 14px; }
+    .stifin-badge.instinct:hover {
+      background: rgba(255, 165, 2, 0.15);
+      border-color: var(--color-instinct);
+      box-shadow: 0 0 15px rgba(255, 165, 2, 0.5);
+      transform: translateY(-3px);
+    }
+    /* --- End of STIFIn Dock Styles --- */
 
     .btn {
       display: flex;
@@ -141,7 +193,6 @@
       border-radius: 12px;
       font-size: 14px;
       font-weight: 600;
-      font-family: 'Poppins', sans-serif;
       margin-bottom: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -159,11 +210,6 @@
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(108, 92, 231, 0.6);
-      background: linear-gradient(45deg, #8e7dff, var(--primary-color));
-    }
-
-    .btn-primary:active {
-      transform: translateY(1px);
     }
 
     .btn-secondary {
@@ -179,17 +225,11 @@
     }
 
     .footer {
-      margin-top: 25px;
+      margin-top: 20px;
       font-size: 10px;
       color: #55556a;
       letter-spacing: 1px;
-      text-transform: uppercase;
       font-family: 'Orbitron', sans-serif;
-    }
-
-    .highlight {
-      color: var(--secondary-color);
-      font-weight: 600;
     }
   </style>
 </head>
@@ -203,11 +243,15 @@
 
   <h1>System Update</h1>
 
-  <p>
-    Tenang Bos <span class="highlight">😎</span><br>
-    Server sedang di-upgrade untuk pengalaman bermain yang lebih maksimal.<br>
-    Silakan coba sebentar lagi. 🚀
-  </p>
+  <p>Server sedang di-upgrade.<br>Jelajahi faksi STIFIn Anda sambil menunggu! 🚀</p>
+
+  <div class="stifin-dock">
+    <div class="stifin-badge sensing" onclick="navigateTo('https://stifinfamilymedan.com/sensing_game.html')" title="Sensing">S</div>
+    <div class="stifin-badge thinking" onclick="navigateTo('https://stifinfamilymedan.com/thinking_game.html')" title="Thinking">T</div>
+    <div class="stifin-badge intuiting" onclick="navigateTo('https://stifinfamilymedan.com/intuiting_game.html')" title="Intuiting">I</div>
+    <div class="stifin-badge feeling" onclick="navigateTo('https://stifinfamilymedan.com/feeling_game.html')" title="Feeling">F</div>
+    <div class="stifin-badge instinct" onclick="navigateTo('https://stifinfamilymedan.com/instinct_game.html')" title="Instinct">In</div>
+  </div>
 
   <button class="btn btn-primary" onclick="retryGame()">
     <span>🔄</span> Coba Lagi
@@ -218,32 +262,30 @@
   </button>
 
   <div class="footer">
-    STIFIn Family App • Bersama Sukses Mulia
+    TIME App • Smart Learning Experience
   </div>
 </div>
 
 <script>
+  function navigateTo(url) {
+    // Tambahkan sedikit efek visual pada tombol jika mau
+    console.log("Mengarahkan ke: " + url);
+    window.location.href = url; 
+  }
+
   function retryGame() {
-    // Tambahkan efek loading sebentar sebelum reload
     const btn = document.querySelector('.btn-primary');
     btn.innerHTML = '<span>⏳</span> Memuat...';
     btn.style.opacity = '0.7';
-    
-    setTimeout(() => {
-      location.reload();
-    }, 500);
+    setTimeout(() => { location.reload(); }, 500);
   }
 
   function goBack() {
-    // 🔥 Kirim signal ke Flutter WebView
     if (window.StifinFamilyapp) {
       window.StifinFamilyapp.postMessage("exit");
     } else if (window.flutter_inappwebview) {
-      // Alternatif jika menggunakan inappwebview
       window.flutter_inappwebview.callHandler('exit');
     }
-
-    // fallback browser
     history.back();
   }
 </script>
