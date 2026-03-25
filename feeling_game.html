@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Empathy Sync: Harmony Quest</title>
+    <style>
+        html, body {
+            margin: 0; padding: 0; width: 100vw; height: 100vh;
+            background-color: #2d0a1f; color: #ff8fa3; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            overflow: hidden; touch-action: none; text-align: center;
+        }
+        .header { margin-top: 30px; }
+        h1 { margin: 0; font-size: 28px; color: #ffb3c6; text-transform: uppercase; letter-spacing: 2px;}
+        h2 { margin: 5px 0 10px 0; font-size: 18px; color: #00e676; }
+        
+        #harmony-container {
+            width: 280px; height: 12px; background-color: #4a0e2e; border-radius: 6px;
+            margin: 10px auto; overflow: hidden; border: 1px solid #ff4081;
+        }
+        #harmony-bar {
+            width: 100%; height: 100%; background-color: #00e676;
+            transition: width 0.1s linear, background-color 0.3s;
+        }
+
+        #mood-display {
+            font-size: 100px; margin: 20px 0;
+            text-shadow: 0 0 30px rgba(255, 64, 129, 0.5);
+            transition: transform 0.2s;
+        }
+        .pop { transform: scale(1.2); }
+
+        .btn-container {
+            display: flex; justify-content: center; gap: 15px; margin-bottom: 50px; width: 100%;
+        }
+        .reaction-btn {
+            width: 70px; height: 70px; font-size: 35px;
+            background-color: #4a0e2e; border: 2px solid #ff8fa3; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: transform 0.1s, background-color 0.2s;
+        }
+        .reaction-btn:active { transform: scale(0.9); background-color: #ff4081; }
+
+        #overlay {
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(45, 10, 31, 0.95); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 10;
+        }
+        #overlay h1 { font-size: 36px; margin-bottom: 10px; color: #ff4081; }
+        .start-btn {
+            margin-top: 20px; padding: 12px 28px; font-size: 18px; font-weight: bold;
+            color: #fff; background-color: #ff4081; border: none; border-radius: 8px; cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+        }
+        .start-btn:active { transform: translateY(2px); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Empathy Sync</h1>
+        <h2 id="level-text">Level 1</h2>
+        <div id="harmony-container"><div id="harmony-bar"></div></div>
+    </div>
+    
+    <div id="mood-display">😊</div>
+
+    <div class="btn-container">
+        <div class="reaction-btn" onclick="sendReaction('calm')">🌊</div>
+        <div class="reaction-btn" onclick="sendReaction('comfort')">💖</div>
+        <div class="reaction-btn" onclick="sendReaction('warmth')">🔥</div>
+    </div>
+
+    <div id="overlay">
+        <h1 id="end-title">HARMONY QUEST</h1>
+        <p id="end-desc" style="color: #ffb3c6;">Berikan empati yang tepat sebelum kesabaran habis!</p>
+        <p style="color: #fff; font-size: 12px; margin-bottom: 20px;">😡 ➔ 🌊 | 😭 ➔ 💖 | 🥶 ➔ 🔥</p>
+        <button class="start-btn" onclick="startGame()">Mulai Pendekatan</button>
+    </div>
+
+    <script>
+        const moodDisplay = document.getElementById('mood-display');
+        const harmonyBar = document.getElementById('harmony-bar');
+        const levelText = document.getElementById('level-text');
+        const overlay = document.getElementById('overlay');
+        const endTitle = document.getElementById('end-title');
+        const endDesc = document.getElementById('end-desc');
+
+        const emotions = [
+            { id: 'angry', icon: '😡', correctReaction: 'calm' },
+            { id: 'sad', icon: '😭', correctReaction: 'comfort' },
+            { id: 'fear', icon: '🥶', correctReaction: 'warmth' }
+        ];
+
+        let level = 1;
+        let scoreInLevel = 0;
+        let currentEmotion = null;
+        let isPlaying = false;
+        
+        let timeLeft = 100; // Persentase
+        let drainRate = 0.5; // Kecepatan berkurang
+        let gameLoop;
+
+        function startGame() {
+            overlay.style.display = 'none';
+            level = 1;
+            scoreInLevel = 0;
+            drainRate = 0.5;
+            levelText.innerText = `Level ${level}`;
+            isPlaying = true;
+            nextMood();
+            
+            clearInterval(gameLoop);
+            gameLoop = setInterval(updateHarmony, 50); // Update setiap 50ms
+        }
+
+        function nextMood() {
+            // Pilih emosi acak
+            let randIndex = Math.floor(Math.random() * emotions.length);
+            currentEmotion = emotions[randIndex];
+            
+            // Animasi pop
+            moodDisplay.innerText = currentEmotion.icon;
+            moodDisplay.classList.add('pop');
+            setTimeout(() => moodDisplay.classList.remove('pop'), 200);
+
+            // Reset waktu untuk emosi baru
+            timeLeft = 100;
+            harmonyBar.style.width = '100%';
+            updateBarColor();
+        }
+
+        function sendReaction(reactionId) {
+            if (!isPlaying) return;
+
+            if (reactionId === currentEmotion.correctReaction) {
+                // Berhasil empati
+                scoreInLevel++;
+                
+                // Naik level setiap 5 empati yang berhasil
+                if (scoreInLevel >= 5) {
+                    level++;
+                    scoreInLevel = 0;
+                    levelText.innerText = `Level ${level}`;
+                    drainRate += 0.2; // Semakin cepat habis
+                    
+                    // JEMBATAN FLUTTER: Kirim Skor saat menang level
+                    if (window.SuperAppChannel) {
+                        window.SuperAppChannel.postMessage(level.toString());
+                    }
+                }
+                
+                nextMood();
+            } else {
+                // Salah empati = Game Over
+                gameOver("SALAH RESPON!", "Hubungan memburuk karena empati tidak tepat.");
+            }
+        }
+
+        function updateHarmony() {
+            timeLeft -= drainRate;
+            harmonyBar.style.width = timeLeft + '%';
+            updateBarColor();
+
+            if (timeLeft <= 0) {
+                gameOver("KESABARAN HABIS!", "Kamu terlalu lama merespon perasaannya.");
+            }
+        }
+
+        function updateBarColor() {
+            if (timeLeft > 60) {
+                harmonyBar.style.backgroundColor = '#00e676'; // Hijau aman
+            } else if (timeLeft > 30) {
+                harmonyBar.style.backgroundColor = '#ffea00'; // Kuning waspada
+            } else {
+                harmonyBar.style.backgroundColor = '#ff4081'; // Merah bahaya
+            }
+        }
+
+        function gameOver(title, desc) {
+            isPlaying = false;
+            clearInterval(gameLoop);
+            
+            // JEMBATAN FLUTTER: Kirim Skor Akhir saat kalah
+            if (window.SuperAppChannel) {
+                window.SuperAppChannel.postMessage((level - 1).toString());
+            }
+
+            overlay.style.display = 'flex';
+            endTitle.innerText = title;
+            endDesc.innerText = `${desc} Terhenti di Level ${level}.`;
+        }
+    </script>
+</body>
+</html>
