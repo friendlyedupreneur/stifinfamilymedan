@@ -155,6 +155,13 @@
                 e.target.classList.add('wrong');
                 statusText.innerText = `Salah! Ingatanmu terputus di Level ${level}.`;
                 statusText.style.color = "#e94560";
+
+                // --- KODE BARU UNTUK MENGIRIM SKOR KE FLUTTER ---
+                // Kita cek dulu apakah game ini sedang dibuka di dalam Flutter
+                if (window.StifinFamilyapp) {
+                // Jika ya, kirim angka level terakhir sebagai skor
+                window.StifinFamilyapp.postMessage(level.toString());
+                }
                 
                 // Tunjukkan jawaban yang benar
                 pattern.forEach(index => {
