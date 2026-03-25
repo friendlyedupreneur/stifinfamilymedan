@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Intuitive Sync: Spatial Mirror</title>
+    <style>
+        html, body {
+            margin: 0; padding: 0; width: 100vw; height: 100vh;
+            background-color: #120024; color: #d4a5ff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            overflow: hidden; touch-action: none;
+        }
+        h1 { margin: 0; font-size: 26px; color: #b388ff; text-transform: uppercase; letter-spacing: 2px;}
+        h2 { margin: 5px 0 10px 0; font-size: 18px; color: #7c4dff; }
+        p { margin: 0 0 15px 0; font-size: 14px; text-align: center; color: #e0c3fc; }
+        
+        #progress-container {
+            width: 280px; height: 10px; background-color: #2a0845; border-radius: 5px;
+            margin-bottom: 20px; overflow: hidden;
+        }
+        #progress-bar {
+            width: 100%; height: 100%; background-color: #b388ff;
+            transition: width 1s linear;
+        }
+
+        #game-board {
+            display: grid; gap: 4px; margin-bottom: 20px;
+            padding: 8px; background-color: #2a0845; border-radius: 8px;
+            box-shadow: 0 0 20px rgba(179, 136, 255, 0.2);
+        }
+        .cell {
+            width: 50px; height: 50px; background-color: #120024;
+            border-radius: 5px; transition: background-color 0.2s, transform 0.1s;
+        }
+        .cell-top { pointer-events: none; } /* Setengah atas tidak bisa diklik */
+        .cell-top.active { background-color: #b388ff; box-shadow: 0 0 10px #b388ff; }
+        
+        .cell-bottom { cursor: pointer; } /* Setengah bawah bisa diklik */
+        .cell-bottom:active { transform: scale(0.9); }
+        .cell-bottom.active { background-color: #7c4dff; box-shadow: 0 0 10px #7c4dff; }
+
+        .mirror-line {
+            grid-column: 1 / -1; height: 4px; background-color: #ff4081;
+            border-radius: 2px; margin: 4px 0; box-shadow: 0 0 8px #ff4081;
+        }
+
+        #overlay {
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(18, 0, 36, 0.95); display: none; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 10;
+        }
+        #overlay h1 { font-size: 36px; margin-bottom: 10px; }
+        button {
+            margin-top: 20px; padding: 12px 28px; font-size: 16px; font-weight: bold;
+            color: #fff; background-color: #7c4dff; border: none; border-radius: 8px; cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4); transition: all 0.2s;
+        }
+        button:active { transform: translateY(2px); }
+        #start-btn { display: block; }
+    </style>
+</head>
+<body>
+
+    <h1>Intuitive Sync</h1>
+    <h2 id="level-text">Level 1</h2>
+    <p>Buat cerminan pola di area bawah secepat mungkin!</p>
+    
+    <div id="progress-container"><div id="progress-bar"></div></div>
+    
+    <div id="game-board"></div>
+    <button id="start-btn" onclick="startGame()">Mulai Sinkronisasi</button>
+
+    <div id="overlay">
+        <h1 id="end-title">SYNC FAILED</h1>
+        <p id="end-desc">Waktu habis.</p>
+        <button onclick="resetGame()">Coba Lagi / Lanjut</button>
+    </div>
+
+    <script>
+        const board = document.getElementById('game-board');
+        const levelText = document.getElementById('level-text');
+        const overlay = document.getElementById('overlay');
+        const endTitle = document.getElementById('end-title');
+        const endDesc = document.getElementById('end-desc');
+        const startBtn = document.getElementById('start-btn');
+        const progressBar = document.getElementById('progress-bar');
+
+        let level = 1;
+        let cols = 4;
+        let rowsPerHalf = 2; // Total baris = 4 (2 atas, 2 bawah)
+        let totalActiveNodes = 3;
+        
+        let topPattern = [];
+        let bottomPattern = [];
+        
+        let timeLeft = 0;
+        let maxTime = 15;
+        let timerInterval;
+        let isPlaying = false;
+
+        function buildBoard() {
+            board.innerHTML = '';
+            board.style.gridTemplateColumns = `repeat(${cols}, 50px)`;
+            
+            topPattern = [];
+            bottomPattern = [];
+
+            // Buat area Atas (Target)
+            for (let i = 0; i < cols * rowsPerHalf; i++) {
+                let cell = document.createElement('div');
+                cell.className = 'cell cell-top';
+                cell.dataset.index = i;
+                board.appendChild(cell);
+            }
+
+            // Garis Cermin Pembatas
+            let mirror = document.createElement('div');
+            mirror.className = 'mirror-line';
+            board.appendChild(mirror);
+
+            // Buat area Bawah (Interactive)
+            for (let i = 0; i < cols * rowsPerHalf; i++) {
+                let cell = document.createElement('div');
+                cell.className = 'cell cell-bottom';
+                cell.dataset.index = i; // Index lokal untuk area bawah
+                cell.addEventListener('click', toggleCell);
+                board.appendChild(cell);
+            }
+        }
+
+        function startGame() {
+            startBtn.style.display = 'none';
+            overlay.style.display = 'none';
+            isPlaying = true;
+            
+            buildBoard();
+            generatePattern();
+            
+            timeLeft = maxTime;
+            progressBar.style.width = '100%';
+            progressBar.style.transition = 'width 1s linear';
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function generatePattern() {
+            let topCells = document.querySelectorAll('.cell-top');
+            let totalCells = cols * rowsPerHalf;
+            let activeIndices = [];
+
+            // Acak pola di area atas
+            while(activeIndices.length < totalActiveNodes) {
+                let r = Math.floor(Math.random() * totalCells);
+                if(activeIndices.indexOf(r) === -1) activeIndices.push(r);
+            }
+
+            activeIndices.forEach(index => {
+                topCells[index].classList.add('active');
+                topPattern.push(index);
+            });
+        }
+
+        function toggleCell(e) {
+            if (!isPlaying) return;
+            
+            let cell = e.target;
+            let index = parseInt(cell.dataset.index);
+            
+            if (cell.classList.contains('active')) {
+                cell.classList.remove('active');
+                bottomPattern = bottomPattern.filter(i => i !== index);
+            } else {
+                cell.classList.add('active');
+                bottomPattern.push(index);
+            }
+
+            checkWin();
+        }
+
+        function checkWin() {
+            if (bottomPattern.length !== topPattern.length) return;
+
+            let isWin = true;
+            
+            // Logika Cermin Vertikal:
+            // Baris ke-0 bawah mencerminkan Baris ke-(rowsPerHalf - 1) atas
+            // Rumus cermin vertikal lokal index:
+            // targetIndexBawah = (rowsPerHalf - 1 - Math.floor(indexAtas / cols)) * cols + (indexAtas % cols)
+
+            for (let i = 0; i < topPattern.length; i++) {
+                let topIndex = topPattern[i];
+                let expectedBottomRow = (rowsPerHalf - 1) - Math.floor(topIndex / cols);
+                let col = topIndex % cols;
+                let expectedBottomIndex = (expectedBottomRow * cols) + col;
+
+                if (!bottomPattern.includes(expectedBottomIndex)) {
+                    isWin = false;
+                    break;
+                }
+            }
+
+            if (isWin) {
+                isPlaying = false;
+                clearInterval(timerInterval);
+                
+                // JEMBATAN FLUTTER: Kirim Level saat menang
+                if (window.SuperAppChannel) {
+                    window.SuperAppChannel.postMessage(level.toString());
+                }
+
+                setTimeout(() => {
+                    level++;
+                    levelText.innerText = `Level ${level}`;
+                    
+                    // Tingkatkan Kesulitan
+                    if (level % 2 === 0) totalActiveNodes++; // Tambah titik
+                    if (level === 4 || level === 7) { 
+                        cols++; // Perlebar grid sesekali
+                        if (cols > 6) cols = 6;
+                    }
+                    if (maxTime > 5) maxTime--; // Waktu makin ketat
+
+                    startGame();
+                }, 500); // Jeda sebentar melihat hasil sebelum lanjut
+            }
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            let percentage = (timeLeft / maxTime) * 100;
+            progressBar.style.width = percentage + '%';
+
+            if (timeLeft <= 0) {
+                isPlaying = false;
+                clearInterval(timerInterval);
+                progressBar.style.width = '0%';
+                
+                // JEMBATAN FLUTTER: Kirim Skor Akhir saat kalah
+                if (window.SuperAppChannel) {
+                    window.SuperAppChannel.postMessage((level - 1).toString());
+                }
+
+                overlay.style.display = 'flex';
+                endTitle.innerText = "OUT OF SYNC";
+                endTitle.style.color = "#ff4081";
+                endDesc.innerText = `Visualisasi terhenti di Level ${level}.`;
+            }
+        }
+
+        function resetGame() {
+            level = 1;
+            cols = 4;
+            rowsPerHalf = 2;
+            totalActiveNodes = 3;
+            maxTime = 15;
+            levelText.innerText = `Level ${level}`;
+            startGame();
+        }
+    </script>
+</body>
+</html>
