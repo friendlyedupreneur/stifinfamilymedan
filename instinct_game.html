@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Primal Reflex: Survival Strike</title>
+    <style>
+        html, body {
+            margin: 0; padding: 0; width: 100vw; height: 100vh;
+            background-color: #0a0a0a; color: #f39c12; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            overflow: hidden; touch-action: none; text-align: center;
+        }
+        .header { margin-top: 20px; }
+        h1 { margin: 0; font-size: 28px; color: #e67e22; text-transform: uppercase; letter-spacing: 2px;}
+        h2 { margin: 5px 0 10px 0; font-size: 18px; color: #f1c40f; }
+        p { margin: 0 0 10px 0; font-size: 14px; color: #ccc; }
+        
+        #arena {
+            position: relative; width: 300px; height: 400px;
+            background-color: #1a1a1a; border: 2px solid #e67e22; border-radius: 12px;
+            overflow: hidden; box-shadow: 0 0 20px rgba(230, 126, 34, 0.2);
+            margin-top: 10px;
+        }
+
+        .target {
+            position: absolute; width: 50px; height: 50px;
+            background: radial-gradient(circle, #f1c40f, #e67e22);
+            border-radius: 50%; box-shadow: 0 0 15px #e67e22;
+            display: none; cursor: pointer;
+            transition: transform 0.05s;
+        }
+        .target:active { transform: scale(0.8); }
+
+        #overlay {
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(10, 10, 10, 0.95); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 10;
+        }
+        #overlay h1 { font-size: 36px; margin-bottom: 10px; color: #e74c3c; }
+        .start-btn {
+            margin-top: 20px; padding: 12px 28px; font-size: 18px; font-weight: bold;
+            color: #111; background-color: #f1c40f; border: none; border-radius: 8px; cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+        }
+        .start-btn:active { transform: translateY(2px); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Primal Reflex</h1>
+        <h2 id="level-text">Level 1</h2>
+        <p>Ketuk target secepat mungkin sebelum menghilang!</p>
+    </div>
+    
+    <div id="arena">
+        <div id="target" class="target" onpointerdown="hitTarget()"></div>
+    </div>
+
+    <div id="overlay">
+        <h1 id="end-title">SURVIVAL TEST</h1>
+        <p id="end-desc" style="color: #f39c12;">Uji kecepatan instingmu.</p>
+        <button class="start-btn" onclick="startGame()">Mulai Bertahan</button>
+    </div>
+
+    <script>
+        const arena = document.getElementById('arena');
+        const target = document.getElementById('target');
+        const levelText = document.getElementById('level-text');
+        const overlay = document.getElementById('overlay');
+        const endTitle = document.getElementById('end-title');
+        const endDesc = document.getElementById('end-desc');
+
+        let level = 1;
+        let score = 0;
+        let isPlaying = false;
+        let spawnTime = 1200; // Waktu awal target bertahan (ms)
+        let targetTimeout;
+
+        function startGame() {
+            overlay.style.display = 'none';
+            level = 1;
+            score = 0;
+            spawnTime = 1200;
+            levelText.innerText = `Level ${level}`;
+            isPlaying = true;
+            spawnTarget();
+        }
+
+        function spawnTarget() {
+            if (!isPlaying) return;
+
+            // Ukuran arena: 300x400. Ukuran target: 50x50.
+            let maxX = 300 - 50;
+            let maxY = 400 - 50;
+
+            let randomX = Math.floor(Math.random() * maxX);
+            let randomY = Math.floor(Math.random() * maxY);
+
+            target.style.left = randomX + 'px';
+            target.style.top = randomY + 'px';
+            target.style.display = 'block';
+
+            // Jika pemain tidak mengetuk target dalam waktu yang ditentukan, Game Over
+            targetTimeout = setTimeout(() => {
+                gameOver("TERLAMBAT!", "Instingmu kurang cepat.");
+            }, spawnTime);
+        }
+
+        function hitTarget() {
+            if (!isPlaying) return;
+
+            clearTimeout(targetTimeout);
+            target.style.display = 'none';
+            score++;
+
+            // Naik level setiap 5 target yang berhasil dipukul
+            if (score % 5 === 0) {
+                level++;
+                levelText.innerText = `Level ${level}`;
+                
+                // Kurangi waktu secara drastis untuk menguji insting
+                if (spawnTime > 400) {
+                    spawnTime -= 150; 
+                } else if (spawnTime > 250) {
+                    spawnTime -= 50; // Mentok di batas manusiawi
+                }
+                
+                // JEMBATAN FLUTTER: Kirim Skor saat menang level
+                if (window.SuperAppChannel) {
+                    window.SuperAppChannel.postMessage(level.toString());
+                }
+            }
+
+            // Jeda sejenak sebelum target berikutnya muncul (elemen kejutan)
+            let randomDelay = Math.random() * 500 + 200;
+            setTimeout(spawnTarget, randomDelay);
+        }
+
+        function gameOver(title, desc) {
+            isPlaying = false;
+            target.style.display = 'none';
+            clearTimeout(targetTimeout);
+            
+            // JEMBATAN FLUTTER: Kirim Skor Akhir saat kalah
+            if (window.SuperAppChannel) {
+                window.SuperAppChannel.postMessage((level > 1 ? level - 1 : 0).toString());
+            }
+
+            overlay.style.display = 'flex';
+            endTitle.innerText = title;
+            endDesc.innerText = `${desc} Bertahan hingga Level ${level}.`;
+        }
+    </script>
+</body>
+</html>
