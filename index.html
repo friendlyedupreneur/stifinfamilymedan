@@ -961,14 +961,7 @@ function scrollGallery(direction) {
 }
   </script>
 
-  <!-- STICKY PROMO BAR -->
-<div id="ramadhanBar" role="status">
-  <div style="font-weight:900">🌙 Ramadhan Special</div>
-  <div>Sisa <span id="ramadhanCount">—</span></div>
-  <a href="promo-stifin.html" style="background:#fff;color:#065f46;padding:8px 12px;border-radius:8px;font-weight:800;">Detail</a>
-  <button id="closeRamadhan" style="background:transparent;border:0;color:#fff;font-size:18px;">✕</button>
-</div>
-
+ 
 <style>
 #ramadhanBar{
   position:fixed;
@@ -988,31 +981,6 @@ function scrollGallery(direction) {
 </style>
 
 
-<script>
-(function(){
-  // Ganti tanggal akhir Ramadhan (contoh 30 Maret 2026)
-  const end = new Date('2026-03-20T23:59:59').getTime();
-  const el  = document.getElementById('ramadhanCount');
-  const bar = document.getElementById('ramadhanBar');
-
-  function update(){
-    const diff = end - Date.now();
-    if(diff <= 0){
-      el.textContent = "Berakhir";
-      return;
-    }
-
-    const days = Math.floor(diff / 86400000);
-    el.textContent = days + " hari";
-  }
-
-  update();
-  setInterval(update, 86400000);
-
-  document.getElementById("closeRamadhan")
-    .addEventListener("click", ()=> bar.style.display="none");
-})();
-</script>
 
 
 </body>
