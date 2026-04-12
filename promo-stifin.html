@@ -1,207 +1,382 @@
 <!doctype html>
 <html lang="id">
 <head>
-<title>Back To School — Temukan Cara Belajar Terbaik | STIFIn Family Medan</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Back To School — Temukan Cara Belajar Terbaik | STIFIn Family Medan</title>
 
-<meta name="description" content="Program Back To School STIFIn. Bantu anak menemukan cara belajar, jurusan, dan pola komunikasi yang tepat." />
+    <meta name="description" content="Program Back To School STIFIn. Bantu anak menemukan cara belajar, jurusan, dan pola komunikasi yang tepat sesuai Mesin Kecerdasan." />
 
-<meta property="og:title" content="Back To School — Start The Journey at The School" />
-<meta property="og:description" content="Mulai perjalanan belajar yang tepat sesuai Mesin Kecerdasan anak." />
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="STIFIn Family Medan" />
-<meta property="og:url" content="https://stifinfamilymedan.com/promo-stifin.html" />
-<meta property="og:image" content="https://stifinfamilymedan.com/img/promo-stifin.png" />
+    <meta property="og:title" content="Back To School — Start The Journey at The Right Path" />
+    <meta property="og:description" content="Mulai perjalanan belajar yang tepat sesuai Mesin Kecerdasan (Sensing, Thinking, Intuiting, Feeling, Instinct) anak." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="STIFIn Family Medan" />
+    <meta property="og:url" content="https://stifinfamilymedan.com/promo-stifin.html" />
+    <meta property="og:image" content="https://stifinfamilymedan.com/img/promo-stifin.png" />
 
-<meta name="theme-color" content="#065f46" />
+    <meta name="theme-color" content="#065f46" />
 
-<!-- (STYLE TIDAK DIUBAH) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 
+    <style>
+        :root {
+            --primary: #065f46;
+            --primary-light: #16a34a;
+            --bg-light: #f8fafc;
+            --bg-accent: #ecfdf5;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --white: #ffffff;
+            --radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            color: var(--text-main);
+            line-height: 1.6;
+            background-color: var(--white);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 14px rgba(6, 95, 70, 0.25);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-ghost:hover {
+            background-color: var(--bg-accent);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: linear-gradient(to bottom, var(--bg-accent) 0%, var(--white) 100%);
+            padding: 60px 0 80px;
+        }
+
+        .hero-wrap {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            font-weight: 800;
+            margin: 16px 0;
+            letter-spacing: -1px;
+            color: #022c22;
+        }
+
+        .pill {
+            display: inline-block;
+            background: #dcfce7;
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-visual img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            transform: scale(1);
+            transition: var(--transition);
+        }
+
+        .hero-visual img:hover {
+            transform: scale(1.02);
+        }
+
+        /* --- GRIDS & CARDS --- */
+        .grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            justify-content: center;
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            padding: 32px;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+            border-color: var(--primary-light);
+            transform: translateY(-4px);
+        }
+
+        .card strong {
+            display: block;
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #022c22;
+        }
+
+        /* --- STEPS / ALUR --- */
+        .badge {
+            background: var(--primary);
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 768px) {
+            .hero-wrap {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-wrap .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .hero-wrap > div:first-child > div {
+                justify-content: center;
+            }
+            .section {
+                padding: 60px 0;
+            }
+            .cta-strip {
+                text-align: center;
+            }
+            .cta-strip .btn {
+                width: 100%;
+                margin-top: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<!-- HERO -->
-<section class="hero section">
-<div class="container hero-wrap">
-<div>
+    <section class="hero section">
+        <div class="container hero-wrap">
+            <div>
+                <span class="pill">🎒 Back To School Program</span>
+                <h1>Start The Journey at The Right School Path</h1>
+                <p class="subtitle" style="margin-bottom: 24px;">
+                    Setiap anak memiliki <strong>Mesin Kecerdasan</strong> yang berbeda. 
+                    Dengan STIFIn, bantu anak menemukan gaya belajar terbaik, potensi jurusan, hingga jalan kesuksesan yang paling pas untuknya sejak awal.
+                </p>
 
-<span class="pill" style="background:#dcfce7;color:#065f46;border:none">
-🎒 Back To School Program
-</span>
+                <div style="display:flex;gap:12px;flex-wrap:wrap">
+                    <a class="btn btn-primary" href="https://wa.me/6281238173518?text=Halo%20STIFIn%20Family%20Medan%2C%20saya%20ingin%20ikut%20Program%20Back%20To%20School">
+                        Daftar Sekarang
+                    </a>
+                    <a class="btn btn-ghost" href="#benefits">
+                        Lihat Detail
+                    </a>
+                </div>
+            </div>
 
-<h1 style="margin:12px 0 8px;font-size:40px;line-height:1.1;font-weight:900">
-Start The Journey at The Right School Path
-</h1>
+            <div class="hero-visual">
+                <img src="img/promo-stifin.png" alt="Program Back To School STIFIn - Temukan Potensi Anak">
+            </div>
+        </div>
+    </section>
 
-<p class="subtitle">
-Setiap anak punya cara belajar yang berbeda.  
-Dengan STIFIn, bantu anak menemukan arah belajar, jurusan, dan masa depan yang lebih tepat sejak awal.
-</p>
+    <div style="background: var(--primary); padding: 14px 0; text-align: center; font-weight: 600; color: var(--white); font-size: 1.1rem; letter-spacing: 0.5px;">
+        🎓 Program Back To School 2026 • Persiapkan Masa Depan Anak Lebih Awal Bersama STIFIn Family Medan
+    </div>
 
-<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-<a class="btn btn-primary"
-href="https://wa.me/6281238173518?text=Halo%20STIFIn%20Family%20Medan%2C%20saya%20ingin%20ikut%20Program%20Back%20To%20School">
-Daftar Sekarang
-</a>
+    <section id="benefits" class="section">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h2 class="title">Kenapa Harus Ikut Program Ini?</h2>
+                <p class="subtitle">Bukan sekadar tes bakat—ini adalah panduan komprehensif arah belajar dan masa depan anak Anda.</p>
+            </div>
 
-<a class="btn btn-ghost" href="#faq">Lihat Detail</a>
-</div>
+            <div class="grid grid-3">
+                <div class="card">
+                    <strong>📚 Cara Belajar yang Tepat</strong>
+                    <p class="subtitle" style="font-size: 1rem;">Anak memahami cara belajar paling efektif sesuai tipe kecerdasannya (S/T/I/F/In).</p>
+                </div>
+                <div class="card">
+                    <strong>🎯 Arah Jurusan yang Jelas</strong>
+                    <p class="subtitle" style="font-size: 1rem;">Tidak ada lagi drama bingung memilih jurusan sekolah menengah atau kampus.</p>
+                </div>
+                <div class="card">
+                    <strong>💬 Pola Komunikasi Akurat</strong>
+                    <p class="subtitle" style="font-size: 1rem;">Orang tua mengerti "bahasa" anak, memudahkan bimbingan tanpa konflik.</p>
+                </div>
+                <div class="card">
+                    <strong>🚀 Potensi Lebih Maksimal</strong>
+                    <p class="subtitle" style="font-size: 1rem;">Mengkalibrasi dan mengoptimalkan bakat genetik alami anak sejak dini.</p>
+                </div>
+                <div class="card">
+                    <strong>🧠 Kenali Mesin Kecerdasan</strong>
+                    <p class="subtitle" style="font-size: 1rem;">Mengetahui belahan otak dominan sebagai fondasi utama pengembangan diri.</p>
+                </div>
+                <div class="card">
+                    <strong>🤝 Panduan Eksklusif Orang Tua</strong>
+                    <p class="subtitle" style="font-size: 1rem;">Mendapatkan *insight* praktis untuk mendukung *strata* kesuksesan anak.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-</div>
+    <section class="section" style="background: var(--bg-light);">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h2 class="title">Alur Program</h2>
+                <p class="subtitle">Hanya butuh 3 langkah mudah untuk membuka potensi terbaik anak.</p>
+            </div>
 
-<div class="hero-visual">
-  <img src="img/promo-stifin.png"
-       alt="Program Back To School STIFIn"
-       style="width:100%; height:auto; display:block;">
-</div>
+            <div class="grid grid-3">
+                <div class="card" style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                    <div class="badge">1</div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 8px; color: var(--text-main);">Daftar & Jadwal</h3>
+                    <p class="subtitle" style="font-size: 1rem;">Hubungi admin, isi data diri, dan pilih jadwal yang paling nyaman untuk Anda.</p>
+                </div>
+                <div class="card" style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                    <div class="badge">2</div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 8px; color: var(--text-main);">Tes STIFIn</h3>
+                    <p class="subtitle" style="font-size: 1rem;">Proses *scan* sidik jari yang cepat, aman, dan nyaman. Hanya butuh ±10–20 menit.</p>
+                </div>
+                <div class="card" style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                    <div class="badge">3</div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 8px; color: var(--text-main);">Hasil & Arahan</h3>
+                    <p class="subtitle" style="font-size: 1rem;">Dapatkan penjelasan mendalam, *insight* belajar, dan peta jurusan langsung dari ahlinya.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-</div>
-</section>
+    <section class="section">
+        <div class="container grid grid-2" style="align-items: center;">
+            <div>
+                <h2 class="title">Investasi Masa Depan</h2>
+                <p class="subtitle" style="margin-bottom: 24px;">Jangan biarkan anak membuang waktu dan tenaga untuk metode belajar yang salah. Berikan mereka kompas yang tepat hari ini.</p>
+                <ul style="list-style: none; display: grid; gap: 12px; margin-bottom: 32px;">
+                    <li style="display: flex; align-items: center; gap: 8px; color: var(--text-muted);">
+                        <span style="color: var(--primary-light);">✔</span> Tes Biometrik Sidik Jari
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 8px; color: var(--text-muted);">
+                        <span style="color: var(--primary-light);">✔</span> E-Certificate STIFIn
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 8px; color: var(--text-muted);">
+                        <span style="color: var(--primary-light);">✔</span> Konsultasi Private Arahan Belajar
+                    </li>
+                </ul>
+            </div>
 
+            <div class="card" style="border: 2px solid var(--primary); background: #f0fdf4;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                    <span class="pill" style="background: var(--primary); color: var(--white);">Promo Terbaik</span>
+                </div>
+                
+                <div class="subtitle" style="font-size:14px; font-weight: 600;">Paket Per Anak</div>
+                <div style="font-size:42px; font-weight:900; color: #022c22; margin-bottom: 24px;">Rp550.000</div>
 
-<!-- Banner -->
-<div style="background:#ecfdf5;padding:10px 0;text-align:center;font-weight:600;color:#065f46">
-🎓 Program Back To School 2026 • Persiapkan Masa Depan Anak Lebih Awal
-</div>
+                <a class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 16px;" href="https://wa.me/6281238173518?text=Halo%20saya%20ingin%20ikut%20Program%20Back%20To%20School">
+                    Ambil Promo Sekarang (WA)
+                </a>
 
+                <p style="font-size:12px; margin-top:16px; color: var(--text-muted); text-align: center;">
+                    *Harga belum termasuk transport (jika panggilan onsite ke rumah/luar Medan).
+                </p>
+            </div>
+        </div>
+    </section>
 
-<!-- BENEFITS -->
-<section class="section">
-<div class="container">
-<h2 class="title">Kenapa Harus Ikut Program Ini?</h2>
-
-<p class="subtitle">
-Bukan sekadar tes — ini adalah panduan arah belajar dan masa depan anak.
-</p>
-
-<div class="grid grid-3" style="margin-top:24px">
-
-<div class="card">
-<strong>📚 Cara Belajar yang Tepat</strong>
-<p class="subtitle">Anak memahami cara belajar paling efektif sesuai tipe kecerdasannya.</p>
-</div>
-
-<div class="card">
-<strong>🎯 Arah Jurusan yang Jelas</strong>
-<p class="subtitle">Tidak lagi bingung memilih jurusan sekolah atau kuliah.</p>
-</div>
-
-<div class="card">
-<strong>💬 Pola Komunikasi yang Tepat</strong>
-<p class="subtitle">Orang tua lebih mudah memahami dan membimbing anak.</p>
-</div>
-
-<div class="card">
-<strong>🚀 Potensi Lebih Maksimal</strong>
-<p class="subtitle">Mengoptimalkan bakat alami sejak dini.</p>
-</div>
-
-<div class="card">
-<strong>🧠 Kenali Mesin Kecerdasan</strong>
-<p class="subtitle">Mengetahui tipe STIFIn sebagai dasar pengembangan diri.</p>
-</div>
-
-<div class="card">
-<strong>🤝 Panduan Orang Tua</strong>
-<p class="subtitle">Orang tua mendapatkan insight untuk mendukung anak dengan tepat.</p>
-</div>
-
-</div>
-</div>
-</section>
-
-
-<!-- PRICING -->
-<section style="background:#f8fafc" class="section">
-<div class="container grid grid-2" style="gap:28px; align-items:center">
-
-<div class="card">
-<div style="display:flex; justify-content:space-between; align-items:end; gap:10px">
-<div>
-<div class="subtitle" style="font-size:13px">Per anak</div>
-<div style="font-size:32px; font-weight:900">Rp550.000</div>
-</div>
-
-<span class="badge" style="background:#dcfce7;color:#065f46;border:none">
-Back To School
-</span>
-</div>
-
-<div style="display:grid; gap:10px; margin-top:14px">
-<a class="btn btn-primary"
-href="https://wa.me/6281238173518?text=Halo%20saya%20ingin%20ikut%20Program%20Back%20To%20School">
-Chat Admin (WA)
-</a>
-</div>
-
-<p class="subtitle" style="font-size:12px; margin-top:8px">
-*Harga belum termasuk transport (jika onsite luar Medan).
-</p>
-
-</div>
-
-</div>
-</section>
-
-
-<!-- STEPS -->
-<section class="section">
-<div class="container">
-<h2 class="title">Alur Program</h2>
-
-<div class="grid grid-3" style="margin-top:16px">
-
-<div class="card">
-<div class="badge">1</div>
-<h3>Daftar</h3>
-<p class="subtitle">Isi data dan pilih jadwal.</p>
-</div>
-
-<div class="card">
-<div class="badge">2</div>
-<h3>Tes STIFIn</h3>
-<p class="subtitle">Proses cepat ±10–20 menit.</p>
-</div>
-
-<div class="card">
-<div class="badge">3</div>
-<h3>Hasil & Arahan</h3>
-<p class="subtitle">Dapatkan insight belajar & jurusan.</p>
-</div>
-
-</div>
-</div>
-</section>
-
-
-<!-- CTA -->
-<section class="section" style="padding-top:0">
-<div class="container">
-
-<div class="cta-strip"
-style="background:linear-gradient(90deg,#065f46,#16a34a);color:#fff;border-radius:18px;padding:22px">
-
-<div style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-
-<div>
-<div style="font-weight:900;font-size:18px">
-🎯 Jangan Biarkan Anak Salah Arah
-</div>
-<div style="opacity:.9">
-Mulai perjalanan belajar yang tepat hari ini.
-</div>
-</div>
-
-<a class="btn"
-style="background:#fff;color:#065f46"
-href="https://wa.me/6281238173518?text=Halo%20saya%20ingin%20ikut%20Program%20Back%20To%20School">
-Daftar Sekarang
-</a>
-
-</div>
-</div>
-
-</div>
-</section>
+    <section class="section" style="padding-top:0">
+        <div class="container">
+            <div class="cta-strip" style="background:linear-gradient(135deg, #022c22, var(--primary)); color:var(--white); border-radius: 24px; padding: 40px; box-shadow: 0 20px 40px rgba(6, 95, 70, 0.2);">
+                <div style="display:flex; gap:24px; align-items:center; justify-content:space-between; flex-wrap:wrap">
+                    <div style="max-width: 600px;">
+                        <h2 style="font-weight:900; font-size: 2rem; margin-bottom: 8px;">🎯 Jangan Biarkan Anak Salah Arah</h2>
+                        <p style="font-size: 1.1rem; opacity: 0.9; line-height: 1.5;">Masa depan mereka terlalu berharga untuk sekadar coba-coba. Mulai perjalanan belajar yang akurat dan tepat hari ini juga.</p>
+                    </div>
+                    <a class="btn" style="background: var(--white); color: var(--primary); font-size: 1.1rem; padding: 16px 32px;" href="https://wa.me/6281238173518?text=Halo%20saya%20ingin%20ikut%20Program%20Back%20To%20School">
+                        Hubungi Kami Sekarang
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
 </body>
 </html>
