@@ -3,14 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STIFIn Family Medan - Kenali Potensi Diri</title>
+  <title>STIFIn Family Medan</title>
 
+  <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-KJXPL95R');</script>
 
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=GTM-KJXPL95R"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -19,650 +21,999 @@
     gtag('config', 'GTM-KJXPL95R');
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Google Icon Font -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  
+  <!-- Materialize CSS -->
   <link rel="stylesheet" href="css/materialize.min.css">
+  <!-- AOS CSS -->
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+  <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
 
-  <meta property="og:title" content="Promo Tes STIFIn — Spesial Ramadhan">
-  <meta property="og:description" content="Momentum Ramadhan untuk mengenal potensi diri & keluarga lebih dalam. Berlaku selama bulan Ramadhan.">
-  <meta property="og:image" content="https://stifinfamilymedan.com/og/promo-stifin.jpg">
-  <meta property="og:type" content="website">
+  <!-- OG Promo (optional tapi bagus buat share) -->
+<meta property="og:title" content="Promo Tes STIFIn — Spesial Ramadhan">
+<meta property="og:description" content="Momentum Ramadhan untuk mengenal potensi diri & keluarga lebih dalam. Berlaku selama bulan Ramadhan.">
+<meta property="og:image" content="https://stifinfamilymedan.com/og/promo-stifin.jpg">
+<meta property="og:type" content="website">
 
-  <style>
-    :root {
-      --primary: #1565c0; /* Blue darken-3 */
-      --primary-light: #1e88e5;
-      --accent: #16a34a; /* Green */
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --bg-light: #f8fafc;
-      --radius: 16px;
-      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    }
+<!-- Mini style untuk elemen promo -->
+<style>
+.ramadhan-pill{
+  display:inline-flex;
+  align-items:center;
+  padding:6px 14px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#065f46,#16a34a);
+  color:#fff;
+  font-weight:700;
+}
 
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      color: var(--text-main);
-      background-color: #ffffff;
-      -webkit-font-smoothing: antialiased;
-    }
+.ramadhan-card{
+  display:block;
+  margin-top:20px;
+  background:linear-gradient(135deg,#064e3b,#166534);
+  color:#fff;
+  border-radius:16px;
+  padding:18px;
+  text-decoration:none;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
 
-    h1, h2, h3, h4, h5, h6 {
-      font-weight: 800;
-      color: var(--text-main);
-    }
+.ramadhan-highlight{
+  font-weight:800;
+  color:#fde68a;
+}
+</style>
 
-    p {
-      line-height: 1.7;
-      color: var(--text-muted);
-    }
 
-    /* Navbar Modernization */
-    nav {
-      box-shadow: var(--shadow-sm);
-    }
-    nav .brand-logo {
-      font-weight: 800;
-      font-size: 1.5rem;
-      letter-spacing: -0.5px;
-    }
-    
-    /* Slider Enhancements */
-    .slider .slides li img {
-      filter: brightness(0.6); /* Make text more readable */
-    }
-    .slider .caption h3 {
-      font-weight: 800;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    }
-    .slider .caption h5 {
-      font-weight: 500;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    }
-
-    /* Promo Card */
-    .ramadhan-card {
-      display: block;
-      margin: -30px auto 40px; /* Overlap with slider slightly */
-      position: relative;
-      z-index: 10;
-      background: linear-gradient(135deg, #064e3b, #166534);
-      color: #fff;
-      border-radius: var(--radius);
-      padding: 24px;
-      text-decoration: none;
-      box-shadow: var(--shadow-lg);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .ramadhan-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.2);
-    }
-
-    /* STIFIn Color Boxes */
-    .color-box {
-      padding: 16px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      font-weight: 700;
-      font-size: 1.1rem;
-      box-shadow: var(--shadow-sm);
-      transition: transform 0.2s;
-    }
-    .color-box:hover {
-      transform: scale(1.02);
-    }
-    .color-box.black { background-color: #1e293b !important; } /* True Black for Thinking */
-
-    /* Custom Cards */
-    .card-panel {
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-md);
-      transition: transform 0.3s ease;
-      height: 100%;
-    }
-    .card-panel:hover {
-      transform: translateY(-5px);
-    }
-    
-    /* Gallery Horizontal Scroll */
-    .gallery-scroll {
-      display: flex;
-      gap: 20px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      padding: 20px 10px;
-      scrollbar-width: none; /* Firefox */
-    }
-    .gallery-scroll::-webkit-scrollbar {
-      display: none; /* Chrome/Safari */
-    }
-    .gallery-card {
-      flex: 0 0 auto;
-      scroll-snap-align: center;
-      width: 320px;
-      height: 220px;
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow-md);
-    }
-    .gallery-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-    .gallery-card:hover img {
-      transform: scale(1.05);
-    }
-
-    /* Swiper Testimonials */
-    .swiper-slide .card {
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: var(--shadow-md);
-      margin: 20px 10px;
-    }
-    
-    /* Pricing Cards */
-    .benefit-list {
-      list-style: none;
-      padding: 0;
-      margin-top: 20px;
-    }
-    .benefit-list li {
-      display: flex;
-      align-items: center;
-      margin-bottom: 12px;
-      font-size: 0.95rem;
-      color: var(--text-muted);
-    }
-    .benefit-list i {
-      margin-right: 12px;
-      color: var(--primary);
-      font-size: 20px;
-    }
-    .badge-ribbon-glow {
-      position: absolute;
-      top: 15px;
-      right: -35px;
-      transform: rotate(45deg);
-      background: #ef4444;
-      color: white;
-      padding: 6px 40px;
-      font-weight: 800;
-      font-size: 0.85rem;
-      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
-    }
-
-    /* Sticky Elements Management */
-    .sticky-register {
-      position: fixed;
-      bottom: 80px; /* Prevent clash with Ramadhan Bar */
-      right: 20px;
-      z-index: 998;
-    }
-    .sticky-register .btn-large {
-      border-radius: 50px;
-      box-shadow: var(--shadow-lg);
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    #ramadhanBar {
-      position: fixed;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
-      z-index: 9999;
-      background: linear-gradient(90deg, #064e3b, #166534);
-      color: #fff;
-      border-radius: 16px;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: var(--shadow-lg);
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 600px) {
-      .slider .caption h3 { font-size: 1.8rem; }
-      .ramadhan-card { margin-top: -20px; padding: 16px; }
-      .gallery-card { width: 280px; height: 180px; }
-      #ramadhanBar { flex-wrap: wrap; gap: 8px; justify-content: center; text-align: center;}
-      .sticky-register { bottom: 100px; } /* Adjust for mobile stacked bar */
-    }
-  </style>
 </head>
 <body id="home" class="scrollspy">
 
+  <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KJXPL95R"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
+  <!-- Navbar -->
   <div class="navbar-fixed">
     <nav class="blue darken-3">
       <div class="container">
         <div class="nav-wrapper">
-          <a href="#home" class="brand-logo">STIFIn Family</a>
+          <a href="#home" class="brand-logo">STIFIn Family Medan</a>
           <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
           <ul class="right hide-on-med-and-down">
-            <li><a href="#home" style="font-weight: 600;">Home</a></li>
-            <li><a href="register.html" style="font-weight: 600;">Daftar</a></li>
-            <li><a href="portfolio.html" style="font-weight: 600;">Portfolio</a></li>
-            <li>
-              <a href="promo-stifin.html" class="promo-pill" style="background:#16a34a; color:#fff; padding:0 20px; border-radius:50px; margin-left: 10px; font-weight: 700; height: 40px; line-height: 40px; margin-top: 12px;">
-                🎒 Back To School
-              </a>
-            </li>
+            <li><a href="#home">Home</a></li>
+            <li><a href="register.html">Daftar</a></li>
+            <li><a href="portfolio.html">Portfolio</a></li>
+             <li><a href="promo-stifin.html" class="promo-pill" style="background:#16a34a;color:#fff;padding:6px 12px;border-radius:999px;">
+    🎒 Back To School</a></li>
           </ul>
         </div>
       </div>
     </nav>
   </div>
 
+  <!-- Sidenav Mobile -->
   <ul class="sidenav" id="mobile-nav">
     <li><a href="#home">Home</a></li>
     <li><a href="register.html">Daftar</a></li>
     <li><a href="portfolio.html">Portfolio</a></li>
-    <li>
-      <a href="promo-stifin.html" style="background:#16a34a; color:#fff; font-weight: 700; margin: 10px; border-radius: 8px; text-align: center;">
-        🎒 Back To School
-      </a>
-    </li>
+     <li><a href="promo-stifin.html" class="promo-pill" style="background:#16a34a;color:#fff;padding:6px 12px;border-radius:999px;">
+    🎒 Back To School</a></li>
   </ul>
 
+      <!-- Slider -->
   <div class="slider">
     <ul class="slides">
       <li>
-        <img src="img/slider/1.jpg" alt="Slide 1" style="object-position: center 30%;">
+        <img src="img/slider/1.jpg" alt="Slide 1">
         <div class="caption center-align">
-          <h3>Sebaik-Baik Makhluk Ialah Yang Mengenal Dirinya</h3>
-          <h5 class="light grey-text text-lighten-4">Setiap Insan Istimewa</h5>
+          <h3>Sebaik-Baik Makhluk Ialah Yang Mengenal Dirinya dan Tuhannya</h3>
+          <h5 class="light grey-text text-lighten-3">Setiap Insan Istimewa</h5>
         </div>
       </li>
       <li>
         <img src="img/slider/2.jpg" alt="Slide 2">
         <div class="caption left-align">
-          <h3>Temukan Kelebihan & Kekuatan Terpendam Anda</h3>
-          <h5 class="light grey-text text-lighten-4">Fokus pada Karpet Merahmu</h5>
+          <h3>Temukan Kelebihan dan Kekurangan Anda</h3>
+          <h5 class="light grey-text text-lighten-3">Setiap Insan Istimewa</h5>
         </div>
       </li>
       <li>
         <img src="img/slider/3.jpg" alt="Slide 3">
         <div class="caption right-align">
-          <h3>Biarkan Kami Membantu Menemukan Jalannya</h3>
-          <h5 class="light grey-text text-lighten-4">Masa Depan Terarah Mulai Hari Ini</h5>
+          <h3>Biarkan Kami Membantu Anda Menemukan Jalannya</h3>
+          <h5 class="light grey-text text-lighten-3">Setiap Insan Istimewa</h5>
         </div>
       </li>
     </ul>
   </div>
 
-  <div class="container">
-    <a href="promo-stifin.html" class="ramadhan-card">
-      <div style="display:flex; align-items:center; justify-content: space-between; gap:20px; flex-wrap:wrap">
-        <div style="flex:1; min-width:250px">
-          <div style="font-size:1.2rem; font-weight:900; margin-bottom: 4px;">
-            🎒 Back To School Program
-          </div>
-          <div style="font-size: 1rem; opacity: 0.95;">
-            Bantu anak menemukan <span style="color:#fde68a; font-weight: 800;">cara belajar & jurusan yang tepat</span>
-          </div>
-          <div style="margin-top:4px; font-size:0.9rem; opacity:.8;">
-            Mulai perjalanan belajar yang benar sejak awal.
-          </div>
-        </div>
-        <div style="font-weight:800; background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 50px;">
-          Lihat Detail &rarr;
-        </div>
-      </div>
-    </a>
+  <!-- PROMO CARD BANNER -->
+<div class="container">
+  <a href="promo-stifin.html" class="ramadhan-card" style="background:linear-gradient(135deg,#065f46,#16a34a);">
+
+<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+  
+  <div style="flex:1;min-width:200px">
+    <div style="font-size:18px;font-weight:900;">
+      🎒 Back To School Program
+    </div>
+
+    <div style="margin-top:6px;">
+      Bantu anak menemukan <span class="ramadhan-highlight">cara belajar & jurusan yang tepat</span>
+    </div>
+
+    <div style="margin-top:6px;font-size:14px;opacity:.9;">
+      Mulai perjalanan belajar yang benar sejak awal
+    </div>
   </div>
 
-  <section style="padding:40px 0; background:#f0fdf4; margin-top: -20px;">
-    <div class="container center-align">
-      <h4 style="font-weight:800; color: #064e3b; margin-bottom: 16px;">
-        🎯 Jangan Sampai Anak Salah Jurusan
-      </h4>
-      <p style="max-width:650px; margin:0 auto 24px; font-size: 1.1rem;">
-        Dengan STIFIn, anak bisa mengetahui gaya belajar paling efektif, potensi bawaan, dan arah masa depan yang paling akurat sejak dini.
-      </p>
-      <a href="promo-stifin.html" class="btn-large green darken-2 waves-effect waves-light" style="border-radius:50px; font-weight: 700; padding: 0 32px;">
-         Daftar Program Back To School
-      </a>
-    </div>
-  </section>
+  <div style="font-weight:800;">
+    Lihat Detail →
+  </div>
 
-  <section id="about" class="about scrollspy" style="padding: 80px 0;">
+</div>
+</a>
+</div>
+
+  <section style="padding:40px 0;background:#f0fdf4">
+  <div class="container center-align">
+
+    <h4 style="font-weight:800">
+      🎯 Jangan Sampai Anak Salah Jurusan
+    </h4>
+
+    <p style="max-width:600px;margin:10px auto;color:#475569">
+      Dengan STIFIn, anak bisa mengetahui cara belajar, potensi, dan arah masa depan sejak dini.
+    </p>
+
+    <a href="promo-stifin.html"
+       class="btn-large green darken-2 waves-effect waves-light"
+       style="margin-top:10px;border-radius:12px;">
+       Daftar Program Back To School
+    </a>
+
+  </div>
+</section>
+
+
+  <!-- About Section -->
+  <section id="about" class="about scrollspy">
     <div class="container">
-      <h3 class="center" style="margin-bottom: 24px;">Kenali Potensi Diri Sejak Dini</h3>
-      <p class="center-align" style="max-width: 800px; margin: 0 auto; font-size: 1.1rem;">
-        Setiap manusia dianugerahi potensi luar biasa melalui <strong>Mesin Kecerdasan</strong> — bagian otak yang dominan digunakan dalam berpikir dan bertindak. 
+      <h3 class="center light">
+Kenali Potensi Anak Sejak Dini, Hindari Salah Arah
+</h3>
+      <p class="about-text center-align">
+        Setiap manusia dianugerahi potensi luar biasa melalui <strong>Mesin Kecerdasan</strong> — bagian otak yang dominan digunakan dalam berpikir dan bertindak.
         STIFIn hadir untuk membantumu memahami potensi unik ini, agar kamu bisa hidup selaras dengan kepribadian, minat, dan kekuatan terbaikmu.
         <br><br>
-        <em style="color: var(--primary); font-weight: 600; font-size: 1.2rem;">"Temukan Karpet Merah perjalanan hidupmu — jalur terbaik yang memang diciptakan khusus untukmu."</em>
+        "Temukan <strong>Karpet Merah</strong> perjalanan hidupmu — jalur terbaik yang memang diciptakan khusus untukmu."
       </p>
     </div>
   </section>
 
-  <section id="stifin" class="stifin scrollspy" style="background: var(--bg-light); padding: 80px 0;">
-    <div class="container">
-      <h3 class="center">Apa Itu STIFIn?</h3>
-      <p class="center-align" style="max-width: 800px; margin: 0 auto 40px;">
-        STIFIn adalah metode pemetaan kecerdasan berbasis dominasi belahan dan lapisan otak. Konsep ini akurat untuk mengenali potensi genetik, pola belajar, gaya kerja, dan arah hidup yang paling sesuai dengan keunikan tiap individu.
-      </p>
-      
-      <div class="row" style="display: flex; flex-wrap: wrap; align-items: center;">
-        <div class="col s12 m6" data-aos="fade-right" data-aos-duration="1000">
-          <div class="color-box red lighten-1 white-text">(S) Sensing : Memori dan Rajin</div>
-          <div class="color-box black white-text">(T) Thinking : Analitis dan Pandai</div>
-          <div class="color-box blue lighten-1 white-text">(I) Intuiting : Kreatif dan Inovatif</div>
-          <div class="color-box green lighten-1 white-text">(F) Feeling : Emosi dan Hubungan</div>
-          <div class="color-box yellow black-text">(In) Insting : Naluri dan Serbabisa</div>
-        </div>
-        
-        <div class="col s12 m6 center-align" data-aos="fade-left" data-aos-duration="1000">
-          <img src="img/stifin/mesin_kecerdasan_stifin.png" alt="STIFIn Illustration" class="responsive-img" style="max-width: 80%; drop-shadow(0 10px 20px rgba(0,0,0,0.15));" />
-        </div>
-      </div>
-    </div>
-  </section>
+  <section style="background:#fff7ed;padding:40px 0">
+  <div class="container center-align">
 
-  <section id="services" class="services scrollspy" style="padding: 80px 0;">
-    <div class="container">
-      <h3 class="center" style="margin-bottom: 40px;">Mengapa Memilih STIFIn?</h3>
-      <div class="row" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-        
-        <div class="col s12 m4" style="display: flex;">
-          <div class="card-panel center" style="flex: 1; padding: 40px 20px;">
-            <i class="material-icons large blue-text text-darken-2">filter_none</i>
-            <h5 style="margin: 20px 0 10px;">Simple</h5>
-            <p style="margin:0;">Hanya terdiri dari 5 Mesin Kecerdasan & 9 Personal Genetik. Sangat aplikatif dan mudah dipahami.</p>
-          </div>
-        </div>
-        
-        <div class="col s12 m4" style="display: flex;">
-          <div class="card-panel center" style="flex: 1; padding: 40px 20px;">
-            <i class="material-icons large green-text text-darken-2">verified</i>
-            <h5 style="margin: 20px 0 10px;">Akurat</h5>
-            <p style="margin:0;">Tingkat akurasi pemetaan genetik yang sangat tinggi, dibuktikan oleh ratusan ribu pengguna.</p>
-          </div>
-        </div>
-        
-        <div class="col s12 m4" style="display: flex;">
-          <div class="card-panel center" style="flex: 1; padding: 40px 20px;">
-            <i class="material-icons large orange-text text-darken-2">auto_fix_high</i>
-            <h5 style="margin: 20px 0 10px;">Aplikatif</h5>
-            <p style="margin:0;">Langsung bisa diterapkan dalam parenting, pendidikan, karir, bisnis, hingga perjodohan.</p>
-          </div>
-        </div>
+    <h5 style="font-weight:800">
+      ⚠️ Banyak Anak Salah Jurusan Bukan Karena Tidak Pintar
+    </h5>
 
-      </div>
-    </div>
-  </section>
+    <p style="max-width:700px;margin:10px auto;color:#475569">
+      Tapi karena tidak tahu cara belajar yang sesuai dengan dirinya.
+      STIFIn membantu menemukan potensi asli anak agar tidak salah arah.
+    </p>
 
-  <section id="documentation" class="scrollspy" style="padding: 80px 0; background: linear-gradient(135deg, #0d47a1, #1976d2);">
-    <div class="container">
-      <h3 class="center white-text" style="margin-bottom: 40px;">Dokumentasi Kegiatan</h3>
-
-      <div class="gallery-scroll">
-        <div class="gallery-card"><img src="img/gallery/1.png" alt="Dokumentasi 1" loading="lazy"></div>
-        <div class="gallery-card"><img src="img/gallery/2.png" alt="Dokumentasi 2" loading="lazy"></div>
-        <div class="gallery-card"><img src="img/gallery/3.png" alt="Dokumentasi 3" loading="lazy"></div>
-        <div class="gallery-card"><img src="img/gallery/4.png" alt="Dokumentasi 4" loading="lazy"></div>
-        <div class="gallery-card"><img src="img/gallery/5.png" alt="Dokumentasi 5" loading="lazy"></div>
-        <div class="gallery-card"><img src="img/gallery/6.png" alt="Dokumentasi 6" loading="lazy"></div>
-        <div class="gallery-card"><img src="img/gallery/7.png" alt="Dokumentasi 7" loading="lazy"></div>
-        <div class="gallery-card"><img src="img/gallery/8.png" alt="Dokumentasi 8" loading="lazy"></div>
-      </div>
-
-      <div style="text-align: center; margin-top: 30px;">
-        <button onclick="scrollGallery('left')" class="btn-floating btn-large waves-effect waves-light white" style="margin-right: 15px;">
-          <i class="material-icons blue-text text-darken-3">arrow_back</i>
-        </button>
-        <button onclick="scrollGallery('right')" class="btn-floating btn-large waves-effect waves-light white">
-          <i class="material-icons blue-text text-darken-3">arrow_forward</i>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <section id="testimoni" class="section" style="padding: 80px 0; background: var(--bg-light);">
-    <div class="container">
-      <h3 class="center-align" data-aos="fade-up" style="margin-bottom: 40px;">Kata Mereka</h3>
-      
-      <div class="swiper mySwiper">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <div class="card" style="max-width: 800px; margin: 20px auto;">
-              <div class="card-content center-align">
-                <img src="img/testimoni/Prof.-Dr.-Kuswandi2C-S.U.2C-M.Phill_.2C-Apt.png" alt="User" class="circle" style="width:100px; height: 100px; object-fit: cover; margin-bottom:16px; border: 4px solid var(--bg-light);">
-                <i class="material-icons" style="font-size:40px; color:#1e88e5; display: block; margin-bottom: 10px;">format_quote</i>
-                <p style="font-size: 1.1rem; color: var(--text-main); font-style: italic;">"Hasil tes STIFIn ini sangat cocok dengan saya. Penjelasannya sangat ilmiah, detail, dan praktis. Sangat penting dilakukan sedini mungkin agar orang tua tidak salah mengarahkan anak."</p>
-                <div style="margin-top: 24px;">
-                  <span style="display: block; font-weight: 800; font-size: 1.1rem;">Prof. Dr. Kuswandi, S.U., M.Phill., Apt</span>
-                  <span style="color: var(--text-muted); font-size: 0.9rem;">Guru Besar UGM, Pakar Genetika</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="card" style="max-width: 800px; margin: 20px auto;">
-              <div class="card-content center-align">
-                <img src="img/testimoni/Pak-Bi-Sukbianto.png" alt="User" class="circle" style="width:100px; height: 100px; object-fit: cover; margin-bottom:16px; border: 4px solid var(--bg-light);">
-                <i class="material-icons" style="font-size:40px; color:#1e88e5; display: block; margin-bottom: 10px;">format_quote</i>
-                <p style="font-size: 1.1rem; color: var(--text-main); font-style: italic;">"Khusus untuk membangun Personal Brand, STIFIn membantu mengidentifikasi Brand DNA Anda. Jelas akan membuat tampilan Logo, Packaging, Iklan Anda akan berkarakter."</p>
-                <div style="margin-top: 24px;">
-                  <span style="display: block; font-weight: 800; font-size: 1.1rem;">Subiakto Priosoedarsono</span>
-                  <span style="color: var(--text-muted); font-size: 0.9rem;">Praktisi Branding > 50 Tahun</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="paket" class="section scrollspy" style="padding: 80px 0;">
-    <div class="container">
-      <h3 class="center-align" style="margin-bottom: 50px;">Investasi Masa Depan</h3>
-      <div class="row" style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center;">
-
-        <div class="col s12 m4" style="display: flex; padding: 0;">
-          <div class="card hoverable" style="flex: 1; border-radius: 20px; overflow: hidden; position: relative; display: flex; flex-direction: column;">
-            <div class="badge-ribbon-glow" style="background: #3b82f6;">🔥 Personal</div>
-            <div class="card-content" style="flex: 1; padding: 40px 30px;">
-              <h5 class="blue-text text-darken-3" style="margin-top: 0;">1 Orang</h5>
-              <h4 style="color: #0f172a; margin: 10px 0 20px; font-weight: 900;">Rp 650.000</h4>
-              <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 20px;">
-              <ul class="benefit-list">
-                <li><i class="material-icons">fingerprint</i> Tes Biometrik STIFIn</li>
-                <li><i class="material-icons">assignment_turned_in</i> Sertifikat Resmi</li>
-                <li><i class="material-icons">menu_book</i> Buku Saku Hasil Tes</li>
-                <li><i class="material-icons">record_voice_over</i> Konsultasi Private</li>
-                <li><i class="material-icons">location_on</i> Home Visit (S&K Berlaku)</li>
-              </ul>
-            </div>
-            <div style="padding: 0 30px 40px;">
-              <a href="register.html?paket=personal" class="btn-large blue darken-3" style="width: 100%; border-radius: 12px; font-weight: 700;">Pilih Paket</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col s12 m4" style="display: flex; padding: 0;">
-          <div class="card hoverable" style="flex: 1; border-radius: 20px; overflow: hidden; position: relative; display: flex; flex-direction: column; border: 2px solid #10b981;">
-            <div class="badge-ribbon-glow" style="background: #10b981;">🌟 Couple</div>
-            <div class="card-content" style="flex: 1; padding: 40px 30px;">
-              <h5 class="green-text text-darken-2" style="margin-top: 0;">2 Orang</h5>
-              <h4 style="color: #0f172a; margin: 10px 0 20px; font-weight: 900;">Rp 600.000 <span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;">/org</span></h4>
-              <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 20px;">
-              <ul class="benefit-list">
-                <li><i class="material-icons">fingerprint</i> Tes Biometrik STIFIn</li>
-                <li><i class="material-icons">assignment_turned_in</i> Sertifikat Resmi</li>
-                <li><i class="material-icons">menu_book</i> Buku Saku Hasil Tes</li>
-                <li><i class="material-icons">record_voice_over</i> Konsultasi Pasangan</li>
-                <li><i class="material-icons">location_on</i> Home Visit (S&K Berlaku)</li>
-              </ul>
-            </div>
-            <div style="padding: 0 30px 40px;">
-              <a href="register.html?paket=couple" class="btn-large green darken-2" style="width: 100%; border-radius: 12px; font-weight: 700;">Pilih Paket</a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <section id="contact" class="contact scrollspy" style="padding: 80px 0; background: var(--bg-light);">
-    <div class="container">
-      <h3 class="center" style="margin-bottom: 40px;">Hubungi Kami</h3>
-      <div class="row" style="display: flex; flex-wrap: wrap; gap: 20px;">
-        
-        <div class="col s12 m7">
-          <div class="card-panel" style="padding: 0; overflow: hidden; border-radius: 20px;">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18..." 
-              width="100%" height="400" style="border:0; display: block;" allowfullscreen="" loading="lazy">
-            </iframe>
-            <div class="center" style="padding: 20px; background: #fff;">
-              <a href="https://g.co/kgs/sPw1GBc" target="_blank" class="btn blue darken-2 waves-effect waves-light" style="border-radius: 50px;">
-                <i class="material-icons left">directions</i>Buka di Google Maps
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="card-panel center" style="border-radius: 20px; padding: 40px 20px;">
-            <img src="img/clients/reza-profile.png" alt="Profile" class="circle" style="width:150px; height: 150px; object-fit: cover; border: 4px solid #e2e8f0; margin-bottom: 20px;" data-aos="zoom-in">
-            <h5 style="margin-bottom: 4px;">Bang Reza</h5>
-            <p style="color: var(--primary); font-weight: 600; margin-top: 0;">Promotor Resmi STIFIn</p>
-            <p style="font-size:0.95rem; line-height: 1.5; margin-bottom: 24px;">"Setiap Insan Istimewa. Jalani peran hidup sesuai dengan desain cetak biru dari-NYA."</p>
-            <div style="display: flex; justify-content: center; gap: 16px;">
-              <a href="https://wa.me/6281238173518?text=Hai%20Kak%2C%20saya%20ingin%20info%20tes%20STIFIn" target="_blank">
-                <img src="img/clients/icon-whatsapp.png" alt="WhatsApp" style="width:48px; transition: transform 0.2s;">
-              </a>  
-              <a href="https://instagram.com/za_ru_zi" target="_blank">
-                <img src="img/clients/icon-instagram.png" alt="Instagram" style="width:48px; transition: transform 0.2s;">
-              </a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <div class="sticky-register">
-    <a href="#paket" class="btn-large green darken-2 waves-effect waves-light">
-      <i class="material-icons left">how_to_reg</i>Daftar Sekarang
-    </a>
   </div>
+</section>
 
-  <section class="promo-app-section" style="padding: 60px 0; background: #fff;" data-aos="fade-up">
+  <!-- STIFIn Section -->
+  <section id="stifin" class="stifin scrollspy">
+    <h3 class="center light">Apa Itu STIFIn?</h3>
+    <p class="center-align light description-text" style="margin-bottom: 30px;">
+      STIFIn adalah metode pemetaan kecerdasan berbasis dominasi belahan dan lapisan otak. Dengan konsep ini, kita dapat mengenali potensi diri, pola belajar, gaya kerja, dan arah hidup yang paling sesuai dengan keunikan tiap individu.
+      <br /><br />
+    </p>
+    
     <div class="container">
-      <div class="card-panel" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: 24px; padding: 40px; box-shadow: none; border: 1px solid #e2e8f0;">
-        <h4 class="center-align" style="margin-bottom: 30px; font-weight: 800; color: #0f172a;">
-          Aplikasi Khusus Member STIFIn
-        </h4>
-        <div class="row valign-wrapper" style="margin-bottom: 0;">
-          <div class="col s12 m6 center-align">
-            <a href="https://play.google.com/store/apps/details?id=com.friendlyedupreneur.stifinfamily" target="_blank">
-              <img src="img/playstore-logo.png" alt="Download di Playstore" style="max-width: 200px; transition: transform 0.2s;">
-            </a>
-            <p style="margin-top: 12px; font-weight: 600;">Tersedia di Google Play</p>
+    
+      <div class="text-section">
+        <div class="row" data-aos="fade-right" data-aos-duration="1000">
+          <div class="col s12">
+            <div class="color-box red lighten-1 white-text">(S) Sensing : Memori dan Rajin</div>
           </div>
-          <div class="col s12 m6 center-align">
-            <img src="img/qrcode_stifinapp.png" alt="QR Code Aplikasi" style="max-width: 140px; border-radius: 12px; box-shadow: var(--shadow-sm);">
-            <p style="margin-top: 12px; font-weight: 600;">Scan QR untuk mengunduh</p>
+          <div class="col s12">
+            <div class="color-box black white-text">(T) Thinking : Analitis dan Pandai</div>
+          </div>
+          <div class="col s12">
+            <div class="color-box blue lighten-1 white-text">(I) Intuiting : Kreatif dan Inovatif</div>
+          </div>
+          <div class="col s12">
+            <div class="color-box green lighten-1 white-text">(F) Feeling : Emosi dan Hubungan</div>
+          </div>
+          <div class="col s12">
+            <div class="color-box yellow black-text">(In) Insting : Naluri dan Serbabisa</div>
           </div>
         </div>
+      </div>
+  
+      <div class="image-section center-align" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="50">
+        <img src="img/stifin/mesin_kecerdasan_stifin.png" alt="STIFIn Illustration" class="responsive-img" />
       </div>
     </div>
   </section>
 
-  <footer class="blue darken-4 white-text center" style="padding: 30px 0;">
-    <p style="margin: 0; font-size: 1rem; color: rgba(255,255,255,0.8);">&copy; 2026 STIFIn Family Medan. All Rights Reserved.</p>
+    
+      <!-- Services Section -->
+  <section id="services" class="services scrollspy">
+    <div class="container">
+      <h3 class="light center grey-text text-darken-3">Mengapa Memilih STIFIn?</h3>
+      <div class="row">
+        <div class="col m4 s12">
+          <div class="card-panel center">
+            <i class="material-icons large">filter_none</i>
+            <h5>Simple</h5>
+            <p>Hanya terdiri dari 5 Mesin Kecerdasan & 9 Personal Genetik. Mudah dipahami dan diterapkan.</p>
+          </div>
+        </div>
+        <div class="col m4 s12">
+          <div class="card-panel center">
+            <i class="material-icons large">verified</i>
+            <h5>Akurat</h5>
+            <p>Tingkat akurasi hingga 95% — telah digunakan lebih dari ratus-ribuan pengguna di seluruh Indonesia.</p>
+          </div>
+        </div>
+        <div class="col m4 s12">
+          <div class="card-panel center">
+            <i class="material-icons large">auto_fix_high</i>
+            <h5>Aplikatif</h5>
+            <p>Dapat diterapkan dalam kehidupan personal, keluarga, pendidikan, hingga bisnis dan organisasi.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Manfaat Tabel -->
+    <div class="container">
+      <h5 class="center" style="margin-top: 50px;">Manfaat Tes STIFIn untuk Semua Kalangan</h5>
+      <div class="horizontal-tables" style="display: flex; gap: 20px; overflow-x: auto; margin-top: 20px;">
+        
+        <table>
+          <thead>
+            <tr><th>Personal / Couple</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Mengetahui Minat-Bakat sejak dini</td></tr>
+            <tr><td>Menghindari 'Stupid Cost'</td></tr>
+            <tr><td>Menyusun Peta Hidup sejak dini</td></tr>
+          </tbody>
+        </table>
+
+        <table>
+          <thead>
+            <tr><th>Keluarga</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Mengetahui pola komunikasi terbaik</td></tr>
+            <tr><td>Mengapresiasi berdasarkan Bahasa Cinta</td></tr>
+            <tr><td>Kalibrasi keluarga sesuai Parent Leader</td></tr>
+          </tbody>
+        </table>
+
+        <table>
+          <thead>
+            <tr><th>Tim / Organisasi</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Menempatkan posisi tim sesuai bakat</td></tr>
+            <tr><td>Menghindari konflik kecil dan besar</td></tr>
+            <tr><td>Menumbuhkan rasa percaya & loyalitas</td></tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </section>
+
+ <!-- Documentation Section -->
+<section id="documentation" class="scrollspy" style="padding: 20px 0; background: linear-gradient(135deg, #0192f3e5, #03f8ec);">
+  <div class="container">
+    <h3 class="light center grey-text text-darken-3">Dokumentasi</h3>
+
+    <div class="gallery-scroll" style="margin-top: 30px; overflow-x: auto; display: flex; gap: 20px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding-bottom: 20px;">
+      
+      <!-- Card 1 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/1.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 2 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/2.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 3 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/3.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 4 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/4.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 5 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/5.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 6 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/6.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 7 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/7.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 8 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/8.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 9 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/9.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 10 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/10.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 11 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/11.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 12 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/12.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 13 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/13.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 14 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/14.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 15 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/15.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 16 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/16.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 17 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/17.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 18 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/18.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 19 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/19.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 20 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/20.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 21 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/21.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 22 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/22.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 23 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/23.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 24 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/24.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 25 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/25.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 26 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/26.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 27 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/27.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 28 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/28.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 29 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/29.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 30 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/30.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 31 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/31.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 32 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/32.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 33 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/33.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 34 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/34.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 35 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/35.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 36 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/36.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 37 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/37.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 38 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/38.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 39 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/39.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <!-- Card 40 -->
+      <div class="gallery-card" style="flex: 0 0 auto; scroll-snap-align: center; width: 350px; height: 250px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <img src="img/gallery/40.png" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+    </div>
+
+    <!-- Tombol -->
+    <div style="text-align: center; margin-top: 20px;">
+      <button onclick="scrollGallery('left')" class="btn blue darken-2" style="margin-right: 10px;">&larr;</button>
+      <button onclick="scrollGallery('right')" class="btn blue darken-2">&rarr;</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- Section Testimoni -->
+<section id="testimoni" class="section">
+  <div class="container">
+    <h3 class="center-align" data-aos="fade-up">Testimoni</h3>
+    
+    <div class="swiper mySwiper">
+      <div class="swiper-wrapper">
+
+        <!-- Card 1 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/Prof.-Dr.-Kuswandi2C-S.U.2C-M.Phill_.2C-Apt.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"Hasil tes STIFIn ini sangat cocok dengan saya. Penjelasannya sangat ilmiah, detail, dan praktis untuk saya pahami. Jadi menurut saya, tes ini sangat penting di lakukan sedini mungkin agar kita sebagai orang tua tidak salah dalam mengarahkan anak untuk memilih jalur pendidikan dan profesi yang sesuai dengan bakan dan potensinya.Sehingga anak-anak menemukan cara belajar yang menyenangkan.
+                "</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Prof. Dr. Kuswandi, S.U., M.Phill., Apt</b>, Guru Besar UGM, Pakar Genetika, Pemerhati Pendidikan</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/Prof.-Dr.-Arief-Rahman-M.Pd_.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"Jika selama ini sidik jari hanya digunakan untuk melengkapi identitas, kepentingan kepolisian, dan sebagai penanda kehadiran seseorang, maka dengan adanya analisis sidik jari dapat digunakan untuk membaca potensi terpendam setiap anak. Dengan demikian, setiap anak akan mendapatkan hak sesuai dengan kecenderungan yang mereka miliki. Jangan paksa anak melukis, padahal ia senang menari. Mengetahui potensi anak sejak dini merupakan sebuah keharusan agar anak mendapat perlakuan yang berbeda dan khusus. Dengan melalui analisis sidik jari ini semakin membuka pikiran kita bahwa setiap anak dilahirkan dengan kecerdasan dan potensinya masing-masing."</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Prof. Dr. Arief Rahman, M.Pd</b>, Praktisi Pendidikan</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/Pak-Bi-Sukbianto.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"Lalu apa hubungannya STIFIn dengan Brand? Ada. Khusus untuk membangun Personal Brand, STIFIn membantu mengidentifikasi Brand DNA Anda. 
+                Untuk produk Brand juga akan sangat membantu untuk mengidentifikasi Brand Personality dari produk Anda. Jelas akan membuat tampilan Logo, Packaging, Iklan Anda akan berkarakter."</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Subiakto Priosoedarsono</b>, Praktisi Branding > 50 Tahun</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/Kris-Pujiatni_-Psikologi.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"Banyak cara untuk memahami diri sendiri & orang lain. Dengan STIFIn kita akan lebih mengerti & memahami diri sendiri dan orang lain. Kerjasama dalam keluarga dan dunia kerja menjadi lebih baik."</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Kris Pujiatni</b>, Psikolog, Dosen Psikologi Fakultas UMS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/Helvy-Tiana-Produser-Film-com.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"STIFIn membuat saya memahami diri sendiri dan orang lain. Bahkan saya menerapkan konsep STIFIn ini dalam mengembangkan karakter tokoh dalam cerpen, novel, dan film yang saya buat"</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Helvy Tiana Rosa</b>, Penulis, Dosen, dan Produser Film</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/Melly-Goeslaw-com.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"I recommended banget untuk semuanya, khususnya untuk anak-anak kita. Tes, deh melalui STIFIn! Thank you STIFIn, Aku jadi tau karakter anak-anak aku, terus bagaimana cara menanggulangi dan berkomunikasi dengan mereka dengan baik. Cocok dan pas banget buat anak-anak kita."</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Melly Goeslaw</b>, Penyanyi dan Penulis Lagu Indonesia</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/Arifia-Maulida-com.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"Setelah mengikuti tes STIFIn, saya dapat mengenal dan memahami diri saya lebih dalam, menentukan metode dan pola belajar yang terbaik untuk diri saya, serta memahami segala kelebihan dan kekurangan diri. 
+
+                Tak hanya itu, STIFIn juga memberikan gambaran akan profesi, bidang studi, hubungan intrapersonal, yang cocok bagi masing-masing karakter. Tentunya STIFIn membantu saya dalam menentukan langkah di masa yang akan datang, dan juga investasi yang baik untuk tiap individu."</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Arifia Maulida</b>, Miss Indonesia Favorit 2020</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/Prof_-Dr_-Kumaidi2C-MA-Ahli-Psikometrik.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"Saya telah membaca laporan riset yang dipimpin oleh Dr. Mohammed Zin Nordin dan timnya tentang Tes STIFIn. Mereka telah melakukan riset dengan baik. "</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Prof. Dr. Kumaidi, MA</b>, Ahli Psikometrik, Dosen UMS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 9 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/seto_mulyadi.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"Setiap orang tua atau setiap pendidik seharusnya memahami potensi setiap anak/ muridnya yang dibimbing/ dididik dengan jelas karena jika terjadi kesalahan deterpertasi atau informasi pengetahuan oleh anak bisa terjadi suatu pelanggaran hak anak seperti pemaksaan dan sejenisnya. Karena pada dasarnya setiap anak itu unik, otentik dan tidak terbandingkan. Maka perlu ada arahan untuk setiap pendidik/ orantua untuk bisa  memahami potensi setiap anak yang saling berbeda, supaya nantinya bisa memberikan pengarahan atau lingkungan  pendidikan yang tepat sehingga setiap anak bisa tumbuh dan berkembang secara optimal.  Saya memberikan apresiasi dengan adanya tes STIFIn karena sangat erat dengan upaya - upaya perlindungan anak dari kekerasan tanpa sengaja dilakukan terhadap anak dengan cara pemaksaan untuk mengikuti/menyukai suatu hal/kegiatan. Semua anak cerdas pada bidang yang saling berbeda.
+                "</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Seto Mulyadi</b>, Psikolog</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 10 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/Asri_Welas.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"Setiap anak itu ternyata berbeda-beda. Saya memiliki tiga anak dan pasti cara mendidik setiap itu berbeda-beda. Alhmdulillah saya bertemu dengan STIFIn yang membantu saya memetakan potensi genetik setiap anak saya dan bagaimana pola asuhnya yang tepat untuk anak-anak saya. Saya pun dan suami saya akhirnya juga mengetahui potensi genetik kami, sehingga kami bisa lebih memaksimalkannya lagi."</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Asri Welas</b>, Pemeran dan Model</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 11 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/Ibnu_Jamil_dan_Ririn_Ekawati.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"Konsep STIFIn adalah salah satu cara untuk mengenali diri. Saya, istri dan anak saya sudah tes STIFIn sehingga kami bisa mengenali lebih dalam karakter dan potensi genetik masing - masing.
+
+              Bagi kalian yang mau mengenali diri lebih dalam, saya sarankan tes STIFIn sekarang juga."</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Ibnu Jamil & Ririn Ekawati</b>, Aktor, Aktris & Presenter </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 12 -->
+        <div class="swiper-slide">
+          <div class="card z-depth-3">
+            <div class="card-content center-align">
+              <img src="img/testimoni/inara.png" alt="User" class="circle responsive-img" style="width:80px; margin-bottom:10px;">
+              <i class="material-icons" style="font-size:32px; color:#2196f3;">format_quote</i>
+              <p class="flow-text">"Sebelumnya saya bingung bagaimana cara berkomunikasi yang baik dengan setiap anak saya. Saya memiliki tiga orang anak, karena setiap anak berbeda isi kepalanya pasti cara berkomunikasinya berbeda-beda. Alhamdulillah saya bertemu dengan tes STIFIn yang bisa membantu saya mengenali Mesin Kecerdasan setiap anak saya, dari sana saya bisa memetakan atau mapping kepada setiap anak sehingga pelan-pelan saya bisa mengarahkan anak saya sesuai dengan karakter dan potensi genetik mereka."</p>
+            </div>
+            <div class="card-action center-align">
+              <span><b>Inara Rusli </b>, Penyanyi</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+      <!-- Paket Section -->
+  <section id="paket" class="section scrollspy" style="background-color: #f9f9f9; padding: 20px 0;">
+    <div class="container">
+      <h4 class="center-align" style="margin-bottom: 40px;">Pilih Paket Tes STIFIn</h4>
+      <div class="row">
+
+        <!-- Paket Personal -->
+        <div class="col s12 m4">
+          <div class="card hoverable z-depth-3 personal-card" style="position: relative; overflow: hidden;">
+            <div class="badge-ribbon-glow red">🔥 Personal</div>
+            <div class="card-content left-align">
+              <h5 class="blue-text text-darken-2">1 Orang</h5>
+              <h6 class="grey-text">Rp 650.000</h6>
+              <ul class="benefit-list">
+                <li><i class="material-icons">fingerprint</i> Tes STIFIn</li>
+                <li><i class="material-icons">assignment_turned_in</i> Sertifikat + Map</li>
+                <li><i class="material-icons">record_voice_over</i> Penjelasan / Konsultasi</li>
+                <li><i class="material-icons">vpn_key</i> PIN / GANCI</li>
+                <li><i class="material-icons">menu_book</i> Buku Saku Hasil Tes</li>
+                <li><i class="material-icons">chrome_reader_mode</i> Ebook Penjelasan Hasil Tes</li>
+                <li><i class="material-icons">question_answer</i> Tanya Jawab / Konsultasi</li>
+                <li><i class="material-icons">groups</i> Grup Komunitas WA</li>
+                <li><i class="material-icons">location_on</i> Tempat Sesuai Permintaan / Home Visit</li>
+              </ul>
+            </div>
+            <div class="card-action center-align">
+              <a href="register.html?paket=personal" class="btn blue darken-2 waves-effect waves-light">Daftar Paket Ini</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paket Couple -->
+        <div class="col s12 m4">
+          <div class="card hoverable z-depth-3 couple-card" style="position: relative; overflow: hidden;">
+            <div class="badge-ribbon-glow green">🌟 Couple</div>
+            <div class="card-content left-align">
+              <h5 class="blue-text text-darken-2">1–2 Orang</h5>
+              <h6 class="grey-text">Rp 600.000 / orang</h6>
+              <ul class="benefit-list">
+                <li><i class="material-icons">fingerprint</i> Tes STIFIn</li>
+                <li><i class="material-icons">assignment_turned_in</i> Sertifikat + Map</li>
+                <li><i class="material-icons">record_voice_over</i> Penjelasan / Konsultasi</li>
+                <li><i class="material-icons">vpn_key</i> PIN / GANCI</li>
+                <li><i class="material-icons">menu_book</i> Buku Saku Hasil Tes</li>
+                <li><i class="material-icons">chrome_reader_mode</i> Ebook Penjelasan Hasil Tes</li>
+                <li><i class="material-icons">question_answer</i> Tanya Jawab / Konsultasi</li>
+                <li><i class="material-icons">groups</i> Grup Komunitas WA</li>
+                <li><i class="material-icons">location_on</i> Tempat Sesuai Permintaan / Home Visit</li>
+              </ul>
+            </div>
+            <div class="card-action center-align">
+              <a href="register.html?paket=couple" class="btn blue darken-2 waves-effect waves-light">Daftar Paket Ini</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paket Family -->
+        <div class="col s12 m4">
+          <div class="card hoverable z-depth-3 family-card" style="position: relative; overflow: hidden;">
+            <div class="badge-ribbon-glow purple">💎 Family</div>
+            <div class="card-content left-align">
+              <h5 class="blue-text text-darken-2">3–9 Orang</h5>
+              <h6 class="grey-text">Harga Khusus</h6>
+              <ul class="benefit-list">
+                <li><i class="material-icons">fingerprint</i> Tes STIFIn</li>
+                <li><i class="material-icons">assignment_turned_in</i> Sertifikat + Map</li>
+                <li><i class="material-icons">record_voice_over</i> Penjelasan / Konsultasi</li>
+                <li><i class="material-icons">vpn_key</i> PIN / GANCI</li>
+                <li><i class="material-icons">menu_book</i> Buku Saku Hasil Tes</li>
+                <li><i class="material-icons">chrome_reader_mode</i> Ebook Penjelasan Hasil Tes</li>
+                <li><i class="material-icons">question_answer</i> Tanya Jawab / Konsultasi</li>
+                <li><i class="material-icons">groups</i> Grup Komunitas WA</li>
+                <li><i class="material-icons">location_on</i> Tempat Sesuai Permintaan / Home Visit</li>
+              </ul>
+            </div>
+            <div class="card-action center-align">
+              <a href="register.html?paket=family" class="btn blue darken-2 waves-effect waves-light">Daftar Paket Ini</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Us Section -->
+<section id="contact" class="contact grey lighten-3 scrollspy" style="padding: 60px 0;">
+  <div class="container">
+    <h3 class="light center grey-text text-darken-3">Contact Us</h3>
+    <div class="row">
+      
+      <!-- Google Maps -->
+<div class="col m6 s12">
+  <div class="card-panel">
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15937.061593558107!2d98.69277689683917!3d3.602953399999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30312e25c6c9167f%3A0xd6e86aa1aefdd8f4!2sKomplek%20Krakatau%20Mas%20Blok%20C12%2C%20Medan%2C%20Sumatera%20Utara%2C%20Indonesia!5e0!3m2!1sid!2sid!4v1714465833787!5m2!1sid!2sid" 
+      width="100%" height="350" style="border:0; border-radius:15px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+
+    <!-- Tombol View on Maps -->
+    <div class="center" style="margin-top: 20px;">
+      <a href="https://g.co/kgs/sPw1GBc" target="_blank" class="btn blue darken-2 waves-effect waves-light">
+        <i class="material-icons left">location_on</i>View on Maps
+      </a>
+    </div>
+
+  </div>
+</div>
+
+      <!-- Profile Info -->
+      <div class="col m6 s12">
+        <div class="card-panel center">
+          <img src="img/clients/reza-profile.png" alt="Profile Photo" class="circle responsive-img" style="width:250px;" data-aos="fade-up">
+          <h5>bang Reza</h5>
+          <p class="grey-text text-darken-2">Promotor | DevMob | Blogger</p>
+          <p class="flow-text" style="font-size:1.1rem;">Setiap Insan Istimewa. Jadi dirimu sendiri, dan jalani peran hidup sesuai dengan ingin-NYA</p>
+
+          <!-- Sosial Media Icons Only -->
+<div style="margin-top: 20px;">
+  <a href="https://wa.me/6281238173518?text=Hai%20Kak%2C%20saya%20tertarik%20dengan%20Promo%20STIFIn%20dari%20website%20ini.%20Boleh%20tau%20bagaimana%20caranya%3F" target="_blank">
+    <img src="img/clients/icon-whatsapp.png" alt="WhatsApp" style="width:40px; margin: 0 10px;">
+  </a>  
+  <a href="https://instagram.com/za_ru_zi" target="_blank">
+    <img src="img/clients/icon-instagram.png" alt="Instagram" style="width:40px; margin: 0 10px;">
+  </a>
+
+</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+  <!-- Flying Button -->
+<div class="sticky-register">
+  <a href="#paket" class="btn-large blue darken-2 waves-effect waves-light">
+    Daftar Sekarang
+  </a>
+</div>
+
+<!-- APP SECTION -->
+<section class="promo-app-section" data-aos="fade-up">
+  <div class="container">
+    <h4 class="center-align" style="margin-bottom: 30px; font-weight: 600;" data-aos="zoom-in">
+      Khusus buat kamu yang sudah Tes STIFIn
+    </h4>
+
+    <div class="row valign-wrapper">
+      <!-- Logo Playstore -->
+      <div class="col s12 m6 center-align" data-aos="fade-right"><a href="https://play.google.com/store/apps/details?id=com.friendlyedupreneur.stifinfamily&pcampaignid=web_share" target="_blank">
+  <img src="img/playstore-logo.png" alt="Download di Playstore" class="responsive-img" style="max-width: 180px;">
+</a>
+        <p class="grey-text">Tersedia di Google Play</p>
+      </div>
+
+      <!-- QR Code -->
+      <div class="col s12 m6 center-align" data-aos="fade-left">
+        <img src="img/qrcode_stifinapp.png" alt="QR Code Aplikasi" class="responsive-img" style="max-width: 160px;">
+        <p class="grey-text">Scan QR untuk mengunduh</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- Footer -->
+  <footer class="blue darken-2 white-text center">
+    <p class="flow-text" style="padding: 20px 0;">&copy; 2025 STIFIn Family Medan</p>
   </footer>
 
-  <div id="ramadhanBar" role="status">
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <div style="font-weight:900; font-size: 1.1rem;">🌙 Ramadhan Special</div>
-      <div style="opacity: 0.9;">Sisa <span id="ramadhanCount" style="font-weight: 800; color: #fde68a;">—</span></div>
-    </div>
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <a href="promo-stifin.html" style="background:#fff; color:#065f46; padding:8px 16px; border-radius:50px; font-weight:800; text-decoration: none;">Lihat Detail</a>
-      <button id="closeRamadhan" style="background:transparent; border:0; color:#fff; font-size:24px; cursor: pointer; padding: 0;">&times;</button>
-    </div>
-  </div>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
 
+      <!-- JavaScript Libraries -->
   <script src="js/materialize.min.js"></script>
   <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
-  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+  const swiper = new Swiper(".mySwiper", {
+  slidesPerView: 1,
+  loop: true,
+  autoplay: {
+    delay: 5000,
+    disableOnInteraction: false,
+  },
+  effect: 'fade',
+  fadeEffect: {
+    crossFade: true
+  },
+  centeredSlides: true,
+});
+</script>
 
+
+  <!-- JS -->
   <script>
-    // Materialize Init
-    M.Sidenav.init(document.querySelectorAll(".sidenav"));
-    M.Slider.init(document.querySelectorAll(".slider"), { indicators: false, height: 600, transition: 600, interval: 4000 });
-    M.Scrollspy.init(document.querySelectorAll(".scrollspy"), { scrollOffset: 80 });
+    // Materialize Sidenav
+    const sidenav = document.querySelectorAll(".sidenav");
+    M.Sidenav.init(sidenav);
 
-    // AOS
-    AOS.init({ once: true, offset: 50 });
-
-    // Swiper Testimoni
-    new Swiper(".mySwiper", {
-      slidesPerView: 1,
-      loop: true,
-      autoplay: { delay: 6000, disableOnInteraction: false },
-      effect: 'fade',
-      fadeEffect: { crossFade: true },
-      centeredSlides: true,
+    // Materialize Slider
+    const slider = document.querySelectorAll(".slider");
+    M.Slider.init(slider, {
+      indicators: false,
+      height: 600,
+      transition: 600,
+      interval: 3000,
     });
 
-    // Gallery Horizontal Scroll Logic
-    function scrollGallery(direction) {
-      const gallery = document.querySelector('.gallery-scroll');
-      const scrollAmount = 340; // width of card + gap
-      if (direction === 'left') {
-        gallery.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      } else {
-        gallery.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      }
+    // Materialize Scrollspy
+    const scroll = document.querySelectorAll(".scrollspy");
+    M.Scrollspy.init(scroll, {
+      scrollOffset: 100,
+    });
+
+    // AOS (Animate on Scroll)
+    AOS.init({
+      once: true, 
+    });
+
+    
+
+function scrollGallery(direction) {
+  const gallery = document.querySelector('.gallery-scroll');
+  const scrollAmount = 300;
+
+  if (direction === 'left') {
+    gallery.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  } else {
+    gallery.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }
+}
+  </script>
+
+  <!-- STICKY PROMO BAR -->
+<div id="ramadhanBar" role="status">
+  <div style="font-weight:900">🌙 Ramadhan Special</div>
+  <div>Sisa <span id="ramadhanCount">—</span></div>
+  <a href="promo-stifin.html" style="background:#fff;color:#065f46;padding:8px 12px;border-radius:8px;font-weight:800;">Detail</a>
+  <button id="closeRamadhan" style="background:transparent;border:0;color:#fff;font-size:18px;">✕</button>
+</div>
+
+<style>
+#ramadhanBar{
+  position:fixed;
+  left:12px;
+  right:12px;
+  bottom:12px;
+  z-index:9999;
+  background:linear-gradient(90deg,#064e3b,#166534);
+  color:#fff;
+  border-radius:14px;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  box-shadow:0 12px 30px rgba(0,0,0,.25);
+}
+</style>
+
+
+<script>
+(function(){
+  // Ganti tanggal akhir Ramadhan (contoh 30 Maret 2026)
+  const end = new Date('2026-03-20T23:59:59').getTime();
+  const el  = document.getElementById('ramadhanCount');
+  const bar = document.getElementById('ramadhanBar');
+
+  function update(){
+    const diff = end - Date.now();
+    if(diff <= 0){
+      el.textContent = "Berakhir";
+      return;
     }
 
-    // Ramadhan Bar Countdown Logic
-    (function(){
-      const end = new Date('2026-03-20T23:59:59').getTime();
-      const el  = document.getElementById('ramadhanCount');
-      const bar = document.getElementById('ramadhanBar');
+    const days = Math.floor(diff / 86400000);
+    el.textContent = days + " hari";
+  }
 
-      function update(){
-        const diff = end - Date.now();
-        if(diff <= 0){
-          el.textContent = "Berakhir";
-          return;
-        }
-        const days = Math.floor(diff / 86400000);
-        el.textContent = days + " hari";
-      }
+  update();
+  setInterval(update, 86400000);
 
-      update();
-      setInterval(update, 86400000);
+  document.getElementById("closeRamadhan")
+    .addEventListener("click", ()=> bar.style.display="none");
+})();
+</script>
 
-      document.getElementById("closeRamadhan").addEventListener("click", () => {
-        bar.style.display = "none";
-      });
-    })();
-  </script>
+
 </body>
 </html>
