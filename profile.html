@@ -1,367 +1,526 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Mobile Developer</title>
-    <style>
-        :root {
-            --bg-color: #050505;
-            --text-main: #e0e0e0;
-            --accent-color: #00ffcc;
-            --accent-secondary: #00ccff;
-            --card-bg: rgba(20, 20, 20, 0.6);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThinkDev | Portfolio</title>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-secondary: #0d0d0d;
+      --card: rgba(18,18,18,0.72);
+      --text: #f1f1f1;
+      --muted: #9d9d9d;
+      --accent: #00ffd0;
+      --accent2: #00bfff;
+      --border: rgba(255,255,255,0.08);
+      --glow: 0 0 40px rgba(0,255,208,0.12);
+    }
 
-        /* Futuristic Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-color); }
-        ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
 
-        /* Split Screen Layout */
-        .layout-wrapper {
-            display: flex;
-            width: 100%;
-            min-height: 100vh;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
 
-        /* Left Pane (Fixed Image Container) */
-        .left-pane-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 45%;
-            height: 100vh;
-            overflow: hidden;
-            z-index: 1;
-            /* Tambahkan kursor 'pointer' untuk memberi kesan interaktif */
-            cursor: pointer; 
-        }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(0,255,208,0.08), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(0,191,255,0.08), transparent 30%);
+      z-index: -1;
+    }
 
-        /* Left Pane (Image with Silhouette and Reveal Effect) */
-        .left-pane {
-            width: 100%;
-            height: 100%;
-            /* GANTI URL DI BAWAH INI DENGAN PATH FOTO ASLI BOS */
-            background-image: url('https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'); 
-            background-size: cover;
-            background-position: center;
-            /* Efek Siluet: Hitam pekat, kontras tinggi, dan grayscale */
-            filter: brightness(0.02) grayscale(100%) contrast(3);
-            /* Transisi lambat dan mulus untuk efek "revealing" */
-            transition: filter 1.5s ease-in-out, box-shadow 1s ease;
-            position: relative;
-        }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
 
-        /* Efek cahaya neon di pinggiran saat siluet aktif */
-        .left-pane::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            box-shadow: inset 0 0 50px rgba(0, 255, 204, 0.5);
-            transition: opacity 1.5s ease;
-            pointer-events: none; /* Cahaya tidak menghalangi interaksi */
-        }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 20px;
+    }
 
-        /* Efek fade ke kanan agar tidak ada batasan garis */
-        .left-pane::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, transparent, var(--bg-color));
-            z-index: 2;
-        }
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
 
-        /* === Efek Reveal saat Hover (Desktop) === */
-        .left-pane-container:hover .left-pane {
-            /* Kembalikan ke gambar asli: Terang, berwarna, kontras normal */
-            filter: brightness(1) grayscale(0%) contrast(1);
-        }
+    .left {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 42%;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
 
-        /* Matikan cahaya neon pinggiran saat gambar asli muncul */
-        .left-pane-container:hover .left-pane::before {
-            opacity: 0;
-        }
+    .left img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.12) grayscale(100%) contrast(1.5);
+      transition: 1.2s ease;
+      transform: scale(1.05);
+    }
 
-        /* Right Pane (Scrolling Content) */
-        .right-pane {
-            margin-left: 45%;
-            width: 55%;
-            padding: 80px 60px;
-            z-index: 3;
-            background-color: var(--bg-color);
-            min-height: 100vh;
-        }
+    .left:hover img {
+      filter: brightness(1) grayscale(0%);
+      transform: scale(1);
+    }
 
-        /* Typography & Header */
-        header {
-            margin-bottom: 60px;
-            animation: fadeInDown 1s ease-out;
-        }
+    .left::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 45%;
+      height: 100%;
+      background: linear-gradient(to right, transparent, var(--bg));
+    }
 
-        h1 {
-            font-size: 4rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #fff;
-            text-shadow: 0 0 10px var(--accent-color);
-            margin-bottom: 5px;
-            line-height: 1.1;
-        }
+    .left-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent 50%);
+      display: flex;
+      align-items: flex-end;
+      padding: 60px;
+      z-index: 2;
+    }
 
-        .subtitle {
-            font-size: 1.3rem;
-            color: var(--accent-secondary);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-top: 10px;
-        }
+    .left-overlay-content h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+    }
 
-        /* Sections */
-        section {
-            margin-bottom: 60px;
-            animation: fadeInUp 1s ease-out both;
-        }
-        section:nth-child(2) { animation-delay: 0.2s; }
-        section:nth-child(3) { animation-delay: 0.4s; }
-        section:nth-child(4) { animation-delay: 0.6s; }
-        section:nth-child(5) { animation-delay: 0.8s; }
+    .left-overlay-content p {
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: 0.95rem;
+    }
 
-        h2 {
-            font-size: 2rem;
-            margin-bottom: 25px;
-            border-left: 4px solid var(--accent-color);
-            padding-left: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #fff;
-        }
+    .right {
+      margin-left: 42%;
+      width: 58%;
+      padding: 80px 70px;
+    }
 
-        /* Cards */
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
+    .hero {
+      margin-bottom: 100px;
+    }
 
-        .card {
-            background: var(--card-bg);
-            border: 1px solid rgba(0, 255, 204, 0.15);
-            padding: 30px;
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
-        }
+    .hero .mini {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 18px;
+      font-size: 0.9rem;
+    }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
+    .hero h1 {
+      font-size: 5rem;
+      line-height: 1;
+      margin-bottom: 30px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-color);
-            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.05);
-            background: rgba(20, 20, 20, 0.9);
-        }
+    .hero h1 span {
+      color: var(--accent);
+      text-shadow: 0 0 20px rgba(0,255,208,0.4);
+    }
 
-        .card:hover::before {
-            transform: translateX(100%);
-        }
+    .hero p {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
 
-        .card h3 {
-            color: var(--accent-color);
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-            letter-spacing: 1px;
-        }
+    section {
+      margin-bottom: 90px;
+    }
 
-        /* Skills Tags */
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      position: relative;
+      padding-left: 18px;
+    }
 
-        .skill-tag {
-            background: rgba(0, 255, 204, 0.05);
-            border: 1px solid rgba(0, 255, 204, 0.5);
-            color: var(--accent-color);
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: all 0.3s;
-        }
+    .section-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 5px;
+      width: 4px;
+      height: 85%;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2));
+      border-radius: 20px;
+    }
 
-        .skill-tag:hover {
-            background: var(--accent-color);
-            color: var(--bg-color);
-            font-weight: bold;
-        }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 35px;
+      transition: 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--glow);
+    }
 
-        /* Animations */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(0,255,208,0.25);
+    }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      transition: 0.8s;
+    }
 
-        /* Responsive Design untuk HP */
-        @media (max-width: 900px) {
-            .left-pane-container {
-                position: relative;
-                width: 100%;
-                height: 60vh;
-            }
-            .left-pane::after {
-                width: 100%;
-                height: 50%;
-                top: auto;
-                bottom: 0;
-                background: linear-gradient(to bottom, transparent, var(--bg-color));
-            }
-            .right-pane {
-                margin-left: 0;
-                width: 100%;
-                padding: 40px 20px;
-                margin-top: -50px;
-            }
-            h1 { font-size: 3rem; }
-        }
-    </style>
+    .card:hover::before {
+      left: 100%;
+    }
+
+    .card h3 {
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+      color: var(--accent);
+    }
+
+    .card p {
+      color: #cfcfcf;
+    }
+
+    .grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .two-col {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .skill {
+      padding: 10px 18px;
+      border-radius: 50px;
+      border: 1px solid rgba(0,255,208,0.25);
+      color: var(--accent);
+      background: rgba(0,255,208,0.05);
+      transition: 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .skill:hover {
+      background: var(--accent);
+      color: #000;
+      transform: translateY(-2px);
+    }
+
+    .highlight {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .quote {
+      margin-top: 30px;
+      border-left: 3px solid var(--accent);
+      padding-left: 20px;
+      color: #d7d7d7;
+      font-style: italic;
+    }
+
+    footer {
+      margin-top: 80px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      color: var(--muted);
+    }
+
+    .contact a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    @media(max-width: 1100px){
+      .hero h1 {
+        font-size: 4rem;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width: 900px){
+      .layout {
+        flex-direction: column;
+      }
+
+      .left {
+        position: relative;
+        width: 100%;
+        height: 65vh;
+      }
+
+      .left::after {
+        width: 100%;
+        height: 40%;
+        top: auto;
+        bottom: 0;
+        background: linear-gradient(to bottom, transparent, var(--bg));
+      }
+
+      .right {
+        margin-left: 0;
+        width: 100%;
+        padding: 50px 24px;
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+      }
+
+      .left-overlay {
+        padding: 30px;
+      }
+
+      .left-overlay-content h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="layout-wrapper">
-        
-        <!-- Sisi Kiri: Kontainer Foto Profil (Satu-satunya yang Interaktif) -->
-        <div class="left-pane-container" id="profilePane">
-            <div class="left-pane"></div>
+  <div class="layout">
+
+    <div class="left">
+      <!-- GANTI FOTO INI DENGAN FOTO BOS SENDIRI -->
+      <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1200&auto=format&fit=crop" alt="ThinkDev">
+
+      <div class="left-overlay">
+        <div class="left-overlay-content">
+          <h2>THINKDEV</h2>
+          <p>Building Future Digital Ecosystems</p>
         </div>
-
-        <!-- Sisi Kanan: Konten Portofolio (Scrolling) -->
-        <div class="right-pane">
-            
-            <header>
-                <h1>Ti-Code</h1>
-                <p class="subtitle">Mobile App Developer & System Architect</p>
-            </header>
-
-            <section>
-                <h2>Sistem Inti (About Me)</h2>
-                <div class="card">
-                    <p>Membangun arsitektur digital dengan presisi logika tingkat tinggi. Sebagai seorang Mobile Developer yang berfokus pada ekosistem Flutter dan Dart, saya merancang aplikasi yang tidak hanya memiliki antarmuka futuristik, tetapi juga performa yang ringan dan <em>scalable</em>. Pendekatan analitis memungkinkan saya membedah masalah kompleks menjadi kode yang rapi, efisien, dan terstruktur kuat.</p>
-                </div>
-            </section>
-
-            <section>
-                <h2>Tech Stack & Keahlian</h2>
-                <div class="card">
-                    <div class="skills-container">
-                        <span class="skill-tag">Flutter</span>
-                        <span class="skill-tag">Dart</span>
-                        <span class="skill-tag">Android Studio</span>
-                        <span class="skill-tag">Firebase</span>
-                        <span class="skill-tag">HTML5 Game Engine</span>
-                        <span class="skill-tag">System Architecture</span>
-                        <span class="skill-tag">UI/UX Logic</span>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2>Log Proyek (Portfolio)</h2>
-                <div class="grid">
-                    <div class="card">
-                        <h3>Super App 12-in-1</h3>
-                        <p>Membangun infrastruktur aplikasi <em>all-in-one</em> dengan <em>dashboard</em> terpusat. Menggabungkan 12 modul utilitas fungsional ke dalam satu antarmuka yang mulus tanpa mengorbankan stabilitas dan performa <em>load time</em>.</p>
-                    </div>
-
-                    <div class="card">
-                        <h3>Daily Notes & Database</h3>
-                        <p>Aplikasi produktivitas pencatatan berbasis tanggal dengan integrasi penyimpanan memori internal (Permanent Database) yang dirancang khusus untuk akses <em>offline</em> instan.</p>
-                    </div>
-
-                    <div class="card">
-                        <h3>Sistem Gamifikasi & SAMDHI</h3>
-                        <p>Pengembangan arsitektur dunia <em>game</em> web "SAMDHI" dan integrasi <em>mini-games</em> HTML5 ke dalam aplikasi <em>mobile</em>, lengkap dengan perancangan sistem logika XP dan <em>milestone badge</em>.</p>
-                    </div>
-
-                    <div class="card">
-                        <h3>Audio Streaming App</h3>
-                        <p>Pengembangan arsitektur aplikasi <em>streaming</em> musik yang difokuskan pada manajemen <em>cache offline</em> untuk file audio berukuran besar secara <em>seamless</em>.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2>Data Historis (Experience)</h2>
-                <div class="grid">
-                    <div class="card">
-                        <h3>Founder & Lead Developer</h3>
-                        <p><strong>STIFIn AppDev</strong></p>
-                        <p style="margin-top:10px;">Memimpin pengembangan perangkat lunak dari hulu ke hilir. Menerapkan metodologi pengembangan yang terstruktur, mulai dari desain kerangka kerja hingga proses <em>deployment</em> akhir.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Trainer Eksekutif & Konsultan</h3>
-                        <p>Mendelegasikan materi analitis, mengoptimalkan potensi sumber daya, dan merancang sistem edukasi berbasis teknologi yang tepat guna bagi pengembangan individu.</p>
-                    </div>
-                </div>
-            </section>
-
-            <footer style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; color: #777; font-size: 0.9rem;">
-                <p>&copy; 2026 Ti-Code / STIFIn AppDev</p>
-            </footer>
-
-        </div>
+      </div>
     </div>
 
-    <!-- JavaScript sederhana untuk menangani "Tap" di Mobile -->
-    <script>
-        document.getElementById('profilePane').addEventListener('click', function() {
-            const pane = this.querySelector('.left-pane');
-            // Cek apakah efek sudah aktif. Jika ya, matikan. Jika tidak, hidupkan.
-            if (pane.style.filter === 'brightness(1) grayscale(0%) contrast(1)') {
-                // Kembalikan ke siluet
-                pane.style.filter = 'brightness(0.02) grayscale(100%) contrast(3)';
-                pane.style.boxShadow = 'inset 0 0 50px rgba(0, 255, 204, 0.5)';
-            } else {
-                // Munculkan foto asli
-                pane.style.filter = 'brightness(1) grayscale(0%) contrast(1)';
-                pane.style.boxShadow = 'none';
-            }
-        });
-    </script>
+    <div class="right">
+
+      <section class="hero">
+        <div class="mini">Portfolio 2026</div>
+
+        <h1>
+          MOBILE ENGINEER <br>
+          & <span>SYSTEM ARCHITECT</span>
+        </h1>
+
+        <p>
+          Membangun sistem digital modern yang bukan hanya terlihat futuristik,
+          tetapi juga dirancang untuk bertahan, berkembang, dan memberikan pengalaman pengguna yang kuat.
+        </p>
+
+        <div class="quote">
+          “Technology is not only about code. It is about creating systems that move people forward.”
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">About Me</h2>
+
+        <div class="card">
+          <p>
+            Saya adalah seorang <span class="highlight">Mobile Developer</span> dan
+            <span class="highlight">System Architect</span> yang berfokus pada pengembangan aplikasi modern,
+            scalable system architecture, dan interactive digital ecosystems.
+          </p>
+
+          <br>
+
+          <p>
+            Selama beberapa tahun terakhir, saya membangun berbagai proyek mulai dari aplikasi edukasi,
+            platform produktivitas, audio streaming, hingga sistem gamifikasi interaktif.
+          </p>
+
+          <br>
+
+          <p>
+            Pendekatan saya menggabungkan technical architecture, product thinking,
+            user psychology, dan future-oriented development.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Technology Stack</h2>
+
+        <div class="card">
+          <div class="skills">
+            <div class="skill">Flutter</div>
+            <div class="skill">Dart</div>
+            <div class="skill">Java</div>
+            <div class="skill">Firebase</div>
+            <div class="skill">SQLite</div>
+            <div class="skill">REST API</div>
+            <div class="skill">Android Studio</div>
+            <div class="skill">HTML5</div>
+            <div class="skill">UI/UX Logic</div>
+            <div class="skill">System Architecture</div>
+            <div class="skill">Gamification</div>
+            <div class="skill">AI Workflow</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Featured Projects</h2>
+
+        <div class="grid">
+
+          <div class="card">
+            <h3>TIME — ThiIsMathEducation</h3>
+            <p>
+              Platform edukasi matematika modern berbasis gamifikasi yang dirancang untuk SD, SMP, SMA hingga umum.
+              Mengintegrasikan challenge system, video learning, ranking, dan interactive learning experience.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Super App Ecosystem</h3>
+            <p>
+              Konsep aplikasi modular multi-fungsi dengan centralized dashboard system dan lightweight architecture
+              untuk menciptakan seamless user experience.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>SAMDHI — Interactive World</h3>
+            <p>
+              Pengembangan sistem dunia interaktif berbasis web yang menggabungkan mini-games,
+              XP system, achievement mechanics, dan progression architecture.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Audio Stream Platform</h3>
+            <p>
+              Sistem audio streaming modern dengan smart offline caching dan seamless playback experience
+              untuk performa yang lebih stabil dan efisien.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Experience</h2>
+
+        <div class="grid two-col">
+
+          <div class="card">
+            <h3>Founder & Lead Developer</h3>
+            <p>
+              Memimpin pengembangan berbagai sistem digital mulai dari perencanaan,
+              desain arsitektur, pengembangan fitur, hingga deployment.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Technology Trainer & Consultant</h3>
+            <p>
+              Mengembangkan pendekatan edukasi berbasis teknologi dan analisis sistem
+              untuk membantu individu maupun komunitas memahami pengembangan digital secara strategis.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Development Philosophy</h2>
+
+        <div class="card">
+          <p>
+            Saya percaya bahwa masa depan teknologi tidak hanya dibangun oleh programmer.
+            Masa depan dibangun oleh individu yang mampu menghubungkan logic, creativity,
+            system thinking, human experience, dan long-term vision.
+          </p>
+
+          <br>
+
+          <p>
+            Karena itu, setiap proyek yang saya bangun selalu memiliki tujuan lebih besar daripada sekadar aplikasi.
+          </p>
+
+          <br>
+
+          <h3 style="margin-bottom:0;">I Build Ecosystems.</h3>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Contact</h2>
+
+        <div class="card contact">
+          <p>Let’s build something impactful together 🚀</p>
+
+          <br>
+
+          <p>Email : <a href="#">your@email.com</a></p>
+          <p>Instagram : <a href="#">@thinkdev</a></p>
+          <p>Website : <a href="https://stifinfamilymedan.com">stifinfamilymedan.com</a></p>
+        </div>
+      </section>
+
+      <footer>
+        <div>© 2026 ThinkDev</div>
+        <div>Building Future Digital Ecosystems</div>
+      </footer>
+
+    </div>
+
+  </div>
 
 </body>
 </html>
