@@ -39,21 +39,45 @@
             min-height: 100vh;
         }
 
-        /* Left Pane (Fixed Image) */
-        .left-pane {
+        /* Left Pane (Fixed Image Container) */
+        .left-pane-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 45%;
             height: 100vh;
-            /* GANTI URL DI BAWAH INI DENGAN LINK/PATH FOTO BOS */
+            overflow: hidden;
+            z-index: 1;
+            /* Tambahkan kursor 'pointer' untuk memberi kesan interaktif */
+            cursor: pointer; 
+        }
+
+        /* Left Pane (Image with Silhouette and Reveal Effect) */
+        .left-pane {
+            width: 100%;
+            height: 100%;
+            /* GANTI URL DI BAWAH INI DENGAN PATH FOTO ASLI BOS */
             background-image: url('https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'); 
             background-size: cover;
             background-position: center;
-            z-index: 1;
+            /* Efek Siluet: Hitam pekat, kontras tinggi, dan grayscale */
+            filter: brightness(0.02) grayscale(100%) contrast(3);
+            /* Transisi lambat dan mulus untuk efek "revealing" */
+            transition: filter 1.5s ease-in-out, box-shadow 1s ease;
+            position: relative;
         }
 
-        /* Efek fade (melebur) ke arah kanan agar tidak ada batasan garis */
+        /* Efek cahaya neon di pinggiran saat siluet aktif */
+        .left-pane::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 0 50px rgba(0, 255, 204, 0.5);
+            transition: opacity 1.5s ease;
+            pointer-events: none; /* Cahaya tidak menghalangi interaksi */
+        }
+
+        /* Efek fade ke kanan agar tidak ada batasan garis */
         .left-pane::after {
             content: '';
             position: absolute;
@@ -63,6 +87,17 @@
             height: 100%;
             background: linear-gradient(to right, transparent, var(--bg-color));
             z-index: 2;
+        }
+
+        /* === Efek Reveal saat Hover (Desktop) === */
+        .left-pane-container:hover .left-pane {
+            /* Kembalikan ke gambar asli: Terang, berwarna, kontras normal */
+            filter: brightness(1) grayscale(0%) contrast(1);
+        }
+
+        /* Matikan cahaya neon pinggiran saat gambar asli muncul */
+        .left-pane-container:hover .left-pane::before {
+            opacity: 0;
         }
 
         /* Right Pane (Scrolling Content) */
@@ -203,7 +238,7 @@
 
         /* Responsive Design untuk HP */
         @media (max-width: 900px) {
-            .left-pane {
+            .left-pane-container {
                 position: relative;
                 width: 100%;
                 height: 60vh;
@@ -219,7 +254,7 @@
                 margin-left: 0;
                 width: 100%;
                 padding: 40px 20px;
-                margin-top: -50px; /* Agar konten sedikit naik menimpa fade */
+                margin-top: -50px;
             }
             h1 { font-size: 3rem; }
         }
@@ -229,10 +264,12 @@
 
     <div class="layout-wrapper">
         
-        <!-- Sisi Kiri: Foto Profil Statis -->
-        <div class="left-pane"></div>
+        <!-- Sisi Kiri: Kontainer Foto Profil (Satu-satunya yang Interaktif) -->
+        <div class="left-pane-container" id="profilePane">
+            <div class="left-pane"></div>
+        </div>
 
-        <!-- Sisi Kanan: Konten Portofolio -->
+        <!-- Sisi Kanan: Konten Portofolio (Scrolling) -->
         <div class="right-pane">
             
             <header>
@@ -308,6 +345,23 @@
 
         </div>
     </div>
+
+    <!-- JavaScript sederhana untuk menangani "Tap" di Mobile -->
+    <script>
+        document.getElementById('profilePane').addEventListener('click', function() {
+            const pane = this.querySelector('.left-pane');
+            // Cek apakah efek sudah aktif. Jika ya, matikan. Jika tidak, hidupkan.
+            if (pane.style.filter === 'brightness(1) grayscale(0%) contrast(1)') {
+                // Kembalikan ke siluet
+                pane.style.filter = 'brightness(0.02) grayscale(100%) contrast(3)';
+                pane.style.boxShadow = 'inset 0 0 50px rgba(0, 255, 204, 0.5)';
+            } else {
+                // Munculkan foto asli
+                pane.style.filter = 'brightness(1) grayscale(0%) contrast(1)';
+                pane.style.boxShadow = 'none';
+            }
+        });
+    </script>
 
 </body>
 </html>
