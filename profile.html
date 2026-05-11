@@ -8,9 +8,9 @@
         :root {
             --bg-color: #050505;
             --text-main: #e0e0e0;
-            --accent-color: #00ffcc; /* Neon Cyan */
+            --accent-color: #00ffcc;
             --accent-secondary: #00ccff;
-            --card-bg: rgba(20, 20, 20, 0.8);
+            --card-bg: rgba(20, 20, 20, 0.6);
         }
 
         * {
@@ -25,79 +25,116 @@
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, transparent 70%);
         }
 
         /* Futuristic Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-color); }
-        ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 20px;
+        /* Split Screen Layout */
+        .layout-wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
         }
 
-        /* Header Section */
+        /* Left Pane (Fixed Image) */
+        .left-pane {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 45%;
+            height: 100vh;
+            /* GANTI URL DI BAWAH INI DENGAN LINK/PATH FOTO BOS */
+            background-image: url('https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'); 
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+        }
+
+        /* Efek fade (melebur) ke arah kanan agar tidak ada batasan garis */
+        .left-pane::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, var(--bg-color));
+            z-index: 2;
+        }
+
+        /* Right Pane (Scrolling Content) */
+        .right-pane {
+            margin-left: 45%;
+            width: 55%;
+            padding: 80px 60px;
+            z-index: 3;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+        }
+
+        /* Typography & Header */
         header {
-            text-align: center;
             margin-bottom: 60px;
             animation: fadeInDown 1s ease-out;
         }
 
         h1 {
-            font-size: 3.5rem;
+            font-size: 4rem;
             text-transform: uppercase;
             letter-spacing: 4px;
             color: #fff;
-            text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
-            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--accent-color);
+            margin-bottom: 5px;
+            line-height: 1.1;
         }
 
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--accent-secondary);
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-transform: uppercase;
+            margin-top: 10px;
         }
 
-        /* Section Styling */
+        /* Sections */
         section {
-            margin-bottom: 50px;
+            margin-bottom: 60px;
             animation: fadeInUp 1s ease-out both;
         }
-
         section:nth-child(2) { animation-delay: 0.2s; }
         section:nth-child(3) { animation-delay: 0.4s; }
         section:nth-child(4) { animation-delay: 0.6s; }
+        section:nth-child(5) { animation-delay: 0.8s; }
 
         h2 {
             font-size: 2rem;
-            margin-bottom: 20px;
-            border-left: 5px solid var(--accent-color);
+            margin-bottom: 25px;
+            border-left: 4px solid var(--accent-color);
             padding-left: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            color: #fff;
         }
 
-        /* Grid for Cards */
+        /* Cards */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: 1fr;
             gap: 20px;
         }
 
-        /* Futuristic Cards */
         .card {
             background: var(--card-bg);
-            border: 1px solid rgba(0, 255, 204, 0.2);
-            padding: 25px;
-            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 204, 0.15);
+            padding: 30px;
+            border-radius: 12px;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
         }
 
         .card::before {
@@ -107,13 +144,14 @@
             width: 100%; height: 2px;
             background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
             transform: translateX(-100%);
-            transition: transform 0.5s ease;
+            transition: transform 0.6s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
             border-color: var(--accent-color);
-            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.05);
+            background: rgba(20, 20, 20, 0.9);
         }
 
         .card:hover::before {
@@ -122,26 +160,34 @@
 
         .card h3 {
             color: var(--accent-color);
-            margin-bottom: 10px;
-            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
         }
 
         /* Skills Tags */
         .skills-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
         }
 
         .skill-tag {
-            background: rgba(0, 255, 204, 0.1);
-            border: 1px solid var(--accent-color);
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.5);
             color: var(--accent-color);
-            padding: 5px 15px;
-            border-radius: 20px;
+            padding: 8px 18px;
+            border-radius: 30px;
             font-size: 0.9rem;
             letter-spacing: 1px;
             text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .skill-tag:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            font-weight: bold;
         }
 
         /* Animations */
@@ -155,93 +201,112 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
-            color: #888;
+        /* Responsive Design untuk HP */
+        @media (max-width: 900px) {
+            .left-pane {
+                position: relative;
+                width: 100%;
+                height: 60vh;
+            }
+            .left-pane::after {
+                width: 100%;
+                height: 50%;
+                top: auto;
+                bottom: 0;
+                background: linear-gradient(to bottom, transparent, var(--bg-color));
+            }
+            .right-pane {
+                margin-left: 0;
+                width: 100%;
+                padding: 40px 20px;
+                margin-top: -50px; /* Agar konten sedikit naik menimpa fade */
+            }
+            h1 { font-size: 3rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Header Profil -->
-        <header>
-            <h1>Ti-Code</h1>
-            <p class="subtitle">Mobile App Developer & System Architect</p>
-        </header>
+    <div class="layout-wrapper">
+        
+        <!-- Sisi Kiri: Foto Profil Statis -->
+        <div class="left-pane"></div>
 
-        <!-- Tentang Saya -->
-        <section>
-            <h2>Sistem Inti (About Me)</h2>
-            <div class="card">
-                <p>Membangun arsitektur digital dengan presisi logika tingkat tinggi. Sebagai seorang Mobile Developer yang berfokus pada ekosistem Flutter dan Dart, saya merancang aplikasi yang tidak hanya memiliki antarmuka futuristik, tetapi juga performa yang ringan dan *scalable*. Pendekatan *Thinking Introvert* (Ti) memungkinkan saya membedah masalah kompleks menjadi kode yang rapi, efisien, dan terstruktur.</p>
-            </div>
-        </section>
+        <!-- Sisi Kanan: Konten Portofolio -->
+        <div class="right-pane">
+            
+            <header>
+                <h1>Ti-Code</h1>
+                <p class="subtitle">Mobile App Developer & System Architect</p>
+            </header>
 
-        <!-- Tech Stack -->
-        <section>
-            <h2>Tech Stack & Keahlian</h2>
-            <div class="card">
-                <div class="skills-container">
-                    <span class="skill-tag">Flutter</span>
-                    <span class="skill-tag">Dart</span>
-                    <span class="skill-tag">Android Studio</span>
-                    <span class="skill-tag">Firebase</span>
-                    <span class="skill-tag">HTML5 Game Engine</span>
-                    <span class="skill-tag">System Architecture</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Portofolio / Pencapaian -->
-        <section>
-            <h2>Log Proyek (Portfolio)</h2>
-            <div class="grid">
-                
+            <section>
+                <h2>Sistem Inti (About Me)</h2>
                 <div class="card">
-                    <h3>Super App 12-in-1</h3>
-                    <p>Membangun infrastruktur aplikasi *all-in-one* dengan *dashboard* terpusat. Menggabungkan 12 modul utilitas (termasuk BMI Calculator & To-Do List) dalam satu antarmuka yang mulus tanpa mengorbankan performa *load time*.</p>
+                    <p>Membangun arsitektur digital dengan presisi logika tingkat tinggi. Sebagai seorang Mobile Developer yang berfokus pada ekosistem Flutter dan Dart, saya merancang aplikasi yang tidak hanya memiliki antarmuka futuristik, tetapi juga performa yang ringan dan <em>scalable</em>. Pendekatan analitis memungkinkan saya membedah masalah kompleks menjadi kode yang rapi, efisien, dan terstruktur kuat.</p>
                 </div>
+            </section>
 
+            <section>
+                <h2>Tech Stack & Keahlian</h2>
                 <div class="card">
-                    <h3>Daily Notes & Database</h3>
-                    <p>Aplikasi produktivitas pencatatan berbasis tanggal dengan integrasi penyimpanan memori internal (Permanent Database) yang dirancang khusus untuk akses *offline* yang secepat kilat.</p>
+                    <div class="skills-container">
+                        <span class="skill-tag">Flutter</span>
+                        <span class="skill-tag">Dart</span>
+                        <span class="skill-tag">Android Studio</span>
+                        <span class="skill-tag">Firebase</span>
+                        <span class="skill-tag">HTML5 Game Engine</span>
+                        <span class="skill-tag">System Architecture</span>
+                        <span class="skill-tag">UI/UX Logic</span>
+                    </div>
                 </div>
+            </section>
 
-                <div class="card">
-                    <h3>Sistem Gamifikasi & SAMDHI</h3>
-                    <p>Pengembangan dunia *game* web-based "SAMDHI" dan integrasi *mini-games* HTML5 (seperti Tebak Nada Emosi) ke dalam aplikasi *mobile*, serta perancangan sistem logika XP dan *milestone badge* untuk STIFIn Challenge.</p>
+            <section>
+                <h2>Log Proyek (Portfolio)</h2>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Super App 12-in-1</h3>
+                        <p>Membangun infrastruktur aplikasi <em>all-in-one</em> dengan <em>dashboard</em> terpusat. Menggabungkan 12 modul utilitas fungsional ke dalam satu antarmuka yang mulus tanpa mengorbankan stabilitas dan performa <em>load time</em>.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Daily Notes & Database</h3>
+                        <p>Aplikasi produktivitas pencatatan berbasis tanggal dengan integrasi penyimpanan memori internal (Permanent Database) yang dirancang khusus untuk akses <em>offline</em> instan.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Sistem Gamifikasi & SAMDHI</h3>
+                        <p>Pengembangan arsitektur dunia <em>game</em> web "SAMDHI" dan integrasi <em>mini-games</em> HTML5 ke dalam aplikasi <em>mobile</em>, lengkap dengan perancangan sistem logika XP dan <em>milestone badge</em>.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Audio Streaming App</h3>
+                        <p>Pengembangan arsitektur aplikasi <em>streaming</em> musik yang difokuskan pada manajemen <em>cache offline</em> untuk file audio berukuran besar secara <em>seamless</em>.</p>
+                    </div>
                 </div>
+            </section>
 
-                <div class="card">
-                    <h3>Audio Streaming App (In-Dev)</h3>
-                    <p>Pengembangan arsitektur aplikasi *streaming* musik (*Spotify-clone*) menggunakan Flutter dan Firebase, difokuskan pada manajemen *cache offline* untuk file MP3 berukuran besar.</p>
+            <section>
+                <h2>Data Historis (Experience)</h2>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Founder & Lead Developer</h3>
+                        <p><strong>STIFIn AppDev</strong></p>
+                        <p style="margin-top:10px;">Memimpin pengembangan perangkat lunak dari hulu ke hilir. Menerapkan metodologi pengembangan yang terstruktur, mulai dari desain kerangka kerja hingga proses <em>deployment</em> akhir.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Trainer Eksekutif & Konsultan</h3>
+                        <p>Mendelegasikan materi analitis, mengoptimalkan potensi sumber daya, dan merancang sistem edukasi berbasis teknologi yang tepat guna bagi pengembangan individu.</p>
+                    </div>
                 </div>
+            </section>
 
-            </div>
-        </section>
+            <footer style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; color: #777; font-size: 0.9rem;">
+                <p>&copy; 2026 Ti-Code / STIFIn AppDev</p>
+            </footer>
 
-        <!-- Pendidikan & Pengalaman -->
-        <section>
-            <h2>Data Historis (Experience)</h2>
-            <div class="card">
-                <h3>Founder & Lead Developer - STIFIn AppDev</h3>
-                <p>Memimpin pengembangan perangkat lunak dari hulu ke hilir. Menerapkan metodologi pengembangan yang terstruktur, mulai dari desain *wireframe* hingga *deployment*.</p>
-                <br>
-                <h3>Promotor & Trainer Eksekutif</h3>
-                <p>Menerapkan pendekatan analitis (*Thinking*) untuk mendelegasikan materi pelatihan, mengoptimalkan SDM, dan merancang sistem edukasi berbasis teknologi yang tepat guna.</p>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer>
-            <p>&copy; 2026 Ti-Code / STIFIn AppDev | Initialized by Bos.</p>
-        </footer>
+        </div>
     </div>
 
 </body>
