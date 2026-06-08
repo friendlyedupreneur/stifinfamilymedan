@@ -3,160 +3,737 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Insight Couple Berdasarkan STIFIn | STIFIn Family Medan</title>
-  <meta name="description" content="Kenali pola cinta, komunikasi, potensi konflik, dan cara memahami pasangan berdasarkan Personality Genetic STIFIn." />
+  <title>Peta Keluarga Berdasarkan STIFIn | STIFIn Family Medan</title>
+  <meta name="description" content="Kenali pola komunikasi, kebutuhan emosi, potensi benturan, dan peran alami keluarga berdasarkan Personality Genetic STIFIn." />
 
   <style>
     :root {
-      --primary: #be123c;
-      --primary-2: #e11d48;
-      --primary-soft: #ffe4e6;
-      --secondary: #fbbf24;
-      --dark: #1f1020;
-      --muted: #735466;
-      --light: #fff7f8;
+      --primary: #15803d;
+      --primary-2: #22c55e;
+      --primary-soft: #dcfce7;
+      --secondary: #facc15;
+      --dark: #102116;
+      --muted: #52685a;
+      --light: #f7fff9;
       --white: #ffffff;
-      --border: #f3d5dc;
-      --shadow: 0 22px 48px rgba(190, 18, 60, 0.14);
+      --border: #d7f2df;
+      --shadow: 0 22px 48px rgba(21, 128, 61, 0.13);
       --radius-lg: 30px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, rgba(251,191,36,.18), transparent 32%), radial-gradient(circle at top right, rgba(225,29,72,.16), transparent 34%), linear-gradient(180deg,#fff7f8,#fff1f3);
-      color: var(--dark); line-height: 1.6;
+      background:
+        radial-gradient(circle at top left, rgba(250, 204, 21, 0.18), transparent 32%),
+        radial-gradient(circle at top right, rgba(34, 197, 94, 0.16), transparent 34%),
+        linear-gradient(180deg, #f7fff9, #effdf4);
+      color: var(--dark);
+      line-height: 1.6;
     }
-    a { color: inherit; text-decoration: none; }
-    .page { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
-    .navbar { position: sticky; top: 0; z-index: 99; backdrop-filter: blur(18px); background: rgba(255,247,248,.84); border-bottom: 1px solid rgba(243,213,220,.9); }
-    .navbar-inner { width: min(1120px, calc(100% - 32px)); margin: 0 auto; min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 950; letter-spacing: -.02em; }
-    .brand-mark { width: 42px; height: 42px; border-radius: 15px; display: grid; place-items: center; background: linear-gradient(135deg,var(--primary),#fb7185); color: white; box-shadow: 0 12px 25px rgba(190,18,60,.25); }
-    .brand small { display: block; font-size: 12px; color: var(--muted); font-weight: 800; margin-top: -3px; }
-    .nav-cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px; border-radius: 999px; background: var(--dark); color: white; font-weight: 900; font-size: 14px; box-shadow: 0 14px 26px rgba(31,16,32,.16); }
-    .hero { padding: 64px 0 34px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 34px; align-items: center; }
-    .badge { width: fit-content; display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; background: white; border: 1px solid var(--border); color: var(--primary); font-weight: 950; font-size: 13px; box-shadow: 0 10px 20px rgba(190,18,60,.06); margin-bottom: 18px; }
-    .hero h1 { font-size: clamp(36px,6vw,68px); line-height: .98; letter-spacing: -.06em; margin-bottom: 20px; }
-    .hero h1 span { color: var(--primary); }
-    .hero p { font-size: clamp(16px,2.3vw,20px); color: var(--muted); max-width: 650px; margin-bottom: 28px; }
-    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-    .btn { border: 0; cursor: pointer; border-radius: 999px; padding: 14px 20px; font-weight: 950; display: inline-flex; align-items: center; justify-content: center; gap: 9px; transition: .25s ease; font-size: 15px; }
-    .btn-primary { background: linear-gradient(135deg,var(--primary),var(--primary-2)); color: white; box-shadow: 0 18px 34px rgba(190,18,60,.26); }
-    .btn-primary:hover, .btn-secondary:hover { transform: translateY(-2px); }
-    .btn-secondary { background: white; color: var(--dark); border: 1px solid var(--border); }
-    .hero-card { position: relative; background: rgba(255,255,255,.88); border: 1px solid rgba(243,213,220,.95); box-shadow: var(--shadow); border-radius: var(--radius-lg); padding: 24px; overflow: hidden; }
-    .hero-card::before { content: ""; position: absolute; width: 190px; height: 190px; border-radius: 999px; background: rgba(251,191,36,.2); top: -80px; right: -70px; }
-    .mini-title { position: relative; font-size: 13px; color: var(--muted); font-weight: 950; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px; }
-    .path-card { position: relative; background: white; border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 12px; }
-    .path-card strong { display: block; font-size: 18px; margin-bottom: 3px; }
-    .path-card span { color: var(--muted); font-size: 14px; font-weight: 650; }
-    .quote-box { position: relative; background: var(--dark); color: white; padding: 18px; border-radius: 22px; margin-top: 14px; font-weight: 800; }
-    .quote-box span { color: var(--secondary); }
-    section { padding: 42px 0; }
-    .section-head { text-align: center; max-width: 780px; margin: 0 auto 26px; }
-    .section-head h2 { font-size: clamp(28px,4vw,44px); line-height: 1.08; letter-spacing: -.04em; margin-bottom: 12px; }
-    .section-head p { color: var(--muted); font-size: 17px; }
-    .selector-shell { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; margin-top: 22px; }
-    .selector-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; box-shadow: 0 14px 32px rgba(190,18,60,.06); }
-    .selector-card h3 { font-size: 22px; letter-spacing: -.03em; margin-bottom: 5px; }
-    .selector-card p { color: var(--muted); font-weight: 700; margin-bottom: 16px; }
-    .pg-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
-    .pg-btn { min-height: 74px; background: #fffafb; border: 1px solid var(--border); border-radius: 18px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 1000; font-size: 22px; transition: .22s ease; color: var(--dark); }
-    .pg-btn small { font-size: 11px; color: var(--muted); font-weight: 800; margin-top: 2px; }
-    .pg-btn:hover, .pg-btn.active { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 18px 35px rgba(190,18,60,.22); }
-    .pg-btn:hover small, .pg-btn.active small { color: rgba(255,255,255,.82); }
-    .result-shell { margin-top: 24px; background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; }
-    .result-top { background: radial-gradient(circle at top right, rgba(251,191,36,.24), transparent 30%), linear-gradient(135deg,rgba(190,18,60,.98),rgba(225,29,72,.92)); color: white; padding: 28px; display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; }
-    .result-top h3 { font-size: clamp(26px,4vw,40px); letter-spacing: -.04em; line-height: 1; margin-bottom: 8px; }
-    .result-top p { color: rgba(255,255,255,.84); max-width: 750px; }
-    .couple-code { min-width: 128px; min-height: 88px; border-radius: 28px; display: grid; place-items: center; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.25); font-size: 30px; font-weight: 1000; padding: 0 18px; text-align: center; }
-    .result-body { padding: 24px; display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
-    .info-card { border: 1px solid var(--border); border-radius: 22px; padding: 20px; background: linear-gradient(180deg,#fff,#fff7f8); }
-    .info-card .icon { width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; background: var(--primary-soft); margin-bottom: 14px; font-size: 20px; }
-    .info-card h4 { font-size: 18px; margin-bottom: 10px; letter-spacing: -.02em; }
-    .info-card ul { padding-left: 18px; color: var(--muted); font-weight: 700; }
-    .info-card li { margin-bottom: 7px; }
-    .note-box { grid-column: 1 / -1; padding: 20px; border-radius: 22px; border: 1px dashed #fb7185; background: #fff1f2; color: #881337; font-weight: 800; }
-    .trust-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-    .trust-card { background: white; border: 1px solid var(--border); border-radius: 24px; padding: 22px; box-shadow: 0 12px 30px rgba(190,18,60,.06); }
-    .trust-card b { font-size: 32px; color: var(--primary); display: block; margin-bottom: 5px; }
-    .trust-card span { color: var(--muted); font-weight: 750; }
-    .cta { padding: 28px; border-radius: var(--radius-lg); background: radial-gradient(circle at top right, rgba(251,191,36,.26), transparent 32%), linear-gradient(135deg,#1f1020,#3b1827); color: white; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; box-shadow: var(--shadow); margin-bottom: 48px; }
-    .cta h2 { font-size: clamp(28px,4vw,44px); line-height: 1.05; letter-spacing: -.04em; margin-bottom: 10px; }
-    .cta p { color: rgba(255,255,255,.78); max-width: 720px; font-size: 17px; }
-    .btn-wa { background: #22c55e; color: white; min-width: 220px; box-shadow: 0 18px 34px rgba(34,197,94,.22); }
-    footer { color: var(--muted); text-align: center; padding: 24px 0 38px; font-size: 14px; }
-    .hidden { display: none; }
-    @media (max-width: 920px) { .hero,.selector-shell,.result-body,.trust-grid,.cta,.result-top { grid-template-columns: 1fr; } .hero { padding-top: 42px; } .couple-code { width: fit-content; min-height: 72px; font-size: 26px; } }
-    @media (max-width: 520px) { .page,.navbar-inner { width: min(100% - 22px,1120px); } .navbar-inner { min-height: 66px; } .brand-mark { width: 38px; height: 38px; } .brand div { font-size: 14px; } .nav-cta { display: none; } .hero { padding-top: 34px; } .hero-actions .btn { width: 100%; } .pg-grid { gap: 8px; } .pg-btn { min-height: 72px; border-radius: 16px; } .result-body,.result-top,.hero-card,.selector-card,.cta { padding: 20px; } section { padding: 34px 0; } }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 99;
+      backdrop-filter: blur(18px);
+      background: rgba(247, 255, 249, 0.84);
+      border-bottom: 1px solid rgba(215, 242, 223, 0.92);
+    }
+
+    .navbar-inner {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      box-shadow: 0 12px 25px rgba(21, 128, 61, 0.24);
+    }
+
+    .brand small {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-top: -3px;
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: var(--dark);
+      color: white;
+      font-weight: 900;
+      font-size: 14px;
+      box-shadow: 0 14px 26px rgba(16, 33, 22, 0.16);
+    }
+
+    .hero {
+      padding: 64px 0 34px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .badge {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--primary);
+      font-weight: 950;
+      font-size: 13px;
+      box-shadow: 0 10px 20px rgba(21, 128, 61, 0.06);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 68px);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      font-size: clamp(16px, 2.3vw, 20px);
+      color: var(--muted);
+      max-width: 650px;
+      margin-bottom: 28px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 14px 20px;
+      font-weight: 950;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      transition: 0.25s ease;
+      font-size: 15px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      box-shadow: 0 18px 34px rgba(21, 128, 61, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 42px rgba(21, 128, 61, 0.32);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--dark);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      border-color: #86efac;
+    }
+
+    .hero-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(215, 242, 223, 0.95);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      border-radius: 999px;
+      background: rgba(250, 204, 21, 0.2);
+      top: -80px;
+      right: -70px;
+    }
+
+    .mini-title {
+      position: relative;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+
+    .path-card {
+      position: relative;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+
+    .path-card strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 3px;
+    }
+
+    .path-card span {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .quote-box {
+      position: relative;
+      background: var(--dark);
+      color: white;
+      padding: 18px;
+      border-radius: 22px;
+      margin-top: 14px;
+      font-weight: 800;
+    }
+
+    .quote-box span {
+      color: var(--secondary);
+    }
+
+    section {
+      padding: 42px 0;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 26px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .selector-shell {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      align-items: start;
+      margin-top: 22px;
+    }
+
+    .selector-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: 0 14px 32px rgba(21, 128, 61, 0.06);
+    }
+
+    .selector-card h3 {
+      font-size: 22px;
+      letter-spacing: -0.03em;
+      margin-bottom: 5px;
+    }
+
+    .selector-card p {
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .pg-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+    }
+
+    .pg-btn {
+      min-height: 68px;
+      background: #fbfffc;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 1000;
+      font-size: 21px;
+      transition: 0.22s ease;
+      color: var(--dark);
+    }
+
+    .pg-btn small {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .pg-btn:hover,
+    .pg-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: 0 18px 35px rgba(21, 128, 61, 0.22);
+    }
+
+    .pg-btn:hover small,
+    .pg-btn.active small {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .result-shell {
+      margin-top: 24px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .result-top {
+      background:
+        radial-gradient(circle at top right, rgba(250, 204, 21, 0.24), transparent 30%),
+        linear-gradient(135deg, rgba(21, 128, 61, 0.98), rgba(34, 197, 94, 0.92));
+      color: white;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .result-top h3 {
+      font-size: clamp(26px, 4vw, 40px);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .result-top p {
+      color: rgba(255, 255, 255, 0.84);
+      max-width: 760px;
+    }
+
+    .family-code {
+      min-width: 148px;
+      min-height: 88px;
+      border-radius: 28px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      font-size: 24px;
+      font-weight: 1000;
+      padding: 0 18px;
+      text-align: center;
+    }
+
+    .result-body {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .info-card {
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 20px;
+      background: linear-gradient(180deg, #ffffff, #f7fff9);
+    }
+
+    .info-card .icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--primary-soft);
+      margin-bottom: 14px;
+      font-size: 20px;
+    }
+
+    .info-card h4 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .info-card ul {
+      padding-left: 18px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .info-card li {
+      margin-bottom: 7px;
+    }
+
+    .wide-card {
+      grid-column: 1 / -1;
+    }
+
+    .note-box {
+      grid-column: 1 / -1;
+      padding: 20px;
+      border-radius: 22px;
+      border: 1px dashed #4ade80;
+      background: #f0fdf4;
+      color: #14532d;
+      font-weight: 800;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .trust-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 12px 30px rgba(21, 128, 61, 0.06);
+    }
+
+    .trust-card b {
+      font-size: 32px;
+      color: var(--primary);
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .trust-card span {
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .cta {
+      padding: 28px;
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at top right, rgba(250, 204, 21, 0.26), transparent 32%),
+        linear-gradient(135deg, #102116, #173923);
+      color: white;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: center;
+      box-shadow: var(--shadow);
+      margin-bottom: 48px;
+    }
+
+    .cta h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      color: rgba(255, 255, 255, 0.78);
+      max-width: 720px;
+      font-size: 17px;
+    }
+
+    .btn-wa {
+      background: #22c55e;
+      color: white;
+      min-width: 225px;
+      box-shadow: 0 18px 34px rgba(34, 197, 94, 0.22);
+    }
+
+    footer {
+      color: var(--muted);
+      text-align: center;
+      padding: 24px 0 38px;
+      font-size: 14px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 1040px) {
+      .selector-shell {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .result-body,
+      .trust-grid,
+      .cta,
+      .result-top {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 42px;
+      }
+
+      .family-code {
+        width: fit-content;
+        min-height: 72px;
+        font-size: 22px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page,
+      .navbar-inner {
+        width: min(100% - 22px, 1120px);
+      }
+
+      .navbar-inner {
+        min-height: 66px;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+      }
+
+      .brand div {
+        font-size: 14px;
+      }
+
+      .nav-cta {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 34px;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .pg-grid {
+        gap: 8px;
+      }
+
+      .pg-btn {
+        min-height: 68px;
+        border-radius: 15px;
+      }
+
+      .result-body,
+      .result-top,
+      .hero-card,
+      .selector-card,
+      .cta {
+        padding: 20px;
+      }
+
+      section {
+        padding: 34px 0;
+      }
+    }
   </style>
 </head>
+
 <body>
   <nav class="navbar">
     <div class="navbar-inner">
       <a href="#" class="brand" aria-label="STIFIn Family Medan">
-        <span class="brand-mark">💞</span>
-        <div>STIFIn Family Medan<small>Insight Couple</small></div>
+        <span class="brand-mark">🏡</span>
+        <div>
+          STIFIn Family Medan
+          <small>Peta Keluarga</small>
+        </div>
       </a>
-      <a class="nav-cta" href="#cek-couple">Cek Couple 💌</a>
+
+      <a class="nav-cta" href="#cek-keluarga">Cek Keluarga 🌿</a>
     </div>
   </nav>
 
   <main class="page">
     <header class="hero">
       <div>
-        <div class="badge">💞 Untuk Pasangan & Calon Pasangan</div>
-        <h1>Kenapa Cara Cintanya <span>Berbeda?</span></h1>
-        <p>Kenali pola komunikasi, bahasa cinta, potensi konflik, dan cara memahami pasangan berdasarkan Personality Genetic STIFIn.</p>
+        <div class="badge">🏡 Untuk Orang Tua & Keluarga</div>
+        <h1>Setiap Anggota Keluarga Punya Cara <span>Dipahami</span></h1>
+        <p>
+          Kenali pola komunikasi, kebutuhan emosi, potensi benturan, dan peran alami
+          tiap anggota keluarga berdasarkan Personality Genetic STIFIn.
+        </p>
+
         <div class="hero-actions">
-          <a href="#cek-couple" class="btn btn-primary">Mulai Cek Couple ✨</a>
-          <a href="#konsultasi" class="btn btn-secondary">Konsultasi Couple</a>
+          <a href="#cek-keluarga" class="btn btn-primary">Mulai Cek Keluarga ✨</a>
+          <a href="#konsultasi" class="btn btn-secondary">Konsultasi Keluarga</a>
         </div>
       </div>
 
-      <aside class="hero-card" aria-label="Alur insight couple">
-        <div class="mini-title">Alur insight couple</div>
-        <div class="path-card"><strong>1. Pilih PG Saya</strong><span>Masukkan Personality Genetic diri sendiri.</span></div>
-        <div class="path-card"><strong>2. Pilih PG Pasangan</strong><span>Masukkan Personality Genetic pasangan.</span></div>
-        <div class="path-card"><strong>3. Baca Pola Relasi</strong><span>Lihat gaya cinta, potensi konflik, dan cara komunikasi.</span></div>
-        <div class="quote-box"><span>Catatan:</span> Kadang masalah bukan karena tidak cinta, tapi karena berbeda cara memproses rasa, logika, dan perhatian.</div>
+      <aside class="hero-card" aria-label="Alur peta keluarga">
+        <div class="mini-title">Alur peta keluarga</div>
+        <div class="path-card">
+          <strong>1. Pilih PG Ayah</strong>
+          <span>Membaca gaya memimpin, melindungi, dan mengambil keputusan.</span>
+        </div>
+        <div class="path-card">
+          <strong>2. Pilih PG Ibu</strong>
+          <span>Membaca pola merawat, mengatur rasa, dan menjaga suasana rumah.</span>
+        </div>
+        <div class="path-card">
+          <strong>3. Pilih PG Anak</strong>
+          <span>Membaca cara anak belajar, merespons aturan, dan butuh didampingi.</span>
+        </div>
+
+        <div class="quote-box">
+          <span>Catatan:</span> Rumah yang harmonis bukan rumah tanpa perbedaan, tapi rumah yang tahu cara memahami perbedaan.
+        </div>
       </aside>
     </header>
 
-    <section id="cek-couple">
+    <section id="cek-keluarga">
       <div class="section-head">
-        <h2>Pilih PG Kamu dan Pasangan</h2>
-        <p>Hasil ini adalah gambaran awal untuk membantu pasangan lebih saling memahami. Untuk membaca relasi lebih dalam, konsultasikan dengan promotor.</p>
+        <h2>Pilih PG Ayah, Ibu, dan Anak</h2>
+        <p>
+          Hasil ini adalah gambaran awal untuk membantu keluarga lebih saling memahami.
+          Untuk membaca peta keluarga lebih lengkap, konsultasikan bersama promotor.
+        </p>
       </div>
 
       <div class="selector-shell">
         <div class="selector-card">
-          <h3>PG Saya</h3>
-          <p>Pilih Personality Genetic kamu.</p>
-          <div class="pg-grid" id="myPgGrid"></div>
+          <h3>PG Ayah</h3>
+          <p>Pilih Personality Genetic ayah.</p>
+          <div class="pg-grid" id="fatherPgGrid"></div>
         </div>
+
         <div class="selector-card">
-          <h3>PG Pasangan</h3>
-          <p>Pilih Personality Genetic pasangan.</p>
-          <div class="pg-grid" id="partnerPgGrid"></div>
+          <h3>PG Ibu</h3>
+          <p>Pilih Personality Genetic ibu.</p>
+          <div class="pg-grid" id="motherPgGrid"></div>
+        </div>
+
+        <div class="selector-card">
+          <h3>PG Anak</h3>
+          <p>Pilih Personality Genetic anak.</p>
+          <div class="pg-grid" id="childPgGrid"></div>
         </div>
       </div>
 
       <div class="result-shell" id="resultShell">
         <div class="result-top">
           <div>
-            <h3 id="resultTitle">Pilih PG kamu dan pasangan dulu, Bos 😄</h3>
-            <p id="resultSubtitle">Setelah dua PG dipilih, insight couple akan tampil otomatis di sini.</p>
+            <h3 id="resultTitle">Pilih PG keluarga dulu, Bos 😄</h3>
+            <p id="resultSubtitle">
+              Setelah PG Ayah, Ibu, dan Anak dipilih, peta keluarga akan tampil otomatis di sini.
+            </p>
           </div>
-          <div class="couple-code" id="coupleCode">? + ?</div>
+          <div class="family-code" id="familyCode">? + ? + ?</div>
         </div>
 
         <div class="result-body hidden" id="resultBody">
-          <article class="info-card"><div class="icon">💗</div><h4>Gaya Cinta</h4><ul id="loveList"></ul></article>
-          <article class="info-card"><div class="icon">💬</div><h4>Cara Komunikasi</h4><ul id="communicationList"></ul></article>
-          <article class="info-card"><div class="icon">⚠️</div><h4>Potensi Konflik</h4><ul id="conflictList"></ul></article>
-          <article class="info-card"><div class="icon">🫶</div><h4>Cara Menenangkan</h4><ul id="calmList"></ul></article>
+          <article class="info-card">
+            <div class="icon">👨</div>
+            <h4>Peran Alami Ayah</h4>
+            <ul id="fatherList"></ul>
+          </article>
+
+          <article class="info-card">
+            <div class="icon">👩</div>
+            <h4>Peran Alami Ibu</h4>
+            <ul id="motherList"></ul>
+          </article>
+
+          <article class="info-card wide-card">
+            <div class="icon">🧒</div>
+            <h4>Cara Mendampingi Anak</h4>
+            <ul id="childList"></ul>
+          </article>
+
+          <article class="info-card">
+            <div class="icon">💬</div>
+            <h4>Pola Komunikasi Rumah</h4>
+            <ul id="communicationList"></ul>
+          </article>
+
+          <article class="info-card">
+            <div class="icon">⚠️</div>
+            <h4>Potensi Benturan</h4>
+            <ul id="conflictList"></ul>
+          </article>
+
           <div class="note-box" id="noteBox"></div>
         </div>
       </div>
@@ -164,116 +741,284 @@
 
     <section>
       <div class="section-head">
-        <h2>Relasi Lebih Mudah Saat Polanya Terbaca</h2>
-        <p>STIFIn membantu pasangan memahami bahwa setiap orang punya cara berbeda dalam memberi perhatian, mengambil keputusan, merespons masalah, dan mengekspresikan cinta.</p>
+        <h2>Keluarga Lebih Tenang Saat Polanya Terbaca</h2>
+        <p>
+          STIFIn membantu keluarga memahami bahwa setiap anggota rumah punya cara berbeda dalam
+          memberi perhatian, menerima nasihat, menenangkan diri, dan mengambil keputusan.
+        </p>
       </div>
+
       <div class="trust-grid">
-        <div class="trust-card"><b>2 PG</b><span>Membaca pola diri dan pasangan agar tidak mudah salah paham.</span></div>
-        <div class="trust-card"><b>4 Area</b><span>Gaya cinta, komunikasi, konflik, dan cara menenangkan.</span></div>
-        <div class="trust-card"><b>1 Tujuan</b><span>Membangun hubungan yang lebih sadar, lembut, dan saling memahami.</span></div>
+        <div class="trust-card">
+          <b>3 Peran</b>
+          <span>Ayah, ibu, dan anak dibaca sebagai satu ekosistem keluarga.</span>
+        </div>
+        <div class="trust-card">
+          <b>5 Area</b>
+          <span>Peran, komunikasi, kebutuhan anak, potensi benturan, dan solusi rumah.</span>
+        </div>
+        <div class="trust-card">
+          <b>1 Tujuan</b>
+          <span>Membangun rumah yang lebih sadar, hangat, dan saling memahami.</span>
+        </div>
       </div>
     </section>
 
     <section id="konsultasi">
       <div class="cta">
         <div>
-          <h2>Ingin membaca peta hubungan lebih dalam?</h2>
-          <p>Insight di halaman ini adalah gambaran awal. Untuk memahami pola relasi, potensi konflik, dan strategi komunikasi pasangan secara lebih personal, konsultasikan bersama promotor STIFIn Family Medan.</p>
+          <h2>Ingin membaca peta keluarga lebih dalam?</h2>
+          <p>
+            Insight di halaman ini adalah gambaran awal. Untuk memahami pola ayah, ibu, anak,
+            potensi benturan, dan strategi komunikasi rumah secara lebih personal,
+            konsultasikan bersama promotor STIFIn Family Medan.
+          </p>
         </div>
-        <a class="btn btn-wa" id="waButton" href="https://wa.me/6280000000000?text=Halo%20STIFIn%20Family%20Medan%2C%20saya%20ingin%20konsultasi%20couple%20berdasarkan%20STIFIn." target="_blank" rel="noopener">Konsultasi WhatsApp 💬</a>
+
+        <a
+          class="btn btn-wa"
+          id="waButton"
+          href="https://wa.me/6280000000000?text=Halo%20STIFIn%20Family%20Medan%2C%20saya%20ingin%20konsultasi%20keluarga%20berdasarkan%20STIFIn."
+          target="_blank"
+          rel="noopener"
+        >
+          Konsultasi WhatsApp 💬
+        </a>
       </div>
     </section>
   </main>
 
-  <footer>©️ <span id="year"></span> STIFIn Family Medan. Insight ini bersifat edukatif dan perlu dikonsultasikan lebih lanjut.</footer>
+  <footer>
+    ©️ <span id="year"></span> STIFIn Family Medan. Insight ini bersifat edukatif dan perlu dikonsultasikan lebih lanjut.
+  </footer>
 
   <script>
     const pgData = {
-      Si:{name:"Sensing introvert",love:"menunjukkan cinta lewat perhatian konkret, keteraturan, bantuan nyata, dan kesetiaan dalam rutinitas.",communication:"lebih nyaman dengan pembicaraan yang jelas, runtut, tidak mendadak, dan berdasarkan bukti.",conflict:"bisa merasa terganggu jika pasangan terlalu acak, tidak konsisten, atau sering berubah rencana.",calm:"tenangkan dengan kepastian, rutinitas yang aman, sentuhan perhatian kecil, dan janji yang ditepati."},
-      Se:{name:"Sensing extrovert",love:"menunjukkan cinta lewat aksi, kebersamaan, hadiah, pengalaman seru, dan perhatian yang terlihat nyata.",communication:"lebih mudah masuk lewat obrolan langsung, santai, praktis, dan tidak terlalu berputar-putar.",conflict:"mudah bosan jika hubungan terlalu kaku, monoton, atau terlalu banyak teori tanpa aksi.",calm:"ajak melakukan aktivitas ringan, beri ruang bergerak, dan tunjukkan perhatian secara nyata."},
-      Ti:{name:"Thinking introvert",love:"menunjukkan cinta lewat solusi, perlindungan teknis, logika, dan kesediaan membantu menyelesaikan masalah.",communication:"butuh argumen yang masuk akal, ruang berpikir, dan percakapan yang tidak terlalu emosional mendadak.",conflict:"bisa terlihat dingin saat sebenarnya sedang memproses masalah secara logis.",calm:"beri waktu berpikir, hindari tekanan emosional berlebihan, lalu ajak bicara dengan data dan tujuan jelas."},
-      Te:{name:"Thinking extrovert",love:"menunjukkan cinta lewat tanggung jawab, target masa depan, keputusan cepat, dan tindakan yang menghasilkan.",communication:"lebih suka pembicaraan to the point, jelas, objektif, dan berorientasi solusi.",conflict:"bisa terlalu dominan atau merasa pasangan lambat jika keputusan tidak segera diambil.",calm:"beri penghargaan atas usahanya, ajak bicara dengan solusi, dan sepakati langkah praktis bersama."},
-      Ii:{name:"Intuiting introvert",love:"menunjukkan cinta lewat ide, visi masa depan, perhatian konseptual, dan kedalaman makna.",communication:"nyaman dengan obrolan mendalam, reflektif, kreatif, dan tidak terlalu dipaksa langsung praktis.",conflict:"bisa menjauh saat merasa tidak dimengerti atau idenya dianggap aneh.",calm:"dengarkan dulu gagasannya, beri ruang sendiri, lalu validasi makna di balik pikirannya."},
-      Ie:{name:"Intuiting extrovert",love:"menunjukkan cinta lewat kejutan, eksplorasi, ide baru, visual, pengalaman, dan spontanitas.",communication:"lebih hidup dengan obrolan terbuka, imajinatif, penuh kemungkinan, dan tidak terlalu membatasi.",conflict:"bisa resah jika hubungan terasa terlalu mengikat, monoton, atau tidak memberi ruang bereksperimen.",calm:"ajak melihat pilihan baru, beri ruang ekspresi, dan jangan langsung mematikan ide-idenya."},
-      Fi:{name:"Feeling introvert",love:"menunjukkan cinta lewat kedekatan emosional, perhatian personal, kesetiaan rasa, dan kepedulian mendalam.",communication:"butuh suasana aman, lembut, privat, dan tidak merasa dihakimi.",conflict:"mudah terluka jika pasangan terlalu keras, dingin, atau mengabaikan perasaannya.",calm:"validasi perasaannya, dengarkan dengan penuh hadir, dan jangan buru-buru memberi solusi."},
-      Fe:{name:"Feeling extrovert",love:"menunjukkan cinta lewat ekspresi, kebersamaan, pujian, sentuhan sosial, dan perhatian yang hangat.",communication:"lebih nyaman dengan respons cepat, nada ramah, ekspresi terbuka, dan suasana yang cair.",conflict:"bisa merasa tidak dicintai jika pasangan terlalu diam, datar, atau kurang memberi respons.",calm:"beri afirmasi, pelukan emosional, ngobrol hangat, dan tunjukkan bahwa hubungan tetap aman."},
-      In:{name:"Insting",love:"menunjukkan cinta lewat kehadiran, spontanitas, fleksibilitas, dan kemampuan menyesuaikan keadaan.",communication:"lebih cocok dengan komunikasi ringan, tidak terlalu menekan, dan memberi ruang mengalir.",conflict:"bisa bingung jika hubungan terlalu penuh tuntutan, terlalu detail, atau terlalu banyak aturan.",calm:"buat suasana rileks, ajak silaturahmi atau quality time, dan jangan memaksa keputusan saat suasana tegang."}
+      Si: {
+        name: "Sensing introvert",
+        role: "penjaga keteraturan, detail, dan rutinitas rumah.",
+        communication: "lebih nyaman dengan arahan yang jelas, runtut, konkret, dan tidak mendadak.",
+        conflict: "mudah terganggu saat suasana rumah terlalu acak, rencana sering berubah, atau aturan tidak konsisten.",
+        childNeed: "butuh jadwal yang rapi, contoh nyata, pengulangan, dan apresiasi atas usaha kecil yang konsisten."
+      },
+      Se: {
+        name: "Sensing extrovert",
+        role: "penggerak aktivitas, pembawa energi, dan pencair suasana lewat aksi nyata.",
+        communication: "lebih mudah masuk lewat obrolan langsung, santai, praktis, dan disertai tindakan.",
+        conflict: "mudah bosan jika rumah terlalu kaku, terlalu banyak teori, atau minim aktivitas bersama.",
+        childNeed: "butuh praktik langsung, aktivitas fisik, tantangan kecil, dan ruang untuk bergerak."
+      },
+      Ti: {
+        name: "Thinking introvert",
+        role: "pemikir teknis, pemecah masalah, dan penjaga logika dalam keluarga.",
+        communication: "butuh penjelasan yang masuk akal, ruang berpikir, dan tidak ditekan emosi mendadak.",
+        conflict: "bisa terlihat dingin saat sedang memproses masalah, padahal bukan berarti tidak peduli.",
+        childNeed: "butuh tantangan logika, ruang mandiri, alasan yang jelas, dan kesempatan menyelesaikan masalah."
+      },
+      Te: {
+        name: "Thinking extrovert",
+        role: "pengambil keputusan, pengarah target, dan penggerak keluarga menuju hasil.",
+        communication: "lebih suka pembicaraan to the point, objektif, jelas, dan ada langkah lanjut.",
+        conflict: "bisa terlalu dominan jika keluarga lambat mengambil keputusan atau tidak bergerak sesuai target.",
+        childNeed: "butuh target, tanggung jawab, kompetisi sehat, dan pengakuan atas pencapaian."
+      },
+      Ii: {
+        name: "Intuiting introvert",
+        role: "perancang ide, pembaca pola masa depan, dan pemberi makna mendalam di rumah.",
+        communication: "nyaman dengan obrolan reflektif, imajinatif, dan tidak selalu harus langsung praktis.",
+        conflict: "bisa menarik diri saat idenya dianggap aneh, tidak didengar, atau terlalu sering dipaksa realistis.",
+        childNeed: "butuh ruang berimajinasi, diskusi makna, proyek kreatif, dan kesempatan menyusun ide."
+      },
+      Ie: {
+        name: "Intuiting extrovert",
+        role: "pembuka peluang, penghidup ide baru, dan pembawa suasana eksploratif dalam keluarga.",
+        communication: "lebih hidup dengan obrolan terbuka, penuh kemungkinan, visual, dan tidak terlalu membatasi.",
+        conflict: "bisa resah jika rumah terasa monoton, terlalu mengikat, atau ide-idenya langsung dipatahkan.",
+        childNeed: "butuh eksplorasi, variasi belajar, ruang mencoba hal baru, dan media visual-kreatif."
+      },
+      Fi: {
+        name: "Feeling introvert",
+        role: "penjaga kedalaman rasa, empati personal, dan kehangatan batin keluarga.",
+        communication: "butuh suasana aman, lembut, privat, dan tidak merasa dihakimi.",
+        conflict: "mudah terluka jika rumah terlalu keras, dingin, atau perasaannya diabaikan.",
+        childNeed: "butuh kedekatan personal, validasi emosi, pendampingan lembut, dan rasa aman."
+      },
+      Fe: {
+        name: "Feeling extrovert",
+        role: "penyambung relasi, pencair suasana, dan penjaga kehangatan sosial keluarga.",
+        communication: "lebih nyaman dengan respons cepat, nada ramah, ekspresi terbuka, dan suasana cair.",
+        conflict: "bisa merasa tidak dihargai jika rumah terlalu diam, datar, atau kurang memberi respons.",
+        childNeed: "butuh pujian, interaksi hangat, kegiatan sosial, dan respons emosional yang terlihat."
+      },
+      In: {
+        name: "Insting",
+        role: "penyeimbang keadaan, penjaga harmoni, dan sosok adaptif saat rumah berubah situasi.",
+        communication: "lebih cocok dengan komunikasi ringan, tidak terlalu menekan, dan memberi ruang mengalir.",
+        conflict: "bisa bingung jika rumah terlalu penuh tuntutan, detail berlebihan, atau terlalu banyak aturan.",
+        childNeed: "butuh suasana rileks, quality time, fleksibilitas, dan tidak dipaksa memilih saat sedang tertekan."
+      }
     };
 
-    const pgOrder = ["Si","Se","Ti","Te","Ii","Ie","Fi","Fe","In"];
-    const circleOrder = ["S","T","In","I","F"];
-    const mkMap = {Si:"S",Se:"S",Ti:"T",Te:"T",Ii:"I",Ie:"I",Fi:"F",Fe:"F",In:"In"};
-    const relationLabels = {
-      0:{title:"Satu Frekuensi",note:"Kalian punya mesin dasar yang mirip, sehingga lebih mudah saling memahami. Tantangannya: jangan sama-sama keras di pola yang sama."},
-      1:{title:"Saling Mendukung",note:"Ada aliran energi yang cenderung mendukung. Hubungan bisa terasa saling menguatkan jika komunikasi dijaga dengan sadar."},
-      2:{title:"Relasi Menantang",note:"Ada potensi saling menekan karena cara berpikir dan kebutuhan berbeda. Kuncinya adalah tidak memaksa pasangan memakai cara kita."},
-      3:{title:"Butuh Saling Mengalah",note:"Relasi ini butuh kedewasaan karena salah satu pihak bisa merasa lebih sering tertarik mengikuti ritme pihak lain."},
-      4:{title:"Saling Melengkapi",note:"Ada peluang saling mengisi kekurangan. Tantangannya adalah tidak menganggap perbedaan sebagai ancaman."}
+    const pgOrder = ["Si", "Se", "Ti", "Te", "Ii", "Ie", "Fi", "Fe", "In"];
+    const circleOrder = ["S", "T", "In", "I", "F"];
+    const mkMap = {
+      Si: "S",
+      Se: "S",
+      Ti: "T",
+      Te: "T",
+      Ii: "I",
+      Ie: "I",
+      Fi: "F",
+      Fe: "F",
+      In: "In"
     };
 
-    let selectedMine = null;
-    let selectedPartner = null;
-    const myPgGrid = document.getElementById("myPgGrid");
-    const partnerPgGrid = document.getElementById("partnerPgGrid");
+    const familyPatterns = {
+      0: "Ada frekuensi yang mirip. Keluarga lebih mudah saling membaca, tetapi perlu hati-hati agar tidak sama-sama keras di pola yang sama.",
+      1: "Ada pola mendukung. Anggota keluarga bisa saling menguatkan jika peran masing-masing diberi ruang yang sehat.",
+      2: "Ada pola menantang. Perbedaan bisa terasa seperti tekanan jika satu pihak memaksa pihak lain memakai caranya.",
+      3: "Ada pola perlu mengalah. Salah satu pihak bisa lebih sering mengikuti ritme pihak lain, sehingga perlu komunikasi yang adil.",
+      4: "Ada pola melengkapi. Perbedaan bisa menjadi kekuatan jika keluarga tidak buru-buru menilai satu sama lain."
+    };
+
+    let selectedFather = null;
+    let selectedMother = null;
+    let selectedChild = null;
+
+    const fatherPgGrid = document.getElementById("fatherPgGrid");
+    const motherPgGrid = document.getElementById("motherPgGrid");
+    const childPgGrid = document.getElementById("childPgGrid");
     const resultTitle = document.getElementById("resultTitle");
     const resultSubtitle = document.getElementById("resultSubtitle");
-    const coupleCode = document.getElementById("coupleCode");
+    const familyCode = document.getElementById("familyCode");
     const resultBody = document.getElementById("resultBody");
-    const loveList = document.getElementById("loveList");
+    const fatherList = document.getElementById("fatherList");
+    const motherList = document.getElementById("motherList");
+    const childList = document.getElementById("childList");
     const communicationList = document.getElementById("communicationList");
     const conflictList = document.getElementById("conflictList");
-    const calmList = document.getElementById("calmList");
     const noteBox = document.getElementById("noteBox");
 
-    function shortName(name){return name.replace("Sensing ","S-").replace("Thinking ","T-").replace("Intuiting ","I-").replace("Feeling ","F-");}
-    function renderList(target, items){target.innerHTML = items.map(item => `<li>${item}</li>`).join("");}
-    function getRelation(mine, partner){const a=circleOrder.indexOf(mkMap[mine]); const b=circleOrder.indexOf(mkMap[partner]); return relationLabels[(b-a+circleOrder.length)%circleOrder.length];}
+    function shortName(name) {
+      return name
+        .replace("Sensing ", "S-")
+        .replace("Thinking ", "T-")
+        .replace("Intuiting ", "I-")
+        .replace("Feeling ", "F-");
+    }
 
-    function buildButtons(target, type){
-      target.innerHTML = pgOrder.map(pg => `<button class="pg-btn" type="button" data-type="${type}" data-pg="${pg}" aria-label="Pilih ${pg} ${pgData[pg].name}">${pg}<small>${shortName(pgData[pg].name)}</small></button>`).join("");
+    function buildButtons(target, type) {
+      target.innerHTML = pgOrder.map(pg => `
+        <button class="pg-btn" type="button" data-type="${type}" data-pg="${pg}" aria-label="Pilih ${pg} ${pgData[pg].name}">
+          ${pg}
+          <small>${shortName(pgData[pg].name)}</small>
+        </button>
+      `).join("");
+
       target.querySelectorAll(".pg-btn").forEach(button => {
         button.addEventListener("click", () => {
           const pg = button.dataset.pg;
-          if(type === "mine"){
-            selectedMine = pg;
-            myPgGrid.querySelectorAll(".pg-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.pg === pg));
+
+          if (type === "father") {
+            selectedFather = pg;
+            fatherPgGrid.querySelectorAll(".pg-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.pg === pg));
+          } else if (type === "mother") {
+            selectedMother = pg;
+            motherPgGrid.querySelectorAll(".pg-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.pg === pg));
           } else {
-            selectedPartner = pg;
-            partnerPgGrid.querySelectorAll(".pg-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.pg === pg));
+            selectedChild = pg;
+            childPgGrid.querySelectorAll(".pg-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.pg === pg));
           }
+
           updateResult();
         });
       });
     }
 
-    function updateResult(){
-      if(!selectedMine || !selectedPartner){
-        const missing = !selectedMine ? "PG kamu" : "PG pasangan";
+    function renderList(target, items) {
+      target.innerHTML = items.map(item => `<li>${item}</li>`).join("");
+    }
+
+    function getDiff(a, b) {
+      const indexA = circleOrder.indexOf(mkMap[a]);
+      const indexB = circleOrder.indexOf(mkMap[b]);
+      return (indexB - indexA + circleOrder.length) % circleOrder.length;
+    }
+
+    function updateResult() {
+      const code = `${selectedFather || "?"} + ${selectedMother || "?"} + ${selectedChild || "?"}`;
+      familyCode.textContent = code;
+
+      if (!selectedFather || !selectedMother || !selectedChild) {
+        let missing = "PG keluarga";
+        if (!selectedFather) missing = "PG Ayah";
+        else if (!selectedMother) missing = "PG Ibu";
+        else if (!selectedChild) missing = "PG Anak";
+
         resultTitle.textContent = `Tinggal pilih ${missing}, Bos 😄`;
-        resultSubtitle.textContent = "Setelah dua PG dipilih, insight couple akan tampil otomatis di sini.";
-        coupleCode.textContent = `${selectedMine || "?"} + ${selectedPartner || "?"}`;
+        resultSubtitle.textContent = "Setelah PG Ayah, Ibu, dan Anak dipilih, peta keluarga akan tampil otomatis di sini.";
         return;
       }
-      const mine = pgData[selectedMine];
-      const partner = pgData[selectedPartner];
-      const relation = getRelation(selectedMine, selectedPartner);
-      resultTitle.textContent = `${selectedMine} + ${selectedPartner} — ${relation.title}`;
-      resultSubtitle.textContent = `${mine.name} bertemu ${partner.name}. Berikut gambaran gaya cinta, komunikasi, konflik, dan cara menenangkan pasangan.`;
-      coupleCode.textContent = `${selectedMine} + ${selectedPartner}`;
-      renderList(loveList, [`Kamu cenderung ${mine.love}`, `Pasangan cenderung ${partner.love}`]);
-      renderList(communicationList, [`Cara masuk ke kamu: ${mine.communication}`, `Cara masuk ke pasangan: ${partner.communication}`]);
-      renderList(conflictList, [`Tantangan dari sisi kamu: ${mine.conflict}`, `Tantangan dari sisi pasangan: ${partner.conflict}`]);
-      renderList(calmList, [`Saat kamu tegang: ${mine.calm}`, `Saat pasangan tegang: ${partner.calm}`]);
-      noteBox.textContent = relation.note;
+
+      const father = pgData[selectedFather];
+      const mother = pgData[selectedMother];
+      const child = pgData[selectedChild];
+
+      const fatherMotherDiff = getDiff(selectedFather, selectedMother);
+      const fatherChildDiff = getDiff(selectedFather, selectedChild);
+      const motherChildDiff = getDiff(selectedMother, selectedChild);
+
+      resultTitle.textContent = `${selectedFather} + ${selectedMother} + ${selectedChild}`;
+      resultSubtitle.textContent = `Peta awal keluarga: Ayah ${father.name}, Ibu ${mother.name}, dan Anak ${child.name}.`;
+      familyCode.textContent = `${selectedFather} + ${selectedMother} + ${selectedChild}`;
+
+      renderList(fatherList, [
+        `Ayah cenderung menjadi ${father.role}`,
+        `Cara masuk ke Ayah: ${father.communication}`,
+        `Saat Ayah tegang: ${father.conflict}`
+      ]);
+
+      renderList(motherList, [
+        `Ibu cenderung menjadi ${mother.role}`,
+        `Cara masuk ke Ibu: ${mother.communication}`,
+        `Saat Ibu tegang: ${mother.conflict}`
+      ]);
+
+      renderList(childList, [
+        `Anak cenderung membutuhkan: ${child.childNeed}`,
+        `Cara komunikasi ke anak: ${child.communication}`,
+        `Hal yang perlu dihindari: ${child.conflict}`
+      ]);
+
+      renderList(communicationList, [
+        `Ayah ↔️ Ibu: ${familyPatterns[fatherMotherDiff]}`,
+        `Ayah ↔️ Anak: ${familyPatterns[fatherChildDiff]}`,
+        `Ibu ↔️ Anak: ${familyPatterns[motherChildDiff]}`
+      ]);
+
+      renderList(conflictList, [
+        `Potensi dari Ayah: ${father.conflict}`,
+        `Potensi dari Ibu: ${mother.conflict}`,
+        `Potensi dari Anak: ${child.conflict}`
+      ]);
+
+      noteBox.textContent =
+        "Kunci keluarga ini adalah membuat setiap anggota rumah merasa dipahami dengan bahasanya masing-masing. Jangan paksa semua orang nyaman dengan cara yang sama; buat aturan rumah yang jelas, tapi tetap hangat dan fleksibel.";
+
       resultBody.classList.remove("hidden");
-      const waText = encodeURIComponent(`Halo STIFIn Family Medan, saya ingin konsultasi couple untuk kombinasi PG ${selectedMine} + ${selectedPartner}.`);
+
+      const waText = encodeURIComponent(
+        `Halo STIFIn Family Medan, saya ingin konsultasi keluarga untuk kombinasi PG Ayah ${selectedFather}, Ibu ${selectedMother}, Anak ${selectedChild}.`
+      );
       document.getElementById("waButton").href = `https://wa.me/6280000000000?text=${waText}`;
-      document.getElementById("resultShell").scrollIntoView({behavior:"smooth", block:"start"});
+
+      document.getElementById("resultShell").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     document.getElementById("year").textContent = new Date().getFullYear();
-    buildButtons(myPgGrid, "mine");
-    buildButtons(partnerPgGrid, "partner");
+    buildButtons(fatherPgGrid, "father");
+    buildButtons(motherPgGrid, "mother");
+    buildButtons(childPgGrid, "child");
   </script>
 </body>
 </html>
