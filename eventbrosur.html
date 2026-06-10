@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pilih Layanan STIFIn | STIFIn Family Medan</title>
+  <meta name="description" content="Pilih info lanjutan STIFIn untuk Pelajar, Couple, atau Keluarga bersama STIFIn Family Medan." />
+  <style>
+    :root{
+      --blue:#1e40af;--green:#15803d;--rose:#be123c;--yellow:#facc15;
+      --dark:#0f172a;--muted:#64748b;--light:#f8fafc;--border:#e2e8f0;
+      --shadow:0 24px 55px rgba(15,23,42,.13);--r:32px
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left,rgba(250,204,21,.18),transparent 32%),
+        radial-gradient(circle at top right,rgba(30,64,175,.16),transparent 34%),
+        radial-gradient(circle at bottom left,rgba(21,128,61,.12),transparent 34%),
+        linear-gradient(180deg,#f8fafc,#eef6ff);
+      color:var(--dark);line-height:1.6;min-height:100vh
+    }
+    a{text-decoration:none;color:inherit}
+    .wrap{width:min(1120px,calc(100% - 32px));margin:auto}
+    .nav{position:sticky;top:0;z-index:9;background:rgba(248,250,252,.84);backdrop-filter:blur(18px);border-bottom:1px solid rgba(226,232,240,.9)}
+    .navin{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:950;letter-spacing:-.02em}
+    .mark{width:44px;height:44px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),#38bdf8);color:white;box-shadow:0 12px 26px rgba(30,64,175,.25);font-size:21px}
+    .brand small{display:block;font-size:12px;color:var(--muted);font-weight:800;margin-top:-3px}
+    .navcta{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;background:var(--dark);color:white;font-weight:900;font-size:14px;box-shadow:0 14px 26px rgba(15,23,42,.16)}
+    .hero{padding:68px 0 36px;text-align:center}
+    .badge{width:fit-content;margin:0 auto 18px;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:white;border:1px solid var(--border);color:var(--blue);font-weight:950;font-size:13px;box-shadow:0 10px 20px rgba(15,23,42,.06)}
+    h1{font-size:clamp(38px,7vw,76px);line-height:.96;letter-spacing:-.07em;max-width:900px;margin:0 auto 20px}
+    h1 span{color:var(--blue)}
+    .hero p,.head p{font-size:clamp(16px,2.3vw,20px);color:var(--muted);max-width:760px;margin:0 auto 28px}
+    .actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+    .btn{border:0;border-radius:999px;padding:14px 20px;font-weight:950;display:inline-flex;align-items:center;justify-content:center;gap:9px;transition:.25s;font-size:15px}
+    .btn:hover{transform:translateY(-2px)}
+    .primary{background:linear-gradient(135deg,var(--blue),#2563eb);color:white;box-shadow:0 18px 34px rgba(30,64,175,.25)}
+    .secondary{background:white;color:var(--dark);border:1px solid var(--border)}
+    section{padding:42px 0}
+    .head{text-align:center;margin:0 auto 28px}
+    .head h2{font-size:clamp(28px,4vw,46px);line-height:1.06;letter-spacing:-.04em;margin-bottom:12px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{position:relative;overflow:hidden;min-height:420px;border-radius:var(--r);background:white;border:1px solid rgba(226,232,240,.94);box-shadow:0 16px 38px rgba(15,23,42,.08);padding:26px;display:flex;flex-direction:column;justify-content:space-between;transition:.28s}
+    .card:hover{transform:translateY(-7px);box-shadow:var(--shadow)}
+    .card:before{content:"";position:absolute;width:210px;height:210px;border-radius:999px;right:-92px;top:-92px;opacity:.16}
+    .student:before{background:var(--blue)}.couple:before{background:var(--rose)}.family:before{background:var(--green)}
+    .top{position:relative}
+    .icon{width:58px;height:58px;border-radius:20px;display:grid;place-items:center;font-size:27px;margin-bottom:18px}
+    .student .icon{background:#dbeafe}.couple .icon{background:#ffe4e6}.family .icon{background:#dcfce7}
+    .card h3{font-size:30px;line-height:1.05;letter-spacing:-.04em;margin-bottom:10px}
+    .card p{color:var(--muted);font-weight:700;margin-bottom:18px}
+    ul{list-style:none;display:grid;gap:10px;margin-top:18px}
+    li{display:flex;gap:9px;color:#334155;font-weight:750;align-items:flex-start}
+    li:before{content:"✓";flex:0 0 22px;width:22px;height:22px;border-radius:999px;display:grid;place-items:center;background:#f1f5f9;color:var(--blue);font-size:13px;font-weight:1000;margin-top:1px}
+    .cardbtn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:22px;border-radius:999px;padding:14px 18px;color:white;font-weight:950;transition:.25s}
+    .student .cardbtn{background:linear-gradient(135deg,var(--blue),#2563eb)}
+    .couple .cardbtn{background:linear-gradient(135deg,var(--rose),#e11d48)}
+    .family .cardbtn{background:linear-gradient(135deg,var(--green),#22c55e)}
+    .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+    .trustitem{background:rgba(255,255,255,.9);border:1px solid var(--border);border-radius:24px;padding:20px;text-align:center;box-shadow:0 12px 30px rgba(15,23,42,.05)}
+    .trustitem b{display:block;font-size:32px;color:var(--blue);margin-bottom:4px}
+    .trustitem span{color:var(--muted);font-weight:750}
+    .cta{padding:30px;border-radius:var(--r);background:radial-gradient(circle at top right,rgba(250,204,21,.26),transparent 32%),linear-gradient(135deg,#0f172a,#1e293b);color:white;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;box-shadow:var(--shadow);margin-bottom:50px}
+    .cta h2{font-size:clamp(28px,4vw,44px);line-height:1.05;letter-spacing:-.04em;margin-bottom:10px}
+    .cta p{color:rgba(255,255,255,.78);max-width:720px;font-size:17px}
+    .wa{background:#22c55e;color:white;min-width:220px;box-shadow:0 18px 34px rgba(34,197,94,.22)}
+    footer{color:var(--muted);text-align:center;padding:24px 0 38px;font-size:14px}
+    @media(max-width:960px){.grid,.trust,.cta{grid-template-columns:1fr}.card{min-height:auto}}
+    @media(max-width:520px){
+      .wrap{width:min(100% - 22px,1120px)}.navin{min-height:66px}.mark{width:38px;height:38px}.brand div{font-size:14px}.navcta{display:none}
+      .hero{padding:42px 0 26px}.actions .btn{width:100%}section{padding:34px 0}.card,.cta{padding:22px;border-radius:26px}.card h3{font-size:27px}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="wrap navin">
+      <a href="#" class="brand">
+        <span class="mark">🧬</span>
+        <div>STIFIn Family Medan<small>Info Lanjutan</small></div>
+      </a>
+      <a class="navcta" href="#pilihan">Pilih Layanan 🚀</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <header class="hero">
+      <div class="badge">✨ Selamat datang dari brosur STIFIn</div>
+      <h1>Pilih Info Lanjutan yang Ingin <span>Dibuka</span></h1>
+      <p>Setiap orang punya kebutuhan yang berbeda. Silakan pilih halaman yang paling sesuai: arah pendidikan anak, pola hubungan pasangan, atau peta harmoni keluarga.</p>
+      <div class="actions">
+        <a href="#pilihan" class="btn primary">Lihat Pilihan Halaman</a>
+        <a href="#konsultasi" class="btn secondary">Konsultasi Langsung</a>
+      </div>
+    </header>
+
+    <section id="pilihan">
+      <div class="head">
+        <h2>Mau Bahas yang Mana Dulu?</h2>
+        <p>Pilih salah satu halaman di bawah ini. Masing-masing halaman sudah dibuat khusus agar lebih mudah dipahami dari HP setelah scan barcode.</p>
+      </div>
+
+      <div class="grid">
+        <article class="card student">
+          <div class="top">
+            <div class="icon">🎓</div>
+            <h3>Pelajar</h3>
+            <p>Untuk orang tua yang ingin melihat gambaran arah sekolah, jurusan kuliah, dan profesi anak berdasarkan STIFIn.</p>
+            <ul>
+              <li>Rekomendasi setelah SMP</li>
+              <li>Jurusan kuliah yang sesuai</li>
+              <li>Profesi masa depan</li>
+              <li>Catatan gaya belajar anak</li>
+            </ul>
+          </div>
+          <a class="cardbtn" href="rekomendasipelajar.html">Buka Halaman Pelajar →</a>
+        </article>
+
+        <article class="card couple">
+          <div class="top">
+            <div class="icon">💞</div>
+            <h3>Couple</h3>
+            <p>Untuk pasangan atau calon pasangan yang ingin memahami pola cinta, komunikasi, konflik, dan cara saling menenangkan.</p>
+            <ul>
+              <li>Pilih PG saya dan pasangan</li>
+              <li>Gaya cinta masing-masing</li>
+              <li>Potensi konflik hubungan</li>
+              <li>Cara komunikasi yang lebih pas</li>
+            </ul>
+          </div>
+          <a class="cardbtn" href="rekomendasicouple.html">Buka Halaman Couple →</a>
+        </article>
+
+        <article class="card family">
+          <div class="top">
+            <div class="icon">🏡</div>
+            <h3>Keluarga</h3>
+            <p>Untuk keluarga yang ingin membaca pola ayah, ibu, dan anak agar rumah lebih hangat, sadar, dan saling memahami.</p>
+            <ul>
+              <li>Pilih PG ayah, ibu, dan anak</li>
+              <li>Peran alami di rumah</li>
+              <li>Pola komunikasi keluarga</li>
+              <li>Potensi benturan dan solusi</li>
+            </ul>
+          </div>
+          <a class="cardbtn" href="rekomendasikeluarga.html">Buka Halaman Keluarga →</a>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="head">
+        <h2>Satu Barcode, Tiga Arah Manfaat</h2>
+        <p>Landing page ini bisa jadi pintu masuk utama dari brosur. Pengunjung cukup scan satu barcode, lalu memilih kebutuhan yang paling sesuai.</p>
+      </div>
+      <div class="trust">
+        <div class="trustitem"><b>1</b><span>Barcode utama dari brosur</span></div>
+        <div class="trustitem"><b>3</b><span>Halaman pilihan sesuai kebutuhan</span></div>
+        <div class="trustitem"><b>300+</b><span>Peserta telah dibantu memahami potensi diri</span></div>
+      </div>
+    </section>
+
+    <section id="konsultasi">
+      <div class="cta">
+        <div>
+          <h2>Masih bingung harus buka yang mana?</h2>
+          <p>Tenang, bisa konsultasi langsung dulu. Tim STIFIn Family Medan akan membantu mengarahkan halaman dan layanan yang paling sesuai dengan kebutuhan Anda.</p>
+        </div>
+        <a class="btn wa" href="https://wa.me/6280000000000?text=Halo%20STIFIn%20Family%20Medan%2C%20saya%20baru%20scan%20barcode%20brosur%20dan%20ingin%20konsultasi%20layanan%20STIFIn." target="_blank" rel="noopener">Konsultasi WhatsApp 💬</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>©️ <span id="year"></span> STIFIn Family Medan. Pilih halaman sesuai kebutuhan Anda.</footer>
+  <script>document.getElementById("year").textContent=new Date().getFullYear();</script>
+</body>
+</html>
