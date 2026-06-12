@@ -1,243 +1,313 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Logical Override: Code Breaker</title>
-    <style>
-        html, body {
-            margin: 0; padding: 0; width: 100vw; height: 100vh;
-            background-color: #0b132b; color: #6fffe9; font-family: 'Courier New', Courier, monospace;
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            overflow: hidden; touch-action: none;
-        }
-        h1 { margin: 20px 0 5px 0; font-size: 24px; text-transform: uppercase; text-shadow: 0 0 10px #6fffe9; }
-        h2 { margin: 0 0 10px 0; font-size: 16px; color: #5bc0be; }
-        p { margin: 0 0 15px 0; font-size: 14px; text-align: center; color: #fff; }
-        
-        #board {
-            display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px;
-            width: 280px; height: 250px; overflow-y: auto; padding: 5px;
-            border: 1px solid #3a506b; border-radius: 5px; background: #1c2541;
-        }
-        .guess-row { display: flex; justify-content: center; gap: 8px; }
-        .guess-box {
-            width: 40px; height: 40px; border: 2px solid #5bc0be; border-radius: 5px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; font-weight: bold; background-color: #0b132b; color: #fff;
-        }
-        .box-green { background-color: #4caf50; border-color: #4caf50; color: #fff; }
-        .box-yellow { background-color: #ff9800; border-color: #ff9800; color: #fff; }
-        .box-gray { background-color: #555; border-color: #555; color: #aaa; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thinking Game Arena</title>
 
-        #input-display {
-            display: flex; gap: 8px; margin-bottom: 15px; height: 45px;
-        }
-        .input-box {
-            width: 40px; height: 40px; border-bottom: 3px solid #6fffe9;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: bold;
-        }
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
 
-        #numpad {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 280px;
-        }
-        .num-btn {
-            padding: 15px; font-size: 20px; font-weight: bold; font-family: 'Courier New', Courier, monospace;
-            color: #0b132b; background-color: #5bc0be; border: none; border-radius: 8px; cursor: pointer;
-            box-shadow: 0 4px 0 #3a506b; transition: all 0.1s;
-        }
-        .num-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #3a506b; }
-        .action-btn { background-color: #1c2541; color: #6fffe9; border: 1px solid #6fffe9; }
-        .action-btn:active { background-color: #3a506b; }
-        
-        #overlay {
-            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(11, 19, 43, 0.9); display: none; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 10;
-        }
-        .btn-restart {
-            margin-top: 20px; padding: 10px 20px; font-size: 18px; font-weight: bold;
-            background-color: #6fffe9; color: #0b132b; border: none; border-radius: 5px; cursor: pointer;
-        }
-    </style>
+    body{
+      background:linear-gradient(180deg,#050505,#111,#000);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .page{
+      max-width:480px;
+      margin:auto;
+      padding:22px 18px 50px;
+    }
+
+    .badge{
+      display:inline-block;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.16);
+      padding:8px 14px;
+      border-radius:999px;
+      font-size:13px;
+      margin-bottom:18px;
+    }
+
+    .hero{
+      background:
+        radial-gradient(circle at top right,rgba(255,255,255,.18),transparent 35%),
+        linear-gradient(135deg,#1b1b1b,#000);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:28px;
+      padding:28px 22px;
+      box-shadow:0 18px 45px rgba(0,0,0,.45);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(255,255,255,.05) 1px,transparent 1px);
+      background-size:28px 28px;
+      opacity:.45;
+    }
+
+    .hero h1,.hero p,.hero button{
+      position:relative;
+      z-index:2;
+    }
+
+    .hero h1{
+      font-size:34px;
+      line-height:1.05;
+      margin-bottom:12px;
+    }
+
+    .hero p{
+      font-size:15px;
+      line-height:1.6;
+      color:#d8d8d8;
+    }
+
+    .hero button{
+      margin-top:22px;
+      width:100%;
+      border:none;
+      padding:15px;
+      border-radius:18px;
+      background:white;
+      color:#000;
+      font-size:16px;
+      font-weight:bold;
+    }
+
+    .section{margin-top:28px}
+
+    .section h2{
+      font-size:21px;
+      margin-bottom:10px;
+    }
+
+    .intro{
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:22px;
+      padding:18px;
+      line-height:1.6;
+      color:#dddddd;
+      font-size:14px;
+    }
+
+    .games{
+      display:grid;
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .game-card{
+      background:rgba(255,255,255,.075);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:22px;
+      padding:16px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+      box-shadow:0 10px 25px rgba(0,0,0,.25);
+    }
+
+    .icon{
+      width:54px;
+      height:54px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#ffffff,#3a3a3a);
+      color:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:25px;
+      flex-shrink:0;
+    }
+
+    .game-info{flex:1}
+
+    .game-info h3{
+      font-size:16px;
+      margin-bottom:5px;
+    }
+
+    .game-info p{
+      font-size:13px;
+      color:#d7d7d7;
+      line-height:1.4;
+    }
+
+    .status{
+      margin-top:8px;
+      display:inline-block;
+      font-size:11px;
+      padding:5px 9px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      color:#fff;
+    }
+
+    .available{
+      background:#ffffff;
+      color:#000;
+      font-weight:bold;
+    }
+
+    .play-btn{
+      margin-top:10px;
+      border:none;
+      background:#fff;
+      color:#000;
+      padding:10px 14px;
+      border-radius:14px;
+      font-weight:bold;
+    }
+
+    .footer-cta{
+      margin-top:30px;
+      text-align:center;
+      background:linear-gradient(135deg,#202020,#000);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:24px;
+      padding:24px 18px;
+    }
+
+    .footer-cta h2{
+      font-size:22px;
+      margin-bottom:10px;
+    }
+
+    .footer-cta p{
+      font-size:14px;
+      color:#d8d8d8;
+      margin-bottom:18px;
+      line-height:1.5;
+    }
+
+    .footer-cta button{
+      width:100%;
+      border:none;
+      padding:15px;
+      border-radius:18px;
+      background:white;
+      color:#000;
+      font-weight:bold;
+      font-size:15px;
+    }
+  </style>
 </head>
+
 <body>
+  <main class="page">
 
-    <h1>Logical Override</h1>
-    <h2 id="level-text">Level 1 (3 Digit)</h2>
-    <p>Retas sistem! 🟢Benar, 🟡Pindah Posisi, ⚫Salah</p>
-    
-    <div id="board"></div>
+    <div class="badge">⚫ STIFIn Thinking Game</div>
 
-    <div id="input-display"></div>
+    <section class="hero">
+      <h1>Thinking<br>Game Arena</h1>
+      <p>
+        Uji logika, strategi, analisa, dan kemampuan menyusun sistem
+        melalui mini game khas Thinking.
+      </p>
+      <button onclick="scrollToGames()">Mulai Tantangan</button>
+    </section>
 
-    <div id="numpad">
-        <button class="num-btn" onclick="pressNum(1)">1</button>
-        <button class="num-btn" onclick="pressNum(2)">2</button>
-        <button class="num-btn" onclick="pressNum(3)">3</button>
-        <button class="num-btn" onclick="pressNum(4)">4</button>
-        <button class="num-btn" onclick="pressNum(5)">5</button>
-        <button class="num-btn" onclick="pressNum(6)">6</button>
-        <button class="num-btn" onclick="pressNum(7)">7</button>
-        <button class="num-btn" onclick="pressNum(8)">8</button>
-        <button class="num-btn" onclick="pressNum(9)">9</button>
-        <button class="num-btn action-btn" onclick="delNum()">DEL</button>
-        <button class="num-btn" onclick="pressNum(0)">0</button>
-        <button class="num-btn action-btn" onclick="submitGuess()">ENT</button>
-    </div>
+    <section class="section">
+      <h2>Karakter Arena</h2>
+      <div class="intro">
+        Thinking kuat dalam membaca pola, menyusun strategi, menganalisa masalah,
+        dan mencari solusi paling efisien. Arena ini dirancang untuk mengasah logika,
+        ketepatan berpikir, dan kemampuan mengambil keputusan berbasis sistem.
+      </div>
+    </section>
 
-    <div id="overlay">
-        <h1 id="end-title" style="font-size: 32px;">SYSTEM HACKED</h1>
-        <p id="end-desc">Skor tersimpan.</p>
-        <button class="btn-restart" onclick="nextLevel()">Lanjut / Ulang</button>
-    </div>
+    <section class="section" id="games">
+      <h2>Pilih Game Thinking</h2>
 
-    <script>
-        let level = 1;
-        let codeLength = 3;
-        let maxGuesses = 8;
-        let secretCode = "";
-        let currentGuess = "";
-        let guesses = 0;
-        let isGameOver = false;
+      <div class="games">
 
-        const board = document.getElementById('board');
-        const inputDisplay = document.getElementById('input-display');
-        const overlay = document.getElementById('overlay');
-        const endTitle = document.getElementById('end-title');
-        const endDesc = document.getElementById('end-desc');
-        const levelText = document.getElementById('level-text');
+        <div class="game-card">
+          <div class="icon">🧩</div>
+          <div class="game-info">
+            <h3>Logic Pipes</h3>
+            <p>Sambungkan jalur pipa agar energi mengalir ke tujuan.</p>
+            <span class="status available">Available</span><br>
+            <button class="play-btn" onclick="openGame('logic-pipes.html')">Mainkan</button>
+          </div>
+        </div>
 
-        function generateCode() {
-            secretCode = "";
-            let digits = ['0','1','2','3','4','5','6','7','8','9'];
-            for(let i = 0; i < codeLength; i++) {
-                let randIndex = Math.floor(Math.random() * digits.length);
-                secretCode += digits[randIndex];
-                digits.splice(randIndex, 1); // Agar tidak ada angka kembar di awal level
-            }
-            console.log("Cheat - Secret Code:", secretCode); // Hapus baris ini saat rilis
-        }
+        <div class="game-card">
+          <div class="icon">🤖</div>
+          <div class="game-info">
+            <h3>Robot Command</h3>
+            <p>Susun instruksi agar robot mencapai target dengan tepat.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-        function renderInput() {
-            inputDisplay.innerHTML = '';
-            for(let i=0; i<codeLength; i++) {
-                let box = document.createElement('div');
-                box.className = 'input-box';
-                box.innerText = currentGuess[i] || "";
-                inputDisplay.appendChild(box);
-            }
-        }
+        <div class="game-card">
+          <div class="icon">🛡️</div>
+          <div class="game-info">
+            <h3>Tower Defense AI</h3>
+            <p>Atur pertahanan dan resource untuk menahan serangan.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-        function pressNum(num) {
-            if (isGameOver || currentGuess.length >= codeLength) return;
-            currentGuess += num;
-            renderInput();
-        }
+        <div class="game-card">
+          <div class="icon">🔢</div>
+          <div class="game-info">
+            <h3>Number Hack</h3>
+            <p>Pecahkan kode angka dan pola tersembunyi.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-        function delNum() {
-            if (isGameOver || currentGuess.length === 0) return;
-            currentGuess = currentGuess.slice(0, -1);
-            renderInput();
-        }
+        <div class="game-card">
+          <div class="icon">♟️</div>
+          <div class="game-info">
+            <h3>Chess Arena Lite</h3>
+            <p>Ambil keputusan taktis dalam mini arena strategi.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-        function submitGuess() {
-            if (isGameOver || currentGuess.length < codeLength) return;
+        <div class="game-card">
+          <div class="icon">⚡</div>
+          <div class="game-info">
+            <h3>Circuit Builder</h3>
+            <p>Rancang jalur listrik paling efisien menuju output.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-            guesses++;
-            let row = document.createElement('div');
-            row.className = 'guess-row';
+      </div>
+    </section>
 
-            let correctCount = 0;
-            let secretArray = secretCode.split('');
-            let guessArray = currentGuess.split('');
+    <section class="footer-cta">
+      <h2>Siap menguji logikamu?</h2>
+      <p>Mulai dari game pertama dan buktikan ketajaman Thinking-mu.</p>
+      <button onclick="openGame('logic-pipes.html')">Main Game Pertama</button>
+    </section>
 
-            // Cek Hijau (Benar Posisi)
-            let boxColors = Array(codeLength).fill('box-gray');
-            for (let i = 0; i < codeLength; i++) {
-                if (guessArray[i] === secretArray[i]) {
-                    boxColors[i] = 'box-green';
-                    secretArray[i] = null; // Tandai sudah diproses
-                    guessArray[i] = null;
-                    correctCount++;
-                }
-            }
+  </main>
 
-            // Cek Kuning (Salah Posisi)
-            for (let i = 0; i < codeLength; i++) {
-                if (guessArray[i] !== null && secretArray.includes(guessArray[i])) {
-                    boxColors[i] = 'box-yellow';
-                    secretArray[secretArray.indexOf(guessArray[i])] = null;
-                }
-            }
+  <script>
+    function scrollToGames(){
+      document.getElementById("games").scrollIntoView({
+        behavior:"smooth"
+      });
+    }
 
-            // Render ke board
-            for (let i = 0; i < codeLength; i++) {
-                let box = document.createElement('div');
-                box.className = `guess-box ${boxColors[i]}`;
-                box.innerText = currentGuess[i];
-                row.appendChild(box);
-            }
-            board.appendChild(row);
-            board.scrollTop = board.scrollHeight;
-
-            if (correctCount === codeLength) {
-                endGame(true);
-            } else if (guesses >= maxGuesses) {
-                endGame(false);
-            }
-
-            currentGuess = "";
-            renderInput();
-        }
-
-        function endGame(isWin) {
-            isGameOver = true;
-            overlay.style.display = "flex";
-            if (isWin) {
-                endTitle.innerText = "SYSTEM HACKED";
-                endTitle.style.color = "#4caf50";
-                endDesc.innerText = `Lolos Level ${level}!`;
-                
-                // JEMBATAN KE FLUTTER: Kirim Skor saat menang level
-                if (window.SuperAppChannel) {
-                    window.SuperAppChannel.postMessage(level.toString());
-                }
-                level++;
-            } else {
-                endTitle.innerText = "ACCESS DENIED";
-                endTitle.style.color = "#e94560";
-                endDesc.innerText = `Kode sebenarnya adalah ${secretCode}`;
-                
-                // JEMBATAN KE FLUTTER: Kirim Skor (level terakhir) saat kalah
-                if (window.SuperAppChannel) {
-                    window.SuperAppChannel.postMessage((level - 1).toString());
-                }
-                level = 1; // Reset ke awal
-            }
-        }
-
-        function nextLevel() {
-            overlay.style.display = "none";
-            isGameOver = false;
-            guesses = 0;
-            currentGuess = "";
-            board.innerHTML = "";
-            
-            // Atur kesulitan
-            if (level === 1) { codeLength = 3; maxGuesses = 8; }
-            else if (level === 2) { codeLength = 4; maxGuesses = 8; }
-            else if (level === 3) { codeLength = 4; maxGuesses = 6; }
-            else { codeLength = 5; maxGuesses = 7; } // Level 4 ke atas
-            
-            levelText.innerText = `Level ${level} (${codeLength} Digit)`;
-            generateCode();
-            renderInput();
-        }
-
-        // Mulai Game
-        nextLevel();
-    </script>
+    function openGame(url){
+      window.location.href = url;
+    }
+  </script>
 </body>
 </html>
