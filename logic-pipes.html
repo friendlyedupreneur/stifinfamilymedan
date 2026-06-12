@@ -97,6 +97,78 @@
       color: #aaa;
       min-height: 20px;
     }
+
+    .board.energy-running {
+  box-shadow:
+    0 0 18px rgba(76,175,80,.35),
+    inset 0 0 28px rgba(76,175,80,.18);
+  animation: boardEnergyPulse .8s ease;
+}
+
+.tile.energy-flash {
+  animation: tileEnergyFlash .55s ease forwards;
+}
+
+.tile.lamp-on {
+  background: #7CFF6B !important;
+  color: #000 !important;
+  box-shadow:
+    0 0 18px rgba(124,255,107,.95),
+    0 0 34px rgba(124,255,107,.55) !important;
+  animation: lampGlow 1s ease-in-out infinite alternate;
+}
+
+.check-btn.loading {
+  background: #7CFF6B;
+  color: #000;
+  box-shadow: 0 0 22px rgba(124,255,107,.65);
+}
+
+.board.energy-fail {
+  animation: failShake .25s ease;
+}
+
+@keyframes boardEnergyPulse {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+
+@keyframes tileEnergyFlash {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(124,255,107,0);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 22px rgba(124,255,107,.85);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 16px rgba(124,255,107,.55);
+  }
+}
+
+@keyframes lampGlow {
+  from {
+    box-shadow:
+      0 0 16px rgba(124,255,107,.75),
+      0 0 28px rgba(124,255,107,.35);
+  }
+  to {
+    box-shadow:
+      0 0 28px rgba(124,255,107,1),
+      0 0 48px rgba(124,255,107,.65);
+  }
+}
+
+@keyframes failShake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
+}
   </style>
 </head>
 <body>
@@ -386,31 +458,83 @@
     return tiles[lampIndex].power;
   }
 
-  function checkPower() {
-    const connected = tracePower();
+  let checkingEnergy = false;
 
-    if (connected) {
-      const earnedScore = Math.max(120 - moves * 3, 25) + level * 15;
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-      score += earnedScore;
-      scoreEl.innerText = score;
-      finalScore.innerText = score;
+async function playEnergyAnimation(success) {
+  const checkBtn = document.querySelector(".check-btn");
+  const tileButtons = document.querySelectorAll(".tile");
 
-      debugInfo.textContent = `✅ Jalur aktif! +${earnedScore} poin`;
-      gameOver.style.display = "flex";
-    } else {
-      const poweredCount = tiles.filter(t => t.power).length;
-      debugInfo.textContent = `❌ Belum sampai ke lampu. ${poweredCount} tile sudah dialiri energi.`;
+  const poweredIndexes = tiles
+    .map((tile, index) => tile.power ? index : null)
+    .filter(index => index !== null);
 
-      const checkBtn = document.querySelector(".check-btn");
-      checkBtn.style.transform = "scale(.95)";
+  board.classList.add("energy-running");
+  checkBtn.classList.add("loading");
 
-      setTimeout(() => {
-        checkBtn.style.transform = "scale(1)";
-      }, 120);
+  for (const index of poweredIndexes) {
+    const tileEl = tileButtons[index];
+
+    if (tileEl) {
+      tileEl.classList.add("energy-flash");
+
+      if (success && tiles[index].type === "lamp") {
+        tileEl.classList.add("lamp-on");
+      }
     }
+
+    await sleep(120);
   }
 
+  if (!success) {
+    board.classList.add("energy-fail");
+
+    await sleep(300);
+
+    board.classList.remove("energy-fail");
+  }
+
+  await sleep(450);
+
+  checkBtn.classList.remove("loading");
+  board.classList.remove("energy-running");
+}
+
+  async function checkPower() {
+  if (checkingEnergy) return;
+
+  checkingEnergy = true;
+
+  const connected = tracePower();
+
+  await playEnergyAnimation(connected);
+
+  if (connected) {
+    const earnedScore = Math.max(120 - moves * 3, 25) + level * 15;
+
+    score += earnedScore;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    debugInfo.textContent = `✅ Jalur aktif! +${earnedScore} poin`;
+
+    setTimeout(() => {
+      gameOver.style.display = "flex";
+      checkingEnergy = false;
+    }, 400);
+
+  } else {
+    const poweredCount = tiles.filter(t => t.power).length;
+
+    debugInfo.textContent =
+      `❌ Energi belum sampai ke lampu. ${poweredCount} tile sudah menyala.`;
+
+    checkingEnergy = false;
+  }
+}
   function nextLevel() {
     level++;
     levelEl.innerText = level;
