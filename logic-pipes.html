@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Logic Pipes</title>
+  <title>Logic Pipes - Fixed</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
     body{
@@ -34,13 +34,12 @@
     .tile{
       aspect-ratio:1/1;border:none;border-radius:18px;background:#1c1c1c;
       color:white;font-size:32px;transition:.15s;position:relative;
-      cursor:pointer;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
     }
     .tile:active{transform:scale(.93)}
     .tile.power{background:#4CAF50;color:white;box-shadow:0 0 18px rgba(76,175,80,.8)}
     .tile.fixed{background:#2b2b2b;color:white;cursor:not-allowed}
     .tile.empty{opacity:.45;cursor:default}
-    .tile.connected{background:#2196F3;box-shadow:0 0 12px rgba(33,150,243,.6)}
     .controls{margin-top:16px;display:grid;gap:12px}
     .check-btn,.reset-btn{
       border:none;border-radius:18px;padding:16px;font-size:16px;font-weight:bold;
@@ -65,13 +64,38 @@
       background:white;color:black;font-size:16px;font-weight:bold;
       cursor:pointer;
     }
+
+    /* Visual connection indicators */
+    .connection-up, .connection-right, .connection-down, .connection-left {
+      position: absolute;
+      background: #666;
+      transition: background 0.3s;
+    }
+    .connection-up {
+      width: 6px; height: 12px; top: -6px; left: 50%; transform: translateX(-50%);
+    }
+    .connection-right {
+      width: 12px; height: 6px; right: -6px; top: 50%; transform: translateY(-50%);
+    }
+    .connection-down {
+      width: 6px; height: 12px; bottom: -6px; left: 50%; transform: translateX(-50%);
+    }
+    .connection-left {
+      width: 12px; height: 6px; left: -6px; top: 50%; transform: translateY(-50%);
+    }
+    .power .connection-up,
+    .power .connection-right,
+    .power .connection-down,
+    .power .connection-left {
+      background: #2E7D32;
+    }
     
-    .auto-check-hint {
+    .debug-info {
       text-align: center;
-      margin-top: 8px;
+      margin-top: 10px;
       font-size: 12px;
-      color: #4CAF50;
-      display: none;
+      color: #aaa;
+      min-height: 20px;
     }
   </style>
 </head>
@@ -97,10 +121,10 @@
       <button class="reset-btn" onclick="loadLevel()">Acak Ulang</button>
     </div>
 
+    <div class="debug-info" id="debugInfo"></div>
     <div class="hint">
       Tap kotak pipa untuk memutar. Jalur harus nyambung dari 🔋 ke 💡.
     </div>
-    <div class="auto-check-hint" id="autoHint">✅ Jalur otomatis terhubung!</div>
   </div>
 
   <div class="game-over" id="gameOver">
@@ -120,261 +144,308 @@
   const movesEl = document.getElementById("moves");
   const gameOver = document.getElementById("gameOver");
   const finalScore = document.getElementById("finalScore");
-  const autoHint = document.getElementById("autoHint");
+  const debugInfo = document.getElementById("debugInfo");
 
   const SIZE = 4;
   let level = 1, score = 0, moves = 0;
   let tiles = [];
 
-  // Level design dengan koordinat [row, col]
+  // Level designs - yang pasti bisa diselesaikan
   const levels = [
-    // Level 1: Simple straight path
+    // Level 1: Path lurus sederhana
     [
-      {type:"battery", rot:1, row:0, col:0}, // kanan
-      {type:"straight", rot:0, row:0, col:1}, // horizontal
-      {type:"corner", rot:3, row:0, col:2},   // kanan-bawah
-      {type:"empty", rot:0, row:0, col:3},
-      {type:"empty", rot:0, row:1, col:0},
-      {type:"empty", rot:0, row:1, col:1},
-      {type:"straight", rot:1, row:1, col:2}, // vertikal
-      {type:"empty", rot:0, row:1, col:3},
-      {type:"empty", rot:0, row:2, col:0},
-      {type:"empty", rot:0, row:2, col:1},
-      {type:"corner", rot:0, row:2, col:2},   // kiri-bawah
-      {type:"straight", rot:0, row:2, col:3}, // horizontal
-      {type:"empty", rot:0, row:3, col:0},
-      {type:"empty", rot:0, row:3, col:1},
-      {type:"empty", rot:0, row:3, col:2},
-      {type:"lamp", rot:3, row:3, col:3}      // kiri
+      {type:"battery", rot:1}, // 0,0 - kanan
+      {type:"straight", rot:0}, // 0,1 - horizontal
+      {type:"straight", rot:0}, // 0,2 - horizontal
+      {type:"corner", rot:3},   // 0,3 - kanan-bawah
+      {type:"empty", rot:0},    // 1,0
+      {type:"empty", rot:0},    // 1,1
+      {type:"empty", rot:0},    // 1,2
+      {type:"straight", rot:1}, // 1,3 - vertikal
+      {type:"empty", rot:0},    // 2,0
+      {type:"empty", rot:0},    // 2,1
+      {type:"empty", rot:0},    // 2,2
+      {type:"corner", rot:0},   // 2,3 - kiri-bawah
+      {type:"empty", rot:0},    // 3,0
+      {type:"empty", rot:0},    // 3,1
+      {type:"empty", rot:0},    // 3,2
+      {type:"lamp", rot:2},     // 3,3 - atas
     ],
-    // Level 2: L-shape path
+    // Level 2: Path L-shape
     [
-      {type:"battery", rot:1, row:0, col:0}, // kanan
-      {type:"corner", rot:1, row:0, col:1},  // kanan-bawah
-      {type:"empty", rot:0, row:0, col:2},
-      {type:"empty", rot:0, row:0, col:3},
-      {type:"empty", rot:0, row:1, col:0},
-      {type:"straight", rot:1, row:1, col:1}, // vertikal
-      {type:"corner", rot:2, row:1, col:2},   // bawah-kiri
-      {type:"empty", rot:0, row:1, col:3},
-      {type:"empty", rot:0, row:2, col:0},
-      {type:"corner", rot:0, row:2, col:1},   // kiri-bawah
-      {type:"corner", rot:2, row:2, col:2},   // bawah-kiri
-      {type:"empty", rot:0, row:2, col:3},
-      {type:"empty", rot:0, row:3, col:0},
-      {type:"straight", rot:0, row:3, col:1}, // horizontal
-      {type:"straight", rot:0, row:3, col:2}, // horizontal
-      {type:"lamp", rot:3, row:3, col:3}      // kiri
-    ],
-    // Level 3: Complex path
-    [
-      {type:"battery", rot:2, row:0, col:0}, // bawah
-      {type:"empty", rot:0, row:0, col:1},
-      {type:"corner", rot:1, row:0, col:2},  // kanan-bawah
-      {type:"lamp", rot:2, row:0, col:3},    // atas
-      {type:"straight", rot:1, row:1, col:0}, // vertikal
-      {type:"corner", rot:1, row:1, col:1},   // kanan-bawah
-      {type:"straight", rot:0, row:1, col:2}, // horizontal
-      {type:"straight", rot:1, row:1, col:3}, // vertikal
-      {type:"corner", rot:0, row:2, col:0},   // kiri-bawah
-      {type:"corner", rot:2, row:2, col:1},   // bawah-kiri
-      {type:"empty", rot:0, row:2, col:2},
-      {type:"empty", rot:0, row:2, col:3},
-      {type:"empty", rot:0, row:3, col:0},
-      {type:"empty", rot:0, row:3, col:1},
-      {type:"empty", rot:0, row:3, col:2},
-      {type:"empty", rot:0, row:3, col:3}
+      {type:"battery", rot:2}, // 0,0 - bawah
+      {type:"empty", rot:0},   // 0,1
+      {type:"empty", rot:0},   // 0,2
+      {type:"empty", rot:0},   // 0,3
+      {type:"straight", rot:1}, // 1,0 - vertikal
+      {type:"empty", rot:0},    // 1,1
+      {type:"empty", rot:0},    // 1,2
+      {type:"empty", rot:0},    // 1,3
+      {type:"corner", rot:0},   // 2,0 - kiri-bawah
+      {type:"straight", rot:0}, // 2,1 - horizontal
+      {type:"straight", rot:0}, // 2,2 - horizontal
+      {type:"corner", rot:3},   // 2,3 - kanan-bawah
+      {type:"empty", rot:0},    // 3,0
+      {type:"empty", rot:0},    // 3,1
+      {type:"empty", rot:0},    // 3,2
+      {type:"lamp", rot:0},     // 3,3 - atas
     ]
   ];
 
+  // FUNGSI KONEKSI YANG SUDAH DIPERBAIKI
   // Arah: 0=atas, 1=kanan, 2=bawah, 3=kiri
-  function connections(tile){
-    if(tile.type === "empty") return [];
+  function getTileConnections(tile) {
+    if (!tile || tile.type === "empty") return [];
     
-    if(tile.type === "battery"){
-      // Battery hanya mengeluarkan energi ke 1 arah
-      return [tile.rot];
+    switch(tile.type) {
+      case "battery":
+        // Battery mengeluarkan energi ke SATU arah berdasarkan rotasi
+        return [tile.rot]; // 0=atas, 1=kanan, 2=bawah, 3=kiri
+        
+      case "lamp":
+        // Lampu menerima energi dari SATU arah
+        return [tile.rot];
+        
+      case "straight":
+        // Pipa lurus: rot 0=horizontal(kanan-kiri), rot 1=vertikal(atas-bawah)
+        // rot 2=horizontal, rot 3=vertikal
+        if (tile.rot === 0 || tile.rot === 2) return [1, 3]; // kanan, kiri
+        return [0, 2]; // atas, bawah
+        
+      case "corner":
+        // Pipa sudut: 
+        // rot 0: kiri-bawah (3, 2)
+        // rot 1: atas-kanan (0, 1) 
+        // rot 2: kanan-bawah (1, 2)
+        // rot 3: kiri-atas (3, 0)
+        const corners = [
+          [3, 2], // rot 0: kiri, bawah
+          [0, 1], // rot 1: atas, kanan
+          [1, 2], // rot 2: kanan, bawah
+          [3, 0]  // rot 3: kiri, atas
+        ];
+        return corners[tile.rot];
+        
+      default:
+        return [];
     }
-    
-    if(tile.type === "lamp"){
-      // Lampu hanya menerima dari 1 arah
-      return [tile.rot];
-    }
-    
-    if(tile.type === "straight"){
-      // Straight: rot 0/2 = horizontal (kiri-kanan), rot 1/3 = vertikal (atas-bawah)
-      return tile.rot % 2 === 0 ? [1, 3] : [0, 2];
-    }
-    
-    if(tile.type === "corner"){
-      // Corner: rot 0=kiri-bawah, 1=kanan-bawah, 2=kanan-atas, 3=kiri-atas
-      const cornerMap = [
-        [3, 2], // kiri(3) dan bawah(2)
-        [1, 2], // kanan(1) dan bawah(2)
-        [1, 0], // kanan(1) dan atas(0)
-        [3, 0]  // kiri(3) dan atas(0)
-      ];
-      return cornerMap[tile.rot];
-    }
-    
-    return [];
   }
 
-  function symbol(tile){
-    if(tile.type === "battery") return "🔋";
-    if(tile.type === "lamp") return "💡";
-    if(tile.type === "empty") return "";
+  function getSymbol(tile) {
+    if (!tile) return "";
     
-    if(tile.type === "straight") {
-      return tile.rot % 2 === 0 ? "━" : "┃";
+    switch(tile.type) {
+      case "battery": return "🔋";
+      case "lamp": return "💡";
+      case "empty": return "";
+      case "straight":
+        return (tile.rot === 0 || tile.rot === 2) ? "━" : "┃";
+      case "corner":
+        const cornerSymbols = ["┛", "┏", "┗", "┓"];
+        return cornerSymbols[tile.rot];
+      default: return "?";
     }
-    
-    if(tile.type === "corner") {
-      const cornerSymbols = ["┛", "┗", "┏", "┓"];
-      return cornerSymbols[tile.rot];
-    }
-    
-    return "?";
   }
 
-  function loadLevel(){
+  function getOppositeDir(dir) {
+    return (dir + 2) % 4;
+  }
+
+  function getNeighborIndex(index, dir) {
+    const row = Math.floor(index / SIZE);
+    const col = index % SIZE;
+    
+    switch(dir) {
+      case 0: return row > 0 ? index - SIZE : -1;        // atas
+      case 1: return col < SIZE - 1 ? index + 1 : -1;    // kanan
+      case 2: return row < SIZE - 1 ? index + SIZE : -1;  // bawah
+      case 3: return col > 0 ? index - 1 : -1;           // kiri
+      default: return -1;
+    }
+  }
+
+  function loadLevel() {
     moves = 0;
     movesEl.innerText = moves;
     gameOver.style.display = "none";
-    autoHint.style.display = "none";
 
     const levelData = levels[(level - 1) % levels.length];
-    
-    // Deep copy level data
-    tiles = levelData.map(t => {
-      const newTile = {...t};
-      
-      // Randomize rotation for non-fixed tiles
-      if(t.type !== "battery" && t.type !== "lamp" && t.type !== "empty"){
-        newTile.rot = Math.floor(Math.random() * 4);
-      }
-      
-      newTile.power = false;
-      return newTile;
-    });
+    tiles = levelData.map((t, index) => ({
+      ...t,
+      index: index,
+      power: false
+    }));
 
     render();
-    checkPower(true); // Auto-check on load
+    
+    // Cek apakah level sudah solved dari awal
+    const isSolved = checkConnections();
+    if (isSolved) {
+      debugInfo.textContent = "✅ Level ini sudah tersambung! Klik 'Alirkan Energi' untuk lanjut.";
+    } else {
+      debugInfo.textContent = "🔄 Putar pipa untuk menyambungkan jalur.";
+    }
   }
 
-  function render(){
+  function render() {
     board.innerHTML = "";
 
-    tiles.forEach((tile, i) => {
+    tiles.forEach((tile, index) => {
       const btn = document.createElement("button");
       btn.className = "tile";
-      if(tile.power) btn.classList.add("power");
-      if(tile.type === "battery" || tile.type === "lamp") btn.classList.add("fixed");
-      if(tile.type === "empty") btn.classList.add("empty");
+      if (tile.power) btn.classList.add("power");
+      if (tile.type === "battery" || tile.type === "lamp") btn.classList.add("fixed");
+      if (tile.type === "empty") btn.classList.add("empty");
 
-      btn.innerText = symbol(tile);
+      // Tambahkan indikator koneksi
+      const connections = getTileConnections(tile);
+      
+      // Container untuk symbol
+      const symbolSpan = document.createElement("span");
+      symbolSpan.textContent = getSymbol(tile);
+      symbolSpan.style.position = "relative";
+      symbolSpan.style.zIndex = "1";
+      btn.appendChild(symbolSpan);
+
+      // Tambahkan indikator visual untuk setiap koneksi
+      const dirs = ["up", "right", "down", "left"];
+      dirs.forEach((dirName, dirIndex) => {
+        if (connections.includes(dirIndex)) {
+          const indicator = document.createElement("div");
+          indicator.className = `connection-${dirName}`;
+          if (tile.power) {
+            indicator.style.background = "#2E7D32";
+          }
+          btn.appendChild(indicator);
+        }
+      });
 
       btn.onclick = () => {
-        if(tile.type === "empty" || tile.type === "battery" || tile.type === "lamp") return;
+        if (tile.type === "empty" || tile.type === "battery" || tile.type === "lamp") return;
         
         tile.rot = (tile.rot + 1) % 4;
-        tile.power = false;
         moves++;
         movesEl.innerText = moves;
         render();
-        checkPower(true); // Auto-check after each rotation
+        
+        // Cek koneksi setiap kali rotasi
+        const isSolved = checkConnections();
+        if (isSolved) {
+          debugInfo.textContent = "✅ Jalur tersambung! Klik 'Alirkan Energi' untuk klaim score.";
+        } else {
+          debugInfo.textContent = "🔄 Putar pipa untuk menyambungkan jalur.";
+        }
       };
 
       board.appendChild(btn);
     });
   }
 
-  function opposite(dir){
-    return (dir + 2) % 4;
-  }
-
-  function neighbor(index, dir){
-    const r = Math.floor(index / SIZE);
-    const c = index % SIZE;
-    
-    if(dir === 0 && r > 0) return index - SIZE;       // atas
-    if(dir === 1 && c < SIZE - 1) return index + 1;    // kanan
-    if(dir === 2 && r < SIZE - 1) return index + SIZE; // bawah
-    if(dir === 3 && c > 0) return index - 1;           // kiri
-    
-    return -1;
-  }
-
-  function checkPower(silent = false){
-    // Reset all power states
+  // FUNGSI UTAMA: Cek apakah semua pipa tersambung dengan benar
+  function checkConnections() {
+    // Reset power
     tiles.forEach(t => t.power = false);
 
-    const startIndex = tiles.findIndex(t => t.type === "battery");
-    const endIndex = tiles.findIndex(t => t.type === "lamp");
-    
-    if(startIndex === -1 || endIndex === -1) return;
+    const batteryIndex = tiles.findIndex(t => t.type === "battery");
+    const lampIndex = tiles.findIndex(t => t.type === "lamp");
 
-    // BFS untuk mencari jalur
-    const queue = [startIndex];
+    if (batteryIndex === -1 || lampIndex === -1) {
+      debugInfo.textContent = "❌ Battery atau Lampu tidak ditemukan!";
+      return false;
+    }
+
+    // BFS dari battery
     const visited = new Set();
-    visited.add(startIndex);
-    tiles[startIndex].power = true;
+    const queue = [batteryIndex];
+    visited.add(batteryIndex);
+    tiles[batteryIndex].power = true;
 
-    while(queue.length > 0){
-      const current = queue.shift();
-      const currentTile = tiles[current];
-      const currentConn = connections(currentTile);
-      
-      // Cek semua koneksi dari tile saat ini
-      for(const dir of currentConn){
-        const next = neighbor(current, dir);
+    let foundPath = false;
+
+    while (queue.length > 0) {
+      const currentIndex = queue.shift();
+      const currentTile = tiles[currentIndex];
+      const currentConnections = getTileConnections(currentTile);
+
+      // Cek setiap arah koneksi dari tile saat ini
+      for (const dir of currentConnections) {
+        const neighborIndex = getNeighborIndex(currentIndex, dir);
         
-        if(next === -1) continue; // Di luar board
-        if(visited.has(next)) continue; // Sudah dikunjungi
+        // Skip jika di luar board
+        if (neighborIndex === -1) continue;
         
-        const nextTile = tiles[next];
-        const nextConn = connections(nextTile);
+        // Skip jika sudah dikunjungi
+        if (visited.has(neighborIndex)) continue;
         
-        // Tile berikutnya harus punya koneksi ke arah sebaliknya
-        const neededDir = opposite(dir);
-        if(nextConn.includes(neededDir)){
-          visited.add(next);
-          tiles[next].power = true;
-          queue.push(next);
+        const neighborTile = tiles[neighborIndex];
+        
+        // Skip jika tile kosong
+        if (neighborTile.type === "empty") continue;
+        
+        const neighborConnections = getTileConnections(neighborTile);
+        const neededDir = getOppositeDir(dir);
+        
+        // Cek apakah neighbor punya koneksi ke arah sebaliknya
+        if (neighborConnections.includes(neededDir)) {
+          visited.add(neighborIndex);
+          tiles[neighborIndex].power = true;
+          queue.push(neighborIndex);
           
-          // Jika sudah sampai lampu, berhenti
-          if(next === endIndex) {
-            break;
+          // Jika sampai di lampu, tandai found
+          if (neighborIndex === lampIndex) {
+            foundPath = true;
           }
         }
       }
     }
 
+    // Render ulang untuk menunjukkan power
     render();
     
-    // Jika lampu menyala
-    if(tiles[endIndex].power) {
-      if(!silent) {
-        score += Math.max(80 - moves * 3, 20) + level * 10;
-        scoreEl.innerText = score;
-        finalScore.innerText = score;
-        gameOver.style.display = "flex";
-      } else {
-        autoHint.style.display = "block";
-        setTimeout(() => {
-          autoHint.style.display = "none";
-        }, 2000);
-      }
+    return foundPath && tiles[lampIndex].power;
+  }
+
+  function checkPower() {
+    const isConnected = checkConnections();
+    
+    if (isConnected && tiles[tiles.findIndex(t => t.type === "lamp")].power) {
+      // Hitung score
+      const baseScore = 100;
+      const movePenalty = moves * 2;
+      const levelBonus = level * 20;
+      const earnedScore = Math.max(baseScore - movePenalty + levelBonus, 10);
+      
+      score += earnedScore;
+      scoreEl.innerText = score;
+      finalScore.innerText = score;
+      
+      debugInfo.textContent = `✅ Berhasil! +${earnedScore} poin`;
+      gameOver.style.display = "flex";
+    } else {
+      // Tunjukkan debug info kenapa gagal
+      const batteryIndex = tiles.findIndex(t => t.type === "battery");
+      const lampIndex = tiles.findIndex(t => t.type === "lamp");
+      const poweredCount = tiles.filter(t => t.power).length;
+      
+      debugInfo.textContent = `❌ Belum tersambung. ${poweredCount} tile menyala. Coba putar lagi!`;
+      
+      // Vibrasi atau feedback visual
+      const checkBtn = document.querySelector(".check-btn");
+      checkBtn.style.transform = "scale(0.95)";
+      setTimeout(() => {
+        checkBtn.style.transform = "scale(1)";
+      }, 100);
     }
   }
 
-  function nextLevel(){
+  function nextLevel() {
     level++;
     levelEl.innerText = level;
+    gameOver.style.display = "none";
     loadLevel();
   }
 
-  // Inisialisasi game
+  // Start game
   loadLevel();
 </script>
 </body>
