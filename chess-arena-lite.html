@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chess Arena Lite</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:radial-gradient(circle at top,#2b2b2b,#080808 55%,#000);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.1);
+      border:none;
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:32px;margin-bottom:8px}
+    .title p{font-size:14px;color:#d8d8d8;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:21px}
+    .stat span{font-size:10px;color:#d8d8d8}
+
+    .mission{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      font-size:14px;
+      color:#d8d8d8;
+      line-height:1.5;
+      text-align:center;
+    }
+
+    .board{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:7px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:26px;
+      padding:14px;
+      box-shadow:0 18px 40px rgba(0,0,0,.35);
+    }
+
+    .cell{
+      aspect-ratio:1/1;
+      border:none;
+      border-radius:13px;
+      background:#1c1c1c;
+      color:white;
+      font-size:30px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      transition:.12s;
+    }
+
+    .cell:nth-child(odd){
+      background:#262626;
+    }
+
+    .cell:active{transform:scale(.94)}
+
+    .player{
+      background:#fff !important;
+      color:#000;
+      box-shadow:0 0 18px rgba(255,255,255,.6);
+    }
+
+    .target{
+      background:#301414 !important;
+      box-shadow:inset 0 0 18px rgba(255,80,80,.4);
+    }
+
+    .blocker{
+      background:#303030 !important;
+      color:#888;
+    }
+
+    .valid{
+      outline:3px solid #7CFF6B;
+      box-shadow:0 0 16px rgba(124,255,107,.7);
+    }
+
+    .danger{
+      outline:3px solid #ff4d4d;
+    }
+
+    .controls{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .main-btn,.reset-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:16px;
+      font-weight:bold;
+    }
+
+    .main-btn{background:white;color:black}
+    .reset-btn{background:rgba(255,255,255,.12);color:white}
+
+    .info{
+      text-align:center;
+      margin-top:14px;
+      color:#d8d8d8;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#111;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.13);
+    }
+
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#d8d8d8;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:black;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>♟️ Chess Arena Lite</h1>
+      <p>Gerakkan bidak dengan pola catur untuk menangkap raja lawan.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="moves">0</h2><span>Move</span></div>
+      <div class="stat"><h2 id="limit">3</h2><span>Limit</span></div>
+    </div>
+
+    <div class="mission" id="mission">
+      Tap bidak putih, lalu pilih langkah hijau untuk mendekati ♚.
+    </div>
+
+    <div class="board" id="board"></div>
+
+    <div class="controls">
+      <button class="main-btn" onclick="showValidMoves()">Lihat Langkah Valid</button>
+      <button class="reset-btn" onclick="loadLevel()">Ulang Level</button>
+    </div>
+
+    <div class="info" id="info">
+      Tujuan: tangkap ♚ sebelum limit langkah habis.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">🏆 Checkmate!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" id="nextBtn" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const SIZE = 5;
+
+  const board = document.getElementById("board");
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const movesEl = document.getElementById("moves");
+  const limitEl = document.getElementById("limit");
+  const mission = document.getElementById("mission");
+  const info = document.getElementById("info");
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+  const nextBtn = document.getElementById("nextBtn");
+
+  let score = 0;
+  let level = 1;
+  let moves = 0;
+  let selected = true;
+  let validMoves = [];
+  let current = null;
+
+  const pieces = {
+    rook:{ icon:"♖", name:"Benteng", desc:"bergerak lurus horizontal atau vertikal" },
+    bishop:{ icon:"♗", name:"Gajah", desc:"bergerak diagonal" },
+    queen:{ icon:"♕", name:"Ratu", desc:"bergerak lurus dan diagonal" },
+    knight:{ icon:"♘", name:"Kuda", desc:"bergerak bentuk L" }
+  };
+
+  const levels = [
+    {
+      piece:"rook",
+      start:{x:0,y:4},
+      target:{x:4,y:4},
+      blockers:[{x:2,y:4},{x:2,y:3}],
+      limit:3
+    },
+    {
+      piece:"bishop",
+      start:{x:0,y:4},
+      target:{x:4,y:0},
+      blockers:[{x:2,y:2}],
+      limit:4
+    },
+    {
+      piece:"knight",
+      start:{x:0,y:4},
+      target:{x:4,y:0},
+      blockers:[{x:2,y:3},{x:3,y:2}],
+      limit:4
+    },
+    {
+      piece:"queen",
+      start:{x:0,y:0},
+      target:{x:4,y:4},
+      blockers:[{x:2,y:2},{x:1,y:3},{x:3,y:1}],
+      limit:4
+    },
+    {
+      piece:"rook",
+      start:{x:4,y:0},
+      target:{x:0,y:4},
+      blockers:[{x:4,y:2},{x:2,y:4},{x:1,y:2}],
+      limit:5
+    },
+    {
+      piece:"bishop",
+      start:{x:1,y:4},
+      target:{x:4,y:1},
+      blockers:[{x:2,y:3},{x:3,y:2}],
+      limit:5
+    }
+  ];
+
+  function loadLevel(){
+    const data = levels[(level - 1) % levels.length];
+
+    current = JSON.parse(JSON.stringify(data));
+    current.player = {...current.start};
+
+    moves = 0;
+    validMoves = [];
+    selected = true;
+
+    levelEl.innerText = level;
+    movesEl.innerText = moves;
+    limitEl.innerText = current.limit;
+
+    const p = pieces[current.piece];
+
+    mission.innerHTML =
+      `Bidak kamu: <strong>${p.icon} ${p.name}</strong><br>` +
+      `Pola gerak: ${p.desc}. Tangkap ♚ dalam ${current.limit} langkah.`;
+
+    info.innerText = "Tap kotak hijau untuk bergerak.";
+    gameOver.style.display = "none";
+
+    renderBoard();
+    showValidMoves();
+  }
+
+  function isBlocker(x,y){
+    return current.blockers.some(b => b.x === x && b.y === y);
+  }
+
+  function inside(x,y){
+    return x >= 0 && x < SIZE && y >= 0 && y < SIZE;
+  }
+
+  function same(a,b){
+    return a.x === b.x && a.y === b.y;
+  }
+
+  function addSlidingMoves(directions, result){
+    directions.forEach(dir => {
+      let x = current.player.x + dir.x;
+      let y = current.player.y + dir.y;
+
+      while(inside(x,y)){
+        if(isBlocker(x,y)) break;
+
+        result.push({x,y});
+
+        if(x === current.target.x && y === current.target.y) break;
+
+        x += dir.x;
+        y += dir.y;
+      }
+    });
+  }
+
+  function calculateMoves(){
+    const result = [];
+    const piece = current.piece;
+
+    if(piece === "rook" || piece === "queen"){
+      addSlidingMoves([
+        {x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}
+      ], result);
+    }
+
+    if(piece === "bishop" || piece === "queen"){
+      addSlidingMoves([
+        {x:1,y:1},{x:-1,y:-1},{x:1,y:-1},{x:-1,y:1}
+      ], result);
+    }
+
+    if(piece === "knight"){
+      const jumps = [
+        {x:1,y:2},{x:2,y:1},{x:-1,y:2},{x:-2,y:1},
+        {x:1,y:-2},{x:2,y:-1},{x:-1,y:-2},{x:-2,y:-1}
+      ];
+
+      jumps.forEach(j => {
+        const x = current.player.x + j.x;
+        const y = current.player.y + j.y;
+
+        if(inside(x,y) && !isBlocker(x,y)){
+          result.push({x,y});
+        }
+      });
+    }
+
+    return result;
+  }
+
+  function showValidMoves(){
+    validMoves = calculateMoves();
+    renderBoard();
+    info.innerText = "Kotak hijau adalah langkah valid. Pilih langkah terbaik.";
+  }
+
+  function isValidMove(x,y){
+    return validMoves.some(m => m.x === x && m.y === y);
+  }
+
+  function moveTo(x,y){
+    if(!isValidMove(x,y)){
+      info.innerText = "❌ Langkah tidak valid untuk bidak ini.";
+      return;
+    }
+
+    current.player = {x,y};
+    moves++;
+    movesEl.innerText = moves;
+
+    if(x === current.target.x && y === current.target.y){
+      winLevel();
+      return;
+    }
+
+    if(moves >= current.limit){
+      loseLevel();
+      return;
+    }
+
+    validMoves = calculateMoves();
+    renderBoard();
+    info.innerText = `Langkah ${moves}/${current.limit}. Cari jalur tercepat ke ♚.`;
+  }
+
+  function renderBoard(){
+    board.innerHTML = "";
+
+    for(let y=0;y<SIZE;y++){
+      for(let x=0;x<SIZE;x++){
+        const cell = document.createElement("button");
+        cell.className = "cell";
+
+        if(isBlocker(x,y)){
+          cell.classList.add("blocker");
+          cell.innerText = "♟";
+        }
+
+        if(x === current.target.x && y === current.target.y){
+          cell.classList.add("target");
+          cell.innerText = "♚";
+        }
+
+        if(x === current.player.x && y === current.player.y){
+          cell.classList.add("player");
+          cell.innerText = pieces[current.piece].icon;
+        }
+
+        if(isValidMove(x,y)){
+          cell.classList.add("valid");
+        }
+
+        cell.onclick = () => moveTo(x,y);
+        board.appendChild(cell);
+      }
+    }
+  }
+
+  function winLevel(){
+    const earnedScore =
+      Math.max(120 - moves * 15, 35) +
+      level * 20;
+
+    score += earnedScore;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    popupTitle.innerText = "🏆 Checkmate!";
+    popupText.innerHTML =
+      `Raja lawan berhasil ditangkap.<br><br>` +
+      `Bonus: +${earnedScore}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Level Berikutnya";
+    nextBtn.onclick = nextLevel;
+
+    gameOver.style.display = "flex";
+  }
+
+  function loseLevel(){
+    popupTitle.innerText = "❌ Skak Gagal!";
+    popupText.innerHTML =
+      `Limit langkah habis.<br><br>` +
+      `Coba susun jalur yang lebih efisien.<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Ulang Level";
+    nextBtn.onclick = retryLevel;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    loadLevel();
+  }
+
+  function retryLevel(){
+    loadLevel();
+  }
+
+  loadLevel();
+</script>
+</body>
+</html>
