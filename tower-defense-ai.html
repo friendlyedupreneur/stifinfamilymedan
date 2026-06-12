@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tower Defense AI v2</title>
+  <title>Tower Defense AI Strategic</title>
 
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
@@ -16,43 +16,36 @@
       overflow-y:auto;
     }
 
-    .container{
-      max-width:480px;
-      margin:auto;
-      padding:20px 16px 120px;
-    }
+    .container{max-width:480px;margin:auto;padding:20px 16px 120px}
 
     .back-btn{
       background:rgba(255,255,255,.1);
-      border:none;
-      color:white;
-      padding:10px 14px;
-      border-radius:14px;
-      font-size:14px;
-      margin-bottom:18px;
+      border:none;color:white;
+      padding:10px 14px;border-radius:14px;
+      font-size:14px;margin-bottom:18px;
     }
 
     .title{text-align:center;margin-bottom:16px}
-    .title h1{font-size:32px;margin-bottom:8px}
+    .title h1{font-size:31px;margin-bottom:8px}
     .title p{font-size:14px;color:#d8d8d8;line-height:1.5}
 
     .stats{
       display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:8px;
+      grid-template-columns:repeat(6,1fr);
+      gap:7px;
       margin-bottom:14px;
     }
 
     .stat{
       background:rgba(255,255,255,.07);
       border:1px solid rgba(255,255,255,.13);
-      border-radius:16px;
-      padding:11px 5px;
+      border-radius:15px;
+      padding:10px 4px;
       text-align:center;
     }
 
-    .stat h2{font-size:19px}
-    .stat span{font-size:10px;color:#d8d8d8}
+    .stat h2{font-size:17px}
+    .stat span{font-size:9px;color:#d8d8d8}
 
     .phase-box{
       background:rgba(255,255,255,.08);
@@ -118,6 +111,36 @@
       line-height:1.35;
     }
 
+    .selected-panel{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:20px;
+      padding:14px;
+      margin-bottom:14px;
+      display:none;
+    }
+
+    .selected-panel h3{
+      font-size:15px;
+      margin-bottom:10px;
+    }
+
+    .selected-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .panel-btn{
+      border:none;
+      border-radius:15px;
+      padding:13px;
+      font-weight:bold;
+    }
+
+    .upgrade-btn{background:white;color:black}
+    .delete-btn{background:rgba(255,255,255,.13);color:white}
+
     .board{
       display:grid;
       grid-template-columns:repeat(6,1fr);
@@ -139,7 +162,7 @@
       align-items:center;
       justify-content:center;
       position:relative;
-      font-size:23px;
+      font-size:22px;
       overflow:hidden;
       user-select:none;
     }
@@ -171,9 +194,12 @@
       box-shadow:0 0 12px rgba(255,255,255,.35);
     }
 
-    .cell.tower-fire{
-      animation:towerFire .28s ease;
+    .cell.selected-tower{
+      outline:3px solid #7CFF6B;
+      box-shadow:0 0 20px rgba(124,255,107,.8);
     }
+
+    .cell.tower-fire{animation:towerFire .25s ease}
 
     @keyframes towerFire{
       0%{transform:scale(1);box-shadow:0 0 0 rgba(124,255,107,0)}
@@ -196,7 +222,7 @@
     .enemy{
       position:relative;
       z-index:2;
-      font-size:23px;
+      font-size:22px;
       animation:enemyMove .5s infinite alternate;
     }
 
@@ -238,16 +264,9 @@
       z-index:3;
     }
 
-    .hp-fill{
-      height:100%;
-      background:#7CFF6B;
-      width:100%;
-    }
+    .hp-fill{height:100%;background:#7CFF6B;width:100%}
 
-    .controls{
-      display:grid;
-      gap:12px;
-    }
+    .controls{display:grid;gap:12px}
 
     .main-btn,.reset-btn{
       border:none;
@@ -313,12 +332,13 @@
 
     <div class="title">
       <h1>🛡️ Tower Defense AI</h1>
-      <p>Susun strategi sebelum wave dimulai. Tower terbatas, energy terbatas, keputusan harus tepat.</p>
+      <p>Map berubah, senjata terbatas, dan strategi harus disusun ulang setiap fase.</p>
     </div>
 
     <div class="stats">
       <div class="stat"><h2 id="wave">1</h2><span>Wave</span></div>
-      <div class="stat"><h2 id="energy">130</h2><span>Energy</span></div>
+      <div class="stat"><h2 id="mapName">A</h2><span>Map</span></div>
+      <div class="stat"><h2 id="energy">140</h2><span>Energy</span></div>
       <div class="stat"><h2 id="lives">10</h2><span>Base</span></div>
       <div class="stat"><h2 id="towerCount">0/4</h2><span>Tower</span></div>
       <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
@@ -335,13 +355,21 @@
     <div class="tower-select">
       <button class="tower-card selected" id="cannonBtn" onclick="selectTower('cannon')">
         🔫 Cannon AI
-        <small>Cost 45<br>Cepat • Damage sedang</small>
+        <small>Cost 45<br>Cepat • bisa upgrade awal</small>
       </button>
 
       <button class="tower-card" id="teslaBtn" onclick="selectTower('tesla')">
         ⚡ Tesla AI
-        <small>Cost 80<br>Lambat • Damage besar</small>
+        <small>Cost 90<br>Kuat • dibatasi per wave</small>
       </button>
+    </div>
+
+    <div class="selected-panel" id="selectedPanel">
+      <h3 id="selectedInfo">Tower dipilih</h3>
+      <div class="selected-actions">
+        <button class="panel-btn upgrade-btn" onclick="upgradeSelectedTower()">Upgrade</button>
+        <button class="panel-btn delete-btn" onclick="deleteSelectedTower()">Hapus</button>
+      </div>
     </div>
 
     <div class="board" id="board"></div>
@@ -352,7 +380,7 @@
     </div>
 
     <div class="info" id="info">
-      Tap area kosong untuk membangun tower. Tap tower saat Build Phase untuk upgrade.
+      Tap area kosong untuk membangun tower. Tap tower untuk upgrade atau hapus saat Build Phase.
     </div>
   </div>
 
@@ -371,26 +399,55 @@
   const COLS = 6;
   const MAX_TOWERS = 4;
 
-  const path = [
-    {x:0,y:2},{x:1,y:2},{x:2,y:2},
-    {x:2,y:1},{x:3,y:1},{x:4,y:1},
-    {x:4,y:2},{x:4,y:3},{x:5,y:3}
+  const maps = [
+    {
+      name:"A",
+      path:[
+        {x:0,y:2},{x:1,y:2},{x:2,y:2},
+        {x:2,y:1},{x:3,y:1},{x:4,y:1},
+        {x:4,y:2},{x:4,y:3},{x:5,y:3}
+      ]
+    },
+    {
+      name:"B",
+      path:[
+        {x:0,y:1},{x:1,y:1},{x:1,y:2},
+        {x:2,y:2},{x:3,y:2},{x:3,y:3},
+        {x:4,y:3},{x:5,y:3}
+      ]
+    },
+    {
+      name:"C",
+      path:[
+        {x:0,y:4},{x:1,y:4},{x:1,y:3},
+        {x:2,y:3},{x:3,y:3},{x:3,y:2},
+        {x:4,y:2},{x:4,y:1},{x:5,y:1}
+      ]
+    },
+    {
+      name:"D",
+      path:[
+        {x:0,y:0},{x:1,y:0},{x:1,y:1},
+        {x:2,y:1},{x:2,y:2},{x:3,y:2},
+        {x:3,y:3},{x:4,y:3},{x:4,y:4},{x:5,y:4}
+      ]
+    }
   ];
 
   const towerTypes = {
-    cannon: {
+    cannon:{
       icon:"🔫",
       cost:45,
       damage:22,
       range:1.75,
-      fireRate:620
+      fireRate:610
     },
-    tesla: {
+    tesla:{
       icon:"⚡",
-      cost:80,
-      damage:48,
+      cost:90,
+      damage:58,
       range:2.35,
-      fireRate:1000
+      fireRate:980
     }
   };
 
@@ -406,23 +463,40 @@
     speed:{
       icon:"⚡",
       label:"Speed",
-      hp:34,
-      speed:.27,
-      reward:16,
+      hp:36,
+      speed:.29,
+      reward:17,
       baseDamage:1
     },
     tank:{
       icon:"🐢",
       label:"Tank",
-      hp:130,
+      hp:145,
       speed:.09,
-      reward:28,
+      reward:30,
       baseDamage:2
+    },
+    shield:{
+      icon:"🛡️",
+      label:"Shield",
+      hp:115,
+      speed:.13,
+      reward:24,
+      baseDamage:1
+    },
+    boss:{
+      icon:"👹",
+      label:"Boss",
+      hp:360,
+      speed:.07,
+      reward:70,
+      baseDamage:4
     }
   };
 
   const board = document.getElementById("board");
   const waveEl = document.getElementById("wave");
+  const mapNameEl = document.getElementById("mapName");
   const energyEl = document.getElementById("energy");
   const livesEl = document.getElementById("lives");
   const towerCountEl = document.getElementById("towerCount");
@@ -432,14 +506,19 @@
   const prediction = document.getElementById("prediction");
   const phaseText = document.getElementById("phaseText");
   const phaseBadge = document.getElementById("phaseBadge");
+  const selectedPanel = document.getElementById("selectedPanel");
+  const selectedInfo = document.getElementById("selectedInfo");
   const gameOver = document.getElementById("gameOver");
   const finalScore = document.getElementById("finalScore");
 
   let selectedTower = "cannon";
-  let energy = 130;
+  let selectedTowerId = null;
+
+  let energy = 140;
   let lives = 10;
   let score = 0;
   let wave = 1;
+  let currentMapIndex = 0;
 
   let buildPhase = true;
   let towers = [];
@@ -452,35 +531,99 @@
   let spawnTimer = null;
   let gameLoop = null;
 
+  function getActivePath(){
+    return maps[currentMapIndex].path;
+  }
+
+  function getMapIndexForWave(w){
+    return Math.floor((w - 1) / 5) % maps.length;
+  }
+
+  function getRules(w){
+    if(w >= 15){
+      return {
+        maxTesla:3,
+        maxCannonLevel:3,
+        maxTeslaLevel:3,
+        enemyBoost:2.15,
+        ruleText:"Wave 15+: Tesla max 3, upgrade max Lv3, enemy brutal."
+      };
+    }
+
+    if(w >= 10){
+      return {
+        maxTesla:2,
+        maxCannonLevel:2,
+        maxTeslaLevel:2,
+        enemyBoost:1.55,
+        ruleText:"Wave 10+: Tesla max 2, Tesla bisa Lv2, enemy makin kuat."
+      };
+    }
+
+    return {
+      maxTesla:1,
+      maxCannonLevel:2,
+      maxTeslaLevel:1,
+      enemyBoost:1,
+      ruleText:"Wave 1-9: Tesla max 1 tanpa upgrade, Cannon max Lv2."
+    };
+  }
+
   function isPath(x,y){
-    return path.some(p => p.x === x && p.y === y);
+    return getActivePath().some(p => p.x === x && p.y === y);
   }
 
   function isStart(x,y){
-    return path[0].x === x && path[0].y === y;
+    const start = getActivePath()[0];
+    return start.x === x && start.y === y;
   }
 
   function isFinish(x,y){
+    const path = getActivePath();
     const end = path[path.length - 1];
     return end.x === x && end.y === y;
+  }
+
+  function getTeslaCount(){
+    return towers.filter(t => t.type === "tesla").length;
+  }
+
+  function getTowerValue(tower){
+    return tower.value || towerTypes[tower.type].cost;
+  }
+
+  function getTowerMaxLevel(tower){
+    const rules = getRules(wave);
+    return tower.type === "cannon" ? rules.maxCannonLevel : rules.maxTeslaLevel;
+  }
+
+  function getUpgradeCost(tower){
+    const base = towerTypes[tower.type].cost;
+    return Math.floor(base * (.75 + tower.level * .35));
   }
 
   function getWavePlan(w){
     return {
       basic: 4 + w,
-      speed: w >= 2 ? Math.floor(w / 2) + 1 : 0,
-      tank: w >= 3 ? Math.floor((w - 1) / 3) + 1 : 0
+      speed: w >= 3 ? 1 + Math.floor(w / 3) : 0,
+      tank: w >= 5 ? 1 + Math.floor(w / 6) : 0,
+      shield: w >= 10 ? Math.floor(w / 4) : 0,
+      boss: w % 5 === 0 ? 1 : 0
     };
   }
 
   function renderPrediction(){
     const plan = getWavePlan(wave);
+    const rules = getRules(wave);
+
     prediction.innerHTML =
-      `Prediksi Wave ${wave}: ` +
-      `👾 Basic x${plan.basic}` +
-      (plan.speed ? ` • ⚡ Speed x${plan.speed}` : "") +
-      (plan.tank ? ` • 🐢 Tank x${plan.tank}` : "") +
-      `<br>Gunakan data ini untuk menentukan posisi dan jenis tower.`;
+      `Map ${maps[currentMapIndex].name} • Prediksi Wave ${wave}: ` +
+      `👾 x${plan.basic}` +
+      (plan.speed ? ` • ⚡ x${plan.speed}` : "") +
+      (plan.tank ? ` • 🐢 x${plan.tank}` : "") +
+      (plan.shield ? ` • 🛡️ x${plan.shield}` : "") +
+      (plan.boss ? ` • 👹 Boss x${plan.boss}` : "") +
+      `<br>${rules.ruleText}`;
   }
 
   function makeEnemyQueue(){
@@ -490,11 +633,14 @@
     for(let i=0;i<plan.basic;i++) list.push("basic");
     for(let i=0;i<plan.speed;i++) list.push("speed");
     for(let i=0;i<plan.tank;i++) list.push("tank");
+    for(let i=0;i<plan.shield;i++) list.push("shield");
+    for(let i=0;i<plan.boss;i++) list.push("boss");
 
     return list.sort(() => Math.random() - .5);
   }
 
   function getEnemyCell(enemy){
+    const path = getActivePath();
     let index = enemy.pathIndex;
 
     if(enemy.progress > .55){
@@ -506,11 +652,13 @@
 
   function selectTower(type){
     if(!buildPhase){
-      info.innerText = "⚔️ Wave sedang berjalan. Tower tidak bisa diganti saat Battle Phase.";
+      info.innerText = "⚔️ Battle Phase berjalan. Pilihan tower dikunci dulu.";
       return;
     }
 
     selectedTower = type;
+    selectedTowerId = null;
+    updateSelectedPanel();
 
     document.getElementById("cannonBtn").classList.remove("selected");
     document.getElementById("teslaBtn").classList.remove("selected");
@@ -518,22 +666,28 @@
 
     const tower = towerTypes[type];
     info.innerText = `${tower.icon} dipilih. Cost ${tower.cost}. Tap area kosong untuk membangun.`;
+
+    renderBoard();
   }
 
   function handleCellClick(x,y){
     const existingTower = towers.find(t => t.x === x && t.y === y);
 
     if(existingTower){
-      upgradeTower(existingTower);
+      selectedTowerId = existingTower.id;
+      updateSelectedPanel();
+      renderBoard();
       return;
     }
 
+    selectedTowerId = null;
+    updateSelectedPanel();
     placeTower(x,y);
   }
 
   function placeTower(x,y){
     if(!buildPhase){
-      info.innerText = "⚔️ Battle Phase berjalan. Tunggu wave selesai untuk membangun.";
+      info.innerText = "⚔️ Tunggu wave selesai untuk membangun atau mengganti tower.";
       return;
     }
 
@@ -543,7 +697,14 @@
     }
 
     if(towers.length >= MAX_TOWERS){
-      info.innerText = "❌ Max tower hanya 4. Upgrade tower yang sudah ada.";
+      info.innerText = "❌ Max 4 senjata aktif. Hapus salah satu tower untuk mengganti strategi.";
+      return;
+    }
+
+    const rules = getRules(wave);
+
+    if(selectedTower === "tesla" && getTeslaCount() >= rules.maxTesla){
+      info.innerText = `❌ Batas Tesla saat ini hanya ${rules.maxTesla}.`;
       return;
     }
 
@@ -562,6 +723,7 @@
       y,
       type:selectedTower,
       level:1,
+      value:type.cost,
       lastShot:0,
       flash:false
     });
@@ -571,30 +733,77 @@
     renderBoard();
   }
 
-  function upgradeTower(tower){
+  function updateSelectedPanel(){
+    const tower = towers.find(t => t.id === selectedTowerId);
+
+    if(!tower){
+      selectedPanel.style.display = "none";
+      return;
+    }
+
+    const maxLevel = getTowerMaxLevel(tower);
+    const upgradeCost = getUpgradeCost(tower);
+
+    selectedPanel.style.display = "block";
+    selectedInfo.innerText =
+      `${towerTypes[tower.type].icon} ${tower.type.toUpperCase()} Lv${tower.level} ` +
+      `• Max Lv${maxLevel} • Upgrade ${upgradeCost} Energy`;
+  }
+
+  function upgradeSelectedTower(){
+    const tower = towers.find(t => t.id === selectedTowerId);
+
+    if(!tower) return;
+
     if(!buildPhase){
-      info.innerText = "⚔️ Tower hanya bisa di-upgrade saat Build Phase.";
+      info.innerText = "⚔️ Upgrade hanya bisa saat Build Phase.";
       return;
     }
 
-    if(tower.level >= 3){
-      info.innerText = "✅ Tower ini sudah level maksimal.";
+    const maxLevel = getTowerMaxLevel(tower);
+
+    if(tower.level >= maxLevel){
+      info.innerText = `❌ Tower ini sudah mencapai batas Lv${maxLevel} untuk wave saat ini.`;
       return;
     }
 
-    const baseCost = towerTypes[tower.type].cost;
-    const upgradeCost = Math.floor(baseCost * .75 * tower.level);
+    const cost = getUpgradeCost(tower);
 
-    if(energy < upgradeCost){
-      info.innerText = `❌ Energy belum cukup untuk upgrade. Butuh ${upgradeCost}.`;
+    if(energy < cost){
+      info.innerText = `❌ Energy kurang. Butuh ${cost}.`;
       return;
     }
 
-    energy -= upgradeCost;
+    energy -= cost;
+    tower.value += cost;
     tower.level++;
 
-    info.innerText = `⬆️ Tower naik ke Level ${tower.level}.`;
+    info.innerText = `⬆️ Tower berhasil naik ke Lv${tower.level}.`;
     updateStats();
+    updateSelectedPanel();
+    renderBoard();
+  }
+
+  function deleteSelectedTower(){
+    const towerIndex = towers.findIndex(t => t.id === selectedTowerId);
+
+    if(towerIndex === -1) return;
+
+    if(!buildPhase){
+      info.innerText = "⚔️ Tower hanya bisa dihapus saat Build Phase.";
+      return;
+    }
+
+    const tower = towers[towerIndex];
+    const refund = Math.floor(getTowerValue(tower) * .6);
+
+    energy += refund;
+    towers.splice(towerIndex,1);
+    selectedTowerId = null;
+
+    info.innerText = `♻️ Tower dihapus. Refund energy +${refund}.`;
+    updateStats();
+    updateSelectedPanel();
     renderBoard();
   }
 
@@ -619,6 +828,7 @@
 
         if(tower){
           cell.classList.add("tower");
+          if(tower.id === selectedTowerId) cell.classList.add("selected-tower");
           if(tower.flash) cell.classList.add("tower-fire");
 
           cell.innerHTML =
@@ -652,18 +862,26 @@
   function startWave(){
     if(spawning || waveActive) return;
 
+    if(towers.length === 0){
+      info.innerText = "❌ Bangun minimal 1 tower sebelum mulai wave.";
+      return;
+    }
+
     buildPhase = false;
     spawning = true;
     waveActive = true;
+    selectedTowerId = null;
+    updateSelectedPanel();
 
     phaseText.innerText = "Battle Phase";
     phaseBadge.innerText = "Pertahankan Base";
 
     startBtn.disabled = true;
     startBtn.innerText = `Wave ${wave} berjalan...`;
-    info.innerText = `⚔️ Wave ${wave} dimulai. Tower tidak bisa dibangun saat battle.`;
+    info.innerText = `⚔️ Wave ${wave} dimulai. Tidak bisa bangun, upgrade, atau hapus tower saat battle.`;
 
     const queue = makeEnemyQueue();
+    const rules = getRules(wave);
     let index = 0;
 
     spawnTimer = setInterval(() => {
@@ -676,8 +894,11 @@
       const enemyType = queue[index];
       const data = enemyTypes[enemyType];
 
-      const hpScale = 1 + wave * .16;
-      const speedScale = 1 + Math.min(wave * .025, .22);
+      const hpScale =
+        (1 + wave * .14) * rules.enemyBoost;
+
+      const speedScale =
+        1 + Math.min(wave * .025, .28);
 
       const maxHp = Math.floor(data.hp * hpScale);
 
@@ -695,7 +916,7 @@
       });
 
       index++;
-    }, 680);
+    }, Math.max(680 - wave * 8, 430));
   }
 
   function moveEnemies(){
@@ -709,7 +930,7 @@
         enemy.pathIndex++;
       }
 
-      if(enemy.pathIndex >= path.length - 1){
+      if(enemy.pathIndex >= getActivePath().length - 1){
         lives -= enemy.baseDamage;
         lives = Math.max(lives, 0);
       } else {
@@ -733,17 +954,29 @@
 
   function findTarget(tower, range){
     let bestTarget = null;
-    let bestProgress = -1;
 
     enemies.forEach(enemy => {
       const enemyPos = getEnemyCell(enemy);
       const dist = distance(tower, enemyPos);
 
-      const progressScore = enemy.pathIndex + enemy.progress;
+      if(dist > range) return;
 
-      if(dist <= range && progressScore > bestProgress){
+      if(!bestTarget){
         bestTarget = enemy;
-        bestProgress = progressScore;
+        return;
+      }
+
+      if(tower.type === "tesla"){
+        if(enemy.hp > bestTarget.hp){
+          bestTarget = enemy;
+        }
+      } else {
+        const progressA = enemy.pathIndex + enemy.progress;
+        const progressB = bestTarget.pathIndex + bestTarget.progress;
+
+        if(progressA > progressB){
+          bestTarget = enemy;
+        }
       }
     });
 
@@ -756,7 +989,7 @@
     towers.forEach(tower => {
       const type = towerTypes[tower.type];
 
-      const levelDamage = type.damage * (1 + (tower.level - 1) * .48);
+      const levelDamage = type.damage * (1 + (tower.level - 1) * .5);
       const levelRange = type.range + (tower.level - 1) * .22;
       const levelFireRate = type.fireRate - (tower.level - 1) * 80;
 
@@ -769,14 +1002,24 @@
       tower.lastShot = now;
       tower.flash = true;
 
-      target.hp -= Math.floor(levelDamage);
+      let damage = Math.floor(levelDamage);
+
+      if(target.type === "shield" && tower.type === "cannon"){
+        damage = Math.floor(damage * .55);
+      }
+
+      if(target.type === "tank" && tower.type === "tesla"){
+        damage = Math.floor(damage * 1.12);
+      }
+
+      target.hp -= damage;
       target.hit = true;
 
       setTimeout(() => {
         tower.flash = false;
         target.hit = false;
         renderBoard();
-      }, 160);
+      }, 150);
 
       if(target.hp <= 0){
         energy += target.reward;
@@ -789,18 +1032,28 @@
 
   function checkWaveClear(){
     if(waveActive && !spawning && enemies.length === 0){
+      const finishedWave = wave;
+
       waveActive = false;
       buildPhase = true;
 
-      const bonusEnergy = 30 + wave * 8;
-      const bonusScore = 60 + wave * 12;
+      const bonusEnergy = 26 + wave * 7;
+      const bonusScore = 55 + wave * 12;
 
       energy += bonusEnergy;
       score += bonusScore;
 
-      info.innerText = `✅ Wave ${wave} selesai! Bonus energy +${bonusEnergy}. Saatnya susun strategi lagi.`;
-
       wave++;
+
+      const oldMapIndex = currentMapIndex;
+      currentMapIndex = getMapIndexForWave(wave);
+
+      if(oldMapIndex !== currentMapIndex){
+        handleMapChange(finishedWave);
+      } else {
+        info.innerText =
+          `✅ Wave ${finishedWave} selesai! Bonus energy +${bonusEnergy}. Susun strategi wave berikutnya.`;
+      }
 
       phaseText.innerText = "Build Phase";
       phaseBadge.innerText = "Rancang Strategi";
@@ -810,11 +1063,31 @@
 
       updateStats();
       renderPrediction();
+      updateSelectedPanel();
     }
+  }
+
+  function handleMapChange(finishedWave){
+    let refund = 0;
+
+    towers.forEach(tower => {
+      refund += Math.floor(getTowerValue(tower) * .65);
+    });
+
+    towers = [];
+    enemies = [];
+    selectedTowerId = null;
+
+    energy += refund;
+
+    info.innerText =
+      `🗺️ Setelah Wave ${finishedWave}, map berubah ke Map ${maps[currentMapIndex].name}. ` +
+      `Semua tower direlokasi. Refund energy +${refund}. Susun strategi baru.`;
   }
 
   function updateStats(){
     waveEl.innerText = wave;
+    mapNameEl.innerText = maps[currentMapIndex].name;
     energyEl.innerText = energy;
     livesEl.innerText = lives;
     towerCountEl.innerText = `${towers.length}/${MAX_TOWERS}`;
@@ -836,6 +1109,7 @@
 
   function endGame(){
     clearInterval(spawnTimer);
+
     spawning = false;
     waveActive = false;
     buildPhase = false;
@@ -849,10 +1123,13 @@
     clearInterval(gameLoop);
 
     selectedTower = "cannon";
-    energy = 130;
+    selectedTowerId = null;
+
+    energy = 140;
     lives = 10;
     score = 0;
     wave = 1;
+    currentMapIndex = 0;
 
     buildPhase = true;
     towers = [];
@@ -872,20 +1149,23 @@
     startBtn.disabled = false;
     startBtn.innerText = "Mulai Wave 1 ▶️";
 
-    info.innerText = "Tap area kosong untuk membangun tower. Tap tower saat Build Phase untuk upgrade.";
+    info.innerText = "Tap area kosong untuk membangun tower. Tap tower untuk upgrade atau hapus saat Build Phase.";
     gameOver.style.display = "none";
 
     updateStats();
     renderPrediction();
+    updateSelectedPanel();
     renderBoard();
 
-    gameLoop = setInterval(tick, 260);
+    gameLoop = setInterval(tick, 240);
   }
 
   updateStats();
   renderPrediction();
+  updateSelectedPanel();
   renderBoard();
-  gameLoop = setInterval(tick, 260);
+
+  gameLoop = setInterval(tick, 240);
 </script>
 </body>
 </html>
