@@ -14,6 +14,7 @@
     .back-btn{
       background:rgba(255,255,255,.1);border:none;color:white;
       padding:10px 14px;border-radius:14px;font-size:14px;margin-bottom:18px;
+      cursor:pointer;
     }
     .title{text-align:center;margin-bottom:16px}
     .title h1{font-size:34px;margin-bottom:8px}
@@ -33,14 +34,17 @@
     .tile{
       aspect-ratio:1/1;border:none;border-radius:18px;background:#1c1c1c;
       color:white;font-size:32px;transition:.15s;position:relative;
+      cursor:pointer;
     }
     .tile:active{transform:scale(.93)}
-    .tile.power{background:white;color:black;box-shadow:0 0 18px rgba(255,255,255,.8)}
-    .tile.fixed{background:#2b2b2b;color:white}
-    .tile.empty{opacity:.45}
+    .tile.power{background:#4CAF50;color:white;box-shadow:0 0 18px rgba(76,175,80,.8)}
+    .tile.fixed{background:#2b2b2b;color:white;cursor:not-allowed}
+    .tile.empty{opacity:.45;cursor:default}
+    .tile.connected{background:#2196F3;box-shadow:0 0 12px rgba(33,150,243,.6)}
     .controls{margin-top:16px;display:grid;gap:12px}
     .check-btn,.reset-btn{
       border:none;border-radius:18px;padding:16px;font-size:16px;font-weight:bold;
+      cursor:pointer;
     }
     .check-btn{background:white;color:black}
     .reset-btn{background:rgba(255,255,255,.12);color:white}
@@ -59,6 +63,15 @@
     .restart{
       width:100%;border:none;border-radius:18px;padding:16px;
       background:white;color:black;font-size:16px;font-weight:bold;
+      cursor:pointer;
+    }
+    
+    .auto-check-hint {
+      text-align: center;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #4CAF50;
+      display: none;
     }
   </style>
 </head>
@@ -87,6 +100,7 @@
     <div class="hint">
       Tap kotak pipa untuk memutar. Jalur harus nyambung dari 🔋 ke 💡.
     </div>
+    <div class="auto-check-hint" id="autoHint">✅ Jalur otomatis terhubung!</div>
   </div>
 
   <div class="game-over" id="gameOver">
@@ -106,46 +120,103 @@
   const movesEl = document.getElementById("moves");
   const gameOver = document.getElementById("gameOver");
   const finalScore = document.getElementById("finalScore");
+  const autoHint = document.getElementById("autoHint");
 
   const SIZE = 4;
   let level = 1, score = 0, moves = 0;
   let tiles = [];
 
+  // Level design dengan koordinat [row, col]
   const levels = [
+    // Level 1: Simple straight path
     [
-      {type:"battery", rot:1}, {type:"straight", rot:0}, {type:"corner", rot:1}, {type:"empty", rot:0},
-      {type:"empty", rot:0},   {type:"empty", rot:0},    {type:"straight", rot:1}, {type:"empty", rot:0},
-      {type:"empty", rot:0},   {type:"empty", rot:0},    {type:"corner", rot:2}, {type:"straight", rot:0},
-      {type:"empty", rot:0},   {type:"empty", rot:0},    {type:"empty", rot:0}, {type:"lamp", rot:3}
+      {type:"battery", rot:1, row:0, col:0}, // kanan
+      {type:"straight", rot:0, row:0, col:1}, // horizontal
+      {type:"corner", rot:3, row:0, col:2},   // kanan-bawah
+      {type:"empty", rot:0, row:0, col:3},
+      {type:"empty", rot:0, row:1, col:0},
+      {type:"empty", rot:0, row:1, col:1},
+      {type:"straight", rot:1, row:1, col:2}, // vertikal
+      {type:"empty", rot:0, row:1, col:3},
+      {type:"empty", rot:0, row:2, col:0},
+      {type:"empty", rot:0, row:2, col:1},
+      {type:"corner", rot:0, row:2, col:2},   // kiri-bawah
+      {type:"straight", rot:0, row:2, col:3}, // horizontal
+      {type:"empty", rot:0, row:3, col:0},
+      {type:"empty", rot:0, row:3, col:1},
+      {type:"empty", rot:0, row:3, col:2},
+      {type:"lamp", rot:3, row:3, col:3}      // kiri
     ],
+    // Level 2: L-shape path
     [
-      {type:"battery", rot:1}, {type:"corner", rot:1}, {type:"empty", rot:0}, {type:"empty", rot:0},
-      {type:"empty", rot:0}, {type:"straight", rot:1}, {type:"corner", rot:1}, {type:"empty", rot:0},
-      {type:"empty", rot:0}, {type:"corner", rot:0}, {type:"corner", rot:2}, {type:"empty", rot:0},
-      {type:"empty", rot:0}, {type:"straight", rot:0}, {type:"straight", rot:0}, {type:"lamp", rot:3}
+      {type:"battery", rot:1, row:0, col:0}, // kanan
+      {type:"corner", rot:1, row:0, col:1},  // kanan-bawah
+      {type:"empty", rot:0, row:0, col:2},
+      {type:"empty", rot:0, row:0, col:3},
+      {type:"empty", rot:0, row:1, col:0},
+      {type:"straight", rot:1, row:1, col:1}, // vertikal
+      {type:"corner", rot:2, row:1, col:2},   // bawah-kiri
+      {type:"empty", rot:0, row:1, col:3},
+      {type:"empty", rot:0, row:2, col:0},
+      {type:"corner", rot:0, row:2, col:1},   // kiri-bawah
+      {type:"corner", rot:2, row:2, col:2},   // bawah-kiri
+      {type:"empty", rot:0, row:2, col:3},
+      {type:"empty", rot:0, row:3, col:0},
+      {type:"straight", rot:0, row:3, col:1}, // horizontal
+      {type:"straight", rot:0, row:3, col:2}, // horizontal
+      {type:"lamp", rot:3, row:3, col:3}      // kiri
     ],
+    // Level 3: Complex path
     [
-      {type:"battery", rot:2}, {type:"empty", rot:0}, {type:"corner", rot:1}, {type:"lamp", rot:2},
-      {type:"straight", rot:1}, {type:"corner", rot:1}, {type:"straight", rot:1}, {type:"straight", rot:1},
-      {type:"corner", rot:0}, {type:"corner", rot:2}, {type:"empty", rot:0}, {type:"empty", rot:0},
-      {type:"empty", rot:0}, {type:"empty", rot:0}, {type:"empty", rot:0}, {type:"empty", rot:0}
+      {type:"battery", rot:2, row:0, col:0}, // bawah
+      {type:"empty", rot:0, row:0, col:1},
+      {type:"corner", rot:1, row:0, col:2},  // kanan-bawah
+      {type:"lamp", rot:2, row:0, col:3},    // atas
+      {type:"straight", rot:1, row:1, col:0}, // vertikal
+      {type:"corner", rot:1, row:1, col:1},   // kanan-bawah
+      {type:"straight", rot:0, row:1, col:2}, // horizontal
+      {type:"straight", rot:1, row:1, col:3}, // vertikal
+      {type:"corner", rot:0, row:2, col:0},   // kiri-bawah
+      {type:"corner", rot:2, row:2, col:1},   // bawah-kiri
+      {type:"empty", rot:0, row:2, col:2},
+      {type:"empty", rot:0, row:2, col:3},
+      {type:"empty", rot:0, row:3, col:0},
+      {type:"empty", rot:0, row:3, col:1},
+      {type:"empty", rot:0, row:3, col:2},
+      {type:"empty", rot:0, row:3, col:3}
     ]
   ];
 
+  // Arah: 0=atas, 1=kanan, 2=bawah, 3=kiri
   function connections(tile){
     if(tile.type === "empty") return [];
+    
     if(tile.type === "battery"){
-      return [[1],[2],[3],[0]][tile.rot];
+      // Battery hanya mengeluarkan energi ke 1 arah
+      return [tile.rot];
     }
+    
     if(tile.type === "lamp"){
-      return [[1],[2],[3],[0]][tile.rot];
+      // Lampu hanya menerima dari 1 arah
+      return [tile.rot];
     }
+    
     if(tile.type === "straight"){
-      return tile.rot % 2 === 0 ? [1,3] : [0,2];
+      // Straight: rot 0/2 = horizontal (kiri-kanan), rot 1/3 = vertikal (atas-bawah)
+      return tile.rot % 2 === 0 ? [1, 3] : [0, 2];
     }
+    
     if(tile.type === "corner"){
-      return [[0,1],[1,2],[2,3],[3,0]][tile.rot];
+      // Corner: rot 0=kiri-bawah, 1=kanan-bawah, 2=kanan-atas, 3=kiri-atas
+      const cornerMap = [
+        [3, 2], // kiri(3) dan bawah(2)
+        [1, 2], // kanan(1) dan bawah(2)
+        [1, 0], // kanan(1) dan atas(0)
+        [3, 0]  // kiri(3) dan atas(0)
+      ];
+      return cornerMap[tile.rot];
     }
+    
     return [];
   }
 
@@ -153,26 +224,42 @@
     if(tile.type === "battery") return "🔋";
     if(tile.type === "lamp") return "💡";
     if(tile.type === "empty") return "";
-    if(tile.type === "straight") return tile.rot % 2 === 0 ? "━" : "┃";
-    if(tile.type === "corner") return ["┗","┏","┓","┛"][tile.rot];
+    
+    if(tile.type === "straight") {
+      return tile.rot % 2 === 0 ? "━" : "┃";
+    }
+    
+    if(tile.type === "corner") {
+      const cornerSymbols = ["┛", "┗", "┏", "┓"];
+      return cornerSymbols[tile.rot];
+    }
+    
+    return "?";
   }
 
   function loadLevel(){
     moves = 0;
     movesEl.innerText = moves;
     gameOver.style.display = "none";
+    autoHint.style.display = "none";
 
-    const base = JSON.parse(JSON.stringify(levels[(level - 1) % levels.length]));
-
-    tiles = base.map(t => {
+    const levelData = levels[(level - 1) % levels.length];
+    
+    // Deep copy level data
+    tiles = levelData.map(t => {
+      const newTile = {...t};
+      
+      // Randomize rotation for non-fixed tiles
       if(t.type !== "battery" && t.type !== "lamp" && t.type !== "empty"){
-        t.rot = Math.floor(Math.random() * 4);
+        newTile.rot = Math.floor(Math.random() * 4);
       }
-      t.power = false;
-      return t;
+      
+      newTile.power = false;
+      return newTile;
     });
 
     render();
+    checkPower(true); // Auto-check on load
   }
 
   function render(){
@@ -189,11 +276,13 @@
 
       btn.onclick = () => {
         if(tile.type === "empty" || tile.type === "battery" || tile.type === "lamp") return;
+        
         tile.rot = (tile.rot + 1) % 4;
         tile.power = false;
         moves++;
         movesEl.innerText = moves;
         render();
+        checkPower(true); // Auto-check after each rotation
       };
 
       board.appendChild(btn);
@@ -207,45 +296,75 @@
   function neighbor(index, dir){
     const r = Math.floor(index / SIZE);
     const c = index % SIZE;
-    if(dir === 0 && r > 0) return index - SIZE;
-    if(dir === 1 && c < SIZE - 1) return index + 1;
-    if(dir === 2 && r < SIZE - 1) return index + SIZE;
-    if(dir === 3 && c > 0) return index - 1;
+    
+    if(dir === 0 && r > 0) return index - SIZE;       // atas
+    if(dir === 1 && c < SIZE - 1) return index + 1;    // kanan
+    if(dir === 2 && r < SIZE - 1) return index + SIZE; // bawah
+    if(dir === 3 && c > 0) return index - 1;           // kiri
+    
     return -1;
   }
 
-  function checkPower(){
+  function checkPower(silent = false){
+    // Reset all power states
     tiles.forEach(t => t.power = false);
 
-    const start = tiles.findIndex(t => t.type === "battery");
-    const end = tiles.findIndex(t => t.type === "lamp");
+    const startIndex = tiles.findIndex(t => t.type === "battery");
+    const endIndex = tiles.findIndex(t => t.type === "lamp");
+    
+    if(startIndex === -1 || endIndex === -1) return;
 
-    const queue = [start];
-    tiles[start].power = true;
+    // BFS untuk mencari jalur
+    const queue = [startIndex];
+    const visited = new Set();
+    visited.add(startIndex);
+    tiles[startIndex].power = true;
 
-    while(queue.length){
+    while(queue.length > 0){
       const current = queue.shift();
-      const currentConn = connections(tiles[current]);
-
-      currentConn.forEach(dir => {
+      const currentTile = tiles[current];
+      const currentConn = connections(currentTile);
+      
+      // Cek semua koneksi dari tile saat ini
+      for(const dir of currentConn){
         const next = neighbor(current, dir);
-        if(next === -1 || tiles[next].power) return;
-
-        const nextConn = connections(tiles[next]);
-        if(nextConn.includes(opposite(dir))){
+        
+        if(next === -1) continue; // Di luar board
+        if(visited.has(next)) continue; // Sudah dikunjungi
+        
+        const nextTile = tiles[next];
+        const nextConn = connections(nextTile);
+        
+        // Tile berikutnya harus punya koneksi ke arah sebaliknya
+        const neededDir = opposite(dir);
+        if(nextConn.includes(neededDir)){
+          visited.add(next);
           tiles[next].power = true;
           queue.push(next);
+          
+          // Jika sudah sampai lampu, berhenti
+          if(next === endIndex) {
+            break;
+          }
         }
-      });
+      }
     }
 
     render();
-
-    if(tiles[end].power){
-      score += Math.max(80 - moves * 3, 20) + level * 10;
-      scoreEl.innerText = score;
-      finalScore.innerText = score;
-      gameOver.style.display = "flex";
+    
+    // Jika lampu menyala
+    if(tiles[endIndex].power) {
+      if(!silent) {
+        score += Math.max(80 - moves * 3, 20) + level * 10;
+        scoreEl.innerText = score;
+        finalScore.innerText = score;
+        gameOver.style.display = "flex";
+      } else {
+        autoHint.style.display = "block";
+        setTimeout(() => {
+          autoHint.style.display = "none";
+        }, 2000);
+      }
     }
   }
 
@@ -255,6 +374,7 @@
     loadLevel();
   }
 
+  // Inisialisasi game
   loadLevel();
 </script>
 </body>
