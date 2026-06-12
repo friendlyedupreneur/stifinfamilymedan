@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tower Defense AI</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:radial-gradient(circle at top,#2b2b2b,#090909 55%,#000);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.1);
+      border:none;
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:32px;margin-bottom:8px}
+    .title p{font-size:14px;color:#d8d8d8;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:21px}
+    .stat span{font-size:11px;color:#d8d8d8}
+
+    .tower-select{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .tower-card{
+      border:none;
+      border-radius:18px;
+      padding:13px 10px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(255,255,255,.12);
+      text-align:center;
+      font-weight:bold;
+    }
+
+    .tower-card.selected{
+      background:white;
+      color:black;
+      box-shadow:0 0 18px rgba(255,255,255,.45);
+    }
+
+    .tower-card small{
+      display:block;
+      margin-top:5px;
+      font-size:11px;
+      opacity:.8;
+    }
+
+    .board{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      gap:7px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:26px;
+      padding:14px;
+      margin-bottom:16px;
+      box-shadow:0 18px 40px rgba(0,0,0,.35);
+    }
+
+    .cell{
+      aspect-ratio:1/1;
+      border-radius:13px;
+      background:#1c1c1c;
+      border:1px solid rgba(255,255,255,.07);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      font-size:24px;
+      overflow:hidden;
+    }
+
+    .cell.path{
+      background:#303030;
+    }
+
+    .cell.path::after{
+      content:"";
+      position:absolute;
+      width:42%;
+      height:4px;
+      background:rgba(255,255,255,.22);
+      border-radius:999px;
+    }
+
+    .cell.start{
+      background:#14301d;
+      box-shadow:inset 0 0 14px rgba(76,255,116,.25);
+    }
+
+    .cell.finish{
+      background:#301414;
+      box-shadow:inset 0 0 14px rgba(255,80,80,.3);
+    }
+
+    .cell.tower{
+      background:#f2f2f2;
+      color:black;
+      box-shadow:0 0 12px rgba(255,255,255,.35);
+    }
+
+    .cell.tower-fire{
+      animation:towerFire .28s ease;
+    }
+
+    @keyframes towerFire{
+      0%{transform:scale(1);box-shadow:0 0 0 rgba(124,255,107,0)}
+      50%{transform:scale(1.1);box-shadow:0 0 22px rgba(124,255,107,.85)}
+      100%{transform:scale(1)}
+    }
+
+    .enemy{
+      position:relative;
+      z-index:2;
+      font-size:24px;
+      animation:enemyMove .5s infinite alternate;
+    }
+
+    .enemy.hit{
+      animation:enemyHit .18s ease;
+    }
+
+    @keyframes enemyMove{
+      from{transform:translateY(0)}
+      to{transform:translateY(-3px)}
+    }
+
+    @keyframes enemyHit{
+      0%{transform:scale(1)}
+      50%{transform:scale(1.25)}
+      100%{transform:scale(1)}
+    }
+
+    .hp-bar{
+      position:absolute;
+      left:8px;
+      right:8px;
+      bottom:6px;
+      height:4px;
+      background:rgba(255,255,255,.2);
+      border-radius:999px;
+      overflow:hidden;
+      z-index:3;
+    }
+
+    .hp-fill{
+      height:100%;
+      background:#7CFF6B;
+      width:100%;
+    }
+
+    .controls{
+      display:grid;
+      gap:12px;
+    }
+
+    .main-btn,.reset-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:16px;
+      font-weight:bold;
+    }
+
+    .main-btn{
+      background:white;
+      color:black;
+    }
+
+    .main-btn:disabled{
+      opacity:.45;
+    }
+
+    .reset-btn{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#d8d8d8;
+      font-size:13px;
+      line-height:1.5;
+      min-height:38px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#111;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.13);
+    }
+
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#d8d8d8;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:black;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🛡️ Tower Defense AI</h1>
+      <p>Bangun pertahanan, atur energi, dan tahan serangan musuh dengan strategi.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="wave">1</h2><span>Wave</span></div>
+      <div class="stat"><h2 id="energy">120</h2><span>Energy</span></div>
+      <div class="stat"><h2 id="lives">8</h2><span>Base</span></div>
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+    </div>
+
+    <div class="tower-select">
+      <button class="tower-card selected" id="cannonBtn" onclick="selectTower('cannon')">
+        🔫 Cannon AI
+        <small>Cost 40 • Cepat</small>
+      </button>
+
+      <button class="tower-card" id="teslaBtn" onclick="selectTower('tesla')">
+        ⚡ Tesla AI
+        <small>Cost 70 • Kuat</small>
+      </button>
+    </div>
+
+    <div class="board" id="board"></div>
+
+    <div class="controls">
+      <button class="main-btn" id="startBtn" onclick="startWave()">Mulai Wave 1 ▶️</button>
+      <button class="reset-btn" onclick="restartGame()">Reset Game</button>
+    </div>
+
+    <div class="info" id="info">
+      Pilih tower, lalu tap area kosong untuk membangun pertahanan.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2>🔥 Base Jebol!</h2>
+      <p>Score akhir kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="restartGame()">Main Lagi</button>
+    </div>
+  </div>
+
+<script>
+  const ROWS = 6;
+  const COLS = 6;
+
+  const path = [
+    {x:0,y:2},{x:1,y:2},{x:2,y:2},
+    {x:2,y:1},{x:3,y:1},{x:4,y:1},
+    {x:4,y:2},{x:4,y:3},{x:5,y:3}
+  ];
+
+  const towerTypes = {
+    cannon: {
+      icon:"🔫",
+      cost:40,
+      damage:20,
+      range:1.7,
+      fireRate:650
+    },
+    tesla: {
+      icon:"⚡",
+      cost:70,
+      damage:36,
+      range:2.25,
+      fireRate:950
+    }
+  };
+
+  const board = document.getElementById("board");
+  const waveEl = document.getElementById("wave");
+  const energyEl = document.getElementById("energy");
+  const livesEl = document.getElementById("lives");
+  const scoreEl = document.getElementById("score");
+  const startBtn = document.getElementById("startBtn");
+  const info = document.getElementById("info");
+  const gameOver = document.getElementById("gameOver");
+  const finalScore = document.getElementById("finalScore");
+
+  let selectedTower = "cannon";
+  let energy = 120;
+  let lives = 8;
+  let score = 0;
+  let wave = 1;
+
+  let towers = [];
+  let enemies = [];
+  let enemyId = 0;
+
+  let spawning = false;
+  let waveActive = false;
+  let spawnTimer = null;
+  let gameLoop = null;
+
+  function isPath(x,y){
+    return path.some(p => p.x === x && p.y === y);
+  }
+
+  function isStart(x,y){
+    return path[0].x === x && path[0].y === y;
+  }
+
+  function isFinish(x,y){
+    const end = path[path.length - 1];
+    return end.x === x && end.y === y;
+  }
+
+  function getEnemyCell(enemy){
+    let index = enemy.pathIndex;
+
+    if(enemy.progress > .55){
+      index = Math.min(index + 1, path.length - 1);
+    }
+
+    return path[index];
+  }
+
+  function selectTower(type){
+    selectedTower = type;
+
+    document.getElementById("cannonBtn").classList.remove("selected");
+    document.getElementById("teslaBtn").classList.remove("selected");
+
+    document.getElementById(type + "Btn").classList.add("selected");
+
+    const tower = towerTypes[type];
+    info.innerText = `${tower.icon} dipilih. Cost ${tower.cost} energy. Tap area kosong untuk membangun.`;
+  }
+
+  function placeTower(x,y){
+    if(isPath(x,y)){
+      info.innerText = "❌ Tidak bisa membangun di jalur musuh.";
+      return;
+    }
+
+    if(towers.some(t => t.x === x && t.y === y)){
+      info.innerText = "❌ Area ini sudah ada tower.";
+      return;
+    }
+
+    const type = towerTypes[selectedTower];
+
+    if(energy < type.cost){
+      info.innerText = "❌ Energy belum cukup untuk membangun tower ini.";
+      return;
+    }
+
+    energy -= type.cost;
+
+    towers.push({
+      x,
+      y,
+      type:selectedTower,
+      lastShot:0,
+      flash:false
+    });
+
+    info.innerText = `✅ Tower ${type.icon} berhasil dibangun.`;
+    updateStats();
+    renderBoard();
+  }
+
+  function renderBoard(){
+    board.innerHTML = "";
+
+    for(let y=0; y<ROWS; y++){
+      for(let x=0; x<COLS; x++){
+        const cell = document.createElement("div");
+        cell.className = "cell";
+
+        if(isPath(x,y)) cell.classList.add("path");
+        if(isStart(x,y)) cell.classList.add("start");
+        if(isFinish(x,y)) cell.classList.add("finish");
+
+        const tower = towers.find(t => t.x === x && t.y === y);
+        const enemy = enemies.find(e => {
+          const pos = getEnemyCell(e);
+          return pos.x === x && pos.y === y;
+        });
+
+        if(tower){
+          cell.classList.add("tower");
+          if(tower.flash) cell.classList.add("tower-fire");
+          cell.innerText = towerTypes[tower.type].icon;
+        } else if(enemy){
+          const hpPercent = Math.max((enemy.hp / enemy.maxHp) * 100, 0);
+
+          cell.innerHTML = `
+            <div class="enemy ${enemy.hit ? "hit" : ""}">👾</div>
+            <div class="hp-bar">
+              <div class="hp-fill" style="width:${hpPercent}%"></div>
+            </div>
+          `;
+        } else if(isStart(x,y)){
+          cell.innerText = "🚪";
+        } else if(isFinish(x,y)){
+          cell.innerText = "🏁";
+        }
+
+        cell.onclick = () => placeTower(x,y);
+
+        board.appendChild(cell);
+      }
+    }
+  }
+
+  function startWave(){
+    if(spawning || waveActive) return;
+
+    const totalEnemies = 5 + wave * 2;
+    let spawned = 0;
+
+    spawning = true;
+    waveActive = true;
+
+    startBtn.disabled = true;
+    startBtn.innerText = `Wave ${wave} berjalan...`;
+    info.innerText = `⚔️ Wave ${wave} dimulai. Pertahankan base!`;
+
+    spawnTimer = setInterval(() => {
+      const maxHp = 46 + wave * 14;
+
+      enemies.push({
+        id:++enemyId,
+        pathIndex:0,
+        progress:0,
+        hp:maxHp,
+        maxHp:maxHp,
+        speed:0.15 + Math.min(wave * 0.012, 0.08),
+        reward:10 + wave * 2,
+        hit:false
+      });
+
+      spawned++;
+
+      if(spawned >= totalEnemies){
+        clearInterval(spawnTimer);
+        spawning = false;
+      }
+    }, 720);
+  }
+
+  function moveEnemies(){
+    const survivors = [];
+
+    enemies.forEach(enemy => {
+      enemy.progress += enemy.speed;
+
+      if(enemy.progress >= 1){
+        enemy.progress = 0;
+        enemy.pathIndex++;
+      }
+
+      if(enemy.pathIndex >= path.length - 1){
+        lives--;
+      } else {
+        survivors.push(enemy);
+      }
+    });
+
+    enemies = survivors;
+
+    if(lives <= 0){
+      endGame();
+    }
+  }
+
+  function distance(a,b){
+    return Math.sqrt(
+      Math.pow(a.x - b.x, 2) +
+      Math.pow(a.y - b.y, 2)
+    );
+  }
+
+  function findTarget(tower, range){
+    let bestTarget = null;
+    let farthest = -1;
+
+    enemies.forEach(enemy => {
+      const enemyPos = getEnemyCell(enemy);
+      const dist = distance(tower, enemyPos);
+
+      if(dist <= range && enemy.pathIndex > farthest){
+        bestTarget = enemy;
+        farthest = enemy.pathIndex;
+      }
+    });
+
+    return bestTarget;
+  }
+
+  function towersAttack(){
+    const now = Date.now();
+
+    towers.forEach(tower => {
+      const type = towerTypes[tower.type];
+
+      if(now - tower.lastShot < type.fireRate) return;
+
+      const target = findTarget(tower, type.range);
+
+      if(!target) return;
+
+      tower.lastShot = now;
+      tower.flash = true;
+
+      target.hp -= type.damage;
+      target.hit = true;
+
+      setTimeout(() => {
+        tower.flash = false;
+        target.hit = false;
+        renderBoard();
+      }, 160);
+
+      if(target.hp <= 0){
+        energy += target.reward;
+        score += 20 + wave * 3;
+
+        enemies = enemies.filter(e => e.id !== target.id);
+      }
+    });
+  }
+
+  function checkWaveClear(){
+    if(waveActive && !spawning && enemies.length === 0){
+      waveActive = false;
+
+      const bonus = 25 + wave * 5;
+      energy += bonus;
+      score += 50 + wave * 10;
+
+      info.innerText = `✅ Wave ${wave} selesai! Bonus energy +${bonus}.`;
+
+      wave++;
+      startBtn.disabled = false;
+      startBtn.innerText = `Mulai Wave ${wave} ▶️`;
+
+      updateStats();
+    }
+  }
+
+  function updateStats(){
+    waveEl.innerText = wave;
+    energyEl.innerText = energy;
+    livesEl.innerText = lives;
+    scoreEl.innerText = score;
+  }
+
+  function tick(){
+    if(lives <= 0) return;
+
+    moveEnemies();
+    towersAttack();
+    checkWaveClear();
+
+    updateStats();
+    renderBoard();
+  }
+
+  function endGame(){
+    clearInterval(spawnTimer);
+    spawning = false;
+    waveActive = false;
+
+    finalScore.innerText = score;
+    gameOver.style.display = "flex";
+  }
+
+  function restartGame(){
+    clearInterval(spawnTimer);
+    clearInterval(gameLoop);
+
+    selectedTower = "cannon";
+    energy = 120;
+    lives = 8;
+    score = 0;
+    wave = 1;
+
+    towers = [];
+    enemies = [];
+    enemyId = 0;
+
+    spawning = false;
+    waveActive = false;
+
+    document.getElementById("cannonBtn").classList.add("selected");
+    document.getElementById("teslaBtn").classList.remove("selected");
+
+    startBtn.disabled = false;
+    startBtn.innerText = "Mulai Wave 1 ▶️";
+
+    info.innerText = "Pilih tower, lalu tap area kosong untuk membangun pertahanan.";
+    gameOver.style.display = "none";
+
+    updateStats();
+    renderBoard();
+
+    gameLoop = setInterval(tick, 260);
+  }
+
+  updateStats();
+  renderBoard();
+  gameLoop = setInterval(tick, 260);
+</script>
+</body>
+</html>
