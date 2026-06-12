@@ -261,18 +261,27 @@
     gameOver.style.display = "none";
 
     const levelData = levels[(level - 1) % levels.length];
-    tiles = levelData.map((t, index) => ({
-      ...t,
-      index: index,
-      power: false
-    }));
+    tiles = levelData.map((t, index) => {
+      // Acak rotasi khusus untuk pipa (jangan acak battery, lamp, atau empty)
+      let initialRot = t.rot;
+      if (t.type === "straight" || t.type === "corner") {
+        initialRot = Math.floor(Math.random() * 4);
+      }
+      
+      return {
+        ...t,
+        rot: initialRot,
+        index: index,
+        power: false
+      };
+    });
 
     render();
     
-    // Cek apakah level sudah solved dari awal
+    // Cek apakah kebetulan langsung solved dari awal (sangat jarang, tapi mungkin terjadi)
     const isSolved = checkConnections();
     if (isSolved) {
-      debugInfo.textContent = "✅ Level ini sudah tersambung! Klik 'Alirkan Energi' untuk lanjut.";
+      debugInfo.textContent = "✅ Wah beruntung! Level ini kebetulan langsung tersambung! Klik 'Alirkan Energi'.";
     } else {
       debugInfo.textContent = "🔄 Putar pipa untuk menyambungkan jalur.";
     }
