@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delivery Rush</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:radial-gradient(circle at top,#ff4b4b,#8b0000 45%,#150000);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.14);
+      border:none;
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#ffdada;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:18px;
+      padding:14px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:24px}
+    .stat span{font-size:12px;color:#ffdada}
+
+    .road{
+      position:relative;
+      height:430px;
+      background:linear-gradient(180deg,#333,#111);
+      border-radius:28px;
+      overflow:hidden;
+      border:3px solid rgba(255,255,255,.18);
+      box-shadow:0 18px 40px rgba(0,0,0,.25);
+    }
+
+    .line{
+      position:absolute;
+      top:0;
+      bottom:0;
+      width:3px;
+      background:rgba(255,255,255,.25);
+    }
+
+    .line.one{left:33.33%}
+    .line.two{left:66.66%}
+
+    .player{
+      position:absolute;
+      bottom:22px;
+      width:64px;
+      height:64px;
+      font-size:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:left .12s;
+      z-index:5;
+    }
+
+    .obstacle,.package{
+      position:absolute;
+      width:58px;
+      height:58px;
+      font-size:42px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:4;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .control-btn{
+      border:none;
+      border-radius:18px;
+      padding:18px 10px;
+      background:white;
+      color:#a00000;
+      font-size:18px;
+      font-weight:bold;
+    }
+
+    .control-btn:active{transform:scale(.94)}
+
+    .hint{
+      text-align:center;
+      margin-top:14px;
+      color:#ffdada;
+      font-size:13px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.82);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#1c0000;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#ffdada;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:#ff2d2d;
+      color:white;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🏍️ Delivery Rush</h1>
+      <p>Antar paket, hindari rintangan, dan bertahan selama mungkin.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="time">30</h2><span>Waktu</span></div>
+      <div class="stat"><h2 id="speed">1</h2><span>Speed</span></div>
+    </div>
+
+    <div class="road" id="road">
+      <div class="line one"></div>
+      <div class="line two"></div>
+      <div class="player" id="player">🏍️</div>
+    </div>
+
+    <div class="controls">
+      <button class="control-btn" onclick="moveToLane(0)">Kiri</button>
+      <button class="control-btn" onclick="moveToLane(1)">Tengah</button>
+      <button class="control-btn" onclick="moveToLane(2)">Kanan</button>
+    </div>
+
+    <div class="hint">Ambil 📦 untuk score. Hindari 🚧 dan 🚗.</div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2>🔥 Selesai!</h2>
+      <p>Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="restartGame()">Main Lagi</button>
+    </div>
+  </div>
+
+  <script>
+    const road = document.getElementById("road");
+    const player = document.getElementById("player");
+
+    const scoreEl = document.getElementById("score");
+    const timeEl = document.getElementById("time");
+    const speedEl = document.getElementById("speed");
+    const gameOver = document.getElementById("gameOver");
+    const finalScore = document.getElementById("finalScore");
+
+    let lane = 1;
+    let score = 0;
+    let time = 30;
+    let speed = 1;
+    let isGameOver = false;
+    let items = [];
+
+    let gameLoop;
+    let timerLoop;
+    let spawnLoop;
+
+    function laneLeft(laneNumber){
+      const roadWidth = road.clientWidth;
+      const laneWidth = roadWidth / 3;
+      return laneWidth * laneNumber + laneWidth / 2 - 32;
+    }
+
+    function updatePlayer(){
+      player.style.left = laneLeft(lane) + "px";
+    }
+
+    function moveToLane(newLane){
+      lane = newLane;
+      updatePlayer();
+    }
+
+    function spawnItem(){
+      if(isGameOver) return;
+
+      const item = document.createElement("div");
+      const isPackage = Math.random() > 0.55;
+
+      item.className = isPackage ? "package" : "obstacle";
+      item.innerText = isPackage ? "📦" : (Math.random() > 0.5 ? "🚧" : "🚗");
+
+      const itemLane = Math.floor(Math.random() * 3);
+      item.dataset.lane = itemLane;
+      item.dataset.type = isPackage ? "package" : "obstacle";
+      item.dataset.y = "-60";
+
+      item.style.left = laneLeft(itemLane) + "px";
+      item.style.top = "-60px";
+
+      road.appendChild(item);
+      items.push(item);
+    }
+
+    function updateItems(){
+      items.forEach((item, index) => {
+        let y = Number(item.dataset.y);
+        y += 4 + speed;
+
+        item.dataset.y = y;
+        item.style.top = y + "px";
+
+        if(y > 320 && y < 385 && Number(item.dataset.lane) === lane){
+          if(item.dataset.type === "package"){
+            score += 10;
+            scoreEl.innerText = score;
+            item.remove();
+            items.splice(index, 1);
+          } else {
+            endGame();
+          }
+        }
+
+        if(y > 460){
+          item.remove();
+          items.splice(index, 1);
+        }
+      });
+    }
+
+    function startGame(){
+      updatePlayer();
+
+      gameLoop = setInterval(updateItems, 30);
+
+      spawnLoop = setInterval(() => {
+        spawnItem();
+      }, 850);
+
+      timerLoop = setInterval(() => {
+        time--;
+        timeEl.innerText = time;
+
+        if(time % 8 === 0){
+          speed++;
+          speedEl.innerText = speed;
+        }
+
+        if(time <= 0){
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function endGame(){
+      if(isGameOver) return;
+
+      isGameOver = true;
+
+      clearInterval(gameLoop);
+      clearInterval(timerLoop);
+      clearInterval(spawnLoop);
+
+      finalScore.innerText = score;
+      gameOver.style.display = "flex";
+    }
+
+    function restartGame(){
+      items.forEach(item => item.remove());
+      items = [];
+
+      lane = 1;
+      score = 0;
+      time = 30;
+      speed = 1;
+      isGameOver = false;
+
+      scoreEl.innerText = score;
+      timeEl.innerText = time;
+      speedEl.innerText = speed;
+
+      gameOver.style.display = "none";
+
+      startGame();
+    }
+
+    updatePlayer();
+    startGame();
+  </script>
+</body>
+</html>
