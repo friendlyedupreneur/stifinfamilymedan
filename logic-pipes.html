@@ -144,115 +144,142 @@
   const movesEl = document.getElementById("moves");
   const gameOver = document.getElementById("gameOver");
   const finalScore = document.getElementById("finalScore");
-  const debugInfo = document.getElementById("debugInfo");
+  const debugInfo = document.getElementById("debugInfo") || { textContent: "" };
 
   const SIZE = 4;
-  let level = 1, score = 0, moves = 0;
+  let level = 1;
+  let score = 0;
+  let moves = 0;
   let tiles = [];
 
-  // Level designs - yang sudah diperbaiki agar bisa diselesaikan
+  // Arah: 0=atas, 1=kanan, 2=bawah, 3=kiri
+  const PIPE_STATES = [
+    { symbol: "━", conn: [1, 3] }, // horizontal
+    { symbol: "┃", conn: [0, 2] }, // vertikal
+    { symbol: "┗", conn: [0, 1] }, // atas + kanan
+    { symbol: "┏", conn: [1, 2] }, // kanan + bawah
+    { symbol: "┓", conn: [2, 3] }, // bawah + kiri
+    { symbol: "┛", conn: [3, 0] }  // kiri + atas
+  ];
+
   const levels = [
-    // Level 1: Path lurus sederhana
     [
-      {type:"battery", rot:1},  // 0,0 - kanan (1)
-      {type:"straight", rot:0}, // 0,1 - horizontal
-      {type:"straight", rot:0}, // 0,2 - horizontal
-      {type:"corner", rot:2},   // 0,3 - butuh dari kiri & ke bawah -> (rot 2)
-      {type:"empty", rot:0},    // 1,0
-      {type:"empty", rot:0},    // 1,1
-      {type:"empty", rot:0},    // 1,2
-      {type:"straight", rot:1}, // 1,3 - vertikal
-      {type:"empty", rot:0},    // 2,0
-      {type:"empty", rot:0},    // 2,1
-      {type:"empty", rot:0},    // 2,2
-      {type:"straight", rot:1}, // 2,3 - lurus vertikal
-      {type:"empty", rot:0},    // 3,0
-      {type:"empty", rot:0},    // 3,1
-      {type:"empty", rot:0},    // 3,2
-      {type:"lamp", rot:0},     // 3,3 - menghadap atas (0)
+      { type:"battery", dir:1 },
+      { type:"pipe", solution:0 },
+      { type:"pipe", solution:4 },
+      { type:"empty" },
+
+      { type:"empty" },
+      { type:"empty" },
+      { type:"pipe", solution:1 },
+      { type:"empty" },
+
+      { type:"empty" },
+      { type:"empty" },
+      { type:"pipe", solution:2 },
+      { type:"pipe", solution:4 },
+
+      { type:"empty" },
+      { type:"empty" },
+      { type:"empty" },
+      { type:"lamp", dir:0 }
     ],
-    // Level 2: Path L-shape
+
     [
-      {type:"battery", rot:2},  // 0,0 - bawah (2)
-      {type:"empty", rot:0},    // 0,1
-      {type:"empty", rot:0},    // 0,2
-      {type:"empty", rot:0},    // 0,3
-      {type:"straight", rot:1}, // 1,0 - vertikal
-      {type:"empty", rot:0},    // 1,1
-      {type:"empty", rot:0},    // 1,2
-      {type:"empty", rot:0},    // 1,3
-      {type:"corner", rot:0},   // 2,0 - butuh dari atas & ke kanan -> (rot 0)
-      {type:"straight", rot:0}, // 2,1 - horizontal
-      {type:"straight", rot:0}, // 2,2 - horizontal
-      {type:"corner", rot:2},   // 2,3 - butuh dari kiri & ke bawah -> (rot 2)
-      {type:"empty", rot:0},    // 3,0
-      {type:"empty", rot:0},    // 3,1
-      {type:"empty", rot:0},    // 3,2
-      {type:"lamp", rot:0},     // 3,3 - menghadap atas (0)
+      { type:"battery", dir:2 },
+      { type:"empty" },
+      { type:"empty" },
+      { type:"empty" },
+
+      { type:"pipe", solution:1 },
+      { type:"empty" },
+      { type:"empty" },
+      { type:"empty" },
+
+      { type:"pipe", solution:2 },
+      { type:"pipe", solution:0 },
+      { type:"pipe", solution:0 },
+      { type:"pipe", solution:4 },
+
+      { type:"empty" },
+      { type:"empty" },
+      { type:"empty" },
+      { type:"lamp", dir:0 }
+    ],
+
+    [
+      { type:"battery", dir:1 },
+      { type:"pipe", solution:0 },
+      { type:"pipe", solution:4 },
+      { type:"empty" },
+
+      { type:"empty" },
+      { type:"empty" },
+      { type:"pipe", solution:1 },
+      { type:"empty" },
+
+      { type:"empty" },
+      { type:"pipe", solution:3 },
+      { type:"pipe", solution:5 },
+      { type:"empty" },
+
+      { type:"empty" },
+      { type:"pipe", solution:2 },
+      { type:"pipe", solution:0 },
+      { type:"lamp", dir:3 }
     ]
   ];
 
-  // FUNGSI KONEKSI - Arah: 0=atas, 1=kanan, 2=bawah, 3=kiri
-  function getTileConnections(tile) {
-    if (!tile || tile.type === "empty") return [];
-    
-    switch(tile.type) {
-      case "battery":
-        return [tile.rot];
-        
-      case "lamp":
-        return [tile.rot];
-        
-      case "straight":
-        if (tile.rot === 0 || tile.rot === 2) return [1, 3]; // kanan, kiri
-        return [0, 2]; // atas, bawah
-        
-      case "corner":
-        const corners = [
-          [0, 1], // rot 0: Atas & Kanan
-          [1, 2], // rot 1: Kanan & Bawah
-          [2, 3], // rot 2: Bawah & Kiri
-          [3, 0]  // rot 3: Kiri & Atas
-        ];
-        return corners[tile.rot];
-        
-      default:
-        return [];
-    }
+  function randomPipeState(exceptState) {
+    let state;
+    do {
+      state = Math.floor(Math.random() * PIPE_STATES.length);
+    } while (state === exceptState);
+
+    return state;
   }
 
-  // FUNGSI SIMBOL VISUAL
+  function getConnections(tile) {
+    if (!tile || tile.type === "empty") return [];
+
+    if (tile.type === "battery") return [tile.dir];
+    if (tile.type === "lamp") return [tile.dir];
+
+    if (tile.type === "pipe") {
+      return PIPE_STATES[tile.state].conn;
+    }
+
+    return [];
+  }
+
   function getSymbol(tile) {
     if (!tile) return "";
-    
-    switch(tile.type) {
-      case "battery": return "🔋";
-      case "lamp": return "💡";
-      case "empty": return "";
-      case "straight":
-        return (tile.rot === 0 || tile.rot === 2) ? "━" : "┃";
-      case "corner":
-        const cornerSymbols = ["┗", "┏", "┓", "┛"];
-        return cornerSymbols[tile.rot];
-      default: return "?";
+
+    if (tile.type === "battery") return "🔋";
+    if (tile.type === "lamp") return "💡";
+    if (tile.type === "empty") return "";
+
+    if (tile.type === "pipe") {
+      return PIPE_STATES[tile.state].symbol;
     }
+
+    return "?";
   }
 
-  function getOppositeDir(dir) {
+  function opposite(dir) {
     return (dir + 2) % 4;
   }
 
-  function getNeighborIndex(index, dir) {
+  function neighbor(index, dir) {
     const row = Math.floor(index / SIZE);
     const col = index % SIZE;
-    
-    switch(dir) {
-      case 0: return row > 0 ? index - SIZE : -1;         // atas
-      case 1: return col < SIZE - 1 ? index + 1 : -1;     // kanan
-      case 2: return row < SIZE - 1 ? index + SIZE : -1;  // bawah
-      case 3: return col > 0 ? index - 1 : -1;            // kiri
-      default: return -1;
-    }
+
+    if (dir === 0 && row > 0) return index - SIZE;
+    if (dir === 1 && col < SIZE - 1) return index + 1;
+    if (dir === 2 && row < SIZE - 1) return index + SIZE;
+    if (dir === 3 && col > 0) return index - 1;
+
+    return -1;
   }
 
   function loadLevel() {
@@ -260,31 +287,20 @@
     movesEl.innerText = moves;
     gameOver.style.display = "none";
 
-    const levelData = levels[(level - 1) % levels.length];
-    tiles = levelData.map((t, index) => {
-      // Acak rotasi khusus untuk pipa (jangan acak battery, lamp, atau empty)
-      let initialRot = t.rot;
-      if (t.type === "straight" || t.type === "corner") {
-        initialRot = Math.floor(Math.random() * 4);
+    const data = levels[(level - 1) % levels.length];
+
+    tiles = data.map(tile => {
+      const copy = { ...tile, power:false };
+
+      if (copy.type === "pipe") {
+        copy.state = randomPipeState(copy.solution);
       }
-      
-      return {
-        ...t,
-        rot: initialRot,
-        index: index,
-        power: false
-      };
+
+      return copy;
     });
 
+    debugInfo.textContent = "🔄 Putar pipa sampai jalur 🔋 terhubung ke 💡.";
     render();
-    
-    // Cek apakah kebetulan langsung solved dari awal (sangat jarang, tapi mungkin terjadi)
-    const isSolved = checkConnections();
-    if (isSolved) {
-      debugInfo.textContent = "✅ Wah beruntung! Level ini kebetulan langsung tersambung! Klik 'Alirkan Energi'.";
-    } else {
-      debugInfo.textContent = "🔄 Putar pipa untuk menyambungkan jalur.";
-    }
   }
 
   function render() {
@@ -293,148 +309,105 @@
     tiles.forEach((tile, index) => {
       const btn = document.createElement("button");
       btn.className = "tile";
+
       if (tile.power) btn.classList.add("power");
       if (tile.type === "battery" || tile.type === "lamp") btn.classList.add("fixed");
       if (tile.type === "empty") btn.classList.add("empty");
 
-      // Tambahkan indikator koneksi
-      const connections = getTileConnections(tile);
-      
-      // Container untuk symbol
       const symbolSpan = document.createElement("span");
       symbolSpan.textContent = getSymbol(tile);
       symbolSpan.style.position = "relative";
-      symbolSpan.style.zIndex = "1";
+      symbolSpan.style.zIndex = "2";
       btn.appendChild(symbolSpan);
 
-      // Tambahkan indikator visual untuk setiap koneksi
       const dirs = ["up", "right", "down", "left"];
+      const connections = getConnections(tile);
+
       dirs.forEach((dirName, dirIndex) => {
         if (connections.includes(dirIndex)) {
           const indicator = document.createElement("div");
           indicator.className = `connection-${dirName}`;
-          if (tile.power) {
-            indicator.style.background = "#2E7D32";
-          }
           btn.appendChild(indicator);
         }
       });
 
       btn.onclick = () => {
-        if (tile.type === "empty" || tile.type === "battery" || tile.type === "lamp") return;
-        
-        tile.rot = (tile.rot + 1) % 4;
+        if (tile.type !== "pipe") return;
+
+        tile.state = (tile.state + 1) % PIPE_STATES.length;
+        tile.power = false;
+
         moves++;
         movesEl.innerText = moves;
+
+        tiles.forEach(t => t.power = false);
+        debugInfo.textContent = "⚙️ Pipa berubah bentuk. Coba alirkan energi.";
         render();
-        
-        // Cek koneksi setiap kali rotasi
-        const isSolved = checkConnections();
-        if (isSolved) {
-          debugInfo.textContent = "✅ Jalur tersambung! Klik 'Alirkan Energi' untuk klaim score.";
-        } else {
-          debugInfo.textContent = "🔄 Putar pipa untuk menyambungkan jalur.";
-        }
       };
 
       board.appendChild(btn);
     });
   }
 
-  // FUNGSI UTAMA: Cek apakah semua pipa tersambung dengan benar
-  function checkConnections() {
-    // Reset power
+  function tracePower() {
     tiles.forEach(t => t.power = false);
 
     const batteryIndex = tiles.findIndex(t => t.type === "battery");
     const lampIndex = tiles.findIndex(t => t.type === "lamp");
 
-    if (batteryIndex === -1 || lampIndex === -1) {
-      debugInfo.textContent = "❌ Battery atau Lampu tidak ditemukan!";
-      return false;
-    }
-
-    // BFS dari battery
-    const visited = new Set();
     const queue = [batteryIndex];
-    visited.add(batteryIndex);
+    const visited = new Set([batteryIndex]);
+
     tiles[batteryIndex].power = true;
 
-    let foundPath = false;
-
     while (queue.length > 0) {
-      const currentIndex = queue.shift();
-      const currentTile = tiles[currentIndex];
-      const currentConnections = getTileConnections(currentTile);
+      const current = queue.shift();
+      const currentConnections = getConnections(tiles[current]);
 
-      // Cek setiap arah koneksi dari tile saat ini
-      for (const dir of currentConnections) {
-        const neighborIndex = getNeighborIndex(currentIndex, dir);
-        
-        // Skip jika di luar board
-        if (neighborIndex === -1) continue;
-        
-        // Skip jika sudah dikunjungi
-        if (visited.has(neighborIndex)) continue;
-        
-        const neighborTile = tiles[neighborIndex];
-        
-        // Skip jika tile kosong
-        if (neighborTile.type === "empty") continue;
-        
-        const neighborConnections = getTileConnections(neighborTile);
-        const neededDir = getOppositeDir(dir);
-        
-        // Cek apakah neighbor punya koneksi ke arah sebaliknya
-        if (neighborConnections.includes(neededDir)) {
-          visited.add(neighborIndex);
-          tiles[neighborIndex].power = true;
-          queue.push(neighborIndex);
-          
-          // Jika sampai di lampu, tandai found
-          if (neighborIndex === lampIndex) {
-            foundPath = true;
-          }
+      currentConnections.forEach(dir => {
+        const next = neighbor(current, dir);
+
+        if (next === -1) return;
+        if (visited.has(next)) return;
+        if (tiles[next].type === "empty") return;
+
+        const nextConnections = getConnections(tiles[next]);
+
+        if (nextConnections.includes(opposite(dir))) {
+          visited.add(next);
+          tiles[next].power = true;
+          queue.push(next);
         }
-      }
+      });
     }
 
-    // Render ulang untuk menunjukkan power
     render();
-    
-    return foundPath && tiles[lampIndex].power;
+
+    return tiles[lampIndex].power;
   }
 
   function checkPower() {
-    const isConnected = checkConnections();
-    
-    if (isConnected && tiles[tiles.findIndex(t => t.type === "lamp")].power) {
-      // Hitung score
-      const baseScore = 100;
-      const movePenalty = moves * 2;
-      const levelBonus = level * 20;
-      const earnedScore = Math.max(baseScore - movePenalty + levelBonus, 10);
-      
+    const connected = tracePower();
+
+    if (connected) {
+      const earnedScore = Math.max(120 - moves * 3, 25) + level * 15;
+
       score += earnedScore;
       scoreEl.innerText = score;
       finalScore.innerText = score;
-      
-      debugInfo.textContent = `✅ Berhasil! +${earnedScore} poin`;
+
+      debugInfo.textContent = `✅ Jalur aktif! +${earnedScore} poin`;
       gameOver.style.display = "flex";
     } else {
-      // Tunjukkan debug info kenapa gagal
-      const batteryIndex = tiles.findIndex(t => t.type === "battery");
-      const lampIndex = tiles.findIndex(t => t.type === "lamp");
       const poweredCount = tiles.filter(t => t.power).length;
-      
-      debugInfo.textContent = `❌ Belum tersambung. ${poweredCount} tile menyala. Coba putar lagi!`;
-      
-      // Vibrasi atau feedback visual
+      debugInfo.textContent = `❌ Belum sampai ke lampu. ${poweredCount} tile sudah dialiri energi.`;
+
       const checkBtn = document.querySelector(".check-btn");
-      checkBtn.style.transform = "scale(0.95)";
+      checkBtn.style.transform = "scale(.95)";
+
       setTimeout(() => {
         checkBtn.style.transform = "scale(1)";
-      }, 100);
+      }, 120);
     }
   }
 
@@ -445,7 +418,6 @@
     loadLevel();
   }
 
-  // Start game
   loadLevel();
 </script>
 </body>
