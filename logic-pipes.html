@@ -150,14 +150,14 @@
   let level = 1, score = 0, moves = 0;
   let tiles = [];
 
-  // Level designs - yang pasti bisa diselesaikan
+  // Level designs - yang sudah diperbaiki agar bisa diselesaikan
   const levels = [
     // Level 1: Path lurus sederhana
     [
-      {type:"battery", rot:1}, // 0,0 - kanan
+      {type:"battery", rot:1},  // 0,0 - kanan (1)
       {type:"straight", rot:0}, // 0,1 - horizontal
       {type:"straight", rot:0}, // 0,2 - horizontal
-      {type:"corner", rot:3},   // 0,3 - kanan-bawah
+      {type:"corner", rot:2},   // 0,3 - butuh dari kiri & ke bawah -> (rot 2)
       {type:"empty", rot:0},    // 1,0
       {type:"empty", rot:0},    // 1,1
       {type:"empty", rot:0},    // 1,2
@@ -165,64 +165,54 @@
       {type:"empty", rot:0},    // 2,0
       {type:"empty", rot:0},    // 2,1
       {type:"empty", rot:0},    // 2,2
-      {type:"corner", rot:0},   // 2,3 - kiri-bawah
+      {type:"straight", rot:1}, // 2,3 - lurus vertikal
       {type:"empty", rot:0},    // 3,0
       {type:"empty", rot:0},    // 3,1
       {type:"empty", rot:0},    // 3,2
-      {type:"lamp", rot:2},     // 3,3 - atas
+      {type:"lamp", rot:0},     // 3,3 - menghadap atas (0)
     ],
     // Level 2: Path L-shape
     [
-      {type:"battery", rot:2}, // 0,0 - bawah
-      {type:"empty", rot:0},   // 0,1
-      {type:"empty", rot:0},   // 0,2
-      {type:"empty", rot:0},   // 0,3
+      {type:"battery", rot:2},  // 0,0 - bawah (2)
+      {type:"empty", rot:0},    // 0,1
+      {type:"empty", rot:0},    // 0,2
+      {type:"empty", rot:0},    // 0,3
       {type:"straight", rot:1}, // 1,0 - vertikal
       {type:"empty", rot:0},    // 1,1
       {type:"empty", rot:0},    // 1,2
       {type:"empty", rot:0},    // 1,3
-      {type:"corner", rot:0},   // 2,0 - kiri-bawah
+      {type:"corner", rot:0},   // 2,0 - butuh dari atas & ke kanan -> (rot 0)
       {type:"straight", rot:0}, // 2,1 - horizontal
       {type:"straight", rot:0}, // 2,2 - horizontal
-      {type:"corner", rot:3},   // 2,3 - kanan-bawah
+      {type:"corner", rot:2},   // 2,3 - butuh dari kiri & ke bawah -> (rot 2)
       {type:"empty", rot:0},    // 3,0
       {type:"empty", rot:0},    // 3,1
       {type:"empty", rot:0},    // 3,2
-      {type:"lamp", rot:0},     // 3,3 - atas
+      {type:"lamp", rot:0},     // 3,3 - menghadap atas (0)
     ]
   ];
 
-  // FUNGSI KONEKSI YANG SUDAH DIPERBAIKI
-  // Arah: 0=atas, 1=kanan, 2=bawah, 3=kiri
+  // FUNGSI KONEKSI - Arah: 0=atas, 1=kanan, 2=bawah, 3=kiri
   function getTileConnections(tile) {
     if (!tile || tile.type === "empty") return [];
     
     switch(tile.type) {
       case "battery":
-        // Battery mengeluarkan energi ke SATU arah berdasarkan rotasi
-        return [tile.rot]; // 0=atas, 1=kanan, 2=bawah, 3=kiri
+        return [tile.rot];
         
       case "lamp":
-        // Lampu menerima energi dari SATU arah
         return [tile.rot];
         
       case "straight":
-        // Pipa lurus: rot 0=horizontal(kanan-kiri), rot 1=vertikal(atas-bawah)
-        // rot 2=horizontal, rot 3=vertikal
         if (tile.rot === 0 || tile.rot === 2) return [1, 3]; // kanan, kiri
         return [0, 2]; // atas, bawah
         
       case "corner":
-        // Pipa sudut: 
-        // rot 0: kiri-bawah (3, 2)
-        // rot 1: atas-kanan (0, 1) 
-        // rot 2: kanan-bawah (1, 2)
-        // rot 3: kiri-atas (3, 0)
         const corners = [
-          [3, 2], // rot 0: kiri, bawah
-          [0, 1], // rot 1: atas, kanan
-          [1, 2], // rot 2: kanan, bawah
-          [3, 0]  // rot 3: kiri, atas
+          [0, 1], // rot 0: Atas & Kanan
+          [1, 2], // rot 1: Kanan & Bawah
+          [2, 3], // rot 2: Bawah & Kiri
+          [3, 0]  // rot 3: Kiri & Atas
         ];
         return corners[tile.rot];
         
@@ -231,6 +221,7 @@
     }
   }
 
+  // FUNGSI SIMBOL VISUAL
   function getSymbol(tile) {
     if (!tile) return "";
     
@@ -241,7 +232,7 @@
       case "straight":
         return (tile.rot === 0 || tile.rot === 2) ? "━" : "┃";
       case "corner":
-        const cornerSymbols = ["┛", "┏", "┗", "┓"];
+        const cornerSymbols = ["┗", "┏", "┓", "┛"];
         return cornerSymbols[tile.rot];
       default: return "?";
     }
@@ -256,10 +247,10 @@
     const col = index % SIZE;
     
     switch(dir) {
-      case 0: return row > 0 ? index - SIZE : -1;        // atas
-      case 1: return col < SIZE - 1 ? index + 1 : -1;    // kanan
+      case 0: return row > 0 ? index - SIZE : -1;         // atas
+      case 1: return col < SIZE - 1 ? index + 1 : -1;     // kanan
       case 2: return row < SIZE - 1 ? index + SIZE : -1;  // bawah
-      case 3: return col > 0 ? index - 1 : -1;           // kiri
+      case 3: return col > 0 ? index - 1 : -1;            // kiri
       default: return -1;
     }
   }
