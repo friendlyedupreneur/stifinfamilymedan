@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Number Hack</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:radial-gradient(circle at top,#2b2b2b,#080808 55%,#000);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.1);
+      border:none;
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#d8d8d8;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:21px}
+    .stat span{font-size:10px;color:#d8d8d8}
+
+    .game-box{
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:26px;
+      padding:18px;
+      margin-bottom:16px;
+    }
+
+    .mission{
+      text-align:center;
+      margin-bottom:16px;
+      color:#d8d8d8;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .code-input{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .digit-box{
+      width:48px;
+      height:58px;
+      border-radius:16px;
+      background:#fff;
+      color:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:26px;
+      font-weight:bold;
+      box-shadow:0 0 18px rgba(255,255,255,.2);
+    }
+
+    .keypad{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+    }
+
+    .key{
+      border:none;
+      border-radius:16px;
+      padding:16px;
+      font-size:22px;
+      font-weight:bold;
+      background:white;
+      color:black;
+    }
+
+    .key:active{transform:scale(.94)}
+
+    .action{
+      background:rgba(255,255,255,.13);
+      color:white;
+      font-size:15px;
+    }
+
+    .submit{
+      background:#7CFF6B;
+      color:black;
+      font-size:15px;
+    }
+
+    .hint-box{
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:22px;
+      padding:14px;
+      margin-bottom:16px;
+      font-size:13px;
+      color:#d8d8d8;
+      line-height:1.55;
+    }
+
+    .history{
+      display:grid;
+      gap:10px;
+    }
+
+    .history-row{
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      padding:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      font-size:14px;
+    }
+
+    .guess{
+      font-weight:bold;
+      letter-spacing:3px;
+      color:white;
+    }
+
+    .result{
+      color:#d8d8d8;
+      font-size:12px;
+      text-align:right;
+      line-height:1.45;
+    }
+
+    .info{
+      text-align:center;
+      margin-top:14px;
+      color:#d8d8d8;
+      font-size:13px;
+      min-height:38px;
+      line-height:1.5;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#111;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.13);
+    }
+
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#d8d8d8;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:black;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🔢 Number Hack</h1>
+      <p>Pecahkan kode angka rahasia dengan membaca feedback sistem.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="attempts">7</h2><span>Chance</span></div>
+      <div class="stat"><h2 id="length">3</h2><span>Digit</span></div>
+    </div>
+
+    <div class="hint-box">
+      <strong>LOCK</strong> = angka benar dan posisi benar.<br>
+      <strong>TRACE</strong> = angka benar tapi posisi salah.<br>
+      Gunakan feedback untuk menyusun kemungkinan kode berikutnya.
+    </div>
+
+    <div class="game-box">
+      <div class="mission" id="mission">
+        Tebak kode 3 digit. Semua angka berbeda.
+      </div>
+
+      <div class="code-input" id="codeInput"></div>
+
+      <div class="keypad">
+        <button class="key" onclick="pressDigit(1)">1</button>
+        <button class="key" onclick="pressDigit(2)">2</button>
+        <button class="key" onclick="pressDigit(3)">3</button>
+        <button class="key" onclick="pressDigit(4)">4</button>
+        <button class="key" onclick="pressDigit(5)">5</button>
+        <button class="key" onclick="pressDigit(6)">6</button>
+        <button class="key" onclick="pressDigit(7)">7</button>
+        <button class="key" onclick="pressDigit(8)">8</button>
+        <button class="key" onclick="pressDigit(9)">9</button>
+        <button class="key action" onclick="deleteDigit()">Hapus</button>
+        <button class="key" onclick="pressDigit(0)">0</button>
+        <button class="key submit" onclick="submitGuess()">Hack</button>
+      </div>
+
+      <div class="info" id="info">
+        Masukkan angka sesuai jumlah digit kode.
+      </div>
+    </div>
+
+    <div class="history" id="historyList"></div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">✅ Kode Terbuka!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" id="nextBtn" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  let score = 0;
+  let level = 1;
+  let codeLength = 3;
+  let attempts = 7;
+  let secretCode = [];
+  let currentInput = [];
+  let locked = false;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const attemptsEl = document.getElementById("attempts");
+  const lengthEl = document.getElementById("length");
+  const missionEl = document.getElementById("mission");
+  const codeInputEl = document.getElementById("codeInput");
+  const historyList = document.getElementById("historyList");
+  const info = document.getElementById("info");
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+  const nextBtn = document.getElementById("nextBtn");
+
+  function setupLevel(){
+    locked = false;
+    currentInput = [];
+    historyList.innerHTML = "";
+
+    if(level < 4){
+      codeLength = 3;
+      attempts = 7;
+    } else if(level < 8){
+      codeLength = 4;
+      attempts = 8;
+    } else {
+      codeLength = 5;
+      attempts = 9;
+    }
+
+    secretCode = generateSecret(codeLength);
+
+    levelEl.innerText = level;
+    attemptsEl.innerText = attempts;
+    lengthEl.innerText = codeLength;
+
+    missionEl.innerText =
+      `Tebak kode ${codeLength} digit. Semua angka berbeda.`;
+
+    info.innerText = "Masukkan angka sesuai jumlah digit kode.";
+
+    renderInput();
+  }
+
+  function generateSecret(length){
+    const digits = [0,1,2,3,4,5,6,7,8,9];
+    const result = [];
+
+    while(result.length < length){
+      const index = Math.floor(Math.random() * digits.length);
+      result.push(digits[index]);
+      digits.splice(index,1);
+    }
+
+    return result;
+  }
+
+  function renderInput(){
+    codeInputEl.innerHTML = "";
+
+    for(let i=0;i<codeLength;i++){
+      const box = document.createElement("div");
+      box.className = "digit-box";
+      box.innerText = currentInput[i] !== undefined ? currentInput[i] : "•";
+      codeInputEl.appendChild(box);
+    }
+  }
+
+  function pressDigit(num){
+    if(locked) return;
+
+    if(currentInput.length >= codeLength){
+      info.innerText = "Kode sudah penuh. Tekan Hack atau Hapus.";
+      return;
+    }
+
+    if(currentInput.includes(num)){
+      info.innerText = "Angka tidak boleh sama dalam satu kode.";
+      return;
+    }
+
+    currentInput.push(num);
+    renderInput();
+  }
+
+  function deleteDigit(){
+    if(locked) return;
+
+    currentInput.pop();
+    renderInput();
+  }
+
+  function submitGuess(){
+    if(locked) return;
+
+    if(currentInput.length < codeLength){
+      info.innerText = `Masukkan ${codeLength} digit dulu.`;
+      return;
+    }
+
+    const result = checkGuess(currentInput);
+
+    addHistory(currentInput, result.lock, result.trace);
+
+    if(result.lock === codeLength){
+      winLevel();
+      return;
+    }
+
+    attempts--;
+    attemptsEl.innerText = attempts;
+
+    if(attempts <= 0){
+      loseLevel();
+      return;
+    }
+
+    info.innerText =
+      `LOCK ${result.lock}, TRACE ${result.trace}. Sisa chance ${attempts}.`;
+
+    currentInput = [];
+    renderInput();
+  }
+
+  function checkGuess(guess){
+    let lock = 0;
+    let trace = 0;
+
+    guess.forEach((num, index) => {
+      if(secretCode[index] === num){
+        lock++;
+      } else if(secretCode.includes(num)){
+        trace++;
+      }
+    });
+
+    return {lock, trace};
+  }
+
+  function addHistory(guess, lock, trace){
+    const row = document.createElement("div");
+    row.className = "history-row";
+
+    row.innerHTML = `
+      <div class="guess">${guess.join("")}</div>
+      <div class="result">
+        LOCK ${lock}<br>
+        TRACE ${trace}
+      </div>
+    `;
+
+    historyList.prepend(row);
+  }
+
+  function winLevel(){
+    locked = true;
+
+    const earnedScore =
+      Math.max(140 - (7 - attempts) * 12, 40) +
+      level * 20 +
+      codeLength * 10;
+
+    score += earnedScore;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    popupTitle.innerText = "✅ Kode Terbuka!";
+    popupText.innerHTML =
+      `Kode berhasil dipecahkan:<br><br>
+      <strong style="font-size:30px;color:white;letter-spacing:4px;">${secretCode.join("")}</strong>
+      <br><br>
+      Score kamu:<br><br>
+      <span id="finalScore" style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Level Berikutnya";
+    nextBtn.onclick = nextLevel;
+
+    gameOver.style.display = "flex";
+  }
+
+  function loseLevel(){
+    locked = true;
+
+    popupTitle.innerText = "❌ Sistem Terkunci!";
+    popupText.innerHTML =
+      `Kode yang benar adalah:<br><br>
+      <strong style="font-size:30px;color:white;letter-spacing:4px;">${secretCode.join("")}</strong>
+      <br><br>
+      Score kamu:<br><br>
+      <span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Ulang Level";
+    nextBtn.onclick = retryLevel;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    gameOver.style.display = "none";
+    setupLevel();
+  }
+
+  function retryLevel(){
+    gameOver.style.display = "none";
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
