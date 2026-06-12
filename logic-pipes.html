@@ -4,427 +4,258 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Logic Pipes</title>
-
   <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial,sans-serif;
-    }
-
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
     body{
-      background:
-        radial-gradient(circle at top,#2b2b2b,#0b0b0b 50%,#000);
-      color:white;
-      min-height:100vh;
-      overflow-x:hidden;
-      overflow-y:auto;
+      background:radial-gradient(circle at top,#2b2b2b,#0b0b0b 50%,#000);
+      color:white;min-height:100vh;overflow-x:hidden;overflow-y:auto;
     }
-
-    .container{
-      max-width:480px;
-      margin:auto;
-      padding:20px 16px 120px;
-    }
-
+    .container{max-width:480px;margin:auto;padding:20px 16px 120px}
     .back-btn{
-      background:rgba(255,255,255,.1);
-      border:none;
-      color:white;
-      padding:10px 14px;
-      border-radius:14px;
-      font-size:14px;
-      margin-bottom:18px;
+      background:rgba(255,255,255,.1);border:none;color:white;
+      padding:10px 14px;border-radius:14px;font-size:14px;margin-bottom:18px;
     }
-
-    .title{
-      text-align:center;
-      margin-bottom:16px;
-    }
-
-    .title h1{
-      font-size:34px;
-      margin-bottom:8px;
-    }
-
-    .title p{
-      font-size:14px;
-      color:#d8d8d8;
-      line-height:1.5;
-    }
-
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:12px;
-      margin-bottom:16px;
-    }
-
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#d8d8d8;line-height:1.5}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
     .stat{
-      background:rgba(255,255,255,.07);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:18px;
-      padding:14px;
-      text-align:center;
+      background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;padding:14px;text-align:center;
     }
-
-    .stat h2{
-      font-size:24px;
-    }
-
-    .stat span{
-      font-size:12px;
-      color:#d8d8d8;
-    }
+    .stat h2{font-size:24px}.stat span{font-size:12px;color:#d8d8d8}
 
     .board{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:10px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:26px;
-      padding:16px;
+      display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+      border-radius:26px;padding:16px;
     }
-
-    .pipe{
-      aspect-ratio:1/1;
-      border:none;
-      border-radius:18px;
-      background:#1c1c1c;
-      color:white;
-      font-size:34px;
-      transition:.15s;
+    .tile{
+      aspect-ratio:1/1;border:none;border-radius:18px;background:#1c1c1c;
+      color:white;font-size:32px;transition:.15s;position:relative;
     }
-
-    .pipe:active{
-      transform:scale(.93);
+    .tile:active{transform:scale(.93)}
+    .tile.power{background:white;color:black;box-shadow:0 0 18px rgba(255,255,255,.8)}
+    .tile.fixed{background:#2b2b2b;color:white}
+    .tile.empty{opacity:.45}
+    .controls{margin-top:16px;display:grid;gap:12px}
+    .check-btn,.reset-btn{
+      border:none;border-radius:18px;padding:16px;font-size:16px;font-weight:bold;
     }
-
-    .pipe.active{
-      background:white;
-      color:black;
-    }
-
-    .controls{
-      margin-top:16px;
-      display:grid;
-      gap:12px;
-    }
-
-    .check-btn{
-      border:none;
-      border-radius:18px;
-      padding:16px;
-      background:white;
-      color:black;
-      font-size:16px;
-      font-weight:bold;
-    }
-
-    .reset-btn{
-      border:none;
-      border-radius:18px;
-      padding:16px;
-      background:rgba(255,255,255,.12);
-      color:white;
-      font-size:15px;
-      font-weight:bold;
-    }
-
-    .hint{
-      margin-top:14px;
-      text-align:center;
-      font-size:13px;
-      color:#d8d8d8;
-      line-height:1.5;
-    }
+    .check-btn{background:white;color:black}
+    .reset-btn{background:rgba(255,255,255,.12);color:white}
+    .hint{text-align:center;margin-top:14px;font-size:13px;color:#d8d8d8;line-height:1.5}
 
     .game-over{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.82);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      z-index:99;
+      position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;
+      align-items:center;justify-content:center;padding:20px;z-index:99;
     }
-
     .popup{
-      width:100%;
-      max-width:380px;
-      background:#111;
-      border-radius:28px;
-      padding:28px 22px;
-      text-align:center;
-      border:1px solid rgba(255,255,255,.12);
+      width:100%;max-width:380px;background:#111;border-radius:28px;
+      padding:28px 22px;text-align:center;border:1px solid rgba(255,255,255,.12);
     }
-
-    .popup h2{
-      font-size:32px;
-      margin-bottom:12px;
-    }
-
-    .popup p{
-      color:#d8d8d8;
-      line-height:1.6;
-      margin-bottom:22px;
-    }
-
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#d8d8d8;line-height:1.6;margin-bottom:22px}
     .restart{
-      width:100%;
-      border:none;
-      border-radius:18px;
-      padding:16px;
-      background:white;
-      color:black;
-      font-size:16px;
-      font-weight:bold;
+      width:100%;border:none;border-radius:18px;padding:16px;
+      background:white;color:black;font-size:16px;font-weight:bold;
     }
-
   </style>
 </head>
-
 <body>
-
   <div class="container">
-
-    <button class="back-btn" onclick="history.back()">
-      ← Kembali
-    </button>
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
 
     <div class="title">
       <h1>🧩 Logic Pipes</h1>
-
-      <p>
-        Putar pipa hingga seluruh jalur energi terhubung.
-      </p>
+      <p>Sambungkan energi dari 🔋 Battery menuju 💡 Lampu.</p>
     </div>
 
     <div class="stats">
-
-      <div class="stat">
-        <h2 id="score">0</h2>
-        <span>Score</span>
-      </div>
-
-      <div class="stat">
-        <h2 id="level">1</h2>
-        <span>Level</span>
-      </div>
-
-      <div class="stat">
-        <h2 id="moves">0</h2>
-        <span>Moves</span>
-      </div>
-
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="moves">0</h2><span>Moves</span></div>
     </div>
 
     <div class="board" id="board"></div>
 
     <div class="controls">
-
-      <button class="check-btn" onclick="checkSolution()">
-        Periksa Jalur
-      </button>
-
-      <button class="reset-btn" onclick="generateBoard()">
-        Acak Ulang
-      </button>
-
+      <button class="check-btn" onclick="checkPower()">Alirkan Energi ⚡</button>
+      <button class="reset-btn" onclick="loadLevel()">Acak Ulang</button>
     </div>
 
     <div class="hint">
-      Tap pipa untuk memutarnya hingga semua jalur aktif ⚡
+      Tap kotak pipa untuk memutar. Jalur harus nyambung dari 🔋 ke 💡.
     </div>
-
   </div>
 
   <div class="game-over" id="gameOver">
-
     <div class="popup">
-
-      <h2>⚡ Jalur Aktif!</h2>
-
-      <p>
-        Score kamu:
-        <br><br>
-
-        <span
-          id="finalScore"
-          style="font-size:42px;font-weight:bold;"
-        >
-          0
-        </span>
-
+      <h2>💡 Lampu Menyala!</h2>
+      <p>Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
       </p>
-
-      <button class="restart" onclick="nextLevel()">
-        Level Berikutnya
-      </button>
-
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
     </div>
-
   </div>
 
-  <script>
+<script>
+  const board = document.getElementById("board");
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const movesEl = document.getElementById("moves");
+  const gameOver = document.getElementById("gameOver");
+  const finalScore = document.getElementById("finalScore");
 
-    const boardEl = document.getElementById("board");
+  const SIZE = 4;
+  let level = 1, score = 0, moves = 0;
+  let tiles = [];
 
-    const scoreEl = document.getElementById("score");
-    const levelEl = document.getElementById("level");
-    const movesEl = document.getElementById("moves");
+  const levels = [
+    [
+      {type:"battery", rot:1}, {type:"straight", rot:0}, {type:"corner", rot:1}, {type:"empty", rot:0},
+      {type:"empty", rot:0},   {type:"empty", rot:0},    {type:"straight", rot:1}, {type:"empty", rot:0},
+      {type:"empty", rot:0},   {type:"empty", rot:0},    {type:"corner", rot:2}, {type:"straight", rot:0},
+      {type:"empty", rot:0},   {type:"empty", rot:0},    {type:"empty", rot:0}, {type:"lamp", rot:3}
+    ],
+    [
+      {type:"battery", rot:1}, {type:"corner", rot:1}, {type:"empty", rot:0}, {type:"empty", rot:0},
+      {type:"empty", rot:0}, {type:"straight", rot:1}, {type:"corner", rot:1}, {type:"empty", rot:0},
+      {type:"empty", rot:0}, {type:"corner", rot:0}, {type:"corner", rot:2}, {type:"empty", rot:0},
+      {type:"empty", rot:0}, {type:"straight", rot:0}, {type:"straight", rot:0}, {type:"lamp", rot:3}
+    ],
+    [
+      {type:"battery", rot:2}, {type:"empty", rot:0}, {type:"corner", rot:1}, {type:"lamp", rot:2},
+      {type:"straight", rot:1}, {type:"corner", rot:1}, {type:"straight", rot:1}, {type:"straight", rot:1},
+      {type:"corner", rot:0}, {type:"corner", rot:2}, {type:"empty", rot:0}, {type:"empty", rot:0},
+      {type:"empty", rot:0}, {type:"empty", rot:0}, {type:"empty", rot:0}, {type:"empty", rot:0}
+    ]
+  ];
 
-    const gameOver = document.getElementById("gameOver");
-    const finalScore = document.getElementById("finalScore");
-
-    let score = 0;
-    let level = 1;
-    let moves = 0;
-
-    let pipes = [];
-
-    const pipeTypes = [
-      "┃",
-      "━",
-      "┏",
-      "┓",
-      "┗",
-      "┛"
-    ];
-
-    function randomPipe(){
-      return pipeTypes[
-        Math.floor(Math.random() * pipeTypes.length)
-      ];
+  function connections(tile){
+    if(tile.type === "empty") return [];
+    if(tile.type === "battery"){
+      return [[1],[2],[3],[0]][tile.rot];
     }
+    if(tile.type === "lamp"){
+      return [[1],[2],[3],[0]][tile.rot];
+    }
+    if(tile.type === "straight"){
+      return tile.rot % 2 === 0 ? [1,3] : [0,2];
+    }
+    if(tile.type === "corner"){
+      return [[0,1],[1,2],[2,3],[3,0]][tile.rot];
+    }
+    return [];
+  }
 
-    function generateBoard(){
+  function symbol(tile){
+    if(tile.type === "battery") return "🔋";
+    if(tile.type === "lamp") return "💡";
+    if(tile.type === "empty") return "";
+    if(tile.type === "straight") return tile.rot % 2 === 0 ? "━" : "┃";
+    if(tile.type === "corner") return ["┗","┏","┓","┛"][tile.rot];
+  }
 
-      pipes = [];
-      boardEl.innerHTML = "";
+  function loadLevel(){
+    moves = 0;
+    movesEl.innerText = moves;
+    gameOver.style.display = "none";
 
-      moves = 0;
-      movesEl.innerText = moves;
+    const base = JSON.parse(JSON.stringify(levels[(level - 1) % levels.length]));
 
-      for(let i=0;i<16;i++){
-
-        const pipe = {
-          type: randomPipe(),
-          active:false
-        };
-
-        pipes.push(pipe);
-
-        const btn =
-          document.createElement("button");
-
-        btn.className = "pipe";
-
-        btn.innerText = pipe.type;
-
-        btn.onclick = () => rotatePipe(i);
-
-        boardEl.appendChild(btn);
-
+    tiles = base.map(t => {
+      if(t.type !== "battery" && t.type !== "lamp" && t.type !== "empty"){
+        t.rot = Math.floor(Math.random() * 4);
       }
+      t.power = false;
+      return t;
+    });
 
-      renderBoard();
+    render();
+  }
 
-    }
+  function render(){
+    board.innerHTML = "";
 
-    function rotatePipe(index){
+    tiles.forEach((tile, i) => {
+      const btn = document.createElement("button");
+      btn.className = "tile";
+      if(tile.power) btn.classList.add("power");
+      if(tile.type === "battery" || tile.type === "lamp") btn.classList.add("fixed");
+      if(tile.type === "empty") btn.classList.add("empty");
 
-      const current = pipes[index];
+      btn.innerText = symbol(tile);
 
-      const currentIndex =
-        pipeTypes.indexOf(current.type);
+      btn.onclick = () => {
+        if(tile.type === "empty" || tile.type === "battery" || tile.type === "lamp") return;
+        tile.rot = (tile.rot + 1) % 4;
+        tile.power = false;
+        moves++;
+        movesEl.innerText = moves;
+        render();
+      };
 
-      const nextIndex =
-        (currentIndex + 1) % pipeTypes.length;
+      board.appendChild(btn);
+    });
+  }
 
-      current.type = pipeTypes[nextIndex];
+  function opposite(dir){
+    return (dir + 2) % 4;
+  }
 
-      moves++;
+  function neighbor(index, dir){
+    const r = Math.floor(index / SIZE);
+    const c = index % SIZE;
+    if(dir === 0 && r > 0) return index - SIZE;
+    if(dir === 1 && c < SIZE - 1) return index + 1;
+    if(dir === 2 && r < SIZE - 1) return index + SIZE;
+    if(dir === 3 && c > 0) return index - 1;
+    return -1;
+  }
 
-      movesEl.innerText = moves;
+  function checkPower(){
+    tiles.forEach(t => t.power = false);
 
-      renderBoard();
+    const start = tiles.findIndex(t => t.type === "battery");
+    const end = tiles.findIndex(t => t.type === "lamp");
 
-    }
+    const queue = [start];
+    tiles[start].power = true;
 
-    function renderBoard(){
+    while(queue.length){
+      const current = queue.shift();
+      const currentConn = connections(tiles[current]);
 
-      const buttons =
-        document.querySelectorAll(".pipe");
+      currentConn.forEach(dir => {
+        const next = neighbor(current, dir);
+        if(next === -1 || tiles[next].power) return;
 
-      buttons.forEach((btn,index)=>{
-
-        btn.innerText = pipes[index].type;
-
-        if(pipes[index].active){
-          btn.classList.add("active");
-        }else{
-          btn.classList.remove("active");
+        const nextConn = connections(tiles[next]);
+        if(nextConn.includes(opposite(dir))){
+          tiles[next].power = true;
+          queue.push(next);
         }
-
       });
-
     }
 
-    function checkSolution(){
+    render();
 
-      let correct = 0;
-
-      pipes.forEach(pipe => {
-
-        const success =
-          Math.random() > 0.35;
-
-        pipe.active = success;
-
-        if(success){
-          correct++;
-        }
-
-      });
-
-      renderBoard();
-
-      if(correct >= 14){
-
-        const bonus =
-          Math.max(50 - moves,10);
-
-        score += bonus + (level * 5);
-
-        scoreEl.innerText = score;
-
-        finalScore.innerText = score;
-
-        gameOver.style.display = "flex";
-
-      }
-
+    if(tiles[end].power){
+      score += Math.max(80 - moves * 3, 20) + level * 10;
+      scoreEl.innerText = score;
+      finalScore.innerText = score;
+      gameOver.style.display = "flex";
     }
+  }
 
-    function nextLevel(){
+  function nextLevel(){
+    level++;
+    levelEl.innerText = level;
+    loadLevel();
+  }
 
-      level++;
-
-      levelEl.innerText = level;
-
-      gameOver.style.display = "none";
-
-      generateBoard();
-
-    }
-
-    generateBoard();
-
-  </script>
-
+  loadLevel();
+</script>
 </body>
 </html>
