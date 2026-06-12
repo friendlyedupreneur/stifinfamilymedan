@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robot Command</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+    body{background:radial-gradient(circle at top,#2b2b2b,#080808 55%,#000);color:white;min-height:100vh;overflow-x:hidden;overflow-y:auto}
+    .container{max-width:480px;margin:auto;padding:20px 16px 120px}
+    .back-btn{background:rgba(255,255,255,.1);border:none;color:white;padding:10px 14px;border-radius:14px;font-size:14px;margin-bottom:18px}
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#d8d8d8;line-height:1.5}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+    .stat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:18px;padding:14px;text-align:center}
+    .stat h2{font-size:24px}.stat span{font-size:12px;color:#d8d8d8}
+
+    .board{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:26px;padding:14px;margin-bottom:16px}
+    .cell{aspect-ratio:1/1;border-radius:14px;background:#1c1c1c;display:flex;align-items:center;justify-content:center;font-size:26px;border:1px solid rgba(255,255,255,.06)}
+    .wall{background:#3a3a3a}
+    .target{background:#fff;color:#000;box-shadow:0 0 14px rgba(255,255,255,.7)}
+    .robot{background:#fff;color:#000}
+
+    .commands{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:22px;padding:14px;margin-bottom:14px;min-height:64px}
+    .commands-title{font-size:13px;color:#d8d8d8;margin-bottom:8px}
+    .command-list{font-size:24px;min-height:32px}
+
+    .buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    button{cursor:pointer}
+    .cmd-btn,.action-btn{border:none;border-radius:16px;padding:14px 8px;font-size:18px;font-weight:bold}
+    .cmd-btn{background:white;color:black}
+    .action-btn{background:rgba(255,255,255,.12);color:white;font-size:14px}
+    .run{grid-column:span 2;background:white;color:black}
+    .hint{text-align:center;margin-top:14px;color:#d8d8d8;font-size:13px;line-height:1.5}
+
+    .game-over{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;padding:20px;z-index:99}
+    .popup{width:100%;max-width:380px;background:#111;border-radius:28px;padding:28px 22px;text-align:center;border:1px solid rgba(255,255,255,.13)}
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#d8d8d8;line-height:1.6;margin-bottom:22px}
+    .restart{width:100%;border:none;border-radius:18px;padding:16px;background:white;color:black;font-size:16px;font-weight:bold}
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+  <div class="title">
+    <h1>🤖 Robot Command</h1>
+    <p>Susun instruksi agar robot mencapai target tanpa menabrak dinding.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+    <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+    <div class="stat"><h2 id="steps">0</h2><span>Command</span></div>
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <div class="commands">
+    <div class="commands-title">Urutan Command:</div>
+    <div class="command-list" id="commandList">Belum ada</div>
+  </div>
+
+  <div class="buttons">
+    <button class="cmd-btn" onclick="addCommand('up')">⬆️</button>
+    <button class="cmd-btn" onclick="addCommand('left')">⬅️</button>
+    <button class="cmd-btn" onclick="addCommand('right')">➡️</button>
+    <button class="cmd-btn" onclick="addCommand('down')">⬇️</button>
+
+    <button class="action-btn" onclick="undoCommand()">Undo</button>
+    <button class="action-btn" onclick="clearCommands()">Clear</button>
+    <button class="action-btn run" onclick="runCommands()">Jalankan ▶️</button>
+  </div>
+
+  <div class="hint">Robot hanya bergerak sesuai urutan command yang kamu susun.</div>
+</div>
+
+<div class="game-over" id="gameOver">
+  <div class="popup">
+    <h2>✅ Misi Berhasil!</h2>
+    <p>Score kamu:<br><br>
+      <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+    </p>
+    <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+  </div>
+</div>
+
+<script>
+  const SIZE = 5;
+  const board = document.getElementById("board");
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const stepsEl = document.getElementById("steps");
+  const commandList = document.getElementById("commandList");
+  const gameOver = document.getElementById("gameOver");
+  const finalScore = document.getElementById("finalScore");
+
+  let level = 1;
+  let score = 0;
+  let robot = {x:0,y:0};
+  let start = {x:0,y:0};
+  let target = {x:4,y:4};
+  let walls = [];
+  let commands = [];
+  let running = false;
+
+  const levels = [
+    {start:{x:0,y:0}, target:{x:4,y:4}, walls:[{x:2,y:0},{x:2,y:1},{x:2,y:3}]},
+    {start:{x:0,y:4}, target:{x:4,y:0}, walls:[{x:1,y:1},{x:1,y:2},{x:3,y:2},{x:3,y:3}]},
+    {start:{x:2,y:4}, target:{x:4,y:1}, walls:[{x:0,y:2},{x:1,y:2},{x:2,y:2},{x:3,y:4}]}
+  ];
+
+  function loadLevel(){
+    const data = levels[(level - 1) % levels.length];
+    start = {...data.start};
+    target = {...data.target};
+    robot = {...start};
+    walls = data.walls;
+    commands = [];
+    running = false;
+    updateCommandList();
+    render();
+  }
+
+  function isWall(x,y){
+    return walls.some(w => w.x === x && w.y === y);
+  }
+
+  function render(){
+    board.innerHTML = "";
+
+    for(let y=0;y<SIZE;y++){
+      for(let x=0;x<SIZE;x++){
+        const cell = document.createElement("div");
+        cell.className = "cell";
+
+        if(isWall(x,y)){
+          cell.classList.add("wall");
+          cell.innerText = "⬛";
+        }
+
+        if(x === target.x && y === target.y){
+          cell.classList.add("target");
+          cell.innerText = "🎯";
+        }
+
+        if(x === robot.x && y === robot.y){
+          cell.classList.add("robot");
+          cell.innerText = "🤖";
+        }
+
+        board.appendChild(cell);
+      }
+    }
+  }
+
+  function addCommand(cmd){
+    if(running || commands.length >= 18) return;
+    commands.push(cmd);
+    updateCommandList();
+  }
+
+  function undoCommand(){
+    if(running) return;
+    commands.pop();
+    updateCommandList();
+  }
+
+  function clearCommands(){
+    if(running) return;
+    commands = [];
+    robot = {...start};
+    updateCommandList();
+    render();
+  }
+
+  function updateCommandList(){
+    const icon = {up:"⬆️",down:"⬇️",left:"⬅️",right:"➡️"};
+    commandList.innerText = commands.length ? commands.map(c => icon[c]).join(" ") : "Belum ada";
+    stepsEl.innerText = commands.length;
+  }
+
+  function move(cmd){
+    let nx = robot.x;
+    let ny = robot.y;
+
+    if(cmd === "up") ny--;
+    if(cmd === "down") ny++;
+    if(cmd === "left") nx--;
+    if(cmd === "right") nx++;
+
+    if(nx < 0 || nx >= SIZE || ny < 0 || ny >= SIZE || isWall(nx,ny)){
+      return false;
+    }
+
+    robot.x = nx;
+    robot.y = ny;
+    return true;
+  }
+
+  async function runCommands(){
+    if(running || commands.length === 0) return;
+
+    running = true;
+    robot = {...start};
+    render();
+
+    for(const cmd of commands){
+      await new Promise(res => setTimeout(res, 420));
+      const ok = move(cmd);
+      render();
+
+      if(!ok){
+        running = false;
+        robot = {...start};
+        setTimeout(render, 500);
+        return;
+      }
+
+      if(robot.x === target.x && robot.y === target.y){
+        score += Math.max(100 - commands.length * 5, 30) + level * 10;
+        scoreEl.innerText = score;
+        finalScore.innerText = score;
+        gameOver.style.display = "flex";
+        running = false;
+        return;
+      }
+    }
+
+    running = false;
+  }
+
+  function nextLevel(){
+    level++;
+    levelEl.innerText = level;
+    gameOver.style.display = "none";
+    loadLevel();
+  }
+
+  loadLevel();
+</script>
+</body>
+</html>
