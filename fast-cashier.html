@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fast Cashier</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+    }
+
+    body{
+      background:
+        radial-gradient(circle at top, #ff4d4d, #7d0000 45%, #140000);
+      color:white;
+      min-height:100vh;
+      overflow:hidden;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 40px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,0.12);
+      border:none;
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+    }
+
+    .title{
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    .title h1{
+      font-size:34px;
+      margin-bottom:8px;
+    }
+
+    .title p{
+      color:#ffd6d6;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-bottom:20px;
+    }
+
+    .stat-box{
+      background:rgba(255,255,255,0.1);
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius:18px;
+      padding:14px;
+      text-align:center;
+    }
+
+    .stat-box h2{
+      font-size:24px;
+      margin-bottom:5px;
+    }
+
+    .stat-box span{
+      font-size:12px;
+      color:#ffd6d6;
+    }
+
+    .game-box{
+      background:rgba(255,255,255,0.1);
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius:26px;
+      padding:24px 18px;
+      text-align:center;
+      min-height:300px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .emoji{
+      font-size:80px;
+      margin-top:15px;
+      margin-bottom:15px;
+      animation:pulse 1s infinite;
+    }
+
+    @keyframes pulse{
+      0%{transform:scale(1);}
+      50%{transform:scale(1.08);}
+      100%{transform:scale(1);}
+    }
+
+    .item-name{
+      font-size:28px;
+      margin-bottom:10px;
+      font-weight:bold;
+    }
+
+    .price{
+      font-size:20px;
+      color:#ffe1e1;
+      margin-bottom:24px;
+    }
+
+    .buttons{
+      display:grid;
+      gap:12px;
+    }
+
+    .cash-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:18px;
+      font-weight:bold;
+      background:white;
+      color:#9b0000;
+      transition:0.15s;
+    }
+
+    .cash-btn:active{
+      transform:scale(0.95);
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#1c0000;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,0.12);
+    }
+
+    .popup h2{
+      font-size:34px;
+      margin-bottom:12px;
+    }
+
+    .popup p{
+      color:#ffd7d7;
+      margin-bottom:24px;
+      line-height:1.6;
+    }
+
+    .restart-btn{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:#ff2b2b;
+      color:white;
+      font-size:16px;
+      font-weight:bold;
+    }
+
+    .combo{
+      position:absolute;
+      top:14px;
+      right:14px;
+      background:#ff2d2d;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:bold;
+      display:none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="topbar">
+      <button class="back-btn" onclick="goBack()">← Kembali</button>
+    </div>
+
+    <div class="title">
+      <h1>🛒 Fast Cashier</h1>
+      <p>
+        Tekan nominal yang benar secepat mungkin sebelum waktu habis.
+      </p>
+    </div>
+
+    <div class="stats">
+      <div class="stat-box">
+        <h2 id="score">0</h2>
+        <span>Score</span>
+      </div>
+
+      <div class="stat-box">
+        <h2 id="timer">30</h2>
+        <span>Waktu</span>
+      </div>
+
+      <div class="stat-box">
+        <h2 id="highscore">0</h2>
+        <span>Highscore</span>
+      </div>
+    </div>
+
+    <div class="game-box">
+
+      <div class="combo" id="comboBox">
+        COMBO x<span id="comboText">0</span>
+      </div>
+
+      <div class="emoji" id="emoji">🍔</div>
+
+      <div class="item-name" id="itemName">
+        Burger
+      </div>
+
+      <div class="price" id="price">
+        Rp 12.000
+      </div>
+
+      <div class="buttons" id="buttons">
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2>🔥 Selesai!</h2>
+
+      <p>
+        Score kamu:
+        <br><br>
+        <span style="font-size:40px;font-weight:bold;" id="finalScore">0</span>
+      </p>
+
+      <button class="restart-btn" onclick="restartGame()">
+        Main Lagi
+      </button>
+    </div>
+  </div>
+
+  <script>
+
+    const products = [
+      {emoji:"🍔", name:"Burger", price:12000},
+      {emoji:"🍟", name:"Kentang", price:8000},
+      {emoji:"🥤", name:"Minuman", price:5000},
+      {emoji:"🍕", name:"Pizza", price:15000},
+      {emoji:"🌭", name:"Hotdog", price:10000},
+      {emoji:"🍩", name:"Donat", price:7000},
+      {emoji:"🍜", name:"Mie", price:13000},
+      {emoji:"🍗", name:"Ayam", price:14000}
+    ];
+
+    let score = 0;
+    let timer = 30;
+    let combo = 0;
+    let currentPrice = 0;
+    let gameInterval;
+
+    const scoreEl = document.getElementById("score");
+    const timerEl = document.getElementById("timer");
+    const highscoreEl = document.getElementById("highscore");
+
+    const emojiEl = document.getElementById("emoji");
+    const itemNameEl = document.getElementById("itemName");
+    const priceEl = document.getElementById("price");
+    const buttonsEl = document.getElementById("buttons");
+
+    const comboBox = document.getElementById("comboBox");
+    const comboText = document.getElementById("comboText");
+
+    const gameOverEl = document.getElementById("gameOver");
+    const finalScoreEl = document.getElementById("finalScore");
+
+    let highscore =
+      localStorage.getItem("fastCashierHighscore") || 0;
+
+    highscoreEl.innerText = highscore;
+
+    function generateQuestion(){
+
+      const item =
+        products[Math.floor(Math.random()*products.length)];
+
+      currentPrice = item.price;
+
+      emojiEl.innerText = item.emoji;
+      itemNameEl.innerText = item.name;
+      priceEl.innerText =
+        "Rp " + item.price.toLocaleString("id-ID");
+
+      let answers = [item.price];
+
+      while(answers.length < 4){
+
+        let fake =
+          item.price +
+          (Math.floor(Math.random()*6)+1)*1000;
+
+        if(!answers.includes(fake)){
+          answers.push(fake);
+        }
+      }
+
+      answers.sort(() => Math.random()-0.5);
+
+      buttonsEl.innerHTML = "";
+
+      answers.forEach(answer => {
+
+        const btn =
+          document.createElement("button");
+
+        btn.className = "cash-btn";
+
+        btn.innerText =
+          "Rp " + answer.toLocaleString("id-ID");
+
+        btn.onclick = () => checkAnswer(answer);
+
+        buttonsEl.appendChild(btn);
+
+      });
+
+    }
+
+    function checkAnswer(answer){
+
+      if(answer === currentPrice){
+
+        score += 10;
+        combo++;
+
+        if(combo >= 3){
+          comboBox.style.display = "block";
+          comboText.innerText = combo;
+          score += combo;
+        }
+
+      } else {
+
+        score -= 5;
+        combo = 0;
+        comboBox.style.display = "none";
+
+        if(score < 0){
+          score = 0;
+        }
+      }
+
+      scoreEl.innerText = score;
+
+      generateQuestion();
+    }
+
+    function startTimer(){
+
+      gameInterval = setInterval(() => {
+
+        timer--;
+
+        timerEl.innerText = timer;
+
+        if(timer <= 0){
+
+          clearInterval(gameInterval);
+
+          endGame();
+        }
+
+      },1000);
+
+    }
+
+    function endGame(){
+
+      if(score > highscore){
+
+        localStorage.setItem(
+          "fastCashierHighscore",
+          score
+        );
+
+        highscoreEl.innerText = score;
+      }
+
+      finalScoreEl.innerText = score;
+
+      gameOverEl.style.display = "flex";
+    }
+
+    function restartGame(){
+
+      score = 0;
+      timer = 30;
+      combo = 0;
+
+      scoreEl.innerText = 0;
+      timerEl.innerText = 30;
+
+      comboBox.style.display = "none";
+
+      gameOverEl.style.display = "none";
+
+      generateQuestion();
+
+      startTimer();
+    }
+
+    function goBack(){
+      history.back();
+    }
+
+    generateQuestion();
+    startTimer();
+
+  </script>
+
+</body>
+</html>
