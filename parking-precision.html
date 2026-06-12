@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parking Precision</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:radial-gradient(circle at top,#ff4b4b,#8b0000 45%,#150000);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{max-width:480px;margin:auto;padding:20px 16px 120px}
+
+    .back-btn{
+      background:rgba(255,255,255,.14);
+      border:none;color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:32px;margin-bottom:8px}
+    .title p{font-size:14px;color:#ffdada;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:18px;
+      padding:14px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:24px}
+    .stat span{font-size:12px;color:#ffdada}
+
+    .arena{
+      position:relative;
+      height:430px;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(255,255,255,.08) 1px,transparent 1px),
+        linear-gradient(180deg,#2d2d2d,#111);
+      background-size:40px 40px;
+      border-radius:28px;
+      overflow:hidden;
+      border:3px solid rgba(255,255,255,.18);
+      box-shadow:0 18px 40px rgba(0,0,0,.25);
+      touch-action:none;
+    }
+
+    .parking-zone{
+      position:absolute;
+      top:24px;
+      right:24px;
+      width:110px;
+      height:78px;
+      border:4px dashed #fff;
+      border-radius:16px;
+      background:rgba(255,255,255,.08);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:13px;
+      text-align:center;
+      line-height:1.2;
+    }
+
+    .car{
+      position:absolute;
+      left:28px;
+      bottom:28px;
+      width:72px;
+      height:48px;
+      border-radius:14px;
+      background:#ff3030;
+      box-shadow:0 8px 18px rgba(0,0,0,.35);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:30px;
+      transition:.08s linear;
+      z-index:5;
+    }
+
+    .obstacle{
+      position:absolute;
+      width:76px;
+      height:50px;
+      border-radius:14px;
+      background:rgba(255,255,255,.18);
+      border:2px solid rgba(255,255,255,.25);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:28px;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .control-btn{
+      border:none;
+      border-radius:18px;
+      padding:17px 10px;
+      background:white;
+      color:#9b0000;
+      font-size:17px;
+      font-weight:bold;
+    }
+
+    .control-btn:active{transform:scale(.94)}
+
+    .wide{grid-column:span 3}
+
+    .hint{
+      text-align:center;
+      margin-top:14px;
+      color:#ffdada;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.82);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#1c0000;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#ffdada;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:#ff2d2d;
+      color:white;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🚗 Parking Precision</h1>
+      <p>Arahkan mobil ke zona parkir tanpa menabrak. Presisi adalah kunci.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="time">40</h2><span>Waktu</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+    </div>
+
+    <div class="arena" id="arena">
+      <div class="parking-zone" id="zone">PARKIR</div>
+      <div class="obstacle" style="left:145px;top:130px;">🚧</div>
+      <div class="obstacle" style="left:45px;top:235px;">🚙</div>
+      <div class="obstacle" style="left:245px;top:265px;">🚕</div>
+      <div class="car" id="car">🚗</div>
+    </div>
+
+    <div class="controls">
+      <button class="control-btn" onclick="moveCar(0,-1)">↑</button>
+      <button class="control-btn" onclick="moveCar(-1,0)">←</button>
+      <button class="control-btn" onclick="moveCar(1,0)">→</button>
+      <button class="control-btn wide" onclick="moveCar(0,1)">↓</button>
+    </div>
+
+    <div class="hint">
+      Masuk penuh ke kotak PARKIR untuk naik level. Tabrakan mengurangi waktu.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="resultTitle">🔥 Selesai!</h2>
+      <p>Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="restartGame()">Main Lagi</button>
+    </div>
+  </div>
+
+  <script>
+    const arena = document.getElementById("arena");
+    const car = document.getElementById("car");
+    const zone = document.getElementById("zone");
+
+    const scoreEl = document.getElementById("score");
+    const timeEl = document.getElementById("time");
+    const levelEl = document.getElementById("level");
+    const gameOver = document.getElementById("gameOver");
+    const finalScore = document.getElementById("finalScore");
+    const resultTitle = document.getElementById("resultTitle");
+
+    let x = 28;
+    let y = 354;
+    let score = 0;
+    let time = 40;
+    let level = 1;
+    let step = 18;
+    let timerLoop;
+    let locked = false;
+
+    function updateCar(){
+      car.style.left = x + "px";
+      car.style.top = y + "px";
+    }
+
+    function rectsOverlap(a,b){
+      return !(
+        a.right < b.left ||
+        a.left > b.right ||
+        a.bottom < b.top ||
+        a.top > b.bottom
+      );
+    }
+
+    function moveCar(dx,dy){
+      if(locked) return;
+
+      const oldX = x;
+      const oldY = y;
+
+      x += dx * step;
+      y += dy * step;
+
+      const maxX = arena.clientWidth - car.offsetWidth;
+      const maxY = arena.clientHeight - car.offsetHeight;
+
+      x = Math.max(8, Math.min(maxX - 8, x));
+      y = Math.max(8, Math.min(maxY - 8, y));
+
+      updateCar();
+
+      if(hitObstacle()){
+        x = oldX;
+        y = oldY;
+        updateCar();
+
+        time -= 3;
+        timeEl.innerText = time;
+
+        if(time <= 0) endGame(false);
+        return;
+      }
+
+      checkParking();
+    }
+
+    function hitObstacle(){
+      const carRect = car.getBoundingClientRect();
+      const obstacles = document.querySelectorAll(".obstacle");
+
+      for(const obs of obstacles){
+        if(rectsOverlap(carRect, obs.getBoundingClientRect())){
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function checkParking(){
+      const carRect = car.getBoundingClientRect();
+      const zoneRect = zone.getBoundingClientRect();
+
+      const inside =
+        carRect.left >= zoneRect.left &&
+        carRect.right <= zoneRect.right &&
+        carRect.top >= zoneRect.top &&
+        carRect.bottom <= zoneRect.bottom;
+
+      if(inside){
+        locked = true;
+        score += 25 + level * 5;
+        level++;
+
+        scoreEl.innerText = score;
+        levelEl.innerText = level;
+
+        setTimeout(nextLevel, 600);
+      }
+    }
+
+    function nextLevel(){
+      locked = false;
+
+      x = 28;
+      y = arena.clientHeight - 76;
+
+      step = Math.max(10, step - 1);
+
+      randomizeZone();
+
+      updateCar();
+    }
+
+    function randomizeZone(){
+      const maxX = arena.clientWidth - zone.offsetWidth - 20;
+      const maxY = arena.clientHeight - zone.offsetHeight - 20;
+
+      const newX = Math.floor(Math.random() * (maxX - 20)) + 20;
+      const newY = Math.floor(Math.random() * (maxY - 20)) + 20;
+
+      zone.style.left = newX + "px";
+      zone.style.top = newY + "px";
+      zone.style.right = "auto";
+    }
+
+    function startTimer(){
+      timerLoop = setInterval(() => {
+        time--;
+        timeEl.innerText = time;
+
+        if(time <= 0){
+          endGame(false);
+        }
+      }, 1000);
+    }
+
+    function endGame(win){
+      clearInterval(timerLoop);
+      locked = true;
+
+      resultTitle.innerText = win ? "🏁 Mantap!" : "🔥 Selesai!";
+      finalScore.innerText = score;
+      gameOver.style.display = "flex";
+    }
+
+    function restartGame(){
+      x = 28;
+      y = arena.clientHeight - 76;
+      score = 0;
+      time = 40;
+      level = 1;
+      step = 18;
+      locked = false;
+
+      scoreEl.innerText = score;
+      timeEl.innerText = time;
+      levelEl.innerText = level;
+
+      zone.style.top = "24px";
+      zone.style.right = "24px";
+      zone.style.left = "auto";
+
+      gameOver.style.display = "none";
+
+      updateCar();
+      clearInterval(timerLoop);
+      startTimer();
+    }
+
+    updateCar();
+    startTimer();
+  </script>
+</body>
+</html>
