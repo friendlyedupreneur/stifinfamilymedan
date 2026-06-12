@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Circuit Builder</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:radial-gradient(circle at top,#2b2b2b,#080808 55%,#000);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.1);
+      border:none;
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#d8d8d8;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#d8d8d8}
+
+    .mission{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      font-size:14px;
+      color:#d8d8d8;
+      line-height:1.55;
+      text-align:center;
+    }
+
+    .mission strong{color:white}
+
+    .component-select{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .component-card{
+      border:none;
+      border-radius:18px;
+      padding:13px 10px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(255,255,255,.13);
+      font-weight:bold;
+      text-align:center;
+    }
+
+    .component-card.selected{
+      background:white;
+      color:black;
+      box-shadow:0 0 18px rgba(255,255,255,.45);
+    }
+
+    .component-card small{
+      display:block;
+      margin-top:5px;
+      font-size:11px;
+      opacity:.82;
+      line-height:1.35;
+    }
+
+    .circuit-box{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:28px;
+      padding:18px;
+      margin-bottom:16px;
+      box-shadow:0 18px 40px rgba(0,0,0,.35);
+    }
+
+    .node{
+      min-height:58px;
+      border-radius:18px;
+      background:#1c1c1c;
+      border:1px solid rgba(255,255,255,.12);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:12px;
+      font-weight:bold;
+    }
+
+    .source{
+      background:#14301d;
+      box-shadow:inset 0 0 18px rgba(124,255,107,.22);
+    }
+
+    .output{
+      background:#301414;
+      box-shadow:inset 0 0 18px rgba(255,80,80,.28);
+    }
+
+    .output.success{
+      background:#1c3a20;
+      box-shadow:0 0 24px rgba(124,255,107,.75);
+    }
+
+    .arrow{
+      text-align:center;
+      color:#d8d8d8;
+      font-size:20px;
+      margin:7px 0;
+    }
+
+    .slot{
+      min-height:62px;
+      border:none;
+      width:100%;
+      border-radius:18px;
+      background:#1c1c1c;
+      color:white;
+      border:1px dashed rgba(255,255,255,.2);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      margin:8px 0;
+      transition:.15s;
+      text-align:left;
+    }
+
+    .slot:active{transform:scale(.97)}
+
+    .slot.filled{
+      border-style:solid;
+      background:#f2f2f2;
+      color:black;
+      box-shadow:0 0 14px rgba(255,255,255,.25);
+    }
+
+    .slot.active{
+      outline:3px solid #7CFF6B;
+      box-shadow:0 0 24px rgba(124,255,107,.72);
+      animation:energyPulse .55s ease;
+    }
+
+    @keyframes energyPulse{
+      0%{transform:scale(1)}
+      50%{transform:scale(1.04)}
+      100%{transform:scale(1)}
+    }
+
+    .slot-icon{
+      font-size:28px;
+      width:42px;
+      text-align:center;
+      flex-shrink:0;
+    }
+
+    .slot-info{
+      flex:1;
+    }
+
+    .slot-info strong{
+      display:block;
+      font-size:14px;
+      margin-bottom:4px;
+    }
+
+    .slot-info span{
+      font-size:12px;
+      opacity:.8;
+      line-height:1.35;
+    }
+
+    .result-panel{
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:20px;
+      padding:14px;
+      margin-bottom:16px;
+      color:#d8d8d8;
+      font-size:13px;
+      line-height:1.5;
+      min-height:64px;
+    }
+
+    .result-panel strong{color:white}
+
+    .controls{
+      display:grid;
+      gap:12px;
+    }
+
+    .main-btn,.reset-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:16px;
+      font-weight:bold;
+    }
+
+    .main-btn{
+      background:white;
+      color:black;
+    }
+
+    .main-btn.running{
+      background:#7CFF6B;
+      box-shadow:0 0 22px rgba(124,255,107,.65);
+    }
+
+    .reset-btn{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#d8d8d8;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#111;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.13);
+    }
+
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#d8d8d8;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:black;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>⚡ Circuit Builder</h1>
+      <p>Susun komponen agar tegangan output stabil tanpa melewati batas panas.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="budget">0</h2><span>Budget</span></div>
+      <div class="stat"><h2 id="heat">0</h2><span>Heat</span></div>
+    </div>
+
+    <div class="mission" id="mission"></div>
+
+    <div class="component-select">
+      <button class="component-card selected" id="wireBtn" onclick="selectComponent('wire')">
+        ━ Wire
+        <small>Cost 10<br>Stabil • Heat +2</small>
+      </button>
+
+      <button class="component-card" id="resistorBtn" onclick="selectComponent('resistor')">
+        Ω Resistor
+        <small>Cost 20<br>Volt -20 • Heat -8</small>
+      </button>
+
+      <button class="component-card" id="boosterBtn" onclick="selectComponent('booster')">
+        ▲ Booster
+        <small>Cost 30<br>Volt +25 • Heat +18</small>
+      </button>
+
+      <button class="component-card" id="regulatorBtn" onclick="selectComponent('regulator')">
+        ▣ Regulator
+        <small>Cost 45<br>Stabilkan volt</small>
+      </button>
+    </div>
+
+    <div class="circuit-box">
+      <div class="node source" id="sourceNode">🔋 Source</div>
+      <div class="arrow">↓</div>
+
+      <div id="slots"></div>
+
+      <div class="arrow">↓</div>
+      <div class="node output" id="outputNode">🎯 Output</div>
+    </div>
+
+    <div class="result-panel" id="resultPanel">
+      Pilih komponen, lalu tap slot kosong untuk memasang. Tap slot terisi untuk menghapus.
+    </div>
+
+    <div class="controls">
+      <button class="main-btn" id="runBtn" onclick="runCircuit()">Jalankan Circuit ⚡</button>
+      <button class="reset-btn" onclick="resetLevel()">Reset Rangkaian</button>
+    </div>
+
+    <div class="info" id="info">
+      Target Thinking: cari kombinasi paling efisien, bukan sekadar penuh semua slot.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">✅ Circuit Stabil!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" id="nextBtn" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const components = {
+    wire:{
+      icon:"━",
+      name:"Wire",
+      cost:10,
+      desc:"Tegangan tetap, heat +2"
+    },
+    resistor:{
+      icon:"Ω",
+      name:"Resistor",
+      cost:20,
+      desc:"Volt -20, heat -8"
+    },
+    booster:{
+      icon:"▲",
+      name:"Booster",
+      cost:30,
+      desc:"Volt +25, heat +18"
+    },
+    regulator:{
+      icon:"▣",
+      name:"Regulator",
+      cost:45,
+      desc:"Mendekatkan volt ke target"
+    }
+  };
+
+  const levelData = [
+    {start:70,  min:90,  max:110, budget:120, slots:4, maxHeat:80},
+    {start:145, min:95,  max:115, budget:130, slots:4, maxHeat:75},
+    {start:55,  min:115, max:135, budget:150, slots:5, maxHeat:85},
+    {start:160, min:110, max:130, budget:135, slots:5, maxHeat:80},
+    {start:100, min:120, max:140, budget:120, slots:4, maxHeat:70},
+    {start:185, min:120, max:145, budget:145, slots:5, maxHeat:80},
+    {start:75,  min:125, max:150, budget:150, slots:5, maxHeat:90},
+    {start:150, min:100, max:125, budget:130, slots:5, maxHeat:70}
+  ];
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const budgetEl = document.getElementById("budget");
+  const heatEl = document.getElementById("heat");
+  const mission = document.getElementById("mission");
+  const slotsEl = document.getElementById("slots");
+  const resultPanel = document.getElementById("resultPanel");
+  const sourceNode = document.getElementById("sourceNode");
+  const outputNode = document.getElementById("outputNode");
+  const runBtn = document.getElementById("runBtn");
+  const info = document.getElementById("info");
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+  const nextBtn = document.getElementById("nextBtn");
+
+  let score = 0;
+  let level = 1;
+  let selectedComponent = "wire";
+  let currentLevel = null;
+  let placed = [];
+  let running = false;
+  let currentVolt = 0;
+  let currentHeat = 0;
+
+  function getLevel(){
+    return levelData[(level - 1) % levelData.length];
+  }
+
+  function selectComponent(type){
+    if(running) return;
+
+    selectedComponent = type;
+
+    document.getElementById("wireBtn").classList.remove("selected");
+    document.getElementById("resistorBtn").classList.remove("selected");
+    document.getElementById("boosterBtn").classList.remove("selected");
+    document.getElementById("regulatorBtn").classList.remove("selected");
+
+    document.getElementById(type + "Btn").classList.add("selected");
+
+    const comp = components[type];
+    info.innerText = `${comp.icon} ${comp.name} dipilih. Tap slot kosong untuk memasang.`;
+  }
+
+  function setupLevel(){
+    currentLevel = getLevel();
+    placed = Array(currentLevel.slots).fill(null);
+    currentVolt = currentLevel.start;
+    currentHeat = 0;
+    running = false;
+
+    levelEl.innerText = level;
+    sourceNode.innerText = `🔋 Source ${currentLevel.start}V`;
+    outputNode.innerText = "🎯 Output";
+    outputNode.classList.remove("success");
+
+    mission.innerHTML =
+      `Source: <strong>${currentLevel.start}V</strong><br>` +
+      `Target Output: <strong>${currentLevel.min}V - ${currentLevel.max}V</strong><br>` +
+      `Budget: <strong>${currentLevel.budget}</strong> • Max Heat: <strong>${currentLevel.maxHeat}</strong>`;
+
+    resultPanel.innerHTML =
+      `Susun komponen agar output masuk target. Gunakan budget sehemat mungkin.`;
+
+    gameOver.style.display = "none";
+
+    updateStats();
+    renderSlots();
+  }
+
+  function getUsedBudget(){
+    return placed.reduce((total, item) => {
+      if(!item) return total;
+      return total + components[item].cost;
+    }, 0);
+  }
+
+  function getBudgetLeft(){
+    return currentLevel.budget - getUsedBudget();
+  }
+
+  function updateStats(){
+    scoreEl.innerText = score;
+    budgetEl.innerText = getBudgetLeft();
+    heatEl.innerText = currentHeat;
+  }
+
+  function renderSlots(activeIndex = -1){
+    slotsEl.innerHTML = "";
+
+    placed.forEach((item, index) => {
+      const btn = document.createElement("button");
+      btn.className = "slot";
+
+      if(item){
+        btn.classList.add("filled");
+      }
+
+      if(index === activeIndex){
+        btn.classList.add("active");
+      }
+
+      if(item){
+        const comp = components[item];
+
+        btn.innerHTML = `
+          <div class="slot-icon">${comp.icon}</div>
+          <div class="slot-info">
+            <strong>${index + 1}. ${comp.name}</strong>
+            <span>${comp.desc}</span>
+          </div>
+        `;
+      } else {
+        btn.innerHTML = `
+          <div class="slot-icon">＋</div>
+          <div class="slot-info">
+            <strong>${index + 1}. Slot Kosong</strong>
+            <span>Tap untuk memasang ${components[selectedComponent].name}</span>
+          </div>
+        `;
+      }
+
+      btn.onclick = () => handleSlot(index);
+
+      slotsEl.appendChild(btn);
+    });
+  }
+
+  function handleSlot(index){
+    if(running) return;
+
+    if(placed[index]){
+      const removed = placed[index];
+      placed[index] = null;
+
+      info.innerText =
+        `${components[removed].icon} ${components[removed].name} dihapus dari slot ${index + 1}.`;
+
+      currentHeat = 0;
+      updateStats();
+      renderSlots();
+      return;
+    }
+
+    const comp = components[selectedComponent];
+
+    if(getBudgetLeft() < comp.cost){
+      info.innerText = `❌ Budget tidak cukup untuk ${comp.name}.`;
+      return;
+    }
+
+    placed[index] = selectedComponent;
+
+    info.innerText =
+      `✅ ${comp.icon} ${comp.name} dipasang di slot ${index + 1}.`;
+
+    updateStats();
+    renderSlots();
+  }
+
+  function applyComponent(type, volt, heat){
+    const center = (currentLevel.min + currentLevel.max) / 2;
+
+    if(type === "wire"){
+      heat += 2;
+    }
+
+    if(type === "resistor"){
+      volt -= 20;
+      heat -= 8;
+    }
+
+    if(type === "booster"){
+      volt += 25;
+      heat += 18;
+    }
+
+    if(type === "regulator"){
+      if(volt > center + 8){
+        volt -= 15;
+      } else if(volt < center - 8){
+        volt += 15;
+      }
+
+      heat -= 5;
+    }
+
+    heat = Math.max(0, heat);
+
+    return {volt, heat};
+  }
+
+  function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function runCircuit(){
+    if(running) return;
+
+    if(placed.every(item => item === null)){
+      info.innerText = "❌ Pasang minimal 1 komponen dulu.";
+      return;
+    }
+
+    running = true;
+    runBtn.classList.add("running");
+    runBtn.innerText = "Mengalirkan Energi...";
+
+    currentVolt = currentLevel.start;
+    currentHeat = 0;
+
+    outputNode.classList.remove("success");
+
+    resultPanel.innerHTML =
+      `⚡ Energi mulai dari <strong>${currentVolt}V</strong>.`;
+
+    updateStats();
+    renderSlots();
+
+    for(let i = 0; i < placed.length; i++){
+      renderSlots(i);
+      await sleep(520);
+
+      const item = placed[i];
+
+      if(!item){
+        resultPanel.innerHTML += `<br>Slot ${i + 1}: kosong, energi lewat tanpa perubahan.`;
+        continue;
+      }
+
+      const beforeVolt = currentVolt;
+      const beforeHeat = currentHeat;
+
+      const result = applyComponent(item, currentVolt, currentHeat);
+      currentVolt = result.volt;
+      currentHeat = result.heat;
+
+      resultPanel.innerHTML +=
+        `<br>${components[item].icon} ${components[item].name}: ` +
+        `${beforeVolt}V → <strong>${currentVolt}V</strong>, ` +
+        `Heat ${beforeHeat} → <strong>${currentHeat}</strong>`;
+
+      updateStats();
+      await sleep(420);
+    }
+
+    renderSlots();
+
+    const success =
+      currentVolt >= currentLevel.min &&
+      currentVolt <= currentLevel.max &&
+      currentHeat <= currentLevel.maxHeat;
+
+    outputNode.innerText = `🎯 Output ${currentVolt}V`;
+
+    if(success){
+      outputNode.classList.add("success");
+      winLevel();
+    } else {
+      failLevel();
+    }
+
+    runBtn.classList.remove("running");
+    runBtn.innerText = "Jalankan Circuit ⚡";
+    running = false;
+  }
+
+  function winLevel(){
+    const efficiencyBonus = getBudgetLeft();
+    const heatBonus = Math.max(currentLevel.maxHeat - currentHeat, 0);
+    const earnedScore =
+      80 + level * 20 + efficiencyBonus + heatBonus;
+
+    score += earnedScore;
+    scoreEl.innerText = score;
+
+    popupTitle.innerText = "✅ Circuit Stabil!";
+    popupText.innerHTML =
+      `Output berhasil stabil di <strong>${currentVolt}V</strong>.<br><br>` +
+      `Bonus efisiensi: +${efficiencyBonus}<br>` +
+      `Bonus heat: +${heatBonus}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Level Berikutnya";
+    nextBtn.onclick = nextLevel;
+
+    gameOver.style.display = "flex";
+  }
+
+  function failLevel(){
+    let reason = "";
+
+    if(currentHeat > currentLevel.maxHeat){
+      reason = `Heat terlalu tinggi: ${currentHeat}/${currentLevel.maxHeat}.`;
+    } else if(currentVolt < currentLevel.min){
+      reason = `Volt terlalu rendah: ${currentVolt}V.`;
+    } else {
+      reason = `Volt terlalu tinggi: ${currentVolt}V.`;
+    }
+
+    popupTitle.innerText = "❌ Circuit Tidak Stabil!";
+    popupText.innerHTML =
+      `${reason}<br><br>` +
+      `Target: ${currentLevel.min}V - ${currentLevel.max}V<br>` +
+      `Coba susun komponen yang lebih efisien.<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Ulang Level";
+    nextBtn.onclick = resetLevel;
+
+    gameOver.style.display = "flex";
+  }
+
+  function resetLevel(){
+    gameOver.style.display = "none";
+    setupLevel();
+  }
+
+  function nextLevel(){
+    level++;
+    gameOver.style.display = "none";
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
