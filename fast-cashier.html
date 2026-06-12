@@ -18,13 +18,15 @@
         radial-gradient(circle at top, #ff4d4d, #7d0000 45%, #140000);
       color:white;
       min-height:100vh;
-      overflow:hidden;
+      overflow-x:hidden;
+      overflow-y:auto;
     }
 
     .container{
       max-width:480px;
       margin:auto;
       padding:20px 16px 40px;
+      padding-bottom: 120px;
     }
 
     .topbar{
@@ -88,11 +90,12 @@
       background:rgba(255,255,255,0.1);
       border:1px solid rgba(255,255,255,0.14);
       border-radius:26px;
-      padding:24px 18px;
+      padding:22px 18px;
       text-align:center;
-      min-height:300px;
+      min-height: auto;
       position:relative;
       overflow:hidden;
+      margin-bottom: 40px;
     }
 
     .emoji{
