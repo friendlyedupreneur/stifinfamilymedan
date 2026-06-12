@@ -1,199 +1,312 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sensing Matrix: The Hidden Path</title>
-    <style>
-        html, body {
-            margin: 0; padding: 0; width: 100vw; height: 100vh;
-            background-color: #1a1a2e; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            overflow: hidden; touch-action: none;
-        }
-        h1 { margin: 0; font-size: 28px; color: #e94560; text-transform: uppercase; letter-spacing: 2px;}
-        h2 { margin: 5px 0 10px 0; font-size: 20px; color: #4caf50; }
-        p { margin: 0 0 20px 0; font-size: 16px; text-align: center; height: 24px; font-weight: bold; }
-        
-        #grid {
-            display: grid;
-            gap: 8px;
-            margin-bottom: 20px;
-            /* Ukuran kolom akan diatur via JavaScript */
-        }
-        .cell {
-            width: 65px; height: 65px;
-            background-color: #16213e;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-        }
-        .cell:active { transform: scale(0.95); }
-        .cell.highlight { background-color: #0f3460; box-shadow: inset 0 0 10px rgba(255,255,255,0.2); }
-        .cell.correct { background-color: #4caf50; pointer-events: none; }
-        .cell.wrong { background-color: #e94560; pointer-events: none; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sensing Game Arena</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-        button {
-            padding: 12px 28px; font-size: 16px; font-weight: bold;
-            color: #fff; background-color: #e94560;
-            border: none; border-radius: 8px; cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: background-color 0.2s;
-        }
-        button:hover { background-color: #ff5c77; }
-        button:active { transform: translateY(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        button:disabled { background-color: #555; cursor: not-allowed; display: none; }
-    </style>
+    body {
+      background: linear-gradient(180deg, #170000, #3b0000, #120000);
+      color: white;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 480px;
+      margin: auto;
+      padding: 22px 18px 40px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .hero {
+      background: radial-gradient(circle at top right, #ff3b3b, #7c0000 45%, #220000);
+      border-radius: 28px;
+      padding: 28px 22px;
+      box-shadow: 0 18px 40px rgba(255,0,0,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      right: -60px;
+      top: -50px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 50%;
+    }
+
+    .hero h1 {
+      font-size: 34px;
+      line-height: 1.05;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #ffe6e6;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero button {
+      margin-top: 22px;
+      width: 100%;
+      border: none;
+      padding: 15px;
+      border-radius: 18px;
+      background: white;
+      color: #b00000;
+      font-size: 16px;
+      font-weight: bold;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section {
+      margin-top: 28px;
+    }
+
+    .section h2 {
+      font-size: 21px;
+      margin-bottom: 10px;
+    }
+
+    .intro {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
+      padding: 18px;
+      line-height: 1.6;
+      color: #ffdede;
+      font-size: 14px;
+    }
+
+    .games {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .game-card {
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 22px;
+      padding: 16px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #ff4747, #8f0000);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      flex-shrink: 0;
+    }
+
+    .game-info {
+      flex: 1;
+    }
+
+    .game-info h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .game-info p {
+      font-size: 13px;
+      color: #ffd0d0;
+      line-height: 1.4;
+    }
+
+    .status {
+      margin-top: 8px;
+      display: inline-block;
+      font-size: 11px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+    }
+
+    .available {
+      background: #ffffff;
+      color: #b00000;
+      font-weight: bold;
+    }
+
+    .play-btn {
+      margin-top: 10px;
+      border: none;
+      background: #ff2d2d;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-weight: bold;
+    }
+
+    .footer-cta {
+      margin-top: 30px;
+      text-align: center;
+      background: linear-gradient(135deg, #ff2424, #7d0000);
+      border-radius: 24px;
+      padding: 24px 18px;
+    }
+
+    .footer-cta h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .footer-cta p {
+      font-size: 14px;
+      color: #ffe1e1;
+      margin-bottom: 18px;
+    }
+
+    .footer-cta button {
+      width: 100%;
+      border: none;
+      padding: 15px;
+      border-radius: 18px;
+      background: white;
+      color: #b00000;
+      font-weight: bold;
+      font-size: 15px;
+    }
+  </style>
 </head>
+
 <body>
+  <main class="page">
 
-    <h1>Sensing Matrix</h1>
-    <h2 id="level-text">Level 1</h2>
-    <p id="status-text">Siap menguji ketahanan memorimu?</p>
-    
-    <div id="grid"></div>
-    <button id="start-btn" onclick="initGame()">Mulai Game</button>
+    <div class="badge">🔴 STIFIn Sensing Game</div>
 
-    <script>
-        const grid = document.getElementById('grid');
-        const statusText = document.getElementById('status-text');
-        const levelText = document.getElementById('level-text');
-        const startBtn = document.getElementById('start-btn');
-        
-        // Pengaturan Awal
-        let level = 1;
-        let gridSize = 3; // Mulai dari 3x3
-        let patternLength = 3; // Menghafal 3 kotak
-        let memoTime = 1500; // Waktu menghafal 1.5 detik
-        
-        let pattern = [];
-        let playerClicks = [];
-        let isPlaying = false;
-        let cells = [];
+    <section class="hero">
+      <h1>Sensing<br>Game Arena</h1>
+      <p>
+        Uji kecepatan, ketelitian, fokus, dan aksi nyata khas Sensing
+        melalui mini game ringan yang seru dimainkan di mobile.
+      </p>
+      <button onclick="scrollToGames()">Mulai Tantangan</button>
+    </section>
 
-        function generateGrid() {
-            grid.innerHTML = ''; // Bersihkan grid sebelumnya
-            grid.style.gridTemplateColumns = `repeat(${gridSize}, 65px)`;
-            cells = [];
-            
-            let totalCells = gridSize * gridSize;
-            for (let i = 0; i < totalCells; i++) {
-                const cell = document.createElement('div');
-                cell.classList.add('cell');
-                cell.dataset.index = i;
-                cell.addEventListener('click', handleCellClick);
-                grid.appendChild(cell);
-                cells.push(cell);
-            }
-        }
+    <section class="section">
+      <h2>Karakter Arena</h2>
+      <div class="intro">
+        Sensing kuat dalam hal nyata, praktis, cepat merespon, dan detail terhadap situasi.
+        Arena ini dirancang untuk melatih refleks, ketelitian, koordinasi, dan keputusan cepat.
+      </div>
+    </section>
 
-        function initGame() {
-            level = 1;
-            gridSize = 3;
-            patternLength = 3;
-            memoTime = 1500;
-            startLevel();
-        }
+    <section class="section" id="games">
+      <h2>Pilih Game Sensing</h2>
 
-        function startLevel() {
-            startBtn.disabled = true;
-            isPlaying = false;
-            pattern = [];
-            playerClicks = [];
-            
-            levelText.innerText = `Level ${level}`;
-            generateGrid();
+      <div class="games">
 
-            statusText.innerText = "Hafalkan pola ini...";
-            statusText.style.color = "#fff";
+        <div class="game-card">
+          <div class="icon">🛒</div>
+          <div class="game-info">
+            <h3>Fast Cashier</h3>
+            <p>Scan barang secepat mungkin tanpa salah hitung.</p>
+            <span class="status available">Available</span><br>
+            <button class="play-btn" onclick="openGame('fast-cashier.html')">Mainkan</button>
+          </div>
+        </div>
 
-            let totalCells = gridSize * gridSize;
+        <div class="game-card">
+          <div class="icon">🔎</div>
+          <div class="game-info">
+            <h3>Object Hunt</h3>
+            <p>Cari benda tersembunyi dalam waktu terbatas.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-            // Membuat pola acak
-            while(pattern.length < patternLength) {
-                let r = Math.floor(Math.random() * totalCells);
-                if(pattern.indexOf(r) === -1) pattern.push(r);
-            }
+        <div class="game-card">
+          <div class="icon">🏍️</div>
+          <div class="game-info">
+            <h3>Delivery Rush</h3>
+            <p>Antar paket cepat sambil menghindari rintangan.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-            // Tampilkan pola ke pemain
-            pattern.forEach(index => {
-                cells[index].classList.add('highlight');
-            });
+        <div class="game-card">
+          <div class="icon">🍳</div>
+          <div class="game-info">
+            <h3>Cooking Sprint</h3>
+            <p>Selesaikan pesanan pelanggan dengan cepat dan tepat.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-            // Hilangkan pola dan biarkan pemain menebak
-            setTimeout(() => {
-                cells.forEach(cell => cell.classList.remove('highlight'));
-                statusText.innerText = `Giliranmu! Temukan ${patternLength} kotak tadi.`;
-                isPlaying = true;
-            }, memoTime);
-        }
+        <div class="game-card">
+          <div class="icon">🚗</div>
+          <div class="game-info">
+            <h3>Parking Precision</h3>
+            <p>Parkir kendaraan dengan kontrol dan presisi tinggi.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-        function handleCellClick(e) {
-            if (!isPlaying) return;
-            
-            const clickedIndex = parseInt(e.target.dataset.index);
-            
-            if(playerClicks.includes(clickedIndex)) return; // Mencegah klik ganda
+        <div class="game-card">
+          <div class="icon">🔧</div>
+          <div class="game-info">
+            <h3>Factory Fix</h3>
+            <p>Perbaiki mesin berdasarkan tanda kerusakan yang muncul.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-            // Cek apakah tebakan BENAR
-            if (pattern.includes(clickedIndex)) {
-                e.target.classList.add('correct');
-                playerClicks.push(clickedIndex);
-                
-                // Cek kondisi MENANG LEVEL
-                if (playerClicks.length === patternLength) {
-                    isPlaying = false;
-                    statusText.innerText = "Sempurna! Bersiap ke level selanjutnya...";
-                    statusText.style.color = "#4caf50";
-                    
-                    setTimeout(nextLevel, 1500); // Lanjut otomatis setelah 1.5 detik
-                }
-            } else {
-                // Kondisi KALAH
-                isPlaying = false;
-                e.target.classList.add('wrong');
-                statusText.innerText = `Salah! Ingatanmu terputus di Level ${level}.`;
-                statusText.style.color = "#e94560";
+      </div>
+    </section>
 
-                // --- KODE BARU UNTUK MENGIRIM SKOR KE FLUTTER ---
-                // Kita cek dulu apakah game ini sedang dibuka di dalam Flutter
-                if (window.StifinFamilyapp) {
-                // Jika ya, kirim angka level terakhir sebagai skor
-                window.StifinFamilyapp.postMessage(level.toString());
-                }
-                
-                // Tunjukkan jawaban yang benar
-                pattern.forEach(index => {
-                    if(!playerClicks.includes(index)) {
-                        cells[index].classList.add('highlight');
-                    }
-                });
-                
-                setTimeout(() => {
-                    startBtn.disabled = false;
-                    startBtn.innerText = "Coba Lagi dari Awal";
-                }, 1000);
-            }
-        }
+    <section class="footer-cta">
+      <h2>Siap uji ketangkasanmu?</h2>
+      <p>Mulai dari game pertama dan buktikan kecepatan khas Sensing.</p>
+      <button onclick="openGame('fast-cashier.html')">Main Game Pertama</button>
+    </section>
 
-        function nextLevel() {
-            level++;
-            
-            // Tingkatkan kesulitan
-            if (level % 2 === 0) {
-                patternLength++; // Tambah jumlah kotak yang dihafal setiap level genap
-            } else {
-                if (gridSize < 6) gridSize++; // Perluas area grid setiap level ganjil (maksimal 6x6)
-            }
-            
-            if (memoTime > 600) memoTime -= 100; // Percepat waktu menghafal
+  </main>
 
-            startLevel();
-        }
+  <script>
+    function scrollToGames() {
+      document.getElementById("games").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
 
-        // Render grid kosong saat pertama kali halaman dimuat
-        generateGrid();
-    </script>
+    function openGame(url) {
+      window.location.href = url;
+    }
+  </script>
 </body>
 </html>
