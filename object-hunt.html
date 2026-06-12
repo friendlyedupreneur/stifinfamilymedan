@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Object Hunt</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+    body{
+      background:radial-gradient(circle at top,#ff4d4d,#850000 45%,#160000);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+    .container{max-width:480px;margin:auto;padding:20px 16px 120px}
+    .back-btn{
+      background:rgba(255,255,255,.14);border:none;color:white;
+      padding:10px 14px;border-radius:14px;font-size:14px;margin-bottom:20px;
+    }
+    .title{text-align:center;margin-bottom:18px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{color:#ffdada;line-height:1.5;font-size:14px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+    .stat{
+      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);
+      border-radius:18px;padding:14px;text-align:center;
+    }
+    .stat h2{font-size:24px}.stat span{font-size:12px;color:#ffdada}
+    .target{
+      background:rgba(255,255,255,.12);border-radius:20px;
+      padding:16px;text-align:center;margin-bottom:16px;
+    }
+    .target .emoji{font-size:42px;margin:8px 0}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      background:rgba(255,255,255,.09);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:26px;
+      padding:16px;
+    }
+    .cell{
+      aspect-ratio:1/1;
+      border:none;
+      border-radius:18px;
+      background:rgba(255,255,255,.92);
+      font-size:30px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:.12s;
+    }
+    .cell:active{transform:scale(.92)}
+    .hint{text-align:center;color:#ffdada;font-size:13px;margin-top:14px}
+    .game-over{
+      position:fixed;inset:0;background:rgba(0,0,0,.82);
+      display:none;align-items:center;justify-content:center;padding:20px;
+    }
+    .popup{
+      max-width:380px;width:100%;background:#1c0000;border-radius:28px;
+      padding:28px 22px;text-align:center;border:1px solid rgba(255,255,255,.14);
+    }
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#ffdada;line-height:1.6;margin-bottom:20px}
+    .restart{
+      width:100%;border:none;border-radius:18px;padding:16px;
+      background:#ff2d2d;color:white;font-size:16px;font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🔎 Object Hunt</h1>
+      <p>Cari objek target secepat mungkin. Jangan sampai salah tap!</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="timer">30</h2><span>Waktu</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+    </div>
+
+    <div class="target">
+      <div>Temukan objek ini:</div>
+      <div class="emoji" id="targetEmoji">🍎</div>
+      <strong id="targetName">Apel</strong>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="hint">Semakin tinggi level, semakin banyak objek pengecoh.</div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2>🔥 Selesai!</h2>
+      <p>Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="restartGame()">Main Lagi</button>
+    </div>
+  </div>
+
+  <script>
+    const objects = [
+      {emoji:"🍎", name:"Apel"},
+      {emoji:"🍌", name:"Pisang"},
+      {emoji:"🍇", name:"Anggur"},
+      {emoji:"🍓", name:"Stroberi"},
+      {emoji:"🍔", name:"Burger"},
+      {emoji:"🍟", name:"Kentang"},
+      {emoji:"🥤", name:"Minuman"},
+      {emoji:"🍩", name:"Donat"},
+      {emoji:"⚽", name:"Bola"},
+      {emoji:"🎒", name:"Tas"},
+      {emoji:"⌚", name:"Jam"},
+      {emoji:"🔑", name:"Kunci"},
+      {emoji:"📱", name:"HP"},
+      {emoji:"✏️", name:"Pensil"},
+      {emoji:"📚", name:"Buku"},
+      {emoji:"🧢", name:"Topi"}
+    ];
+
+    let score = 0;
+    let timer = 30;
+    let level = 1;
+    let target = objects[0];
+    let interval;
+
+    const grid = document.getElementById("grid");
+    const scoreEl = document.getElementById("score");
+    const timerEl = document.getElementById("timer");
+    const levelEl = document.getElementById("level");
+    const targetEmoji = document.getElementById("targetEmoji");
+    const targetName = document.getElementById("targetName");
+    const gameOver = document.getElementById("gameOver");
+    const finalScore = document.getElementById("finalScore");
+
+    function shuffle(arr){
+      return arr.sort(() => Math.random() - 0.5);
+    }
+
+    function createRound(){
+      grid.innerHTML = "";
+
+      target = objects[Math.floor(Math.random() * objects.length)];
+      targetEmoji.innerText = target.emoji;
+      targetName.innerText = target.name;
+
+      const totalCells = Math.min(8 + level * 2, 24);
+      const options = [target];
+
+      while(options.length < totalCells){
+        const randomObj = objects[Math.floor(Math.random() * objects.length)];
+        options.push(randomObj);
+      }
+
+      shuffle(options).forEach(obj => {
+        const btn = document.createElement("button");
+        btn.className = "cell";
+        btn.innerText = obj.emoji;
+        btn.onclick = () => checkObject(obj);
+        grid.appendChild(btn);
+      });
+    }
+
+    function checkObject(obj){
+      if(obj.emoji === target.emoji){
+        score += 10 + level;
+        level++;
+
+        if(level % 3 === 0 && timer < 30){
+          timer += 3;
+        }
+      } else {
+        score -= 5;
+        timer -= 2;
+        if(score < 0) score = 0;
+      }
+
+      scoreEl.innerText = score;
+      levelEl.innerText = level;
+      timerEl.innerText = timer;
+
+      if(timer <= 0){
+        endGame();
+        return;
+      }
+
+      createRound();
+    }
+
+    function startTimer(){
+      interval = setInterval(() => {
+        timer--;
+        timerEl.innerText = timer;
+
+        if(timer <= 0){
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function endGame(){
+      clearInterval(interval);
+      finalScore.innerText = score;
+      gameOver.style.display = "flex";
+    }
+
+    function restartGame(){
+      score = 0;
+      timer = 30;
+      level = 1;
+
+      scoreEl.innerText = score;
+      timerEl.innerText = timer;
+      levelEl.innerText = level;
+      gameOver.style.display = "none";
+
+      createRound();
+      startTimer();
+    }
+
+    createRound();
+    startTimer();
+  </script>
+</body>
+</html>
