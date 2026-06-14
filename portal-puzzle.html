@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Puzzle</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(0,180,255,.36),transparent 34%),
+        radial-gradient(circle at top left,rgba(80,80,255,.25),transparent 32%),
+        linear-gradient(180deg,#00152c,#001020,#000713);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(120,210,255,.2);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#d9efff;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#d9efff}
+
+    .mission{
+      background:
+        radial-gradient(circle at top right,rgba(0,180,255,.20),transparent 45%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.2);
+      border-radius:24px;
+      padding:16px;
+      margin-bottom:16px;
+      text-align:center;
+      color:#d9efff;
+      font-size:14px;
+      line-height:1.55;
+      box-shadow:0 16px 35px rgba(0,120,255,.15);
+    }
+
+    .mission strong{color:white}
+
+    .board{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:28px;
+      padding:16px;
+      margin-bottom:16px;
+      box-shadow:0 18px 40px rgba(0,120,255,.2);
+    }
+
+    .cell{
+      aspect-ratio:1/1;
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.16);
+      color:white;
+      font-size:30px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+      transition:.15s;
+    }
+
+    .cell:active{transform:scale(.94)}
+
+    .cell.empty{
+      opacity:.35;
+    }
+
+    .portal{
+      background:
+        radial-gradient(circle,rgba(123,220,255,.38),rgba(0,70,160,.18));
+      box-shadow:inset 0 0 20px rgba(0,180,255,.25);
+    }
+
+    .portal::after{
+      content:"";
+      position:absolute;
+      inset:8px;
+      border-radius:50%;
+      border:2px solid rgba(123,220,255,.35);
+      animation:spin 2.3s linear infinite;
+    }
+
+    @keyframes spin{
+      from{transform:rotate(0)}
+      to{transform:rotate(360deg)}
+    }
+
+    .start{
+      background:#14301d !important;
+      box-shadow:0 0 18px rgba(124,255,107,.55);
+    }
+
+    .end{
+      background:#301444 !important;
+      box-shadow:0 0 18px rgba(190,120,255,.55);
+    }
+
+    .selected{
+      background:white !important;
+      color:#0057a8;
+      box-shadow:0 0 24px rgba(123,220,255,.9);
+      transform:scale(1.03);
+    }
+
+    .wrong{
+      outline:3px solid #ff4d4d;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .path-panel{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      text-align:center;
+    }
+
+    .path-title{
+      color:#d9efff;
+      font-size:13px;
+      margin-bottom:10px;
+    }
+
+    .path-list{
+      min-height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      flex-wrap:wrap;
+      font-size:24px;
+    }
+
+    .path-item{
+      background:white;
+      color:#0057a8;
+      border-radius:14px;
+      padding:8px 10px;
+      box-shadow:0 0 14px rgba(0,180,255,.35);
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .action-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-weight:bold;
+      font-size:15px;
+    }
+
+    .clear{background:rgba(255,255,255,.12);color:white}
+    .check{background:white;color:#0057a8}
+
+    .info{
+      text-align:center;
+      margin-top:14px;
+      color:#d9efff;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#00152c;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(120,210,255,.25);
+      box-shadow:0 0 34px rgba(0,180,255,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#d9efff;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#0057a8;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🌀 Portal Puzzle</h1>
+      <p>Hubungkan portal antar dimensi dengan membaca urutan energi yang tepat.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="chance">3</h2><span>Chance</span></div>
+      <div class="stat"><h2 id="step">0/0</h2><span>Portal</span></div>
+    </div>
+
+    <div class="mission" id="mission">
+      Pilih portal sesuai urutan clue untuk membuka jalur dimensi.
+    </div>
+
+    <div class="board" id="board"></div>
+
+    <div class="path-panel">
+      <div class="path-title">Jalur Portal Terpilih</div>
+      <div class="path-list" id="pathList">Belum ada portal</div>
+    </div>
+
+    <div class="actions">
+      <button class="action-btn clear" onclick="clearPath()">Ulang</button>
+      <button class="action-btn check" onclick="checkPath()">Buka Portal ✨</button>
+    </div>
+
+    <div class="info" id="info">
+      Tap portal untuk menyusun urutan. Setiap level punya pola dimensi berbeda.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">🌌 Portal Terbuka!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" id="nextBtn" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const portalTypes = {
+    sun:{icon:"☀️", name:"Surya"},
+    moon:{icon:"🌙", name:"Luna"},
+    star:{icon:"⭐", name:"Stella"},
+    wave:{icon:"🌊", name:"Aqua"},
+    fire:{icon:"🔥", name:"Ignis"},
+    tree:{icon:"🌲", name:"Gaia"},
+    crystal:{icon:"🔮", name:"Orion"},
+    cloud:{icon:"☁️", name:"Nimbo"}
+  };
+
+  const levels = [
+    {
+      clue:"Clue: Mulai dari cahaya, masuk ke malam, lalu ikuti bintang.",
+      answer:["sun","moon","star"],
+      portals:["sun","moon","star","wave","fire","tree"],
+      blanks:10
+    },
+    {
+      clue:"Clue: Energi bergerak dari air, naik menjadi awan, lalu kembali ke cahaya.",
+      answer:["wave","cloud","sun"],
+      portals:["wave","cloud","sun","moon","crystal","fire"],
+      blanks:10
+    },
+    {
+      clue:"Clue: Dunia baru lahir dari api, dilindungi bumi, lalu dibuka oleh kristal.",
+      answer:["fire","tree","crystal"],
+      portals:["fire","tree","crystal","sun","wave","moon"],
+      blanks:10
+    },
+    {
+      clue:"Clue: Ikuti malam, temukan kristal, lalu bintang menunjukkan pintu.",
+      answer:["moon","crystal","star"],
+      portals:["moon","crystal","star","cloud","tree","fire"],
+      blanks:10
+    },
+    {
+      clue:"Clue: Portal panjang: cahaya → air → bumi → kristal.",
+      answer:["sun","wave","tree","crystal"],
+      portals:["sun","wave","tree","crystal","moon","fire","cloud"],
+      blanks:9
+    },
+    {
+      clue:"Clue: Pola dimensi: awan → bulan → api → bintang.",
+      answer:["cloud","moon","fire","star"],
+      portals:["cloud","moon","fire","star","sun","wave","crystal"],
+      blanks:9
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let chance = 3;
+  let selectedPath = [];
+  let currentLevel = null;
+  let boardItems = [];
+  let locked = false;
+
+  const board = document.getElementById("board");
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const chanceEl = document.getElementById("chance");
+  const stepEl = document.getElementById("step");
+  const mission = document.getElementById("mission");
+  const pathList = document.getElementById("pathList");
+  const info = document.getElementById("info");
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+  const nextBtn = document.getElementById("nextBtn");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function setupLevel(){
+    locked = false;
+    chance = 3;
+    selectedPath = [];
+
+    currentLevel = levels[(level - 1) % levels.length];
+
+    const portalItems = currentLevel.portals.map(id => ({
+      type:"portal",
+      id
+    }));
+
+    const emptyItems = Array(currentLevel.blanks).fill(null).map(() => ({
+      type:"empty"
+    }));
+
+    boardItems = shuffle([...portalItems, ...emptyItems]).slice(0, 16);
+
+    levelEl.innerText = level;
+    chanceEl.innerText = chance;
+    mission.innerHTML =
+      `<strong>Tujuan:</strong> buka jalur dimensi dengan urutan portal benar.<br>${currentLevel.clue}`;
+
+    info.innerText = "Baca clue, lalu pilih portal sesuai urutan makna.";
+    gameOver.style.display = "none";
+
+    renderBoard();
+    renderPath();
+  }
+
+  function renderBoard(wrongId = null){
+    board.innerHTML = "";
+
+    boardItems.forEach((item, index) => {
+      const btn = document.createElement("button");
+      btn.className = "cell";
+
+      if(item.type === "empty"){
+        btn.classList.add("empty");
+        btn.innerText = "·";
+        board.appendChild(btn);
+        return;
+      }
+
+      const portal = portalTypes[item.id];
+
+      btn.classList.add("portal");
+      btn.innerText = portal.icon;
+
+      if(selectedPath.includes(item.id)){
+        btn.classList.add("selected");
+      }
+
+      if(wrongId === item.id){
+        btn.classList.add("wrong");
+      }
+
+      btn.onclick = () => selectPortal(item.id);
+
+      board.appendChild(btn);
+    });
+  }
+
+  function renderPath(){
+    stepEl.innerText =
+      `${selectedPath.length}/${currentLevel.answer.length}`;
+
+    pathList.innerHTML = "";
+
+    if(selectedPath.length === 0){
+      pathList.innerText = "Belum ada portal";
+      return;
+    }
+
+    selectedPath.forEach(id => {
+      const item = document.createElement("div");
+      item.className = "path-item";
+      item.innerText = portalTypes[id].icon;
+      pathList.appendChild(item);
+    });
+  }
+
+  function selectPortal(id){
+    if(locked) return;
+
+    if(selectedPath.length >= currentLevel.answer.length){
+      info.innerText = "Urutan sudah penuh. Tekan Buka Portal atau Ulang.";
+      return;
+    }
+
+    if(selectedPath.includes(id)){
+      info.innerText = "Portal itu sudah dipilih dalam jalur.";
+      return;
+    }
+
+    selectedPath.push(id);
+
+    renderBoard();
+    renderPath();
+
+    info.innerText = `${portalTypes[id].icon} ${portalTypes[id].name} masuk ke jalur dimensi.`;
+  }
+
+  function clearPath(){
+    if(locked) return;
+
+    selectedPath = [];
+    renderBoard();
+    renderPath();
+    info.innerText = "Jalur dikosongkan. Baca clue lagi dan susun ulang.";
+  }
+
+  function checkPath(){
+    if(locked) return;
+
+    if(selectedPath.length !== currentLevel.answer.length){
+      info.innerText = `Pilih ${currentLevel.answer.length} portal dulu.`;
+      return;
+    }
+
+    const correct =
+      selectedPath.join("-") === currentLevel.answer.join("-");
+
+    if(correct){
+      winLevel();
+      return;
+    }
+
+    chance--;
+    chanceEl.innerText = chance;
+
+    const firstWrongIndex = selectedPath.findIndex(
+      (id, index) => id !== currentLevel.answer[index]
+    );
+
+    const wrongId = selectedPath[firstWrongIndex];
+
+    renderBoard(wrongId);
+
+    if(chance <= 0){
+      loseLevel();
+      return;
+    }
+
+    info.innerText =
+      `❌ Jalur belum sinkron. Kesalahan mulai terasa di portal ke-${firstWrongIndex + 1}. Chance ${chance}.`;
+
+    selectedPath = [];
+    setTimeout(() => {
+      renderBoard();
+      renderPath();
+    }, 600);
+  }
+
+  function winLevel(){
+    locked = true;
+
+    const earned =
+      100 +
+      level * 20 +
+      chance * 15 +
+      currentLevel.answer.length * 10;
+
+    score += earned;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    const portalNames = currentLevel.answer
+      .map(id => `${portalTypes[id].icon} ${portalTypes[id].name}`)
+      .join(" → ");
+
+    popupTitle.innerText = "🌌 Portal Terbuka!";
+    popupText.innerHTML =
+      `Jalur dimensi berhasil terbuka:<br><br>` +
+      `<strong style="color:white;">${portalNames}</strong><br><br>` +
+      `Bonus chance: +${chance * 15}<br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Level Berikutnya";
+    nextBtn.onclick = nextLevel;
+
+    gameOver.style.display = "flex";
+  }
+
+  function loseLevel(){
+    locked = true;
+
+    const answer = currentLevel.answer
+      .map(id => `${portalTypes[id].icon} ${portalTypes[id].name}`)
+      .join(" → ");
+
+    popupTitle.innerText = "🌀 Portal Tidak Stabil";
+    popupText.innerHTML =
+      `Jalur yang benar adalah:<br><br>` +
+      `<strong style="color:white;">${answer}</strong><br><br>` +
+      `Coba baca simbol dan alurnya dengan lebih intuitif.<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Ulang Level";
+    nextBtn.onclick = retryLevel;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  function retryLevel(){
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
