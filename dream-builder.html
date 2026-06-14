@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dream Builder</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(0,180,255,.35),transparent 34%),
+        radial-gradient(circle at top left,rgba(80,80,255,.25),transparent 32%),
+        linear-gradient(180deg,#00152c,#001020,#000713);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(120,210,255,.2);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#d9efff;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:21px}
+    .stat span{font-size:10px;color:#d9efff}
+
+    .dream-box{
+      background:
+        radial-gradient(circle at top right,rgba(0,180,255,.25),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.2);
+      border-radius:26px;
+      padding:18px;
+      margin-bottom:16px;
+      box-shadow:0 18px 40px rgba(0,120,255,.2);
+    }
+
+    .dream-title{
+      font-size:13px;
+      color:#d9efff;
+      margin-bottom:8px;
+      text-align:center;
+    }
+
+    .dream-theme{
+      text-align:center;
+      font-size:24px;
+      font-weight:bold;
+      line-height:1.3;
+      margin-bottom:14px;
+    }
+
+    .target{
+      background:rgba(255,255,255,.09);
+      border:1px solid rgba(120,210,255,.15);
+      border-radius:18px;
+      padding:13px;
+      color:#d9efff;
+      font-size:13px;
+      line-height:1.5;
+      text-align:center;
+    }
+
+    .canvas{
+      min-height:150px;
+      background:rgba(0,0,0,.22);
+      border:1px dashed rgba(120,210,255,.28);
+      border-radius:24px;
+      padding:16px;
+      margin-bottom:16px;
+      text-align:center;
+    }
+
+    .canvas-title{
+      font-size:13px;
+      color:#d9efff;
+      margin-bottom:12px;
+    }
+
+    .selected-elements{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      min-height:70px;
+      align-items:center;
+    }
+
+    .selected-item{
+      width:64px;
+      height:64px;
+      border-radius:20px;
+      background:white;
+      color:#0057a8;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:32px;
+      box-shadow:0 0 18px rgba(0,180,255,.35);
+      animation:float 1.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes float{
+      from{transform:translateY(0)}
+      to{transform:translateY(-6px)}
+    }
+
+    .elements{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .element-btn{
+      border:none;
+      border-radius:18px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(120,210,255,.18);
+      padding:13px 6px;
+      font-size:27px;
+      min-height:66px;
+    }
+
+    .element-btn:active{transform:scale(.94)}
+
+    .element-btn.used{
+      background:white;
+      color:#0057a8;
+      box-shadow:0 0 16px rgba(0,180,255,.45);
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .action-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .clear{background:rgba(255,255,255,.12);color:white}
+    .build{background:white;color:#0057a8}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#d9efff;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .result{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-top:16px;
+      color:#d9efff;
+      font-size:13px;
+      line-height:1.5;
+      display:none;
+    }
+
+    .result strong{color:white}
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#00152c;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(120,210,255,.25);
+      box-shadow:0 0 34px rgba(0,180,255,.28);
+    }
+
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#d9efff;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#0057a8;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🌌 Dream Builder</h1>
+      <p>Bangun dunia mimpi dari kombinasi elemen. Cocokkan ide dengan tema visi.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="chance">3</h2><span>Chance</span></div>
+      <div class="stat"><h2 id="pick">0/3</h2><span>Elemen</span></div>
+    </div>
+
+    <div class="dream-box">
+      <div class="dream-title">Tema Dunia Mimpi</div>
+      <div class="dream-theme" id="dreamTheme">Kota Masa Depan</div>
+      <div class="target" id="targetText">
+        Pilih 3 elemen yang paling cocok untuk membangun dunia ini.
+      </div>
+    </div>
+
+    <div class="canvas">
+      <div class="canvas-title">Elemen Terpilih</div>
+      <div class="selected-elements" id="selectedElements">
+        Belum ada elemen
+      </div>
+    </div>
+
+    <div class="elements" id="elements"></div>
+
+    <div class="actions">
+      <button class="action-btn clear" onclick="clearSelection()">Ulang</button>
+      <button class="action-btn build" onclick="buildDream()">Bangun Mimpi ✨</button>
+    </div>
+
+    <div class="info" id="info">
+      Pilih tepat 3 elemen yang menurutmu paling sesuai dengan tema.
+    </div>
+
+    <div class="result" id="resultBox"></div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">✨ Dunia Terbentuk!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span style="font-size:42px;font-weight:bold;" id="finalScore">0</span>
+      </p>
+      <button class="restart" id="nextBtn" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const elementPool = [
+    {id:"star", icon:"⭐", name:"Bintang"},
+    {id:"portal", icon:"🌀", name:"Portal"},
+    {id:"city", icon:"🏙️", name:"Kota"},
+    {id:"forest", icon:"🌲", name:"Hutan"},
+    {id:"robot", icon:"🤖", name:"Robot"},
+    {id:"book", icon:"📖", name:"Cerita"},
+    {id:"crystal", icon:"🔮", name:"Kristal"},
+    {id:"rocket", icon:"🚀", name:"Roket"},
+    {id:"ocean", icon:"🌊", name:"Samudra"},
+    {id:"music", icon:"🎵", name:"Musik"},
+    {id:"fire", icon:"🔥", name:"Api"},
+    {id:"flower", icon:"🌸", name:"Bunga"},
+    {id:"moon", icon:"🌙", name:"Bulan"},
+    {id:"brain", icon:"🧠", name:"Ide"},
+    {id:"bridge", icon:"🌉", name:"Jembatan"},
+    {id:"seed", icon:"🌱", name:"Benih"}
+  ];
+
+  const dreamLevels = [
+    {
+      theme:"Kota Masa Depan",
+      target:"Bangun kota yang terasa maju, cerdas, dan penuh kemungkinan.",
+      best:["city","robot","rocket"],
+      good:["portal","brain","star","bridge"]
+    },
+    {
+      theme:"Hutan Ajaib",
+      target:"Bangun dunia alami yang penuh misteri, kehidupan, dan keajaiban.",
+      best:["forest","crystal","flower"],
+      good:["moon","seed","music","star"]
+    },
+    {
+      theme:"Gerbang Dimensi",
+      target:"Bangun jalur menuju dunia baru yang tidak biasa dan imajinatif.",
+      best:["portal","crystal","star"],
+      good:["moon","rocket","brain","bridge"]
+    },
+    {
+      theme:"Kerajaan Bawah Laut",
+      target:"Bangun dunia bawah laut yang indah, hidup, dan punya rahasia.",
+      best:["ocean","crystal","music"],
+      good:["flower","moon","book","star"]
+    },
+    {
+      theme:"Perpustakaan Langit",
+      target:"Bangun tempat pengetahuan yang melayang, luas, dan visioner.",
+      best:["book","star","moon"],
+      good:["brain","portal","rocket","crystal"]
+    },
+    {
+      theme:"Taman Ide",
+      target:"Bangun tempat lahirnya gagasan baru dan inspirasi masa depan.",
+      best:["brain","seed","flower"],
+      good:["book","music","star","crystal"]
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let chance = 3;
+  let selected = [];
+  let currentDream = null;
+  let locked = false;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const chanceEl = document.getElementById("chance");
+  const pickEl = document.getElementById("pick");
+  const dreamTheme = document.getElementById("dreamTheme");
+  const targetText = document.getElementById("targetText");
+  const selectedElements = document.getElementById("selectedElements");
+  const elementsEl = document.getElementById("elements");
+  const info = document.getElementById("info");
+  const resultBox = document.getElementById("resultBox");
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+  const nextBtn = document.getElementById("nextBtn");
+
+  function setupLevel(){
+    locked = false;
+    selected = [];
+    chance = 3;
+
+    currentDream = dreamLevels[(level - 1) % dreamLevels.length];
+
+    levelEl.innerText = level;
+    chanceEl.innerText = chance;
+    dreamTheme.innerText = currentDream.theme;
+    targetText.innerText = currentDream.target;
+    resultBox.style.display = "none";
+    gameOver.style.display = "none";
+
+    renderSelected();
+    renderElements();
+
+    info.innerText = "Pilih tepat 3 elemen yang menurutmu paling sesuai dengan tema.";
+  }
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function renderElements(){
+    elementsEl.innerHTML = "";
+
+    const mustShow = [
+      ...currentDream.best,
+      ...currentDream.good.slice(0,3)
+    ];
+
+    const others = elementPool
+      .map(e => e.id)
+      .filter(id => !mustShow.includes(id));
+
+    const selectedIds = shuffle([
+      ...mustShow,
+      ...shuffle(others).slice(0, 10)
+    ]).slice(0, 12);
+
+    selectedIds.forEach(id => {
+      const element = elementPool.find(e => e.id === id);
+      const btn = document.createElement("button");
+
+      btn.className = "element-btn";
+      if(selected.includes(id)) btn.classList.add("used");
+
+      btn.innerText = element.icon;
+      btn.title = element.name;
+      btn.onclick = () => toggleElement(id);
+
+      elementsEl.appendChild(btn);
+    });
+  }
+
+  function renderSelected(){
+    pickEl.innerText = `${selected.length}/3`;
+    selectedElements.innerHTML = "";
+
+    if(selected.length === 0){
+      selectedElements.innerText = "Belum ada elemen";
+      return;
+    }
+
+    selected.forEach(id => {
+      const element = elementPool.find(e => e.id === id);
+      const item = document.createElement("div");
+      item.className = "selected-item";
+      item.innerText = element.icon;
+      selectedElements.appendChild(item);
+    });
+  }
+
+  function toggleElement(id){
+    if(locked) return;
+
+    if(selected.includes(id)){
+      selected = selected.filter(item => item !== id);
+    } else {
+      if(selected.length >= 3){
+        info.innerText = "Maksimal 3 elemen. Hapus salah satu dulu.";
+        return;
+      }
+
+      selected.push(id);
+    }
+
+    renderSelected();
+    renderElements();
+  }
+
+  function clearSelection(){
+    if(locked) return;
+
+    selected = [];
+    renderSelected();
+    renderElements();
+    info.innerText = "Pilihan dikosongkan. Susun kombinasi baru.";
+  }
+
+  function calculateScore(){
+    let points = 0;
+    let bestCount = 0;
+    let goodCount = 0;
+
+    selected.forEach(id => {
+      if(currentDream.best.includes(id)){
+        points += 35;
+        bestCount++;
+      } else if(currentDream.good.includes(id)){
+        points += 20;
+        goodCount++;
+      } else {
+        points += 5;
+      }
+    });
+
+    const synergyBonus = bestCount === 3 ? 35 : bestCount === 2 ? 18 : 0;
+    const ideaBonus = goodCount >= 2 ? 10 : 0;
+
+    points += synergyBonus + ideaBonus;
+
+    return {points, bestCount, goodCount, synergyBonus, ideaBonus};
+  }
+
+  function buildDream(){
+    if(locked) return;
+
+    if(selected.length !== 3){
+      info.innerText = "Pilih tepat 3 elemen dulu.";
+      return;
+    }
+
+    const result = calculateScore();
+
+    resultBox.style.display = "block";
+    resultBox.innerHTML =
+      `<strong>Analisis Dunia:</strong><br>` +
+      `Elemen inti cocok: ${result.bestCount}/3<br>` +
+      `Elemen pendukung cocok: ${result.goodCount}<br>` +
+      `Bonus sinergi: +${result.synergyBonus}<br>` +
+      `Bonus ide: +${result.ideaBonus}<br>` +
+      `Nilai dunia mimpi: <strong>${result.points}</strong>`;
+
+    if(result.points >= 85){
+      winLevel(result.points);
+      return;
+    }
+
+    chance--;
+    chanceEl.innerText = chance;
+
+    if(chance <= 0){
+      loseLevel();
+      return;
+    }
+
+    info.innerText =
+      `Dunia belum cukup kuat. Coba kombinasi lain. Chance tersisa ${chance}.`;
+
+    selected = [];
+    renderSelected();
+    renderElements();
+  }
+
+  function winLevel(points){
+    locked = true;
+
+    const earned = points + level * 20 + chance * 10;
+    score += earned;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    popupTitle.innerText = "✨ Dunia Terbentuk!";
+    popupText.innerHTML =
+      `Kombinasi ide berhasil membentuk:<br><br>` +
+      `<strong style="font-size:24px;color:white;">${currentDream.theme}</strong><br><br>` +
+      `Bonus level: +${level * 20}<br>` +
+      `Bonus chance: +${chance * 10}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Level Berikutnya";
+    nextBtn.onclick = nextLevel;
+    gameOver.style.display = "flex";
+  }
+
+  function loseLevel(){
+    locked = true;
+
+    const bestNames = currentDream.best
+      .map(id => elementPool.find(e => e.id === id))
+      .map(e => `${e.icon} ${e.name}`)
+      .join(", ");
+
+    popupTitle.innerText = "🌙 Mimpi Belum Stabil";
+    popupText.innerHTML =
+      `Kombinasi paling kuat untuk tema ini adalah:<br><br>` +
+      `<strong style="color:white;">${bestNames}</strong><br><br>` +
+      `Coba bangun ulang dengan imajinasi yang lebih tepat.<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Ulang Level";
+    nextBtn.onclick = retryLevel;
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  function retryLevel(){
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
