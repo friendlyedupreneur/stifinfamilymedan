@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Idea Fusion</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(0,180,255,.36),transparent 34%),
+        radial-gradient(circle at top left,rgba(80,80,255,.25),transparent 32%),
+        linear-gradient(180deg,#00152c,#001020,#000713);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(120,210,255,.2);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#d9efff;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#d9efff}
+
+    .mission{
+      background:
+        radial-gradient(circle at top right,rgba(0,180,255,.25),transparent 45%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.2);
+      border-radius:24px;
+      padding:16px;
+      margin-bottom:16px;
+      text-align:center;
+      color:#d9efff;
+      font-size:14px;
+      line-height:1.55;
+      box-shadow:0 16px 35px rgba(0,120,255,.15);
+    }
+
+    .mission strong{color:white}
+
+    .fusion-box{
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:28px;
+      padding:18px;
+      margin-bottom:16px;
+      box-shadow:0 18px 40px rgba(0,120,255,.2);
+    }
+
+    .fusion-title{
+      text-align:center;
+      color:#d9efff;
+      font-size:13px;
+      margin-bottom:14px;
+    }
+
+    .selected-row{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:10px;
+      align-items:center;
+    }
+
+    .selected-card{
+      min-height:105px;
+      border-radius:22px;
+      background:rgba(255,255,255,.08);
+      border:1px dashed rgba(120,210,255,.25);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:12px;
+      text-align:center;
+      color:#d9efff;
+    }
+
+    .selected-card.filled{
+      background:white;
+      color:#0057a8;
+      border-style:solid;
+      box-shadow:0 0 22px rgba(123,220,255,.55);
+      animation:floatCard 1.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatCard{
+      from{transform:translateY(0)}
+      to{transform:translateY(-5px)}
+    }
+
+    .selected-card .icon{
+      font-size:36px;
+      margin-bottom:8px;
+    }
+
+    .selected-card .name{
+      font-weight:bold;
+      font-size:14px;
+    }
+
+    .plus{
+      font-size:28px;
+      color:#d9efff;
+    }
+
+    .idea-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .idea-btn{
+      border:none;
+      border-radius:18px;
+      min-height:76px;
+      padding:10px 6px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(120,210,255,.18);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+    }
+
+    .idea-btn:active{transform:scale(.94)}
+
+    .idea-btn.used{
+      background:white;
+      color:#0057a8;
+      box-shadow:0 0 18px rgba(123,220,255,.55);
+    }
+
+    .idea-btn .emoji{
+      font-size:27px;
+    }
+
+    .idea-btn .label{
+      font-size:11px;
+      font-weight:bold;
+      line-height:1.2;
+    }
+
+    .result-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#d9efff;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .result-box strong{color:white}
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .action-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .clear{background:rgba(255,255,255,.12);color:white}
+    .fuse{background:white;color:#0057a8}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#d9efff;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#00152c;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(120,210,255,.25);
+      box-shadow:0 0 34px rgba(0,180,255,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#d9efff;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#0057a8;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>💡 Idea Fusion</h1>
+      <p>Gabungkan dua ide berbeda menjadi konsep baru yang unik dan visioner.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="chance">3</h2><span>Chance</span></div>
+      <div class="stat"><h2 id="target">0/2</h2><span>Ide</span></div>
+    </div>
+
+    <div class="mission" id="mission">
+      Pilih 2 ide yang paling cocok untuk memenuhi tantangan konsep.
+    </div>
+
+    <div class="fusion-box">
+      <div class="fusion-title">Ide yang akan digabungkan</div>
+
+      <div class="selected-row">
+        <div class="selected-card" id="slotA">
+          <div class="icon">?</div>
+          <div class="name">Ide 1</div>
+        </div>
+
+        <div class="plus">＋</div>
+
+        <div class="selected-card" id="slotB">
+          <div class="icon">?</div>
+          <div class="name">Ide 2</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="idea-grid" id="ideaGrid"></div>
+
+    <div class="result-box" id="resultBox"></div>
+
+    <div class="actions">
+      <button class="action-btn clear" onclick="clearSelection()">Ulang</button>
+      <button class="action-btn fuse" onclick="fuseIdeas()">Fusion ✨</button>
+    </div>
+
+    <div class="info" id="info">
+      Pilih dua ide. Kombinasi terbaik akan membuka konsep baru.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">✨ Fusion Berhasil!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" id="nextBtn" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const ideas = [
+    {id:"ai", icon:"🤖", name:"AI"},
+    {id:"education", icon:"🎓", name:"Edukasi"},
+    {id:"health", icon:"🩺", name:"Kesehatan"},
+    {id:"family", icon:"👨‍👩‍👧", name:"Keluarga"},
+    {id:"game", icon:"🎮", name:"Game"},
+    {id:"nature", icon:"🌿", name:"Alam"},
+    {id:"finance", icon:"💰", name:"Finansial"},
+    {id:"music", icon:"🎵", name:"Musik"},
+    {id:"travel", icon:"✈️", name:"Travel"},
+    {id:"food", icon:"🍲", name:"Kuliner"},
+    {id:"city", icon:"🏙️", name:"Kota"},
+    {id:"story", icon:"📖", name:"Cerita"},
+    {id:"energy", icon:"⚡", name:"Energi"},
+    {id:"community", icon:"🤝", name:"Komunitas"},
+    {id:"security", icon:"🛡️", name:"Keamanan"}
+  ];
+
+  const challenges = [
+    {
+      title:"Buat konsep belajar yang terasa menyenangkan dan personal.",
+      best:["ai","education"],
+      good:[["game","education"],["story","education"],["community","education"]],
+      concept:"Personal Learning AI",
+      explanation:"AI + Edukasi membentuk sistem belajar yang bisa menyesuaikan materi dengan gaya belajar pengguna."
+    },
+    {
+      title:"Buat konsep menjaga kesehatan keluarga di rumah.",
+      best:["health","family"],
+      good:[["ai","health"],["community","family"],["food","health"]],
+      concept:"Family Health Companion",
+      explanation:"Kesehatan + Keluarga menghasilkan ide pendamping kesehatan sederhana untuk kebiasaan sehat di rumah."
+    },
+    {
+      title:"Buat konsep kota masa depan yang ramah manusia dan lingkungan.",
+      best:["city","nature"],
+      good:[["energy","city"],["community","city"],["ai","city"]],
+      concept:"Eco Future City",
+      explanation:"Kota + Alam membuka konsep kota hijau yang tetap modern namun menjaga keseimbangan hidup."
+    },
+    {
+      title:"Buat konsep aplikasi yang mengubah kebiasaan baik menjadi lebih seru.",
+      best:["game","health"],
+      good:[["game","education"],["ai","game"],["community","game"]],
+      concept:"Habit Quest",
+      explanation:"Game + Kesehatan membuat kebiasaan baik terasa seperti misi harian yang menyenangkan."
+    },
+    {
+      title:"Buat konsep perjalanan yang bukan hanya liburan, tapi penuh makna.",
+      best:["travel","story"],
+      good:[["travel","community"],["travel","nature"],["music","travel"]],
+      concept:"Story Journey",
+      explanation:"Travel + Cerita membuat perjalanan menjadi pengalaman naratif yang lebih dalam dan berkesan."
+    },
+    {
+      title:"Buat konsep komunitas kreatif yang bisa saling menguatkan ide.",
+      best:["community","story"],
+      good:[["community","education"],["music","community"],["ai","community"]],
+      concept:"Creative Circle",
+      explanation:"Komunitas + Cerita membentuk ruang berbagi pengalaman yang bisa memantik ide dan kolaborasi baru."
+    },
+    {
+      title:"Buat konsep sistem finansial yang mudah dipahami keluarga muda.",
+      best:["finance","family"],
+      good:[["ai","finance"],["education","finance"],["game","finance"]],
+      concept:"Family Finance Map",
+      explanation:"Finansial + Keluarga menghasilkan konsep pengelolaan uang yang dekat dengan kebutuhan rumah tangga."
+    },
+    {
+      title:"Buat konsep keamanan digital yang terasa sederhana untuk pengguna biasa.",
+      best:["security","ai"],
+      good:[["security","education"],["security","family"],["community","security"]],
+      concept:"Smart Safety Guide",
+      explanation:"Keamanan + AI membuat sistem perlindungan digital yang bisa memberi peringatan dan arahan otomatis."
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let chance = 3;
+  let currentChallenge = null;
+  let currentIdeas = [];
+  let selected = [];
+  let locked = false;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const chanceEl = document.getElementById("chance");
+  const targetEl = document.getElementById("target");
+  const mission = document.getElementById("mission");
+  const ideaGrid = document.getElementById("ideaGrid");
+  const slotA = document.getElementById("slotA");
+  const slotB = document.getElementById("slotB");
+  const resultBox = document.getElementById("resultBox");
+  const info = document.getElementById("info");
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+  const nextBtn = document.getElementById("nextBtn");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function setupLevel(){
+    locked = false;
+    chance = 3;
+    selected = [];
+    resultBox.style.display = "none";
+    gameOver.style.display = "none";
+
+    currentChallenge = challenges[(level - 1) % challenges.length];
+
+    const required = [
+      ...currentChallenge.best,
+      ...currentChallenge.good.flat()
+    ];
+
+    const uniqueRequired = [...new Set(required)];
+    const others = ideas
+      .map(i => i.id)
+      .filter(id => !uniqueRequired.includes(id));
+
+    const chosenIds = shuffle([
+      ...uniqueRequired,
+      ...shuffle(others).slice(0, 9)
+    ]).slice(0, 12);
+
+    currentIdeas = shuffle(chosenIds);
+
+    levelEl.innerText = level;
+    chanceEl.innerText = chance;
+    mission.innerHTML =
+      `<strong>Tantangan Konsep:</strong><br>${currentChallenge.title}`;
+
+    renderSelected();
+    renderIdeas();
+
+    info.innerText = "Pilih dua ide yang menurutmu paling cocok untuk tantangan ini.";
+  }
+
+  function getIdea(id){
+    return ideas.find(item => item.id === id);
+  }
+
+  function renderSelected(){
+    targetEl.innerText = `${selected.length}/2`;
+
+    const a = selected[0] ? getIdea(selected[0]) : null;
+    const b = selected[1] ? getIdea(selected[1]) : null;
+
+    renderSlot(slotA, a, "Ide 1");
+    renderSlot(slotB, b, "Ide 2");
+  }
+
+  function renderSlot(slot, idea, placeholder){
+    if(idea){
+      slot.classList.add("filled");
+      slot.innerHTML = `
+        <div class="icon">${idea.icon}</div>
+        <div class="name">${idea.name}</div>
+      `;
+    } else {
+      slot.classList.remove("filled");
+      slot.innerHTML = `
+        <div class="icon">?</div>
+        <div class="name">${placeholder}</div>
+      `;
+    }
+  }
+
+  function renderIdeas(){
+    ideaGrid.innerHTML = "";
+
+    currentIdeas.forEach(id => {
+      const idea = getIdea(id);
+      const btn = document.createElement("button");
+      btn.className = "idea-btn";
+
+      if(selected.includes(id)){
+        btn.classList.add("used");
+      }
+
+      btn.innerHTML = `
+        <div class="emoji">${idea.icon}</div>
+        <div class="label">${idea.name}</div>
+      `;
+
+      btn.onclick = () => toggleIdea(id);
+
+      ideaGrid.appendChild(btn);
+    });
+  }
+
+  function toggleIdea(id){
+    if(locked) return;
+
+    if(selected.includes(id)){
+      selected = selected.filter(item => item !== id);
+    } else {
+      if(selected.length >= 2){
+        info.innerText = "Maksimal 2 ide. Hapus salah satu dulu.";
+        return;
+      }
+
+      selected.push(id);
+    }
+
+    renderSelected();
+    renderIdeas();
+  }
+
+  function clearSelection(){
+    if(locked) return;
+
+    selected = [];
+    resultBox.style.display = "none";
+    renderSelected();
+    renderIdeas();
+
+    info.innerText = "Pilihan dikosongkan. Coba gabungkan ide lain.";
+  }
+
+  function isSamePair(pairA, pairB){
+    return pairA.includes(pairB[0]) && pairA.includes(pairB[1]);
+  }
+
+  function evaluateFusion(){
+    if(isSamePair(selected, currentChallenge.best)){
+      return {
+        type:"best",
+        points:100,
+        title:currentChallenge.concept,
+        text:currentChallenge.explanation
+      };
+    }
+
+    const goodMatch = currentChallenge.good.some(pair => isSamePair(selected, pair));
+
+    if(goodMatch){
+      const ideaA = getIdea(selected[0]);
+      const ideaB = getIdea(selected[1]);
+
+      return {
+        type:"good",
+        points:75,
+        title:`${ideaA.name} Fusion`,
+        text:`${ideaA.name} + ${ideaB.name} masih nyambung dengan tantangan, meski belum menjadi kombinasi paling kuat.`
+      };
+    }
+
+    const ideaA = getIdea(selected[0]);
+    const ideaB = getIdea(selected[1]);
+
+    return {
+      type:"weak",
+      points:35,
+      title:`${ideaA.name} x ${ideaB.name}`,
+      text:`Kombinasi ini unik, tapi belum menjawab tantangan utama secara kuat. Coba cari pasangan ide yang lebih relevan.`
+    };
+  }
+
+  function fuseIdeas(){
+    if(locked) return;
+
+    if(selected.length !== 2){
+      info.innerText = "Pilih tepat 2 ide dulu.";
+      return;
+    }
+
+    const result = evaluateFusion();
+
+    resultBox.style.display = "block";
+    resultBox.innerHTML =
+      `<strong>${result.title}</strong><br>` +
+      `${result.text}<br><br>` +
+      `Nilai fusion: <strong>${result.points}</strong>`;
+
+    if(result.type === "best"){
+      winLevel(result);
+      return;
+    }
+
+    chance--;
+    chanceEl.innerText = chance;
+
+    if(chance <= 0){
+      loseLevel();
+      return;
+    }
+
+    if(result.type === "good"){
+      info.innerText =
+        `✅ Sudah cukup kreatif, tapi masih ada fusion terbaik. Chance tersisa ${chance}.`;
+    } else {
+      info.innerText =
+        `❌ Fusion belum kuat. Coba baca tantangannya lagi. Chance tersisa ${chance}.`;
+    }
+
+    selected = [];
+    renderSelected();
+    renderIdeas();
+  }
+
+  function winLevel(result){
+    locked = true;
+
+    const earned =
+      result.points +
+      level * 25 +
+      chance * 15;
+
+    score += earned;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    const bestNames = currentChallenge.best
+      .map(id => getIdea(id))
+      .map(i => `${i.icon} ${i.name}`)
+      .join(" + ");
+
+    popupTitle.innerText = "✨ Fusion Berhasil!";
+    popupText.innerHTML =
+      `Kombinasi terbaik ditemukan:<br><br>` +
+      `<strong style="font-size:22px;color:white;">${bestNames}</strong><br><br>` +
+      `Konsep: <strong>${currentChallenge.concept}</strong><br>` +
+      `Bonus chance: +${chance * 15}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Level Berikutnya";
+    nextBtn.onclick = nextLevel;
+
+    gameOver.style.display = "flex";
+  }
+
+  function loseLevel(){
+    locked = true;
+
+    const bestNames = currentChallenge.best
+      .map(id => getIdea(id))
+      .map(i => `${i.icon} ${i.name}`)
+      .join(" + ");
+
+    popupTitle.innerText = "🌙 Fusion Belum Stabil";
+    popupText.innerHTML =
+      `Kombinasi terbaik untuk tantangan ini adalah:<br><br>` +
+      `<strong style="font-size:22px;color:white;">${bestNames}</strong><br><br>` +
+      `Konsep: <strong>${currentChallenge.concept}</strong><br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Ulang Level";
+    nextBtn.onclick = retryLevel;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  function retryLevel(){
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
