@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Symbol Vision</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(0,180,255,.36),transparent 34%),
+        radial-gradient(circle at top left,rgba(80,80,255,.25),transparent 32%),
+        linear-gradient(180deg,#00152c,#001020,#000713);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(120,210,255,.2);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#d9efff;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#d9efff}
+
+    .vision-card{
+      background:
+        radial-gradient(circle at top right,rgba(0,180,255,.25),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.2);
+      border-radius:28px;
+      padding:20px;
+      margin-bottom:16px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(0,120,255,.2);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .vision-card::after{
+      content:"";
+      position:absolute;
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,.08);
+      right:-60px;
+      top:-60px;
+      box-shadow:0 0 30px rgba(0,180,255,.24);
+    }
+
+    .symbol-label{
+      color:#bfe7ff;
+      font-size:13px;
+      margin-bottom:12px;
+      position:relative;
+      z-index:2;
+    }
+
+    .symbol-display{
+      width:130px;
+      height:130px;
+      margin:0 auto 16px;
+      border-radius:36px;
+      background:white;
+      color:#0057a8;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:68px;
+      box-shadow:
+        0 0 26px rgba(0,180,255,.45),
+        inset 0 0 18px rgba(0,120,255,.1);
+      animation:floatSymbol 1.5s ease-in-out infinite alternate;
+      position:relative;
+      z-index:2;
+    }
+
+    @keyframes floatSymbol{
+      from{transform:translateY(0) scale(1)}
+      to{transform:translateY(-7px) scale(1.03)}
+    }
+
+    .symbol-title{
+      font-size:24px;
+      font-weight:bold;
+      margin-bottom:10px;
+      position:relative;
+      z-index:2;
+    }
+
+    .symbol-clue{
+      color:#d9efff;
+      font-size:14px;
+      line-height:1.6;
+      position:relative;
+      z-index:2;
+    }
+
+    .choices{
+      display:grid;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .choice-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(120,210,255,.2);
+      padding:15px;
+      text-align:left;
+      line-height:1.45;
+      font-size:14px;
+    }
+
+    .choice-btn strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:5px;
+    }
+
+    .choice-btn:active{transform:scale(.97)}
+
+    .choice-btn.correct{
+      background:white;
+      color:#0057a8;
+      box-shadow:0 0 22px rgba(123,220,255,.75);
+    }
+
+    .choice-btn.wrong{
+      outline:3px solid #ff4d4d;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .meaning-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#d9efff;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .meaning-box strong{color:white}
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .action-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .skip{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .next{
+      background:white;
+      color:#0057a8;
+    }
+
+    .next:disabled{
+      opacity:.45;
+    }
+
+    .info{
+      text-align:center;
+      margin-top:14px;
+      color:#d9efff;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#00152c;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(120,210,255,.25);
+      box-shadow:0 0 34px rgba(0,180,255,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#d9efff;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#0057a8;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🔮 Symbol Vision</h1>
+      <p>Baca simbol, tangkap makna tersembunyi, dan susun visi dari pola abstrak.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="round">1/5</h2><span>Round</span></div>
+      <div class="stat"><h2 id="chance">3</h2><span>Chance</span></div>
+    </div>
+
+    <div class="vision-card">
+      <div class="symbol-label">Simbol Visi</div>
+      <div class="symbol-display" id="symbolDisplay">△</div>
+      <div class="symbol-title" id="symbolTitle">Segitiga Cahaya</div>
+      <div class="symbol-clue" id="symbolClue">
+        Simbol ini menunjukkan arah, pertumbuhan, dan dorongan naik.
+      </div>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="meaning-box" id="meaningBox"></div>
+
+    <div class="actions">
+      <button class="action-btn skip" onclick="skipSymbol()">Lewati</button>
+      <button class="action-btn next" id="nextBtn" onclick="nextRound()" disabled>Lanjut ✨</button>
+    </div>
+
+    <div class="info" id="info">
+      Pilih makna yang paling sesuai dengan simbol.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">✨ Visi Terbaca!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const symbolBank = [
+    {
+      icon:"△",
+      title:"Segitiga Cahaya",
+      clue:"Simbol ini menunjukkan arah, pertumbuhan, dan dorongan naik.",
+      answer:"growth",
+      meaning:"Pertumbuhan",
+      explanation:"Segitiga mengarah ke atas, cocok dibaca sebagai visi peningkatan, ambisi, dan perjalanan menuju level baru.",
+      choices:[
+        {id:"growth", title:"Pertumbuhan", desc:"Naik, berkembang, dan memperluas kapasitas."},
+        {id:"rest", title:"Istirahat", desc:"Diam, berhenti, dan menunggu situasi."},
+        {id:"chaos", title:"Kekacauan", desc:"Gerak acak tanpa arah yang jelas."}
+      ]
+    },
+    {
+      icon:"∞",
+      title:"Lingkar Tak Berujung",
+      clue:"Simbol ini terasa seperti siklus, pengulangan, dan kemungkinan yang terus terbuka.",
+      answer:"cycle",
+      meaning:"Siklus Kemungkinan",
+      explanation:"Simbol infinity membawa makna kesinambungan, pola berulang, dan ide yang terus berkembang tanpa akhir.",
+      choices:[
+        {id:"limit", title:"Batas Akhir", desc:"Sesuatu yang berhenti dan tidak bisa berkembang."},
+        {id:"cycle", title:"Siklus Kemungkinan", desc:"Pola berulang yang terus membuka ruang baru."},
+        {id:"isolation", title:"Keterpisahan", desc:"Tidak terhubung dengan hal lain."}
+      ]
+    },
+    {
+      icon:"✦",
+      title:"Bintang Inti",
+      clue:"Simbol ini seperti titik inspirasi yang kecil, tapi mampu menerangi ruang luas.",
+      answer:"inspiration",
+      meaning:"Inspirasi",
+      explanation:"Bintang sering dibaca sebagai cahaya ide, arah, dan inspirasi yang muncul dari satu titik terang.",
+      choices:[
+        {id:"inspiration", title:"Inspirasi", desc:"Percikan ide yang menerangi kemungkinan baru."},
+        {id:"burden", title:"Beban", desc:"Sesuatu yang menahan dan memberatkan langkah."},
+        {id:"routine", title:"Rutinitas", desc:"Pola biasa yang berulang tanpa kebaruan."}
+      ]
+    },
+    {
+      icon:"◌",
+      title:"Lingkar Kosong",
+      clue:"Simbol ini menunjukkan ruang kosong yang belum terisi, seperti peluang yang menunggu bentuk.",
+      answer:"potential",
+      meaning:"Potensi",
+      explanation:"Lingkar kosong bisa dibaca sebagai wadah, ruang kemungkinan, dan potensi yang belum diwujudkan.",
+      choices:[
+        {id:"potential", title:"Potensi", desc:"Ruang kosong yang siap diisi oleh ide baru."},
+        {id:"ending", title:"Penutupan", desc:"Akhir dari perjalanan yang sudah selesai."},
+        {id:"noise", title:"Gangguan", desc:"Hal acak yang mengaburkan fokus."}
+      ]
+    },
+    {
+      icon:"◇",
+      title:"Kristal Arah",
+      clue:"Simbol ini terasa tajam, jernih, dan punya banyak sisi yang saling memantulkan makna.",
+      answer:"perspective",
+      meaning:"Perspektif",
+      explanation:"Bentuk kristal menunjukkan banyak sisi. Cocok dibaca sebagai kemampuan melihat dari sudut pandang berbeda.",
+      choices:[
+        {id:"perspective", title:"Perspektif", desc:"Melihat banyak sisi dari satu kemungkinan."},
+        {id:"fear", title:"Ketakutan", desc:"Menutup diri dari pilihan baru."},
+        {id:"delay", title:"Penundaan", desc:"Menahan langkah tanpa alasan jelas."}
+      ]
+    },
+    {
+      icon:"≈",
+      title:"Gelombang Ide",
+      clue:"Simbol ini bergerak lembut, seperti inspirasi yang datang bertahap dan tidak lurus.",
+      answer:"flow",
+      meaning:"Aliran Ide",
+      explanation:"Gelombang menandakan aliran, fleksibilitas, dan ide yang bergerak menyesuaikan ruang.",
+      choices:[
+        {id:"force", title:"Paksaan", desc:"Menekan arah tanpa mengikuti keadaan."},
+        {id:"flow", title:"Aliran Ide", desc:"Bergerak fleksibel mengikuti kemungkinan yang muncul."},
+        {id:"stuck", title:"Mandek", desc:"Tidak bergerak dan tidak berubah."}
+      ]
+    },
+    {
+      icon:"⬡",
+      title:"Sarang Pola",
+      clue:"Simbol ini menunjukkan struktur, koneksi, dan rancangan yang bisa berkembang menjadi sistem besar.",
+      answer:"network",
+      meaning:"Jaringan Ide",
+      explanation:"Bentuk heksagon sering terasa seperti sel jaringan. Cocok untuk membaca koneksi antar ide.",
+      choices:[
+        {id:"network", title:"Jaringan Ide", desc:"Koneksi antar gagasan yang membentuk sistem."},
+        {id:"loss", title:"Kehilangan", desc:"Terputus dari arah dan sumber makna."},
+        {id:"silence", title:"Keheningan", desc:"Diam tanpa pertumbuhan."}
+      ]
+    },
+    {
+      icon:"☄",
+      title:"Komet Visi",
+      clue:"Simbol ini seperti gagasan yang melesat cepat, membawa arah baru dan momentum.",
+      answer:"breakthrough",
+      meaning:"Terobosan",
+      explanation:"Komet memberi kesan gerakan cepat, momen langka, dan ide yang menembus pola lama.",
+      choices:[
+        {id:"breakthrough", title:"Terobosan", desc:"Ide yang menembus batas lama dan membuka jalan baru."},
+        {id:"habit", title:"Kebiasaan Lama", desc:"Mengulang pola yang sudah biasa."},
+        {id:"hide", title:"Bersembunyi", desc:"Menahan potensi agar tidak terlihat."}
+      ]
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let round = 1;
+  let chance = 3;
+  let currentSymbols = [];
+  let currentSymbol = null;
+  let answered = false;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const roundEl = document.getElementById("round");
+  const chanceEl = document.getElementById("chance");
+  const symbolDisplay = document.getElementById("symbolDisplay");
+  const symbolTitle = document.getElementById("symbolTitle");
+  const symbolClue = document.getElementById("symbolClue");
+  const choicesEl = document.getElementById("choices");
+  const meaningBox = document.getElementById("meaningBox");
+  const nextBtn = document.getElementById("nextBtn");
+  const info = document.getElementById("info");
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function setupLevel(){
+    round = 1;
+    chance = 3;
+    answered = false;
+
+    currentSymbols = shuffle([...symbolBank]).slice(0,5);
+
+    levelEl.innerText = level;
+    chanceEl.innerText = chance;
+    gameOver.style.display = "none";
+
+    loadRound();
+  }
+
+  function loadRound(){
+    answered = false;
+    currentSymbol = currentSymbols[round - 1];
+
+    roundEl.innerText = `${round}/5`;
+    chanceEl.innerText = chance;
+    nextBtn.disabled = true;
+
+    symbolDisplay.innerText = currentSymbol.icon;
+    symbolTitle.innerText = currentSymbol.title;
+    symbolClue.innerText = currentSymbol.clue;
+
+    meaningBox.style.display = "none";
+    meaningBox.innerHTML = "";
+
+    renderChoices();
+
+    info.innerText = "Baca clue dan pilih makna simbol yang paling sesuai.";
+  }
+
+  function renderChoices(){
+    choicesEl.innerHTML = "";
+
+    shuffle([...currentSymbol.choices]).forEach(choice => {
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+      btn.innerHTML = `
+        <strong>${choice.title}</strong>
+        ${choice.desc}
+      `;
+
+      btn.onclick = () => chooseMeaning(choice.id, btn);
+
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function chooseMeaning(choiceId, button){
+    if(answered) return;
+
+    answered = true;
+
+    const correct = choiceId === currentSymbol.answer;
+
+    if(correct){
+      button.classList.add("correct");
+
+      const earned = 35 + level * 5 + chance * 5;
+      score += earned;
+      scoreEl.innerText = score;
+
+      meaningBox.style.display = "block";
+      meaningBox.innerHTML =
+        `<strong>Makna Terbaca: ${currentSymbol.meaning}</strong><br>` +
+        `${currentSymbol.explanation}<br><br>` +
+        `Score +${earned}`;
+
+      info.innerText = "✅ Simbol terbaca dengan tepat.";
+    } else {
+      button.classList.add("wrong");
+      chance--;
+      chanceEl.innerText = chance;
+
+      meaningBox.style.display = "block";
+      meaningBox.innerHTML =
+        `<strong>Makna belum tepat.</strong><br>` +
+        `Simbol ini lebih dekat dengan: <strong>${currentSymbol.meaning}</strong><br>` +
+        `${currentSymbol.explanation}`;
+
+      info.innerText = "❌ Pilihan belum sesuai, tapi maknanya sudah terbuka.";
+
+      if(chance <= 0){
+        setTimeout(finishLevel, 900);
+        return;
+      }
+    }
+
+    nextBtn.disabled = false;
+  }
+
+  function skipSymbol(){
+    if(answered) return;
+
+    answered = true;
+    chance--;
+    chanceEl.innerText = chance;
+
+    meaningBox.style.display = "block";
+    meaningBox.innerHTML =
+      `<strong>Simbol dilewati.</strong><br>` +
+      `Makna sebenarnya: <strong>${currentSymbol.meaning}</strong><br>` +
+      `${currentSymbol.explanation}`;
+
+    info.innerText = "Simbol dilewati. Chance berkurang 1.";
+    nextBtn.disabled = false;
+
+    if(chance <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function nextRound(){
+    if(!answered) return;
+
+    round++;
+
+    if(round > 5){
+      finishLevel();
+      return;
+    }
+
+    loadRound();
+  }
+
+  function finishLevel(){
+    const bonus = chance * 20 + level * 30;
+    score += bonus;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    let title = "✨ Visi Terbaca!";
+    let desc = "Kamu berhasil membaca pola simbol dan menangkap makna tersembunyi.";
+
+    if(chance >= 3){
+      title = "🌌 Vision Master!";
+      desc = "Pembacaan simbol sangat tajam. Hampir semua makna terbaca tanpa kehilangan energi.";
+    } else if(chance === 0){
+      title = "🌙 Visi Melemah";
+      desc = "Beberapa simbol belum terbaca utuh. Namun pola maknanya mulai terlihat.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Bonus level: +${level * 30}<br>` +
+      `Bonus chance: +${chance * 20}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
