@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Future City</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(0,180,255,.36),transparent 34%),
+        radial-gradient(circle at top left,rgba(80,80,255,.25),transparent 32%),
+        linear-gradient(180deg,#00152c,#001020,#000713);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(120,210,255,.2);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#d9efff;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#d9efff}
+
+    .mission{
+      background:
+        radial-gradient(circle at top right,rgba(0,180,255,.25),transparent 45%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.2);
+      border-radius:24px;
+      padding:16px;
+      margin-bottom:16px;
+      text-align:center;
+      color:#d9efff;
+      font-size:14px;
+      line-height:1.55;
+      box-shadow:0 16px 35px rgba(0,120,255,.15);
+    }
+
+    .mission strong{color:white}
+
+    .meter-box{
+      display:grid;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .meter{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.16);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .meter-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#d9efff;
+      margin-bottom:7px;
+    }
+
+    .bar{
+      height:9px;
+      background:rgba(255,255,255,.13);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:50%;
+      background:linear-gradient(90deg,#7bdcff,#0077ff);
+      border-radius:999px;
+      transition:.35s;
+      box-shadow:0 0 14px rgba(0,180,255,.65);
+    }
+
+    .city-board{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:28px;
+      padding:16px;
+      margin-bottom:16px;
+      min-height:260px;
+      box-shadow:0 18px 40px rgba(0,120,255,.2);
+    }
+
+    .slot{
+      aspect-ratio:1/1;
+      border:none;
+      border-radius:22px;
+      background:rgba(255,255,255,.08);
+      border:1px dashed rgba(120,210,255,.25);
+      color:#d9efff;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:8px;
+      font-size:12px;
+      line-height:1.25;
+      transition:.15s;
+    }
+
+    .slot:active{transform:scale(.94)}
+
+    .slot.filled{
+      background:white;
+      color:#0057a8;
+      border-style:solid;
+      box-shadow:0 0 22px rgba(123,220,255,.55);
+      animation:cityFloat 1.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes cityFloat{
+      from{transform:translateY(0)}
+      to{transform:translateY(-4px)}
+    }
+
+    .slot .icon{
+      font-size:30px;
+      margin-bottom:6px;
+    }
+
+    .slot .name{
+      font-weight:bold;
+    }
+
+    .building-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .building-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(120,210,255,.18);
+      padding:14px 10px;
+      text-align:left;
+      min-height:92px;
+    }
+
+    .building-btn.selected{
+      background:white;
+      color:#0057a8;
+      box-shadow:0 0 20px rgba(123,220,255,.6);
+    }
+
+    .building-btn strong{
+      display:block;
+      font-size:14px;
+      margin-bottom:6px;
+    }
+
+    .building-btn span{
+      display:block;
+      font-size:11px;
+      line-height:1.35;
+      opacity:.86;
+    }
+
+    .building-btn:active{transform:scale(.96)}
+
+    .result-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#d9efff;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .result-box strong{color:white}
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .action-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .clear{background:rgba(255,255,255,.12);color:white}
+    .build{background:white;color:#0057a8}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#d9efff;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#00152c;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(120,210,255,.25);
+      box-shadow:0 0 34px rgba(0,180,255,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#d9efff;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#0057a8;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🏙️ Future City</h1>
+      <p>Rancang kota masa depan yang visioner, seimbang, dan penuh kemungkinan.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="budget">100</h2><span>Budget</span></div>
+      <div class="stat"><h2 id="buildCount">0/5</h2><span>Build</span></div>
+    </div>
+
+    <div class="mission" id="mission">
+      Bangun kota dengan visi yang sesuai target level.
+    </div>
+
+    <div class="meter-box">
+      <div class="meter">
+        <div class="meter-row"><span>🤖 Teknologi</span><strong id="techText">0</strong></div>
+        <div class="bar"><div class="fill" id="techFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>🌿 Alam</span><strong id="natureText">0</strong></div>
+        <div class="bar"><div class="fill" id="natureFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>👥 Manusia</span><strong id="peopleText">0</strong></div>
+        <div class="bar"><div class="fill" id="peopleFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>⚡ Energi</span><strong id="energyText">0</strong></div>
+        <div class="bar"><div class="fill" id="energyFill"></div></div>
+      </div>
+    </div>
+
+    <div class="city-board" id="cityBoard"></div>
+
+    <div class="building-grid" id="buildingGrid"></div>
+
+    <div class="result-box" id="resultBox"></div>
+
+    <div class="actions">
+      <button class="action-btn clear" onclick="resetCity()">Reset Kota</button>
+      <button class="action-btn build" onclick="evaluateCity()">Evaluasi Kota ✨</button>
+    </div>
+
+    <div class="info" id="info">
+      Pilih bangunan, lalu tap slot kota. Tap slot terisi untuk menghapus.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">🌆 Kota Terbentuk!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" id="nextBtn" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const buildings = {
+    aiHub:{
+      icon:"🤖",
+      name:"AI Hub",
+      cost:25,
+      tech:35,
+      nature:-5,
+      people:5,
+      energy:-10
+    },
+    greenPark:{
+      icon:"🌿",
+      name:"Green Park",
+      cost:18,
+      tech:0,
+      nature:35,
+      people:12,
+      energy:0
+    },
+    solarGrid:{
+      icon:"☀️",
+      name:"Solar Grid",
+      cost:22,
+      tech:12,
+      nature:12,
+      people:0,
+      energy:35
+    },
+    communityCenter:{
+      icon:"🤝",
+      name:"Community Center",
+      cost:20,
+      tech:0,
+      nature:5,
+      people:35,
+      energy:-5
+    },
+    transitHub:{
+      icon:"🚄",
+      name:"Transit Hub",
+      cost:24,
+      tech:18,
+      nature:5,
+      people:18,
+      energy:-8
+    },
+    verticalFarm:{
+      icon:"🌱",
+      name:"Vertical Farm",
+      cost:26,
+      tech:12,
+      nature:30,
+      people:8,
+      energy:-5
+    },
+    learningDome:{
+      icon:"🎓",
+      name:"Learning Dome",
+      cost:21,
+      tech:15,
+      nature:0,
+      people:28,
+      energy:-4
+    },
+    energyCore:{
+      icon:"⚡",
+      name:"Energy Core",
+      cost:28,
+      tech:15,
+      nature:-8,
+      people:0,
+      energy:45
+    }
+  };
+
+  const levelTargets = [
+    {
+      title:"Eco Future City",
+      desc:"Bangun kota hijau yang tetap modern dan nyaman untuk manusia.",
+      target:{tech:45,nature:65,people:50,energy:45},
+      budget:100,
+      maxBuild:5
+    },
+    {
+      title:"Smart Innovation City",
+      desc:"Bangun kota teknologi tinggi tanpa mengorbankan manusia dan energi.",
+      target:{tech:70,nature:35,people:45,energy:55},
+      budget:110,
+      maxBuild:5
+    },
+    {
+      title:"Human Harmony City",
+      desc:"Bangun kota yang berpusat pada manusia, komunitas, dan kehidupan seimbang.",
+      target:{tech:40,nature:45,people:75,energy:40},
+      budget:105,
+      maxBuild:5
+    },
+    {
+      title:"Self-Sustaining City",
+      desc:"Bangun kota mandiri dengan energi kuat dan lingkungan tetap aman.",
+      target:{tech:55,nature:50,people:40,energy:75},
+      budget:115,
+      maxBuild:5
+    },
+    {
+      title:"Balanced Vision City",
+      desc:"Bangun kota yang semua aspeknya seimbang dan tidak timpang.",
+      target:{tech:55,nature:55,people:55,energy:55},
+      budget:105,
+      maxBuild:5
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let currentTarget = null;
+  let selectedBuilding = "aiHub";
+  let citySlots = Array(9).fill(null);
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const budgetEl = document.getElementById("budget");
+  const buildCountEl = document.getElementById("buildCount");
+  const mission = document.getElementById("mission");
+  const cityBoard = document.getElementById("cityBoard");
+  const buildingGrid = document.getElementById("buildingGrid");
+  const resultBox = document.getElementById("resultBox");
+  const info = document.getElementById("info");
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+  const nextBtn = document.getElementById("nextBtn");
+
+  const techText = document.getElementById("techText");
+  const natureText = document.getElementById("natureText");
+  const peopleText = document.getElementById("peopleText");
+  const energyText = document.getElementById("energyText");
+
+  const techFill = document.getElementById("techFill");
+  const natureFill = document.getElementById("natureFill");
+  const peopleFill = document.getElementById("peopleFill");
+  const energyFill = document.getElementById("energyFill");
+
+  function setupLevel(){
+    currentTarget = levelTargets[(level - 1) % levelTargets.length];
+    citySlots = Array(9).fill(null);
+    resultBox.style.display = "none";
+    gameOver.style.display = "none";
+
+    levelEl.innerText = level;
+
+    mission.innerHTML =
+      `<strong>${currentTarget.title}</strong><br>${currentTarget.desc}<br><br>` +
+      `Target minimal: Tech ${currentTarget.target.tech}, Alam ${currentTarget.target.nature}, ` +
+      `Manusia ${currentTarget.target.people}, Energi ${currentTarget.target.energy}`;
+
+    renderBuildings();
+    renderCity();
+    updateStats();
+
+    info.innerText = "Pilih bangunan, lalu tap slot kota untuk membangun.";
+  }
+
+  function getUsedBudget(){
+    return citySlots.reduce((total,id) => {
+      if(!id) return total;
+      return total + buildings[id].cost;
+    },0);
+  }
+
+  function getBudgetLeft(){
+    return currentTarget.budget - getUsedBudget();
+  }
+
+  function getBuildCount(){
+    return citySlots.filter(Boolean).length;
+  }
+
+  function getCityStats(){
+    const result = {tech:0,nature:0,people:0,energy:0};
+
+    citySlots.forEach(id => {
+      if(!id) return;
+
+      const b = buildings[id];
+      result.tech += b.tech;
+      result.nature += b.nature;
+      result.people += b.people;
+      result.energy += b.energy;
+    });
+
+    result.tech = Math.max(0,result.tech);
+    result.nature = Math.max(0,result.nature);
+    result.people = Math.max(0,result.people);
+    result.energy = Math.max(0,result.energy);
+
+    return result;
+  }
+
+  function updateStats(){
+    const stats = getCityStats();
+
+    scoreEl.innerText = score;
+    budgetEl.innerText = getBudgetLeft();
+    buildCountEl.innerText = `${getBuildCount()}/${currentTarget.maxBuild}`;
+
+    techText.innerText = stats.tech;
+    natureText.innerText = stats.nature;
+    peopleText.innerText = stats.people;
+    energyText.innerText = stats.energy;
+
+    techFill.style.width = Math.min(stats.tech,100) + "%";
+    natureFill.style.width = Math.min(stats.nature,100) + "%";
+    peopleFill.style.width = Math.min(stats.people,100) + "%";
+    energyFill.style.width = Math.min(stats.energy,100) + "%";
+  }
+
+  function renderBuildings(){
+    buildingGrid.innerHTML = "";
+
+    Object.entries(buildings).forEach(([id,b]) => {
+      const btn = document.createElement("button");
+      btn.className = "building-btn";
+
+      if(id === selectedBuilding){
+        btn.classList.add("selected");
+      }
+
+      btn.innerHTML = `
+        <strong>${b.icon} ${b.name}</strong>
+        <span>Cost ${b.cost}<br>
+        Tech ${b.tech}, Alam ${b.nature}, Manusia ${b.people}, Energi ${b.energy}</span>
+      `;
+
+      btn.onclick = () => selectBuilding(id);
+
+      buildingGrid.appendChild(btn);
+    });
+  }
+
+  function selectBuilding(id){
+    selectedBuilding = id;
+    renderBuildings();
+
+    const b = buildings[id];
+    info.innerText = `${b.icon} ${b.name} dipilih. Tap slot kota untuk membangun.`;
+  }
+
+  function renderCity(){
+    cityBoard.innerHTML = "";
+
+    citySlots.forEach((id,index) => {
+      const slot = document.createElement("button");
+      slot.className = "slot";
+
+      if(id){
+        const b = buildings[id];
+
+        slot.classList.add("filled");
+        slot.innerHTML = `
+          <div class="icon">${b.icon}</div>
+          <div class="name">${b.name}</div>
+        `;
+      } else {
+        slot.innerHTML = `
+          <div class="icon">＋</div>
+          <div class="name">Slot ${index + 1}</div>
+        `;
+      }
+
+      slot.onclick = () => handleSlot(index);
+
+      cityBoard.appendChild(slot);
+    });
+  }
+
+  function handleSlot(index){
+    resultBox.style.display = "none";
+
+    if(citySlots[index]){
+      const removed = buildings[citySlots[index]];
+      citySlots[index] = null;
+
+      info.innerText = `${removed.icon} ${removed.name} dihapus dari kota.`;
+      renderCity();
+      updateStats();
+      return;
+    }
+
+    const b = buildings[selectedBuilding];
+
+    if(getBuildCount() >= currentTarget.maxBuild){
+      info.innerText = `❌ Maksimal hanya ${currentTarget.maxBuild} bangunan untuk level ini.`;
+      return;
+    }
+
+    if(getBudgetLeft() < b.cost){
+      info.innerText = `❌ Budget tidak cukup untuk ${b.name}.`;
+      return;
+    }
+
+    citySlots[index] = selectedBuilding;
+
+    info.innerText = `✅ ${b.icon} ${b.name} berhasil dibangun.`;
+    renderCity();
+    updateStats();
+  }
+
+  function resetCity(){
+    citySlots = Array(9).fill(null);
+    resultBox.style.display = "none";
+    renderCity();
+    updateStats();
+    info.innerText = "Kota direset. Susun rancangan baru.";
+  }
+
+  function evaluateCity(){
+    const stats = getCityStats();
+    const target = currentTarget.target;
+
+    const techOk = stats.tech >= target.tech;
+    const natureOk = stats.nature >= target.nature;
+    const peopleOk = stats.people >= target.people;
+    const energyOk = stats.energy >= target.energy;
+
+    const passed = [techOk,natureOk,peopleOk,energyOk].filter(Boolean).length;
+
+    const balance =
+      Math.max(stats.tech,stats.nature,stats.people,stats.energy) -
+      Math.min(stats.tech,stats.nature,stats.people,stats.energy);
+
+    const efficiency = getBudgetLeft();
+
+    resultBox.style.display = "block";
+    resultBox.innerHTML =
+      `<strong>Evaluasi Kota:</strong><br>` +
+      `Teknologi: ${stats.tech}/${target.tech} ${techOk ? "✅" : "❌"}<br>` +
+      `Alam: ${stats.nature}/${target.nature} ${natureOk ? "✅" : "❌"}<br>` +
+      `Manusia: ${stats.people}/${target.people} ${peopleOk ? "✅" : "❌"}<br>` +
+      `Energi: ${stats.energy}/${target.energy} ${energyOk ? "✅" : "❌"}<br>` +
+      `Sisa budget: ${efficiency}<br>` +
+      `Jarak keseimbangan: ${balance}`;
+
+    if(passed === 4){
+      winLevel(balance, efficiency);
+      return;
+    }
+
+    info.innerText =
+      `Kota belum memenuhi semua target. ${passed}/4 aspek sudah aman.`;
+  }
+
+  function winLevel(balance, efficiency){
+    const balanceBonus = Math.max(60 - balance, 0);
+    const earned =
+      120 +
+      level * 25 +
+      efficiency +
+      balanceBonus;
+
+    score += earned;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    popupTitle.innerText = "🌆 Kota Masa Depan Terbentuk!";
+    popupText.innerHTML =
+      `<strong>${currentTarget.title}</strong> berhasil dirancang.<br><br>` +
+      `Bonus efisiensi: +${efficiency}<br>` +
+      `Bonus keseimbangan: +${balanceBonus}<br>` +
+      `Total score: +${earned}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    nextBtn.innerText = "Level Berikutnya";
+    nextBtn.onclick = nextLevel;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
