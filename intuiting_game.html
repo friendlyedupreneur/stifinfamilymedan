@@ -1,263 +1,337 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Intuitive Sync: Spatial Mirror</title>
-    <style>
-        html, body {
-            margin: 0; padding: 0; width: 100vw; height: 100vh;
-            background-color: #120024; color: #d4a5ff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            overflow: hidden; touch-action: none;
-        }
-        h1 { margin: 0; font-size: 26px; color: #b388ff; text-transform: uppercase; letter-spacing: 2px;}
-        h2 { margin: 5px 0 10px 0; font-size: 18px; color: #7c4dff; }
-        p { margin: 0 0 15px 0; font-size: 14px; text-align: center; color: #e0c3fc; }
-        
-        #progress-container {
-            width: 280px; height: 10px; background-color: #2a0845; border-radius: 5px;
-            margin-bottom: 20px; overflow: hidden;
-        }
-        #progress-bar {
-            width: 100%; height: 100%; background-color: #b388ff;
-            transition: width 1s linear;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intuiting Game Arena</title>
 
-        #game-board {
-            display: grid; gap: 4px; margin-bottom: 20px;
-            padding: 8px; background-color: #2a0845; border-radius: 8px;
-            box-shadow: 0 0 20px rgba(179, 136, 255, 0.2);
-        }
-        .cell {
-            width: 50px; height: 50px; background-color: #120024;
-            border-radius: 5px; transition: background-color 0.2s, transform 0.1s;
-        }
-        .cell-top { pointer-events: none; } /* Setengah atas tidak bisa diklik */
-        .cell-top.active { background-color: #b388ff; box-shadow: 0 0 10px #b388ff; }
-        
-        .cell-bottom { cursor: pointer; } /* Setengah bawah bisa diklik */
-        .cell-bottom:active { transform: scale(0.9); }
-        .cell-bottom.active { background-color: #7c4dff; box-shadow: 0 0 10px #7c4dff; }
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
 
-        .mirror-line {
-            grid-column: 1 / -1; height: 4px; background-color: #ff4081;
-            border-radius: 2px; margin: 4px 0; box-shadow: 0 0 8px #ff4081;
-        }
+    body{
+      background:
+        radial-gradient(circle at top right, rgba(0,170,255,.35), transparent 35%),
+        radial-gradient(circle at top left, rgba(80,80,255,.25), transparent 30%),
+        linear-gradient(180deg,#00152c,#001020,#000713);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
 
-        #overlay {
-            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(18, 0, 36, 0.95); display: none; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 10;
-        }
-        #overlay h1 { font-size: 36px; margin-bottom: 10px; }
-        button {
-            margin-top: 20px; padding: 12px 28px; font-size: 16px; font-weight: bold;
-            color: #fff; background-color: #7c4dff; border: none; border-radius: 8px; cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.4); transition: all 0.2s;
-        }
-        button:active { transform: translateY(2px); }
-        #start-btn { display: block; }
-    </style>
+    .page{
+      max-width:480px;
+      margin:auto;
+      padding:22px 18px 50px;
+    }
+
+    .badge{
+      display:inline-block;
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(120,210,255,.28);
+      padding:8px 14px;
+      border-radius:999px;
+      font-size:13px;
+      margin-bottom:18px;
+      box-shadow:0 0 18px rgba(0,170,255,.18);
+    }
+
+    .hero{
+      background:
+        radial-gradient(circle at top right,rgba(0,180,255,.45),transparent 38%),
+        linear-gradient(135deg,#003a78,#001631 65%,#000713);
+      border:1px solid rgba(120,210,255,.25);
+      border-radius:30px;
+      padding:30px 22px;
+      box-shadow:0 18px 45px rgba(0,120,255,.25);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      width:180px;
+      height:180px;
+      right:-70px;
+      top:-60px;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,.12);
+      box-shadow:0 0 38px rgba(0,180,255,.35);
+    }
+
+    .hero::after{
+      content:"✦ ✧ ✦";
+      position:absolute;
+      right:22px;
+      bottom:20px;
+      color:rgba(255,255,255,.25);
+      font-size:24px;
+      letter-spacing:7px;
+    }
+
+    .hero h1,.hero p,.hero button{
+      position:relative;
+      z-index:2;
+    }
+
+    .hero h1{
+      font-size:34px;
+      line-height:1.05;
+      margin-bottom:12px;
+    }
+
+    .hero p{
+      font-size:15px;
+      line-height:1.6;
+      color:#d9efff;
+    }
+
+    .hero button{
+      margin-top:22px;
+      width:100%;
+      border:none;
+      padding:15px;
+      border-radius:18px;
+      background:white;
+      color:#004c92;
+      font-size:16px;
+      font-weight:bold;
+    }
+
+    .section{
+      margin-top:28px;
+    }
+
+    .section h2{
+      font-size:21px;
+      margin-bottom:10px;
+    }
+
+    .intro{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:22px;
+      padding:18px;
+      line-height:1.6;
+      color:#dcefff;
+      font-size:14px;
+    }
+
+    .games{
+      display:grid;
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .game-card{
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.045));
+      border:1px solid rgba(120,210,255,.18);
+      border-radius:22px;
+      padding:16px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+      box-shadow:0 10px 25px rgba(0,80,160,.18);
+    }
+
+    .icon{
+      width:56px;
+      height:56px;
+      border-radius:19px;
+      background:linear-gradient(135deg,#7bdcff,#0057d9);
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:26px;
+      flex-shrink:0;
+      box-shadow:0 0 18px rgba(0,180,255,.35);
+    }
+
+    .game-info{
+      flex:1;
+    }
+
+    .game-info h3{
+      font-size:16px;
+      margin-bottom:5px;
+    }
+
+    .game-info p{
+      font-size:13px;
+      color:#d5ecff;
+      line-height:1.4;
+    }
+
+    .status{
+      margin-top:8px;
+      display:inline-block;
+      font-size:11px;
+      padding:5px 9px;
+      border-radius:999px;
+      background:rgba(255,255,255,.13);
+      color:#fff;
+    }
+
+    .available{
+      background:#ffffff;
+      color:#0057a8;
+      font-weight:bold;
+    }
+
+    .play-btn{
+      margin-top:10px;
+      border:none;
+      background:#ffffff;
+      color:#0057a8;
+      padding:10px 14px;
+      border-radius:14px;
+      font-weight:bold;
+    }
+
+    .footer-cta{
+      margin-top:30px;
+      text-align:center;
+      background:
+        radial-gradient(circle at top,rgba(0,180,255,.35),transparent 45%),
+        linear-gradient(135deg,#004d99,#001a38);
+      border:1px solid rgba(120,210,255,.22);
+      border-radius:24px;
+      padding:24px 18px;
+      box-shadow:0 18px 38px rgba(0,100,200,.22);
+    }
+
+    .footer-cta h2{
+      font-size:22px;
+      margin-bottom:10px;
+    }
+
+    .footer-cta p{
+      font-size:14px;
+      color:#d8efff;
+      margin-bottom:18px;
+      line-height:1.5;
+    }
+
+    .footer-cta button{
+      width:100%;
+      border:none;
+      padding:15px;
+      border-radius:18px;
+      background:white;
+      color:#0057a8;
+      font-weight:bold;
+      font-size:15px;
+    }
+  </style>
 </head>
+
 <body>
+  <main class="page">
 
-    <h1>Intuitive Sync</h1>
-    <h2 id="level-text">Level 1</h2>
-    <p>Buat cerminan pola di area bawah secepat mungkin!</p>
-    
-    <div id="progress-container"><div id="progress-bar"></div></div>
-    
-    <div id="game-board"></div>
-    <button id="start-btn" onclick="startGame()">Mulai Sinkronisasi</button>
+    <div class="badge">🔵 STIFIn Intuiting Game</div>
 
-    <div id="overlay">
-        <h1 id="end-title">SYNC FAILED</h1>
-        <p id="end-desc">Waktu habis.</p>
-        <button onclick="resetGame()">Coba Lagi / Lanjut</button>
-    </div>
+    <section class="hero">
+      <h1>Intuiting<br>Game Arena</h1>
+      <p>
+        Jelajahi ide, pola, imajinasi, dan kemungkinan baru melalui mini game
+        kreatif khas Intuiting.
+      </p>
+      <button onclick="scrollToGames()">Mulai Eksplorasi</button>
+    </section>
 
-    <script>
-        const board = document.getElementById('game-board');
-        const levelText = document.getElementById('level-text');
-        const overlay = document.getElementById('overlay');
-        const endTitle = document.getElementById('end-title');
-        const endDesc = document.getElementById('end-desc');
-        const startBtn = document.getElementById('start-btn');
-        const progressBar = document.getElementById('progress-bar');
+    <section class="section">
+      <h2>Karakter Arena</h2>
+      <div class="intro">
+        Intuiting kuat dalam melihat peluang, membayangkan masa depan, menangkap pola,
+        dan menghubungkan ide yang belum terlihat jelas. Arena ini dirancang untuk
+        melatih kreativitas, eksplorasi, dan keberanian menemukan kemungkinan baru.
+      </div>
+    </section>
 
-        let level = 1;
-        let cols = 4;
-        let rowsPerHalf = 2; // Total baris = 4 (2 atas, 2 bawah)
-        let totalActiveNodes = 3;
-        
-        let topPattern = [];
-        let bottomPattern = [];
-        
-        let timeLeft = 0;
-        let maxTime = 15;
-        let timerInterval;
-        let isPlaying = false;
+    <section class="section" id="games">
+      <h2>Pilih Game Intuiting</h2>
 
-        function buildBoard() {
-            board.innerHTML = '';
-            board.style.gridTemplateColumns = `repeat(${cols}, 50px)`;
-            
-            topPattern = [];
-            bottomPattern = [];
+      <div class="games">
 
-            // Buat area Atas (Target)
-            for (let i = 0; i < cols * rowsPerHalf; i++) {
-                let cell = document.createElement('div');
-                cell.className = 'cell cell-top';
-                cell.dataset.index = i;
-                board.appendChild(cell);
-            }
+        <div class="game-card">
+          <div class="icon">🌌</div>
+          <div class="game-info">
+            <h3>Dream Builder</h3>
+            <p>Bangun dunia mimpi dari kombinasi elemen imajinatif.</p>
+            <span class="status available">Available</span><br>
+            <button class="play-btn" onclick="openGame('dream-builder.html')">Mainkan</button>
+          </div>
+        </div>
 
-            // Garis Cermin Pembatas
-            let mirror = document.createElement('div');
-            mirror.className = 'mirror-line';
-            board.appendChild(mirror);
+        <div class="game-card">
+          <div class="icon">📖</div>
+          <div class="game-info">
+            <h3>Story Path</h3>
+            <p>Pilih alur cerita bercabang dan temukan ending terbaik.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-            // Buat area Bawah (Interactive)
-            for (let i = 0; i < cols * rowsPerHalf; i++) {
-                let cell = document.createElement('div');
-                cell.className = 'cell cell-bottom';
-                cell.dataset.index = i; // Index lokal untuk area bawah
-                cell.addEventListener('click', toggleCell);
-                board.appendChild(cell);
-            }
-        }
+        <div class="game-card">
+          <div class="icon">🌀</div>
+          <div class="game-info">
+            <h3>Portal Puzzle</h3>
+            <p>Hubungkan portal antar dimensi untuk membuka jalur baru.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-        function startGame() {
-            startBtn.style.display = 'none';
-            overlay.style.display = 'none';
-            isPlaying = true;
-            
-            buildBoard();
-            generatePattern();
-            
-            timeLeft = maxTime;
-            progressBar.style.width = '100%';
-            progressBar.style.transition = 'width 1s linear';
-            
-            clearInterval(timerInterval);
-            timerInterval = setInterval(updateTimer, 1000);
-        }
+        <div class="game-card">
+          <div class="icon">🔮</div>
+          <div class="game-info">
+            <h3>Symbol Vision</h3>
+            <p>Baca simbol abstrak dan temukan makna tersembunyi.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-        function generatePattern() {
-            let topCells = document.querySelectorAll('.cell-top');
-            let totalCells = cols * rowsPerHalf;
-            let activeIndices = [];
+        <div class="game-card">
+          <div class="icon">💡</div>
+          <div class="game-info">
+            <h3>Idea Fusion</h3>
+            <p>Gabungkan ide berbeda menjadi konsep baru yang unik.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-            // Acak pola di area atas
-            while(activeIndices.length < totalActiveNodes) {
-                let r = Math.floor(Math.random() * totalCells);
-                if(activeIndices.indexOf(r) === -1) activeIndices.push(r);
-            }
+        <div class="game-card">
+          <div class="icon">🏙️</div>
+          <div class="game-info">
+            <h3>Future City</h3>
+            <p>Rancang kota masa depan dengan visi dan strategi kreatif.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-            activeIndices.forEach(index => {
-                topCells[index].classList.add('active');
-                topPattern.push(index);
-            });
-        }
+      </div>
+    </section>
 
-        function toggleCell(e) {
-            if (!isPlaying) return;
-            
-            let cell = e.target;
-            let index = parseInt(cell.dataset.index);
-            
-            if (cell.classList.contains('active')) {
-                cell.classList.remove('active');
-                bottomPattern = bottomPattern.filter(i => i !== index);
-            } else {
-                cell.classList.add('active');
-                bottomPattern.push(index);
-            }
+    <section class="footer-cta">
+      <h2>Siap membuka kemungkinan?</h2>
+      <p>Mulai dari game pertama dan buktikan kekuatan imajinasi Intuiting-mu.</p>
+      <button onclick="openGame('dream-builder.html')">Main Game Pertama</button>
+    </section>
 
-            checkWin();
-        }
+  </main>
 
-        function checkWin() {
-            if (bottomPattern.length !== topPattern.length) return;
+  <script>
+    function scrollToGames(){
+      document.getElementById("games").scrollIntoView({
+        behavior:"smooth"
+      });
+    }
 
-            let isWin = true;
-            
-            // Logika Cermin Vertikal:
-            // Baris ke-0 bawah mencerminkan Baris ke-(rowsPerHalf - 1) atas
-            // Rumus cermin vertikal lokal index:
-            // targetIndexBawah = (rowsPerHalf - 1 - Math.floor(indexAtas / cols)) * cols + (indexAtas % cols)
-
-            for (let i = 0; i < topPattern.length; i++) {
-                let topIndex = topPattern[i];
-                let expectedBottomRow = (rowsPerHalf - 1) - Math.floor(topIndex / cols);
-                let col = topIndex % cols;
-                let expectedBottomIndex = (expectedBottomRow * cols) + col;
-
-                if (!bottomPattern.includes(expectedBottomIndex)) {
-                    isWin = false;
-                    break;
-                }
-            }
-
-            if (isWin) {
-                isPlaying = false;
-                clearInterval(timerInterval);
-                
-                // JEMBATAN FLUTTER: Kirim Level saat menang
-                if (window.SuperAppChannel) {
-                    window.SuperAppChannel.postMessage(level.toString());
-                }
-
-                setTimeout(() => {
-                    level++;
-                    levelText.innerText = `Level ${level}`;
-                    
-                    // Tingkatkan Kesulitan
-                    if (level % 2 === 0) totalActiveNodes++; // Tambah titik
-                    if (level === 4 || level === 7) { 
-                        cols++; // Perlebar grid sesekali
-                        if (cols > 6) cols = 6;
-                    }
-                    if (maxTime > 5) maxTime--; // Waktu makin ketat
-
-                    startGame();
-                }, 500); // Jeda sebentar melihat hasil sebelum lanjut
-            }
-        }
-
-        function updateTimer() {
-            timeLeft--;
-            let percentage = (timeLeft / maxTime) * 100;
-            progressBar.style.width = percentage + '%';
-
-            if (timeLeft <= 0) {
-                isPlaying = false;
-                clearInterval(timerInterval);
-                progressBar.style.width = '0%';
-                
-                // JEMBATAN FLUTTER: Kirim Skor Akhir saat kalah
-                if (window.SuperAppChannel) {
-                    window.SuperAppChannel.postMessage((level - 1).toString());
-                }
-
-                overlay.style.display = 'flex';
-                endTitle.innerText = "OUT OF SYNC";
-                endTitle.style.color = "#ff4081";
-                endDesc.innerText = `Visualisasi terhenti di Level ${level}.`;
-            }
-        }
-
-        function resetGame() {
-            level = 1;
-            cols = 4;
-            rowsPerHalf = 2;
-            totalActiveNodes = 3;
-            maxTime = 15;
-            levelText.innerText = `Level ${level}`;
-            startGame();
-        }
-    </script>
+    function openGame(url){
+      window.location.href = url;
+    }
+  </script>
 </body>
 </html>
