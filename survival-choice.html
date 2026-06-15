@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Survival Choice</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.38),transparent 35%),
+        radial-gradient(circle at top left,rgba(255,170,0,.25),transparent 32%),
+        linear-gradient(180deg,#3b2a00,#1f1600,#0d0800);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,230,130,.24);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#fff4c7;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.2);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#fff4c7}
+
+    .meter-box{
+      display:grid;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .meter{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .meter-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#fff4c7;
+      margin-bottom:7px;
+    }
+
+    .bar{
+      height:9px;
+      background:rgba(255,255,255,.13);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:50%;
+      background:linear-gradient(90deg,#fff08a,#ffb300);
+      border-radius:999px;
+      transition:.35s;
+      box-shadow:0 0 14px rgba(255,220,70,.7);
+    }
+
+    .survival-card{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.28),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.24);
+      border-radius:30px;
+      padding:22px 18px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(255,170,0,.18);
+      margin-bottom:16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .survival-card::after{
+      content:"⚡";
+      position:absolute;
+      right:20px;
+      top:14px;
+      color:rgba(255,255,255,.24);
+      font-size:30px;
+    }
+
+    .scene-icon{
+      width:130px;
+      height:130px;
+      margin:0 auto 16px;
+      border-radius:38px;
+      background:white;
+      color:#a36d00;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:66px;
+      box-shadow:
+        0 0 32px rgba(255,220,70,.45),
+        inset 0 0 20px rgba(255,170,0,.14);
+      animation:pulseScene 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseScene{
+      from{transform:scale(1)}
+      to{transform:scale(1.04)}
+    }
+
+    .scene-label{
+      color:#fff4c7;
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .scene-title{
+      font-size:24px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .scene-text{
+      color:#fff4c7;
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .timer-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:22px;
+      padding:14px;
+      margin-bottom:16px;
+    }
+
+    .timer-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#fff4c7;
+      margin-bottom:8px;
+    }
+
+    .time-fill{
+      height:100%;
+      width:100%;
+      background:linear-gradient(90deg,#fff08a,#ffb300);
+      border-radius:999px;
+      transition:.08s linear;
+      box-shadow:0 0 14px rgba(255,220,70,.7);
+    }
+
+    .choices{
+      display:grid;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .choice-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(255,230,130,.22);
+      padding:15px;
+      text-align:left;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .choice-btn strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:6px;
+    }
+
+    .choice-btn:active{transform:scale(.97)}
+
+    .choice-btn.best{
+      background:white;
+      color:#a36d00;
+      box-shadow:0 0 22px rgba(255,220,70,.78);
+    }
+
+    .choice-btn.okay{
+      outline:3px solid rgba(255,220,80,.85);
+    }
+
+    .choice-btn.bad{
+      outline:3px solid #ff6b6b;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .feedback-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .feedback-box strong{color:white}
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .control-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .skip{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .next{
+      background:white;
+      color:#a36d00;
+    }
+
+    .next:disabled{opacity:.45}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#2a1c00;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,230,130,.28);
+      box-shadow:0 0 34px rgba(255,220,70,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#fff4c7;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#a36d00;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🧭 Survival Choice</h1>
+      <p>Pilih keputusan cepat dalam situasi darurat. Naluri harus tepat dan tetap tenang.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="round">1/5</h2><span>Situasi</span></div>
+      <div class="stat"><h2 id="life">3</h2><span>Life</span></div>
+    </div>
+
+    <div class="meter-box">
+      <div class="meter">
+        <div class="meter-row"><span>❤️ Life</span><strong id="lifeText">80</strong></div>
+        <div class="bar"><div class="fill" id="lifeFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>⚡ Energy</span><strong id="energyText">70</strong></div>
+        <div class="bar"><div class="fill" id="energyFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>🧘 Calm</span><strong id="calmText">60</strong></div>
+        <div class="bar"><div class="fill" id="calmFill"></div></div>
+      </div>
+    </div>
+
+    <div class="timer-box">
+      <div class="timer-row">
+        <span>Waktu Memilih</span>
+        <strong id="timeText">100%</strong>
+      </div>
+      <div class="bar">
+        <div class="time-fill" id="timeFill"></div>
+      </div>
+    </div>
+
+    <div class="survival-card">
+      <div class="scene-icon" id="sceneIcon">🧭</div>
+      <div class="scene-label">Situasi Darurat</div>
+      <div class="scene-title" id="sceneTitle">Siap Bertahan?</div>
+      <div class="scene-text" id="sceneText">
+        Pilih keputusan yang paling aman dan cepat.
+      </div>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="feedback-box" id="feedbackBox"></div>
+
+    <div class="controls">
+      <button class="control-btn skip" onclick="skipChoice()">Lewati</button>
+      <button class="control-btn next" id="nextBtn" onclick="nextRound()" disabled>Lanjut 🧭</button>
+    </div>
+
+    <div class="info" id="info">
+      Keputusan terbaik biasanya menjaga keselamatan, energi, dan ketenangan sekaligus.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">🧭 Survival Selesai!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const situations = [
+    {
+      icon:"🌧️",
+      title:"Hujan Deras di Jalan",
+      text:"Kamu sedang dalam perjalanan. Hujan tiba-tiba sangat deras, jalan mulai licin, dan jarak pandang menurun.",
+      best:{
+        title:"Cari Tempat Aman",
+        text:"Kurangi kecepatan, menepi di tempat aman, lalu tunggu kondisi lebih jelas.",
+        life:18, energy:-4, calm:18
+      },
+      okay:{
+        title:"Lanjut Pelan",
+        text:"Tetap berjalan pelan sambil lebih hati-hati.",
+        life:6, energy:-10, calm:5
+      },
+      bad:{
+        title:"Percepat Perjalanan",
+        text:"Tambah kecepatan agar cepat sampai sebelum hujan makin parah.",
+        life:-25, energy:-14, calm:-18
+      },
+      explanation:"Dalam kondisi jarak pandang buruk, bertahan paling aman adalah mengurangi risiko dulu."
+    },
+    {
+      icon:"🔥",
+      title:"Asap dari Dapur",
+      text:"Kamu mencium bau gosong dan melihat asap mulai keluar dari dapur.",
+      best:{
+        title:"Matikan Sumber dan Menjauh",
+        text:"Matikan kompor/listrik jika aman, buka jalur keluar, dan minta bantuan.",
+        life:20, energy:-6, calm:16
+      },
+      okay:{
+        title:"Cek Sendiri Terlebih Dulu",
+        text:"Masuk perlahan untuk melihat sumber asap.",
+        life:4, energy:-8, calm:2
+      },
+      bad:{
+        title:"Siram Sembarangan",
+        text:"Langsung siram semua dengan air tanpa tahu sumbernya.",
+        life:-22, energy:-12, calm:-15
+      },
+      explanation:"Insting bertahan perlu cepat, tapi tetap aman. Jangan masuk risiko tanpa membaca sumber bahaya."
+    },
+    {
+      icon:"📱",
+      title:"HP Hampir Habis Saat Tersesat",
+      text:"Kamu berada di tempat asing, baterai HP tinggal 8%, dan sinyal tidak stabil.",
+      best:{
+        title:"Hemat Baterai dan Kirim Lokasi",
+        text:"Aktifkan hemat daya, kirim lokasi terakhir, lalu cari tempat ramai/aman.",
+        life:16, energy:10, calm:15
+      },
+      okay:{
+        title:"Terus Buka Maps",
+        text:"Pantau Maps terus sampai menemukan jalan.",
+        life:5, energy:-20, calm:4
+      },
+      bad:{
+        title:"Panik dan Telepon Banyak Orang",
+        text:"Telepon semua kontak satu per satu sambil berjalan tanpa arah.",
+        life:-10, energy:-28, calm:-25
+      },
+      explanation:"Saat sumber daya terbatas, survival terbaik adalah menghemat energi dan membuat diri mudah ditemukan."
+    },
+    {
+      icon:"🌲",
+      title:"Jalur Hutan Bercabang",
+      text:"Kamu hiking ringan. Jalur bercabang tiga, tapi penanda jalan tampak rusak.",
+      best:{
+        title:"Berhenti dan Tandai Posisi",
+        text:"Jangan asal lanjut. Tandai posisi, cek arah, dan kembali ke titik aman jika ragu.",
+        life:15, energy:-5, calm:18
+      },
+      okay:{
+        title:"Pilih Jalur Terlihat Lebar",
+        text:"Ambil jalur yang tampak paling sering dilewati.",
+        life:4, energy:-10, calm:4
+      },
+      bad:{
+        title:"Ikuti Feeling Tanpa Tanda",
+        text:"Pilih jalur acak karena merasa arahnya benar.",
+        life:-18, energy:-18, calm:-12
+      },
+      explanation:"Insting bukan asal nekat. Naluri terbaik tetap membaca tanda dan menjaga opsi kembali."
+    },
+    {
+      icon:"🚨",
+      title:"Kerumunan Mulai Panik",
+      text:"Di sebuah event, orang-orang tiba-tiba bergerak cepat ke satu arah. Suasana mulai kacau.",
+      best:{
+        title:"Menepi dan Cari Jalur Aman",
+        text:"Jangan melawan arus. Menepi, lindungi diri, lalu cari jalur keluar yang tidak padat.",
+        life:20, energy:-8, calm:15
+      },
+      okay:{
+        title:"Ikuti Arus Pelan",
+        text:"Bergerak mengikuti arus sambil menjaga jarak.",
+        life:7, energy:-12, calm:2
+      },
+      bad:{
+        title:"Lawan Arus",
+        text:"Dorong ke arah berlawanan agar cepat keluar dari kerumunan.",
+        life:-28, energy:-20, calm:-20
+      },
+      explanation:"Dalam kerumunan panik, menjaga posisi dan tidak melawan arus lebih aman."
+    },
+    {
+      icon:"💸",
+      title:"Dompet Hilang di Tempat Ramai",
+      text:"Kamu baru sadar dompet tidak ada. Tempat ramai, dan kamu mulai panik.",
+      best:{
+        title:"Amankan Prioritas",
+        text:"Tenang, cek tas/saku terakhir, blokir kartu jika perlu, lalu lapor ke petugas.",
+        life:4, energy:-8, calm:22
+      },
+      okay:{
+        title:"Cari Keliling Sendiri",
+        text:"Keliling tempat tadi sambil mencari dompet.",
+        life:2, energy:-18, calm:2
+      },
+      bad:{
+        title:"Teriak dan Panik",
+        text:"Langsung menuduh orang sekitar dan membuat keributan.",
+        life:-5, energy:-20, calm:-25
+      },
+      explanation:"Situasi kehilangan butuh tenang dan prioritas: amankan data/uang, baru cari fisiknya."
+    },
+    {
+      icon:"🦶",
+      title:"Teman Terkilir",
+      text:"Saat jalan bersama, temanmu terkilir dan sulit berdiri. Lokasi cukup jauh dari bantuan.",
+      best:{
+        title:"Stabilkan dan Kurangi Gerak",
+        text:"Bantu duduk aman, jangan dipaksa berjalan, kompres jika ada, lalu cari bantuan.",
+        life:18, energy:-8, calm:14
+      },
+      okay:{
+        title:"Bantu Jalan Pelan",
+        text:"Bantu ia berjalan pelan supaya cepat sampai tempat ramai.",
+        life:2, energy:-15, calm:4
+      },
+      bad:{
+        title:"Paksa Bergerak",
+        text:"Suruh ia tahan sakit dan terus jalan.",
+        life:-24, energy:-18, calm:-16
+      },
+      explanation:"Cedera perlu distabilkan dulu. Memaksa bergerak bisa memperparah kondisi."
+    },
+    {
+      icon:"⚡",
+      title:"Lampu Padam Mendadak",
+      text:"Rumah tiba-tiba gelap. Kamu mendengar suara percikan kecil dari dekat stop kontak.",
+      best:{
+        title:"Jauhkan Diri dan Matikan Arus",
+        text:"Jangan sentuh area itu. Jauhkan orang, matikan MCB jika aman, lalu cek bantuan.",
+        life:22, energy:-4, calm:15
+      },
+      okay:{
+        title:"Gunakan Senter dan Cek",
+        text:"Ambil senter lalu lihat dari jarak aman.",
+        life:6, energy:-5, calm:6
+      },
+      bad:{
+        title:"Sentuh Stop Kontak",
+        text:"Coba pegang stop kontak untuk memastikan sumber masalah.",
+        life:-30, energy:-10, calm:-22
+      },
+      explanation:"Percikan listrik adalah sinyal bahaya. Insting aman: jangan sentuh, amankan area dulu."
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let round = 1;
+  let lifeCount = 3;
+
+  let life = 80;
+  let energy = 70;
+  let calm = 60;
+
+  let currentSet = [];
+  let currentSituation = null;
+  let answered = false;
+  let timer = null;
+  let timeLeft = 100;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const roundEl = document.getElementById("round");
+  const lifeCountEl = document.getElementById("life");
+
+  const lifeText = document.getElementById("lifeText");
+  const energyText = document.getElementById("energyText");
+  const calmText = document.getElementById("calmText");
+  const lifeFill = document.getElementById("lifeFill");
+  const energyFill = document.getElementById("energyFill");
+  const calmFill = document.getElementById("calmFill");
+
+  const timeText = document.getElementById("timeText");
+  const timeFill = document.getElementById("timeFill");
+
+  const sceneIcon = document.getElementById("sceneIcon");
+  const sceneTitle = document.getElementById("sceneTitle");
+  const sceneText = document.getElementById("sceneText");
+  const choicesEl = document.getElementById("choices");
+  const feedbackBox = document.getElementById("feedbackBox");
+  const nextBtn = document.getElementById("nextBtn");
+  const info = document.getElementById("info");
+
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function clamp(value){
+    return Math.max(0, Math.min(100, value));
+  }
+
+  function setupLevel(){
+    round = 1;
+    lifeCount = 3;
+    life = 80;
+    energy = 70;
+    calm = 60;
+    answered = false;
+    currentSet = shuffle([...situations]).slice(0,5);
+
+    levelEl.innerText = level;
+    lifeCountEl.innerText = lifeCount;
+    gameOver.style.display = "none";
+
+    loadRound();
+  }
+
+  function updateMeters(){
+    life = clamp(life);
+    energy = clamp(energy);
+    calm = clamp(calm);
+
+    lifeText.innerText = life;
+    energyText.innerText = energy;
+    calmText.innerText = calm;
+
+    lifeFill.style.width = life + "%";
+    energyFill.style.width = energy + "%";
+    calmFill.style.width = calm + "%";
+
+    scoreEl.innerText = score;
+    lifeCountEl.innerText = lifeCount;
+  }
+
+  function startTimer(){
+    clearInterval(timer);
+    timeLeft = 100;
+    updateTimer();
+
+    const drain = Math.max(2.4, 4.2 - level * 0.25);
+
+    timer = setInterval(() => {
+      if(answered){
+        clearInterval(timer);
+        return;
+      }
+
+      timeLeft -= drain;
+
+      if(timeLeft <= 0){
+        timeLeft = 0;
+        updateTimer();
+        timeoutChoice();
+        return;
+      }
+
+      updateTimer();
+    }, 100);
+  }
+
+  function updateTimer(){
+    timeText.innerText = Math.ceil(timeLeft) + "%";
+    timeFill.style.width = timeLeft + "%";
+  }
+
+  function loadRound(){
+    answered = false;
+    currentSituation = currentSet[round - 1];
+
+    roundEl.innerText = `${round}/5`;
+    lifeCountEl.innerText = lifeCount;
+    nextBtn.disabled = true;
+
+    sceneIcon.innerText = currentSituation.icon;
+    sceneTitle.innerText = currentSituation.title;
+    sceneText.innerText = currentSituation.text;
+
+    feedbackBox.style.display = "none";
+    feedbackBox.innerHTML = "";
+
+    renderChoices();
+    updateMeters();
+    startTimer();
+
+    info.innerText = "Pilih cepat. Keputusan terlalu lama juga bisa berbahaya.";
+  }
+
+  function renderChoices(){
+    choicesEl.innerHTML = "";
+
+    const choices = [
+      {type:"best", ...currentSituation.best},
+      {type:"okay", ...currentSituation.okay},
+      {type:"bad", ...currentSituation.bad}
+    ];
+
+    shuffle(choices).forEach(choice => {
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+
+      btn.innerHTML = `
+        <strong>${choice.title}</strong>
+        "${choice.text}"
+      `;
+
+      btn.onclick = () => chooseSurvival(choice, btn);
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function applyEffect(choice){
+    life += choice.life;
+    energy += choice.energy;
+    calm += choice.calm;
+  }
+
+  function chooseSurvival(choice, button){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    applyEffect(choice);
+
+    if(choice.type === "best"){
+      button.classList.add("best");
+
+      const speedBonus = Math.ceil(timeLeft / 5);
+      const earned = 55 + level * 6 + speedBonus;
+      score += earned;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🧭 Keputusan Survival Terbaik</strong><br>` +
+        `${currentSituation.explanation}<br><br>` +
+        `Life ${formatEffect(choice.life)} • Energy ${formatEffect(choice.energy)} • Calm ${formatEffect(choice.calm)}<br>` +
+        `Speed bonus +${speedBonus} • Score +${earned}`;
+
+      info.innerText = "✅ Naluri cepat dan aman. Kamu bertahan dengan baik.";
+    }
+
+    if(choice.type === "okay"){
+      button.classList.add("okay");
+
+      const speedBonus = Math.ceil(timeLeft / 10);
+      const earned = 22 + level * 3 + speedBonus;
+      score += earned;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🙂 Keputusan Cukup Aman</strong><br>` +
+        `Pilihan ini masih bisa membantu, tapi belum paling aman untuk survival.<br><br>` +
+        `<strong>Yang lebih tepat:</strong><br>"${currentSituation.best.text}"`;
+
+      info.innerText = "Cukup aman, tapi masih ada pilihan yang lebih stabil.";
+    }
+
+    if(choice.type === "bad"){
+      button.classList.add("bad");
+      lifeCount--;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>⚠️ Keputusan Berisiko</strong><br>` +
+        `Pilihan ini meningkatkan bahaya dan membuat kondisi makin tidak stabil.<br><br>` +
+        `<strong>Yang lebih aman:</strong><br>"${currentSituation.best.text}"`;
+
+      info.innerText = "❌ Survival melemah. Life berkurang.";
+
+      if(lifeCount <= 0 || life <= 0 || energy <= 0 || calm <= 0){
+        updateMeters();
+        setTimeout(finishLevel, 900);
+        return;
+      }
+    }
+
+    if(life <= 0 || energy <= 0 || calm <= 0){
+      lifeCount--;
+      info.innerText = "⚠️ Salah satu kondisi utama drop. Life berkurang.";
+    }
+
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(lifeCount <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function timeoutChoice(){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    lifeCount--;
+    calm -= 18;
+    energy -= 8;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>⌛ Terlambat Memilih</strong><br>` +
+      `Dalam survival, terlalu lama diam bisa memperbesar risiko.<br><br>` +
+      `<strong>Keputusan terbaik:</strong><br>"${currentSituation.best.text}"<br><br>` +
+      `${currentSituation.explanation}`;
+
+    info.innerText = "Terlambat memilih. Life, calm, dan energy turun.";
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(lifeCount <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function skipChoice(){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    lifeCount--;
+    calm -= 15;
+    energy -= 10;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>Situasi dilewati.</strong><br>` +
+      `Keputusan terbaik sebenarnya:<br>"${currentSituation.best.text}"<br><br>` +
+      `${currentSituation.explanation}`;
+
+    info.innerText = "Situasi dilewati. Survival condition turun.";
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(lifeCount <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function formatEffect(value){
+    if(value > 0) return `+${value}`;
+    return value;
+  }
+
+  function nextRound(){
+    if(!answered) return;
+
+    if(lifeCount <= 0 || life <= 0 || energy <= 0 || calm <= 0){
+      finishLevel();
+      return;
+    }
+
+    round++;
+
+    if(round > 5){
+      finishLevel();
+      return;
+    }
+
+    loadRound();
+  }
+
+  function finishLevel(){
+    clearInterval(timer);
+
+    const average = Math.round((life + energy + calm) / 3);
+    const bonus = Math.max(average, 0) + lifeCount * 40 + level * 30;
+    score += bonus;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    let title = "🧭 Survival Selesai!";
+    let desc = "Kamu berhasil melewati beberapa situasi darurat dengan naluri yang cukup baik.";
+
+    if(average >= 75 && lifeCount >= 3){
+      title = "🟡 Survival Instinct Master!";
+      desc = "Keputusanmu cepat, aman, dan stabil. Insting bertahanmu sangat tajam.";
+    } else if(lifeCount <= 0 || average <= 35){
+      title = "⚠️ Survival Perlu Diasah";
+      desc = "Beberapa keputusan terlalu berisiko. Tapi kamu mulai membaca pola daruratnya.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Life: <strong>${life}</strong><br>` +
+      `Energy: <strong>${energy}</strong><br>` +
+      `Calm: <strong>${calm}</strong><br>` +
+      `Bonus kondisi: +${Math.max(average, 0)}<br>` +
+      `Bonus life: +${lifeCount * 40}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
