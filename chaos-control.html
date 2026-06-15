@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chaos Control</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.38),transparent 35%),
+        radial-gradient(circle at top left,rgba(255,170,0,.25),transparent 32%),
+        linear-gradient(180deg,#3b2a00,#1f1600,#0d0800);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,230,130,.24);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#fff4c7;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.2);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#fff4c7}
+
+    .meter-box{
+      display:grid;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .meter{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .meter-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#fff4c7;
+      margin-bottom:7px;
+    }
+
+    .bar{
+      height:9px;
+      background:rgba(255,255,255,.13);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:50%;
+      background:linear-gradient(90deg,#fff08a,#ffb300);
+      border-radius:999px;
+      transition:.35s;
+      box-shadow:0 0 14px rgba(255,220,70,.7);
+    }
+
+    .chaos-fill{
+      background:linear-gradient(90deg,#ff6b6b,#ffb300);
+      box-shadow:0 0 14px rgba(255,100,80,.75);
+    }
+
+    .control-card{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.28),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.24);
+      border-radius:30px;
+      padding:22px 18px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(255,170,0,.18);
+      margin-bottom:16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .control-card::after{
+      content:"🌪️";
+      position:absolute;
+      right:20px;
+      top:14px;
+      color:rgba(255,255,255,.24);
+      font-size:30px;
+    }
+
+    .chaos-icon{
+      width:130px;
+      height:130px;
+      margin:0 auto 16px;
+      border-radius:38px;
+      background:white;
+      color:#a36d00;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:66px;
+      box-shadow:
+        0 0 32px rgba(255,220,70,.45),
+        inset 0 0 20px rgba(255,170,0,.14);
+      animation:chaosMove .9s ease-in-out infinite alternate;
+    }
+
+    @keyframes chaosMove{
+      from{transform:rotate(-2deg) scale(1)}
+      to{transform:rotate(2deg) scale(1.05)}
+    }
+
+    .scene-label{
+      color:#fff4c7;
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .scene-title{
+      font-size:24px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .scene-text{
+      color:#fff4c7;
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .timer-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:22px;
+      padding:14px;
+      margin-bottom:16px;
+    }
+
+    .timer-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#fff4c7;
+      margin-bottom:8px;
+    }
+
+    .time-fill{
+      height:100%;
+      width:100%;
+      background:linear-gradient(90deg,#fff08a,#ffb300);
+      border-radius:999px;
+      transition:.08s linear;
+      box-shadow:0 0 14px rgba(255,220,70,.7);
+    }
+
+    .choices{
+      display:grid;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .choice-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(255,230,130,.22);
+      padding:15px;
+      text-align:left;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .choice-btn strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:6px;
+    }
+
+    .choice-btn:active{transform:scale(.97)}
+
+    .choice-btn.best{
+      background:white;
+      color:#a36d00;
+      box-shadow:0 0 22px rgba(255,220,70,.78);
+    }
+
+    .choice-btn.okay{
+      outline:3px solid rgba(255,220,80,.85);
+    }
+
+    .choice-btn.bad{
+      outline:3px solid #ff6b6b;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .feedback-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .feedback-box strong{color:white}
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .control-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .skip{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .next{
+      background:white;
+      color:#a36d00;
+    }
+
+    .next:disabled{opacity:.45}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#2a1c00;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,230,130,.28);
+      box-shadow:0 0 34px rgba(255,220,70,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#fff4c7;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#a36d00;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🌪️ Chaos Control</h1>
+      <p>Kendalikan situasi kacau dengan keputusan spontan yang tepat dan stabil.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="round">1/6</h2><span>Chaos</span></div>
+      <div class="stat"><h2 id="life">3</h2><span>Life</span></div>
+    </div>
+
+    <div class="meter-box">
+      <div class="meter">
+        <div class="meter-row"><span>🌪️ Chaos</span><strong id="chaosText">65</strong></div>
+        <div class="bar"><div class="fill chaos-fill" id="chaosFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>🛡️ Control</span><strong id="controlText">45</strong></div>
+        <div class="bar"><div class="fill" id="controlFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>🧘 Stability</span><strong id="stabilityText">50</strong></div>
+        <div class="bar"><div class="fill" id="stabilityFill"></div></div>
+      </div>
+    </div>
+
+    <div class="timer-box">
+      <div class="timer-row">
+        <span>Waktu Kontrol</span>
+        <strong id="timeText">100%</strong>
+      </div>
+      <div class="bar">
+        <div class="time-fill" id="timeFill"></div>
+      </div>
+    </div>
+
+    <div class="control-card">
+      <div class="chaos-icon" id="sceneIcon">🌪️</div>
+      <div class="scene-label">Situasi Kacau</div>
+      <div class="scene-title" id="sceneTitle">Chaos Muncul</div>
+      <div class="scene-text" id="sceneText">
+        Pilih respon yang paling cepat mengendalikan keadaan.
+      </div>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="feedback-box" id="feedbackBox"></div>
+
+    <div class="controls">
+      <button class="control-btn skip" onclick="skipChaos()">Lewati</button>
+      <button class="control-btn next" id="nextBtn" onclick="nextRound()" disabled>Lanjut 🌪️</button>
+    </div>
+
+    <div class="info" id="info">
+      Chaos harus diturunkan, control dan stability harus dinaikkan.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">🌪️ Chaos Terkendali!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const chaosScenes = [
+    {
+      icon:"📢",
+      title:"Banyak Orang Bicara Bersamaan",
+      text:"Semua orang memberi pendapat sekaligus. Suasana rapat makin ribut dan arah pembahasan hilang.",
+      best:{
+        title:"Buat Urutan Bicara",
+        text:"Hentikan sebentar, tentukan giliran bicara, lalu catat poin utama satu per satu.",
+        chaos:-24, control:22, stability:16
+      },
+      okay:{
+        title:"Dengarkan Semua",
+        text:"Biarkan semua bicara dulu sampai selesai.",
+        chaos:-6, control:5, stability:4
+      },
+      bad:{
+        title:"Ikut Menaikkan Suara",
+        text:"Bicara lebih keras agar pendapatmu terdengar.",
+        chaos:20, control:-15, stability:-18
+      },
+      explanation:"Saat semua berbicara bersamaan, chaos turun ketika ada struktur cepat dan giliran yang jelas."
+    },
+    {
+      icon:"📦",
+      title:"Barang Penting Tertukar",
+      text:"Beberapa barang tertukar menjelang acara. Waktu mepet, semua orang mulai panik.",
+      best:{
+        title:"Pisahkan dan Cek Prioritas",
+        text:"Pisahkan barang penting, cek daftar utama, lalu tugaskan orang untuk mencari item yang hilang.",
+        chaos:-22, control:20, stability:14
+      },
+      okay:{
+        title:"Cari Bersama-sama",
+        text:"Semua orang mencari barang yang tertukar.",
+        chaos:-8, control:6, stability:2
+      },
+      bad:{
+        title:"Saling Menyalahkan",
+        text:"Tanyakan siapa yang terakhir pegang dan marahi orang tersebut.",
+        chaos:24, control:-18, stability:-18
+      },
+      explanation:"Dalam kekacauan logistik, prioritas dan pembagian tugas lebih efektif daripada mencari tanpa arah."
+    },
+    {
+      icon:"🚦",
+      title:"Antrian Mulai Berantakan",
+      text:"Antrian tidak jelas. Beberapa orang mulai menyerobot dan yang lain protes.",
+      best:{
+        title:"Buat Jalur dan Nomor",
+        text:"Tentukan satu jalur, beri nomor/urutan, dan jelaskan aturan singkat ke semua orang.",
+        chaos:-26, control:24, stability:16
+      },
+      okay:{
+        title:"Minta Semua Tenang",
+        text:"Katakan agar semua sabar dan tidak berebut.",
+        chaos:-5, control:5, stability:5
+      },
+      bad:{
+        title:"Biarkan Mengalir",
+        text:"Biarkan saja, nanti juga orang-orang akan mengatur sendiri.",
+        chaos:18, control:-14, stability:-12
+      },
+      explanation:"Antrian kacau butuh sistem sederhana yang langsung terlihat dan dipahami."
+    },
+    {
+      icon:"📱",
+      title:"Grup Chat Meledak",
+      text:"Grup chat penuh pesan bertubi-tubi. Informasi penting tenggelam oleh debat dan emoji.",
+      best:{
+        title:"Kunci Fokus Topik",
+        text:"Kirim ringkasan, tetapkan satu topik, lalu minta respon hanya sesuai format.",
+        chaos:-23, control:21, stability:13
+      },
+      okay:{
+        title:"Scroll Semua Pesan",
+        text:"Baca semuanya satu per satu untuk mencari informasi penting.",
+        chaos:-6, control:4, stability:-3
+      },
+      bad:{
+        title:"Balas Semua Pesan",
+        text:"Tanggapi setiap pesan agar tidak ada yang merasa diabaikan.",
+        chaos:22, control:-16, stability:-14
+      },
+      explanation:"Chat kacau perlu diringkas dan dikunci ke format sederhana agar informasi utama muncul kembali."
+    },
+    {
+      icon:"🍽️",
+      title:"Pesanan Cafe Menumpuk",
+      text:"Banyak pelanggan menunggu. Beberapa pesanan hampir salah, dan tim mulai bingung.",
+      best:{
+        title:"Kelompokkan Pesanan",
+        text:"Pisahkan pesanan cepat, pesanan kompleks, dan komplain. Kerjakan dari yang paling mendesak.",
+        chaos:-24, control:22, stability:12
+      },
+      okay:{
+        title:"Kerjakan yang Terdekat",
+        text:"Ambil pesanan yang paling dekat dan langsung kerjakan.",
+        chaos:-8, control:5, stability:3
+      },
+      bad:{
+        title:"Ganti-ganti Tugas",
+        text:"Pindah dari satu pesanan ke pesanan lain setiap ada yang memanggil.",
+        chaos:25, control:-18, stability:-16
+      },
+      explanation:"Saat pekerjaan menumpuk, chaos turun ketika tugas dikelompokkan dan urutan prioritas dibuat."
+    },
+    {
+      icon:"🧒",
+      title:"Anak-anak Mulai Ribut",
+      text:"Beberapa anak berlari, sebagian berebut mainan, dan suasana ruangan mulai tidak terkendali.",
+      best:{
+        title:"Alihkan ke Aktivitas Terstruktur",
+        text:"Kumpulkan mereka, beri permainan singkat dengan aturan jelas, lalu bagi giliran.",
+        chaos:-22, control:20, stability:16
+      },
+      okay:{
+        title:"Minta Diam",
+        text:"Katakan agar semua duduk dan diam.",
+        chaos:-4, control:5, stability:2
+      },
+      bad:{
+        title:"Marah Besar",
+        text:"Bentak keras agar mereka takut dan berhenti.",
+        chaos:16, control:-12, stability:-20
+      },
+      explanation:"Kekacauan anak-anak lebih mudah turun dengan aktivitas terarah daripada tekanan emosi."
+    },
+    {
+      icon:"🌧️",
+      title:"Rencana Outdoor Gagal",
+      text:"Acara luar ruangan tiba-tiba terganggu hujan. Orang-orang bingung harus pindah ke mana.",
+      best:{
+        title:"Aktifkan Plan B",
+        text:"Tentukan titik kumpul teduh, pindahkan alat utama dulu, lalu umumkan alur baru.",
+        chaos:-25, control:23, stability:14
+      },
+      okay:{
+        title:"Tunggu Hujan Reda",
+        text:"Minta semua menunggu sebentar sambil melihat kondisi.",
+        chaos:-4, control:3, stability:2
+      },
+      bad:{
+        title:"Tetap Paksa Acara",
+        text:"Lanjutkan acara seperti rencana awal meski kondisi tidak mendukung.",
+        chaos:24, control:-20, stability:-18
+      },
+      explanation:"Perubahan mendadak butuh keputusan adaptif: titik aman, prioritas barang, dan alur baru."
+    },
+    {
+      icon:"💻",
+      title:"Presentasi Error",
+      text:"Laptop tiba-tiba bermasalah saat presentasi. Audiens menunggu dan suasana mulai tegang.",
+      best:{
+        title:"Ambil Kendali Komunikasi",
+        text:"Tenang, sampaikan jeda singkat, minta bantuan teknis, lalu lanjutkan dengan penjelasan verbal sementara.",
+        chaos:-23, control:20, stability:18
+      },
+      okay:{
+        title:"Coba Klik Terus",
+        text:"Coba buka ulang file sambil tetap di depan audiens.",
+        chaos:-5, control:4, stability:-3
+      },
+      bad:{
+        title:"Panik dan Diam",
+        text:"Diam lama sambil terlihat bingung tanpa memberi penjelasan.",
+        chaos:18, control:-17, stability:-16
+      },
+      explanation:"Saat sistem error, yang paling penting adalah menjaga komunikasi agar audiens tetap merasa situasi terkendali."
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let round = 1;
+  let life = 3;
+
+  let chaos = 65;
+  let control = 45;
+  let stability = 50;
+
+  let currentSet = [];
+  let currentScene = null;
+  let answered = false;
+  let timer = null;
+  let timeLeft = 100;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const roundEl = document.getElementById("round");
+  const lifeEl = document.getElementById("life");
+
+  const chaosText = document.getElementById("chaosText");
+  const controlText = document.getElementById("controlText");
+  const stabilityText = document.getElementById("stabilityText");
+  const chaosFill = document.getElementById("chaosFill");
+  const controlFill = document.getElementById("controlFill");
+  const stabilityFill = document.getElementById("stabilityFill");
+
+  const timeText = document.getElementById("timeText");
+  const timeFill = document.getElementById("timeFill");
+
+  const sceneIcon = document.getElementById("sceneIcon");
+  const sceneTitle = document.getElementById("sceneTitle");
+  const sceneText = document.getElementById("sceneText");
+  const choicesEl = document.getElementById("choices");
+  const feedbackBox = document.getElementById("feedbackBox");
+  const nextBtn = document.getElementById("nextBtn");
+  const info = document.getElementById("info");
+
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function clamp(value){
+    return Math.max(0, Math.min(100, value));
+  }
+
+  function setupLevel(){
+    round = 1;
+    life = 3;
+
+    chaos = 65 + Math.min(level * 3, 20);
+    control = 45;
+    stability = 50;
+
+    answered = false;
+    currentSet = shuffle([...chaosScenes]).slice(0,6);
+
+    levelEl.innerText = level;
+    lifeEl.innerText = life;
+    gameOver.style.display = "none";
+
+    loadRound();
+  }
+
+  function updateMeters(){
+    chaos = clamp(chaos);
+    control = clamp(control);
+    stability = clamp(stability);
+
+    chaosText.innerText = chaos;
+    controlText.innerText = control;
+    stabilityText.innerText = stability;
+
+    chaosFill.style.width = chaos + "%";
+    controlFill.style.width = control + "%";
+    stabilityFill.style.width = stability + "%";
+
+    scoreEl.innerText = score;
+    lifeEl.innerText = life;
+  }
+
+  function startTimer(){
+    clearInterval(timer);
+    timeLeft = 100;
+    updateTimer();
+
+    const drain = Math.max(2.3, 4.4 - level * 0.25);
+
+    timer = setInterval(() => {
+      if(answered){
+        clearInterval(timer);
+        return;
+      }
+
+      timeLeft -= drain;
+      chaos += 1;
+
+      if(timeLeft <= 0){
+        timeLeft = 0;
+        updateTimer();
+        timeoutChaos();
+        return;
+      }
+
+      updateTimer();
+      updateMeters();
+    }, 100);
+  }
+
+  function updateTimer(){
+    timeText.innerText = Math.ceil(timeLeft) + "%";
+    timeFill.style.width = timeLeft + "%";
+  }
+
+  function loadRound(){
+    answered = false;
+    currentScene = currentSet[round - 1];
+
+    roundEl.innerText = `${round}/6`;
+    nextBtn.disabled = true;
+
+    sceneIcon.innerText = currentScene.icon;
+    sceneTitle.innerText = currentScene.title;
+    sceneText.innerText = currentScene.text;
+
+    feedbackBox.style.display = "none";
+    feedbackBox.innerHTML = "";
+
+    renderChoices();
+    updateMeters();
+    startTimer();
+
+    info.innerText = "Chaos terus naik selama kamu belum mengambil keputusan.";
+  }
+
+  function renderChoices(){
+    choicesEl.innerHTML = "";
+
+    const choices = [
+      {type:"best", ...currentScene.best},
+      {type:"okay", ...currentScene.okay},
+      {type:"bad", ...currentScene.bad}
+    ];
+
+    shuffle(choices).forEach(choice => {
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+      btn.innerHTML = `
+        <strong>${choice.title}</strong>
+        "${choice.text}"
+      `;
+
+      btn.onclick = () => chooseControl(choice, btn);
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function applyEffect(choice){
+    chaos += choice.chaos;
+    control += choice.control;
+    stability += choice.stability;
+  }
+
+  function chooseControl(choice, button){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    applyEffect(choice);
+
+    if(choice.type === "best"){
+      button.classList.add("best");
+
+      const speedBonus = Math.ceil(timeLeft / 5);
+      const controlBonus = Math.ceil((control + stability) / 8);
+      const chaosBonus = Math.max(30 - Math.floor(chaos / 4), 0);
+      const earned = 55 + level * 6 + speedBonus + controlBonus + chaosBonus;
+
+      score += earned;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🌪️ Kontrol Terbaik</strong><br>` +
+        `${currentScene.explanation}<br><br>` +
+        `Chaos ${formatEffect(choice.chaos)} • Control ${formatEffect(choice.control)} • Stability ${formatEffect(choice.stability)}<br>` +
+        `Speed bonus +${speedBonus} • Score +${earned}`;
+
+      info.innerText = "✅ Chaos menurun. Situasi mulai terkendali.";
+    }
+
+    if(choice.type === "okay"){
+      button.classList.add("okay");
+
+      const speedBonus = Math.ceil(timeLeft / 10);
+      const earned = 22 + level * 3 + speedBonus;
+      score += earned;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🙂 Cukup Mengendalikan</strong><br>` +
+        `Respon ini membantu sedikit, tapi belum langsung memegang inti kekacauan.<br><br>` +
+        `<strong>Yang lebih tepat:</strong><br>"${currentScene.best.text}"`;
+
+      info.innerText = "Cukup membantu, tapi chaos belum turun maksimal.";
+    }
+
+    if(choice.type === "bad"){
+      button.classList.add("bad");
+      life--;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>⚠️ Chaos Makin Naik</strong><br>` +
+        `Respon ini memperbesar kekacauan dan menurunkan kendali.<br><br>` +
+        `<strong>Yang lebih aman:</strong><br>"${currentScene.best.text}"`;
+
+      info.innerText = "❌ Chaos meningkat. Life berkurang.";
+    }
+
+    if(chaos >= 95 || control <= 5 || stability <= 5){
+      life--;
+      info.innerText += " Kondisi kritis, life berkurang lagi.";
+    }
+
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(life <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function timeoutChaos(){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    life--;
+    chaos += 18;
+    control -= 12;
+    stability -= 12;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>⌛ Terlambat Mengontrol</strong><br>` +
+      `Dalam situasi kacau, terlalu lama diam membuat chaos semakin besar.<br><br>` +
+      `<strong>Respon terbaik:</strong><br>"${currentScene.best.text}"<br><br>` +
+      `${currentScene.explanation}`;
+
+    info.innerText = "Terlambat memilih. Chaos naik, control dan stability turun.";
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(life <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function skipChaos(){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    life--;
+    chaos += 15;
+    control -= 10;
+    stability -= 10;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>Chaos dilewati.</strong><br>` +
+      `Situasi memburuk karena tidak ada tindakan pengendali.<br><br>` +
+      `<strong>Respon terbaik:</strong><br>"${currentScene.best.text}"`;
+
+    info.innerText = "Situasi dilewati. Chaos naik.";
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(life <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function formatEffect(value){
+    if(value > 0) return `+${value}`;
+    return value;
+  }
+
+  function nextRound(){
+    if(!answered) return;
+
+    if(life <= 0){
+      finishLevel();
+      return;
+    }
+
+    round++;
+
+    if(round > 6){
+      finishLevel();
+      return;
+    }
+
+    chaos += 5 + level;
+    control -= 3;
+    stability -= 2;
+
+    loadRound();
+  }
+
+  function finishLevel(){
+    clearInterval(timer);
+
+    const controlAverage = Math.round((control + stability) / 2);
+    const chaosPenalty = Math.floor(chaos / 2);
+    const bonus = Math.max(controlAverage - chaosPenalty, 0) + life * 45 + level * 35;
+
+    score += bonus;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    let title = "🌪️ Chaos Terkendali!";
+    let desc = "Kamu berhasil mengurangi beberapa kekacauan dengan respon yang cukup cepat.";
+
+    if(chaos <= 35 && control >= 75 && stability >= 70 && life >= 3){
+      title = "🟡 Chaos Control Master!";
+      desc = "Situasi kacau berhasil kamu ubah menjadi terkendali. Insting adaptifmu tajam!";
+    } else if(life <= 0 || chaos >= 85){
+      title = "⚠️ Chaos Terlalu Besar";
+      desc = "Beberapa respon terlambat atau kurang tepat. Tapi pola kendalinya mulai terlihat.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Chaos akhir: <strong>${chaos}</strong><br>` +
+      `Control akhir: <strong>${control}</strong><br>` +
+      `Stability akhir: <strong>${stability}</strong><br>` +
+      `Bonus life: +${life * 45}<br>` +
+      `Bonus level: +${level * 35}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
