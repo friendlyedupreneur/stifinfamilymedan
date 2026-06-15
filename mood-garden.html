@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mood Garden</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.32),transparent 35%),
+        radial-gradient(circle at top left,rgba(0,180,110,.24),transparent 32%),
+        linear-gradient(180deg,#00351f,#001f15,#000d08);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(150,255,190,.2);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#ddffec;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#ddffec}
+
+    .garden-card{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.25),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.2);
+      border-radius:30px;
+      padding:20px;
+      margin-bottom:16px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(0,140,80,.2);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .garden-card::after{
+      content:"♡";
+      position:absolute;
+      right:20px;
+      top:14px;
+      color:rgba(255,255,255,.22);
+      font-size:28px;
+    }
+
+    .garden-label{
+      color:#cffff0;
+      font-size:13px;
+      margin-bottom:10px;
+    }
+
+    .garden-visual{
+      min-height:150px;
+      border-radius:26px;
+      background:
+        radial-gradient(circle at bottom,rgba(120,255,170,.22),transparent 48%),
+        rgba(0,0,0,.18);
+      border:1px dashed rgba(150,255,190,.22);
+      padding:18px;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:10px;
+      align-items:end;
+      margin-bottom:16px;
+    }
+
+    .plant{
+      height:58px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:32px;
+      background:rgba(255,255,255,.08);
+      transition:.3s;
+    }
+
+    .plant.bloom{
+      background:white;
+      box-shadow:0 0 20px rgba(76,255,130,.62);
+      animation:bloomFloat 1.3s ease-in-out infinite alternate;
+    }
+
+    @keyframes bloomFloat{
+      from{transform:translateY(0) scale(1)}
+      to{transform:translateY(-5px) scale(1.04)}
+    }
+
+    .situation-title{
+      font-size:23px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .situation-text{
+      color:#ddffec;
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .mood-meter{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:14px;
+      margin-bottom:16px;
+    }
+
+    .meter-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#ddffec;
+      margin-bottom:8px;
+    }
+
+    .bar{
+      height:10px;
+      background:rgba(255,255,255,.13);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:40%;
+      background:linear-gradient(90deg,#9dffbf,#00b86b);
+      border-radius:999px;
+      transition:.35s;
+      box-shadow:0 0 14px rgba(76,255,130,.65);
+    }
+
+    .actions-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .care-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(150,255,190,.2);
+      padding:15px 10px;
+      min-height:92px;
+      text-align:center;
+      line-height:1.35;
+      font-size:13px;
+    }
+
+    .care-btn strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:6px;
+    }
+
+    .care-btn:active{transform:scale(.96)}
+
+    .care-btn.best{
+      background:white;
+      color:#00864d;
+      box-shadow:0 0 22px rgba(76,255,130,.75);
+    }
+
+    .care-btn.okay{
+      outline:3px solid rgba(255,220,80,.8);
+    }
+
+    .care-btn.bad{
+      outline:3px solid #ff6b6b;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .feedback-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .feedback-box strong{color:white}
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .control-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .reset{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .next{
+      background:white;
+      color:#00864d;
+    }
+
+    .next:disabled{opacity:.45}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#002817;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(150,255,190,.25);
+      box-shadow:0 0 34px rgba(76,255,130,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#ddffec;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#00864d;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🌷 Mood Garden</h1>
+      <p>Rawat taman suasana hati dengan memilih tindakan yang paling empatik.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="round">1/5</h2><span>Round</span></div>
+      <div class="stat"><h2 id="heart">3</h2><span>Heart</span></div>
+    </div>
+
+    <div class="mood-meter">
+      <div class="meter-row">
+        <span>🌿 Mood Garden</span>
+        <strong id="moodText">40</strong>
+      </div>
+      <div class="bar">
+        <div class="fill" id="moodFill"></div>
+      </div>
+    </div>
+
+    <div class="garden-card">
+      <div class="garden-label">Taman Suasana Hati</div>
+
+      <div class="garden-visual" id="gardenVisual"></div>
+
+      <div class="situation-title" id="situationTitle">Mood Sedang Layu</div>
+      <div class="situation-text" id="situationText">
+        Pilih tindakan yang paling cocok untuk merawat suasana hati.
+      </div>
+    </div>
+
+    <div class="actions-grid" id="actionsGrid"></div>
+
+    <div class="feedback-box" id="feedbackBox"></div>
+
+    <div class="controls">
+      <button class="control-btn reset" onclick="skipCare()">Lewati</button>
+      <button class="control-btn next" id="nextBtn" onclick="nextRound()" disabled>Lanjut 🌷</button>
+    </div>
+
+    <div class="info" id="info">
+      Garden akan mekar ketika responmu membuat hati merasa aman dan dipahami.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">🌷 Garden Mekar!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const gardenSituations = [
+    {
+      title:"Tanaman Kecewa",
+      text:"Seseorang merasa kecewa karena usahanya tidak dihargai. Mood garden mulai layu.",
+      best:{
+        title:"Validasi Perasaan",
+        desc:"Akui rasa kecewanya dulu.",
+        text:"Aku paham kamu kecewa. Rasanya nggak enak ketika usaha besar terasa tidak dilihat.",
+        effect:25
+      },
+      okay:{
+        title:"Beri Semangat",
+        desc:"Dorong untuk tetap kuat.",
+        text:"Tetap semangat, nanti juga ada yang menghargai.",
+        effect:10
+      },
+      bad:{
+        title:"Meremehkan",
+        desc:"Anggap itu bukan masalah.",
+        text:"Ah, nggak usah dipikirin. Biasa aja.",
+        effect:-18
+      },
+      explanation:"Saat orang kecewa, hati biasanya butuh diakui dulu sebelum diberi semangat."
+    },
+    {
+      title:"Daun Cemas",
+      text:"Seseorang takut menghadapi hal baru dan terus membayangkan kemungkinan buruk.",
+      best:{
+        title:"Tenangkan Perlahan",
+        desc:"Bantu ia merasa aman.",
+        text:"Takut itu wajar. Kita hadapi pelan-pelan, satu langkah dulu yang paling mudah.",
+        effect:24
+      },
+      okay:{
+        title:"Kasih Instruksi Cepat",
+        desc:"Langsung beri solusi.",
+        text:"Ya sudah, lakukan saja ini dulu, nanti beres.",
+        effect:8
+      },
+      bad:{
+        title:"Tekan Perasaan",
+        desc:"Paksa agar tidak takut.",
+        text:"Jangan takut. Kalau takut terus, kapan majunya?",
+        effect:-20
+      },
+      explanation:"Rasa cemas lebih mudah mereda ketika orang merasa aman, bukan ditekan."
+    },
+    {
+      title:"Bunga Marah",
+      text:"Seseorang merasa tidak didengar dan mulai berbicara dengan nada tinggi.",
+      best:{
+        title:"Dengarkan Aktif",
+        desc:"Tunjukkan kamu mau memahami.",
+        text:"Aku dengar kamu merasa tidak didengarkan. Aku mau paham bagian mana yang paling mengganggu.",
+        effect:26
+      },
+      okay:{
+        title:"Minta Tenang",
+        desc:"Ajak menurunkan emosi.",
+        text:"Tenang dulu, jangan marah-marah.",
+        effect:5
+      },
+      bad:{
+        title:"Balas Menyalahkan",
+        desc:"Tegur dengan keras.",
+        text:"Kamu juga jangan berlebihan begitu.",
+        effect:-22
+      },
+      explanation:"Marah sering muncul karena ada batas yang terasa dilanggar. Didengar dulu biasanya lebih menenangkan."
+    },
+    {
+      title:"Akar Kesepian",
+      text:"Seseorang terlihat menjauh dari kelompok dan merasa tidak punya tempat.",
+      best:{
+        title:"Temani Tanpa Memaksa",
+        desc:"Beri ruang aman.",
+        text:"Aku ada di sini. Kamu nggak harus cerita sekarang, tapi kamu nggak sendirian.",
+        effect:25
+      },
+      okay:{
+        title:"Ajak Gabung",
+        desc:"Langsung tarik ke kelompok.",
+        text:"Ayo ikut gabung, biar nggak sendirian.",
+        effect:9
+      },
+      bad:{
+        title:"Tinggalkan",
+        desc:"Anggap ia ingin sendiri total.",
+        text:"Ya sudah, kalau mau sendiri ya sendiri saja.",
+        effect:-18
+      },
+      explanation:"Saat kesepian, kehadiran yang lembut sering lebih berarti daripada dorongan yang memaksa."
+    },
+    {
+      title:"Rumput Lelah",
+      text:"Seseorang terlihat kelelahan karena terlalu banyak membantu orang lain.",
+      best:{
+        title:"Ingatkan Batas",
+        desc:"Bantu ia menjaga diri.",
+        text:"Kamu sudah banyak membantu. Sekarang kamu juga berhak istirahat dan dirawat.",
+        effect:24
+      },
+      okay:{
+        title:"Puji Kebaikan",
+        desc:"Apresiasi usahanya.",
+        text:"Kamu memang orang baik, semua orang terbantu karena kamu.",
+        effect:11
+      },
+      bad:{
+        title:"Tambah Beban",
+        desc:"Minta ia tetap kuat.",
+        text:"Kamu kan kuat, bantu sedikit lagi pasti bisa.",
+        effect:-20
+      },
+      explanation:"Orang yang lelah membantu perlu diingatkan bahwa dirinya juga penting."
+    },
+    {
+      title:"Kelopak Malu",
+      text:"Seseorang malu setelah melakukan kesalahan kecil di depan orang lain.",
+      best:{
+        title:"Normalisasi",
+        desc:"Buat ia tidak merasa sendirian.",
+        text:"Nggak apa-apa, semua orang bisa salah. Kesalahan kecil itu tidak mengurangi nilaimu.",
+        effect:23
+      },
+      okay:{
+        title:"Alihkan Topik",
+        desc:"Bantu suasana tidak tegang.",
+        text:"Sudah, kita bahas yang lain saja.",
+        effect:8
+      },
+      bad:{
+        title:"Bercanda Keras",
+        desc:"Jadikan bahan tertawaan.",
+        text:"Wah, malu-maluin juga tadi, ya.",
+        effect:-24
+      },
+      explanation:"Malu mereda ketika orang merasa tetap diterima meski melakukan kesalahan."
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let round = 1;
+  let heart = 3;
+  let mood = 40;
+  let currentSet = [];
+  let currentSituation = null;
+  let answered = false;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const roundEl = document.getElementById("round");
+  const heartEl = document.getElementById("heart");
+  const moodText = document.getElementById("moodText");
+  const moodFill = document.getElementById("moodFill");
+  const gardenVisual = document.getElementById("gardenVisual");
+  const situationTitle = document.getElementById("situationTitle");
+  const situationText = document.getElementById("situationText");
+  const actionsGrid = document.getElementById("actionsGrid");
+  const feedbackBox = document.getElementById("feedbackBox");
+  const nextBtn = document.getElementById("nextBtn");
+  const info = document.getElementById("info");
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function setupLevel(){
+    round = 1;
+    heart = 3;
+    mood = 40;
+    answered = false;
+    currentSet = shuffle([...gardenSituations]).slice(0,5);
+
+    levelEl.innerText = level;
+    heartEl.innerText = heart;
+    gameOver.style.display = "none";
+
+    loadRound();
+  }
+
+  function updateMood(){
+    mood = Math.max(0, Math.min(100, mood));
+    moodText.innerText = mood;
+    moodFill.style.width = mood + "%";
+    renderGarden();
+  }
+
+  function renderGarden(){
+    gardenVisual.innerHTML = "";
+
+    const bloomCount = Math.max(1, Math.ceil(mood / 20));
+    const plants = ["🌱","🌿","🌷","🌸","🌻"];
+
+    for(let i = 0; i < 5; i++){
+      const plant = document.createElement("div");
+      plant.className = "plant";
+
+      if(i < bloomCount){
+        plant.classList.add("bloom");
+        plant.innerText = plants[Math.min(i, plants.length - 1)];
+      } else {
+        plant.innerText = "🥀";
+      }
+
+      gardenVisual.appendChild(plant);
+    }
+  }
+
+  function loadRound(){
+    answered = false;
+    currentSituation = currentSet[round - 1];
+
+    roundEl.innerText = `${round}/5`;
+    heartEl.innerText = heart;
+    nextBtn.disabled = true;
+
+    situationTitle.innerText = currentSituation.title;
+    situationText.innerText = currentSituation.text;
+
+    feedbackBox.style.display = "none";
+    feedbackBox.innerHTML = "";
+
+    renderActions();
+    updateMood();
+
+    info.innerText = "Pilih tindakan yang paling merawat suasana hati.";
+  }
+
+  function renderActions(){
+    actionsGrid.innerHTML = "";
+
+    const actions = [
+      {type:"best", ...currentSituation.best},
+      {type:"okay", ...currentSituation.okay},
+      {type:"bad", ...currentSituation.bad}
+    ];
+
+    shuffle(actions).forEach(action => {
+      const btn = document.createElement("button");
+      btn.className = "care-btn";
+      btn.innerHTML = `
+        <strong>${action.title}</strong>
+        ${action.desc}
+      `;
+
+      btn.onclick = () => chooseCare(action, btn);
+      actionsGrid.appendChild(btn);
+    });
+  }
+
+  function chooseCare(action, button){
+    if(answered) return;
+
+    answered = true;
+
+    mood += action.effect;
+
+    if(action.type === "best"){
+      button.classList.add("best");
+
+      const earned = 45 + level * 6 + heart * 8;
+      score += earned;
+      scoreEl.innerText = score;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🌷 Tindakan Paling Merawat</strong><br>` +
+        `"${action.text}"<br><br>` +
+        `${currentSituation.explanation}<br><br>` +
+        `Mood +${action.effect} • Score +${earned}`;
+
+      info.innerText = "✅ Garden mulai mekar karena hati merasa dipahami.";
+    }
+
+    if(action.type === "okay"){
+      button.classList.add("okay");
+
+      const earned = 20 + level * 3;
+      score += earned;
+      scoreEl.innerText = score;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🙂 Cukup Membantu</strong><br>` +
+        `"${action.text}"<br><br>` +
+        `Respon ini tidak buruk, tapi belum menyentuh kebutuhan emosi terdalam.<br><br>` +
+        `<strong>Yang lebih merawat:</strong><br>"${currentSituation.best.text}"`;
+
+      info.innerText = "Cukup baik, tapi garden belum mekar penuh.";
+    }
+
+    if(action.type === "bad"){
+      button.classList.add("bad");
+      heart--;
+      heartEl.innerText = heart;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🥀 Tindakan Kurang Tepat</strong><br>` +
+        `"${action.text}"<br><br>` +
+        `Respon ini bisa membuat suasana hati makin tertutup.<br><br>` +
+        `<strong>Yang lebih lembut:</strong><br>"${currentSituation.best.text}"`;
+
+      info.innerText = "❌ Garden makin layu. Heart berkurang.";
+
+      if(heart <= 0){
+        updateMood();
+        setTimeout(finishLevel, 900);
+        return;
+      }
+    }
+
+    updateMood();
+    nextBtn.disabled = false;
+  }
+
+  function skipCare(){
+    if(answered) return;
+
+    answered = true;
+    heart--;
+    mood -= 12;
+    heartEl.innerText = heart;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>Situasi dilewati.</strong><br>` +
+      `Tindakan terbaik sebenarnya:<br>"${currentSituation.best.text}"<br><br>` +
+      `${currentSituation.explanation}`;
+
+    info.innerText = "Situasi dilewati. Garden sedikit layu.";
+    updateMood();
+    nextBtn.disabled = false;
+
+    if(heart <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function nextRound(){
+    if(!answered) return;
+
+    round++;
+
+    if(round > 5){
+      finishLevel();
+      return;
+    }
+
+    loadRound();
+  }
+
+  function finishLevel(){
+    const bonus = heart * 25 + mood + level * 30;
+    score += bonus;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    let title = "🌷 Garden Mekar!";
+    let desc = "Kamu berhasil merawat suasana hati dan membuat garden kembali hidup.";
+
+    if(mood >= 85 && heart >= 3){
+      title = "🌿 Healing Garden Master!";
+      desc = "Taman suasana hati mekar sempurna. Responmu lembut, tepat, dan sangat merawat.";
+    } else if(heart === 0 || mood <= 35){
+      title = "🥀 Garden Masih Layu";
+      desc = "Beberapa respon belum cukup merawat. Tapi kamu mulai memahami kebutuhan emosinya.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Mood akhir: <strong>${mood}</strong><br>` +
+      `Bonus heart: +${heart * 25}<br>` +
+      `Bonus level: +${level * 30}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
