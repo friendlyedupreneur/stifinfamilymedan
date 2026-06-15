@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emotion Match</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.32),transparent 35%),
+        radial-gradient(circle at top left,rgba(0,180,110,.24),transparent 32%),
+        linear-gradient(180deg,#00351f,#001f15,#000d08);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(150,255,190,.2);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#ddffec;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#ddffec}
+
+    .emotion-card{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.26),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.2);
+      border-radius:30px;
+      padding:24px 18px;
+      margin-bottom:16px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(0,140,80,.2);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .emotion-card::after{
+      content:"♡";
+      position:absolute;
+      right:20px;
+      top:14px;
+      color:rgba(255,255,255,.22);
+      font-size:28px;
+    }
+
+    .face-label{
+      font-size:13px;
+      color:#cffff0;
+      margin-bottom:12px;
+    }
+
+    .face{
+      width:140px;
+      height:140px;
+      margin:0 auto 16px;
+      border-radius:38px;
+      background:white;
+      color:#00864d;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:74px;
+      box-shadow:
+        0 0 28px rgba(76,255,130,.42),
+        inset 0 0 18px rgba(0,160,90,.12);
+      animation:softFloat 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes softFloat{
+      from{transform:translateY(0) scale(1)}
+      to{transform:translateY(-7px) scale(1.03)}
+    }
+
+    .scenario-title{
+      font-size:23px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .scenario-text{
+      color:#ddffec;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .choices{
+      display:grid;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .choice-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(150,255,190,.2);
+      padding:15px;
+      text-align:left;
+      line-height:1.45;
+      font-size:14px;
+    }
+
+    .choice-btn strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:5px;
+    }
+
+    .choice-btn:active{transform:scale(.97)}
+
+    .choice-btn.correct{
+      background:white;
+      color:#00864d;
+      box-shadow:0 0 22px rgba(76,255,130,.75);
+    }
+
+    .choice-btn.wrong{
+      outline:3px solid #ff6b6b;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .meaning-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .meaning-box strong{color:white}
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .action-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .skip{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .next{
+      background:white;
+      color:#00864d;
+    }
+
+    .next:disabled{
+      opacity:.45;
+    }
+
+    .info{
+      text-align:center;
+      margin-top:14px;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#002817;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(150,255,190,.25);
+      box-shadow:0 0 34px rgba(76,255,130,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#ddffec;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#00864d;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>😊 Emotion Match</h1>
+      <p>Cocokkan ekspresi dan situasi dengan emosi yang paling tepat.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="round">1/5</h2><span>Round</span></div>
+      <div class="stat"><h2 id="heart">3</h2><span>Heart</span></div>
+    </div>
+
+    <div class="emotion-card">
+      <div class="face-label">Ekspresi Karakter</div>
+      <div class="face" id="face">😊</div>
+      <div class="scenario-title" id="scenarioTitle">Situasi</div>
+      <div class="scenario-text" id="scenarioText">
+        Baca situasi, lalu pilih emosi yang paling sesuai.
+      </div>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="meaning-box" id="meaningBox"></div>
+
+    <div class="actions">
+      <button class="action-btn skip" onclick="skipEmotion()">Lewati</button>
+      <button class="action-btn next" id="nextBtn" onclick="nextRound()" disabled>Lanjut 💚</button>
+    </div>
+
+    <div class="info" id="info">
+      Feeling kuat saat mampu membaca emosi di balik ekspresi.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">💚 Empati Terbaca!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const emotionBank = [
+    {
+      face:"😊",
+      title:"Senyum Tenang",
+      text:"Temanmu baru saja mendapat kabar baik dan terlihat lebih ringan dari biasanya.",
+      answer:"bahagia",
+      explanation:"Ekspresi senyum lembut dan suasana yang ringan menunjukkan rasa bahagia atau lega.",
+      choices:[
+        {id:"bahagia", title:"Bahagia", desc:"Merasa senang, lega, dan hati lebih ringan."},
+        {id:"marah", title:"Marah", desc:"Merasa terganggu, panas, atau ingin melawan."},
+        {id:"takut", title:"Takut", desc:"Merasa cemas karena ada ancaman atau risiko."}
+      ]
+    },
+    {
+      face:"😔",
+      title:"Tatapan Menunduk",
+      text:"Sahabatmu diam sejak tadi. Ia tersenyum kecil, tapi matanya terlihat berat.",
+      answer:"sedih",
+      explanation:"Senyum kecil tidak selalu berarti bahagia. Mata berat dan sikap diam bisa menunjukkan kesedihan yang ditahan.",
+      choices:[
+        {id:"sedih", title:"Sedih", desc:"Merasa kehilangan, kecewa, atau butuh ditemani."},
+        {id:"antusias", title:"Antusias", desc:"Penuh semangat dan ingin segera bergerak."},
+        {id:"bangga", title:"Bangga", desc:"Merasa puas karena berhasil mencapai sesuatu."}
+      ]
+    },
+    {
+      face:"😟",
+      title:"Wajah Cemas",
+      text:"Adikmu berkali-kali mengecek tasnya sebelum berangkat. Ia takut ada yang tertinggal.",
+      answer:"cemas",
+      explanation:"Perilaku mengecek berulang dan takut salah menunjukkan rasa cemas.",
+      choices:[
+        {id:"cemas", title:"Cemas", desc:"Khawatir terhadap sesuatu yang belum terjadi."},
+        {id:"tenang", title:"Tenang", desc:"Merasa aman dan tidak terbebani."},
+        {id:"senang", title:"Senang", desc:"Merasa positif dan nyaman dengan situasi."}
+      ]
+    },
+    {
+      face:"😡",
+      title:"Alis Mengencang",
+      text:"Temanmu dipotong pembicaraannya berkali-kali. Ia mulai diam, napasnya pendek, dan wajahnya tegang.",
+      answer:"marah",
+      explanation:"Wajah tegang, napas pendek, dan merasa tidak dihargai sering memicu rasa marah.",
+      choices:[
+        {id:"marah", title:"Marah", desc:"Merasa batas dirinya dilanggar atau tidak dihargai."},
+        {id:"malu", title:"Malu", desc:"Merasa ingin menghindar karena diperhatikan orang."},
+        {id:"rindu", title:"Rindu", desc:"Merasa ingin bertemu seseorang yang jauh."}
+      ]
+    },
+    {
+      face:"😳",
+      title:"Pipi Memerah",
+      text:"Seseorang dipuji di depan banyak orang. Ia tersenyum, tapi juga menunduk dan tampak salah tingkah.",
+      answer:"malu",
+      explanation:"Salah tingkah, menunduk, dan pipi memerah menunjukkan rasa malu atau tersipu.",
+      choices:[
+        {id:"malu", title:"Malu", desc:"Merasa tersorot dan sedikit canggung."},
+        {id:"bosan", title:"Bosan", desc:"Merasa tidak tertarik dan kehilangan energi."},
+        {id:"marah", title:"Marah", desc:"Merasa panas karena tidak setuju atau tersinggung."}
+      ]
+    },
+    {
+      face:"😮",
+      title:"Mulut Terbuka",
+      text:"Ia baru saja mendengar kabar yang sama sekali tidak diduga. Matanya membesar dan ia berhenti bicara sejenak.",
+      answer:"terkejut",
+      explanation:"Mata membesar, mulut terbuka, dan berhenti sejenak adalah tanda umum rasa terkejut.",
+      choices:[
+        {id:"terkejut", title:"Terkejut", desc:"Merespons sesuatu yang datang tiba-tiba."},
+        {id:"damai", title:"Damai", desc:"Merasa tenteram dan tidak terganggu."},
+        {id:"iri", title:"Iri", desc:"Merasa tidak nyaman melihat pencapaian orang lain."}
+      ]
+    },
+    {
+      face:"🥺",
+      title:"Mata Memohon",
+      text:"Anak kecil melihat mainannya rusak. Ia tidak menangis keras, tapi matanya berkaca-kaca dan ingin dipahami.",
+      answer:"butuh_dipeluk",
+      explanation:"Ekspresi berkaca-kaca dan ingin dipahami menunjukkan kebutuhan untuk ditenangkan dan diberi rasa aman.",
+      choices:[
+        {id:"butuh_dipeluk", title:"Butuh Ditenangkan", desc:"Ingin dipahami, ditemani, dan diberi rasa aman."},
+        {id:"percaya_diri", title:"Percaya Diri", desc:"Yakin pada kemampuan diri dan siap tampil."},
+        {id:"kesal", title:"Kesal", desc:"Terganggu karena sesuatu tidak berjalan sesuai harapan."}
+      ]
+    },
+    {
+      face:"😌",
+      title:"Napas Lega",
+      text:"Setelah masalah selesai, ia menarik napas panjang dan tersenyum perlahan.",
+      answer:"lega",
+      explanation:"Napas panjang dan senyum perlahan setelah masalah selesai menunjukkan rasa lega.",
+      choices:[
+        {id:"lega", title:"Lega", desc:"Beban terasa berkurang setelah situasi membaik."},
+        {id:"panik", title:"Panik", desc:"Merasa kacau dan sulit berpikir jernih."},
+        {id:"curiga", title:"Curiga", desc:"Merasa ada sesuatu yang tidak beres."}
+      ]
+    },
+    {
+      face:"😐",
+      title:"Wajah Datar",
+      text:"Ia ikut berkumpul, tapi tidak banyak merespon. Pandangannya kosong dan beberapa kali menguap.",
+      answer:"bosan",
+      explanation:"Wajah datar, minim respon, dan menguap bisa menunjukkan rasa bosan atau kurang tertarik.",
+      choices:[
+        {id:"bosan", title:"Bosan", desc:"Kurang tertarik dan energinya menurun."},
+        {id:"bahagia", title:"Bahagia", desc:"Merasa senang dan penuh energi positif."},
+        {id:"takut", title:"Takut", desc:"Merasa terancam atau tidak aman."}
+      ]
+    },
+    {
+      face:"🤗",
+      title:"Tangan Terbuka",
+      text:"Temanmu mendekat dengan wajah hangat setelah kamu bercerita panjang tentang hari yang berat.",
+      answer:"peduli",
+      explanation:"Gestur terbuka dan wajah hangat menunjukkan kepedulian serta kesiapan memberi dukungan.",
+      choices:[
+        {id:"peduli", title:"Peduli", desc:"Ingin memahami, mendukung, dan menemani."},
+        {id:"menghindar", title:"Menghindar", desc:"Menjauh karena tidak ingin terlibat."},
+        {id:"bingung", title:"Bingung", desc:"Belum memahami situasi atau arah yang harus dipilih."}
+      ]
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let round = 1;
+  let heart = 3;
+  let currentSet = [];
+  let currentEmotion = null;
+  let answered = false;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const roundEl = document.getElementById("round");
+  const heartEl = document.getElementById("heart");
+
+  const faceEl = document.getElementById("face");
+  const scenarioTitle = document.getElementById("scenarioTitle");
+  const scenarioText = document.getElementById("scenarioText");
+  const choicesEl = document.getElementById("choices");
+  const meaningBox = document.getElementById("meaningBox");
+  const nextBtn = document.getElementById("nextBtn");
+  const info = document.getElementById("info");
+
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function setupLevel(){
+    round = 1;
+    heart = 3;
+    answered = false;
+    currentSet = shuffle([...emotionBank]).slice(0,5);
+
+    levelEl.innerText = level;
+    heartEl.innerText = heart;
+    gameOver.style.display = "none";
+
+    loadRound();
+  }
+
+  function loadRound(){
+    answered = false;
+    currentEmotion = currentSet[round - 1];
+
+    roundEl.innerText = `${round}/5`;
+    heartEl.innerText = heart;
+    nextBtn.disabled = true;
+
+    faceEl.innerText = currentEmotion.face;
+    scenarioTitle.innerText = currentEmotion.title;
+    scenarioText.innerText = currentEmotion.text;
+
+    meaningBox.style.display = "none";
+    meaningBox.innerHTML = "";
+
+    renderChoices();
+
+    info.innerText = "Baca ekspresi dan situasinya, lalu pilih emosi yang paling cocok.";
+  }
+
+  function renderChoices(){
+    choicesEl.innerHTML = "";
+
+    shuffle([...currentEmotion.choices]).forEach(choice => {
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+
+      btn.innerHTML = `
+        <strong>${choice.title}</strong>
+        ${choice.desc}
+      `;
+
+      btn.onclick = () => chooseEmotion(choice.id, btn);
+
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function chooseEmotion(choiceId, button){
+    if(answered) return;
+
+    answered = true;
+
+    const correct = choiceId === currentEmotion.answer;
+
+    if(correct){
+      button.classList.add("correct");
+
+      const earned = 35 + level * 5 + heart * 5;
+      score += earned;
+      scoreEl.innerText = score;
+
+      meaningBox.style.display = "block";
+      meaningBox.innerHTML =
+        `<strong>Emosi Terbaca Tepat 💚</strong><br>` +
+        `${currentEmotion.explanation}<br><br>` +
+        `Score +${earned}`;
+
+      info.innerText = "✅ Tepat. Kamu berhasil membaca emosi di balik ekspresi.";
+    } else {
+      button.classList.add("wrong");
+      heart--;
+      heartEl.innerText = heart;
+
+      const correctText = currentEmotion.choices.find(
+        item => item.id === currentEmotion.answer
+      );
+
+      meaningBox.style.display = "block";
+      meaningBox.innerHTML =
+        `<strong>Belum tepat.</strong><br>` +
+        `Emosi yang lebih sesuai: <strong>${correctText.title}</strong><br>` +
+        `${currentEmotion.explanation}`;
+
+      info.innerText = "❌ Belum pas, tapi kamu sudah belajar membaca tandanya.";
+
+      if(heart <= 0){
+        setTimeout(finishLevel, 900);
+        return;
+      }
+    }
+
+    nextBtn.disabled = false;
+  }
+
+  function skipEmotion(){
+    if(answered) return;
+
+    answered = true;
+    heart--;
+    heartEl.innerText = heart;
+
+    const correctText = currentEmotion.choices.find(
+      item => item.id === currentEmotion.answer
+    );
+
+    meaningBox.style.display = "block";
+    meaningBox.innerHTML =
+      `<strong>Emosi dilewati.</strong><br>` +
+      `Emosi yang paling sesuai: <strong>${correctText.title}</strong><br>` +
+      `${currentEmotion.explanation}`;
+
+    info.innerText = "Emosi dilewati. Heart berkurang 1.";
+    nextBtn.disabled = false;
+
+    if(heart <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function nextRound(){
+    if(!answered) return;
+
+    round++;
+
+    if(round > 5){
+      finishLevel();
+      return;
+    }
+
+    loadRound();
+  }
+
+  function finishLevel(){
+    const bonus = heart * 25 + level * 30;
+    score += bonus;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    let title = "💚 Empati Terbaca!";
+    let desc = "Kamu berhasil membaca beberapa emosi dan memahami tanda-tandanya.";
+
+    if(heart >= 3){
+      title = "🌿 Empathy Master!";
+      desc = "Pembacaan emosimu sangat halus. Kamu mampu menangkap ekspresi dan situasi dengan tepat.";
+    } else if(heart === 0){
+      title = "🌧️ Empati Melemah";
+      desc = "Beberapa emosi belum terbaca utuh. Namun kamu sudah mulai memahami polanya.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Bonus level: +${level * 30}<br>` +
+      `Bonus heart: +${heart * 25}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
