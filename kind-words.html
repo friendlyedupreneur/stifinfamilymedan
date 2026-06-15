@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kind Words</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.32),transparent 35%),
+        radial-gradient(circle at top left,rgba(0,180,110,.24),transparent 32%),
+        linear-gradient(180deg,#00351f,#001f15,#000d08);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(150,255,190,.2);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#ddffec;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#ddffec}
+
+    .person-card{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.26),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.2);
+      border-radius:30px;
+      padding:22px 18px;
+      margin-bottom:16px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(0,140,80,.2);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .person-card::after{
+      content:"♡";
+      position:absolute;
+      right:20px;
+      top:14px;
+      color:rgba(255,255,255,.22);
+      font-size:28px;
+    }
+
+    .person-face{
+      width:120px;
+      height:120px;
+      margin:0 auto 16px;
+      border-radius:36px;
+      background:white;
+      color:#00864d;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:66px;
+      box-shadow:
+        0 0 28px rgba(76,255,130,.42),
+        inset 0 0 18px rgba(0,160,90,.12);
+      animation:softFloat 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes softFloat{
+      from{transform:translateY(0) scale(1)}
+      to{transform:translateY(-7px) scale(1.03)}
+    }
+
+    .situation-label{
+      color:#cffff0;
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .situation-title{
+      font-size:23px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .situation-text{
+      color:#ddffec;
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .mood-meter{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:14px;
+      margin-bottom:16px;
+    }
+
+    .meter-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#ddffec;
+      margin-bottom:8px;
+    }
+
+    .bar{
+      height:10px;
+      background:rgba(255,255,255,.13);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:50%;
+      background:linear-gradient(90deg,#9dffbf,#00b86b);
+      border-radius:999px;
+      transition:.35s;
+      box-shadow:0 0 14px rgba(76,255,130,.65);
+    }
+
+    .choices{
+      display:grid;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .choice-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(150,255,190,.2);
+      padding:15px;
+      text-align:left;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .choice-btn strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:6px;
+    }
+
+    .choice-btn:active{transform:scale(.97)}
+
+    .choice-btn.best{
+      background:white;
+      color:#00864d;
+      box-shadow:0 0 22px rgba(76,255,130,.75);
+    }
+
+    .choice-btn.okay{
+      outline:3px solid rgba(255,220,80,.8);
+    }
+
+    .choice-btn.bad{
+      outline:3px solid #ff6b6b;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .feedback-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .feedback-box strong{color:white}
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .action-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .skip{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .next{
+      background:white;
+      color:#00864d;
+    }
+
+    .next:disabled{opacity:.45}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#002817;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(150,255,190,.25);
+      box-shadow:0 0 34px rgba(76,255,130,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#ddffec;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#00864d;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>💬 Kind Words</h1>
+      <p>Pilih kata yang paling menenangkan untuk menjaga hati dan hubungan.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="round">1/5</h2><span>Round</span></div>
+      <div class="stat"><h2 id="heart">3</h2><span>Heart</span></div>
+    </div>
+
+    <div class="mood-meter">
+      <div class="meter-row">
+        <span>💚 Mood Orang Tersebut</span>
+        <strong id="moodText">50</strong>
+      </div>
+      <div class="bar">
+        <div class="fill" id="moodFill"></div>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-face" id="personFace">😔</div>
+      <div class="situation-label">Situasi Emosional</div>
+      <div class="situation-title" id="situationTitle">Butuh Ditenangkan</div>
+      <div class="situation-text" id="situationText">
+        Pilih kalimat yang paling lembut dan tepat.
+      </div>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="feedback-box" id="feedbackBox"></div>
+
+    <div class="actions">
+      <button class="action-btn skip" onclick="skipRound()">Lewati</button>
+      <button class="action-btn next" id="nextBtn" onclick="nextRound()" disabled>Lanjut 💚</button>
+    </div>
+
+    <div class="info" id="info">
+      Kata yang tepat bukan hanya benar, tapi juga membuat orang merasa dipahami.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">💚 Kata Menenangkan!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const situations = [
+    {
+      face:"😔",
+      title:"Teman Gagal Ujian",
+      text:"Temanmu terlihat kecewa karena hasil ujiannya tidak sesuai harapan. Ia berkata, 'Aku kayaknya memang nggak bisa.'",
+      best:"Aku tahu ini berat. Tapi satu hasil bukan berarti kamu gagal sebagai pribadi. Kita lihat pelan-pelan bagian mana yang bisa diperbaiki, ya.",
+      okay:"Nggak apa-apa, nanti juga bisa belajar lagi.",
+      bad:"Makanya lain kali belajar lebih serius.",
+      explanation:"Respon terbaik mengakui rasa kecewanya dulu, lalu memberi harapan tanpa menghakimi."
+    },
+    {
+      face:"😟",
+      title:"Adik Takut Tampil",
+      text:"Adikmu akan tampil di depan kelas. Tangannya dingin dan ia berkata, 'Aku takut salah.'",
+      best:"Takut itu wajar. Kamu nggak harus sempurna, cukup mulai pelan-pelan. Aku percaya kamu bisa melewatinya.",
+      okay:"Santai aja, jangan takut.",
+      bad:"Gitu aja kok takut, sih?",
+      explanation:"Kalimat terbaik menormalisasi rasa takut dan memberi dukungan yang aman."
+    },
+    {
+      face:"😡",
+      title:"Sahabat Sedang Kesal",
+      text:"Sahabatmu marah karena merasa tidak didengarkan dalam diskusi kelompok.",
+      best:"Aku paham kamu kesal karena merasa tidak dihargai. Mau cerita dulu bagian mana yang paling bikin kamu terganggu?",
+      okay:"Udah, sabar aja dulu.",
+      bad:"Kamu terlalu baper, deh.",
+      explanation:"Respon terbaik memvalidasi perasaan, lalu membuka ruang cerita tanpa menyalahkan."
+    },
+    {
+      face:"🥺",
+      title:"Anak Kehilangan Mainan",
+      text:"Seorang anak terlihat hampir menangis karena mainan kesayangannya hilang.",
+      best:"Kamu sedih karena mainan itu penting buat kamu, ya. Kita cari bareng-bareng pelan-pelan.",
+      okay:"Jangan nangis, nanti kita beli lagi.",
+      bad:"Kan cuma mainan, nggak usah lebay.",
+      explanation:"Respon terbaik memahami nilai emosional mainan itu bagi anak, bukan meremehkannya."
+    },
+    {
+      face:"😳",
+      title:"Teman Malu Dipuji",
+      text:"Temanmu dipuji di depan banyak orang, lalu ia menunduk dan tampak salah tingkah.",
+      best:"Aku senang orang lain lihat usahamu. Nggak apa-apa kalau kamu malu, kamu memang pantas diapresiasi.",
+      okay:"Cie, malu-malu nih.",
+      bad:"Kenapa malu? Aneh banget.",
+      explanation:"Respon terbaik tetap menghargai rasa malunya sambil memberi apresiasi yang lembut."
+    },
+    {
+      face:"😞",
+      title:"Pasangan Merasa Tidak Diperhatikan",
+      text:"Pasanganmu berkata, 'Aku merasa akhir-akhir ini kamu jauh.'",
+      best:"Makasih sudah jujur. Aku nggak mau kamu merasa sendirian. Boleh kita ngobrol pelan-pelan malam ini?",
+      okay:"Aku kan sibuk, tapi bukan berarti nggak peduli.",
+      bad:"Kamu mulai drama lagi.",
+      explanation:"Respon terbaik menerima perasaannya, tidak defensif, dan mengajak bicara dengan hangat."
+    },
+    {
+      face:"😰",
+      title:"Teman Panik Karena Deadline",
+      text:"Temanmu panik karena tugasnya belum selesai dan waktunya tinggal sedikit.",
+      best:"Oke, tarik napas dulu. Kita pecah jadi bagian kecil. Mana yang paling penting diselesaikan dulu?",
+      okay:"Cepat kerjain aja, waktunya mepet.",
+      bad:"Lah, kenapa baru panik sekarang?",
+      explanation:"Respon terbaik menenangkan dulu, lalu membantu menyusun langkah kecil yang bisa dilakukan."
+    },
+    {
+      face:"😐",
+      title:"Anak Terlihat Diam",
+      text:"Anak biasanya ceria, tapi hari ini ia lebih diam dan tidak banyak menjawab.",
+      best:"Hari ini kamu terlihat lebih diam. Nggak harus cerita sekarang, tapi kalau mau cerita, aku siap dengar.",
+      okay:"Kamu kenapa? Cerita dong.",
+      bad:"Jangan diam aja, bikin bingung.",
+      explanation:"Respon terbaik memberi ruang aman tanpa memaksa."
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let round = 1;
+  let heart = 3;
+  let mood = 50;
+  let currentSet = [];
+  let currentSituation = null;
+  let answered = false;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const roundEl = document.getElementById("round");
+  const heartEl = document.getElementById("heart");
+  const moodText = document.getElementById("moodText");
+  const moodFill = document.getElementById("moodFill");
+  const personFace = document.getElementById("personFace");
+  const situationTitle = document.getElementById("situationTitle");
+  const situationText = document.getElementById("situationText");
+  const choicesEl = document.getElementById("choices");
+  const feedbackBox = document.getElementById("feedbackBox");
+  const nextBtn = document.getElementById("nextBtn");
+  const info = document.getElementById("info");
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function setupLevel(){
+    round = 1;
+    heart = 3;
+    mood = 50;
+    answered = false;
+    currentSet = shuffle([...situations]).slice(0,5);
+
+    levelEl.innerText = level;
+    heartEl.innerText = heart;
+    gameOver.style.display = "none";
+
+    loadRound();
+  }
+
+  function updateMood(){
+    mood = Math.max(0, Math.min(100, mood));
+    moodText.innerText = mood;
+    moodFill.style.width = mood + "%";
+  }
+
+  function loadRound(){
+    answered = false;
+    currentSituation = currentSet[round - 1];
+
+    roundEl.innerText = `${round}/5`;
+    heartEl.innerText = heart;
+    nextBtn.disabled = true;
+
+    personFace.innerText = currentSituation.face;
+    situationTitle.innerText = currentSituation.title;
+    situationText.innerText = currentSituation.text;
+
+    feedbackBox.style.display = "none";
+    feedbackBox.innerHTML = "";
+
+    renderChoices();
+    updateMood();
+
+    info.innerText = "Pilih kalimat yang paling membuat orang merasa dipahami.";
+  }
+
+  function renderChoices(){
+    choicesEl.innerHTML = "";
+
+    const choices = [
+      {type:"best", text:currentSituation.best, label:"Respon A"},
+      {type:"okay", text:currentSituation.okay, label:"Respon B"},
+      {type:"bad", text:currentSituation.bad, label:"Respon C"}
+    ];
+
+    shuffle(choices).forEach(choice => {
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+      btn.innerHTML = `
+        <strong>${choice.label}</strong>
+        "${choice.text}"
+      `;
+
+      btn.onclick = () => chooseWord(choice.type, btn, choice.text);
+
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function chooseWord(type, button, text){
+    if(answered) return;
+
+    answered = true;
+
+    if(type === "best"){
+      button.classList.add("best");
+
+      mood += 20;
+
+      const earned = 45 + level * 5 + heart * 8;
+      score += earned;
+      scoreEl.innerText = score;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>💚 Respon Paling Menenangkan</strong><br>` +
+        `${currentSituation.explanation}<br><br>` +
+        `Mood +20 • Score +${earned}`;
+
+      info.innerText = "✅ Kata-katamu membuat orang merasa dipahami.";
+    }
+
+    if(type === "okay"){
+      button.classList.add("okay");
+
+      mood += 8;
+
+      const earned = 18 + level * 3;
+      score += earned;
+      scoreEl.innerText = score;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🙂 Cukup Baik</strong><br>` +
+        `Respon ini tidak buruk, tapi belum sepenuhnya menyentuh perasaan utama.<br><br>` +
+        `<strong>Respon yang lebih hangat:</strong><br>"${currentSituation.best}"<br><br>` +
+        `Mood +8 • Score +${earned}`;
+
+      info.innerText = "Lumayan, tapi masih bisa lebih empatik.";
+    }
+
+    if(type === "bad"){
+      button.classList.add("bad");
+
+      mood -= 18;
+      heart--;
+      heartEl.innerText = heart;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🌧️ Respon Kurang Tepat</strong><br>` +
+        `Kalimat ini bisa membuat orang merasa dihakimi atau diremehkan.<br><br>` +
+        `<strong>Respon yang lebih baik:</strong><br>"${currentSituation.best}"`;
+
+      info.innerText = "❌ Kata-kata ini kurang menenangkan. Heart berkurang.";
+
+      if(heart <= 0){
+        updateMood();
+        setTimeout(finishLevel, 900);
+        return;
+      }
+    }
+
+    updateMood();
+    nextBtn.disabled = false;
+  }
+
+  function skipRound(){
+    if(answered) return;
+
+    answered = true;
+    heart--;
+    mood -= 10;
+    heartEl.innerText = heart;
+    updateMood();
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>Situasi dilewati.</strong><br>` +
+      `Respon terbaik sebenarnya:<br>"${currentSituation.best}"<br><br>` +
+      `${currentSituation.explanation}`;
+
+    info.innerText = "Situasi dilewati. Heart dan mood berkurang.";
+    nextBtn.disabled = false;
+
+    if(heart <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function nextRound(){
+    if(!answered) return;
+
+    round++;
+
+    if(round > 5){
+      finishLevel();
+      return;
+    }
+
+    loadRound();
+  }
+
+  function finishLevel(){
+    const bonus = heart * 25 + mood + level * 30;
+    score += bonus;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    let title = "💚 Kata Menenangkan!";
+    let desc = "Kamu berhasil memilih beberapa kalimat yang membantu menjaga suasana hati.";
+
+    if(mood >= 85 && heart >= 3){
+      title = "🌿 Gentle Communicator!";
+      desc = "Pilihan katamu sangat lembut, tepat, dan membuat orang merasa aman.";
+    } else if(heart === 0 || mood <= 35){
+      title = "🌧️ Komunikasi Perlu Dilembutkan";
+      desc = "Beberapa kalimat masih terasa kurang menenangkan. Tapi kamu sudah belajar membaca situasinya.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Mood akhir: <strong>${mood}</strong><br>` +
+      `Bonus heart: +${heart * 25}<br>` +
+      `Bonus level: +${level * 30}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
