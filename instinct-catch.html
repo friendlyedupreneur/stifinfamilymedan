@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instinct Catch</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.38),transparent 35%),
+        radial-gradient(circle at top left,rgba(255,170,0,.25),transparent 32%),
+        linear-gradient(180deg,#3b2a00,#1f1600,#0d0800);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,230,130,.24);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#fff4c7;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.2);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#fff4c7}
+
+    .arena{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.28),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.24);
+      border-radius:30px;
+      padding:18px;
+      box-shadow:0 18px 40px rgba(255,170,0,.18);
+      margin-bottom:16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hint{
+      text-align:center;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.5;
+      margin-bottom:14px;
+    }
+
+    .catch-board{
+      height:360px;
+      border-radius:26px;
+      background:
+        radial-gradient(circle at center,rgba(255,255,255,.08),transparent 45%),
+        rgba(0,0,0,.20);
+      border:1px dashed rgba(255,230,130,.25);
+      position:relative;
+      overflow:hidden;
+      touch-action:none;
+    }
+
+    .item{
+      position:absolute;
+      width:66px;
+      height:66px;
+      border:none;
+      border-radius:22px;
+      background:white;
+      color:#a36d00;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:34px;
+      box-shadow:0 0 22px rgba(255,220,70,.6);
+      animation:itemPop .25s ease;
+    }
+
+    @keyframes itemPop{
+      from{transform:scale(.4);opacity:0}
+      to{transform:scale(1);opacity:1}
+    }
+
+    .item.good{
+      background:#fff7c2;
+    }
+
+    .item.bad{
+      background:#ffd0d0;
+      box-shadow:0 0 22px rgba(255,80,80,.55);
+    }
+
+    .item.bonus{
+      background:#ffffff;
+      box-shadow:0 0 28px rgba(255,255,255,.8);
+    }
+
+    .item:active{
+      transform:scale(.92);
+    }
+
+    .target-box{
+      margin-top:14px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:20px;
+      padding:14px;
+      text-align:center;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .target-box strong{color:white}
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .control-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .start{
+      background:white;
+      color:#a36d00;
+    }
+
+    .reset{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .info{
+      text-align:center;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .flash-good{
+      animation:flashGood .25s ease;
+    }
+
+    .flash-bad{
+      animation:flashBad .25s ease;
+    }
+
+    @keyframes flashGood{
+      0%{box-shadow:0 0 0 rgba(255,220,70,0)}
+      50%{box-shadow:0 0 38px rgba(255,220,70,.75)}
+      100%{box-shadow:0 18px 40px rgba(255,170,0,.18)}
+    }
+
+    @keyframes flashBad{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-6px)}
+      50%{transform:translateX(6px)}
+      75%{transform:translateX(-3px)}
+      100%{transform:translateX(0)}
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#2a1c00;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,230,130,.28);
+      box-shadow:0 0 34px rgba(255,220,70,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#fff4c7;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#a36d00;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🎯 Instinct Catch</h1>
+      <p>Tangkap item baik, hindari item buruk, dan manfaatkan bonus yang muncul cepat.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="life">3</h2><span>Life</span></div>
+      <div class="stat"><h2 id="time">30</h2><span>Time</span></div>
+    </div>
+
+    <div class="arena" id="arena">
+      <div class="hint">
+        Tangkap: ⭐ 💧 🛡️ ⚡<br>
+        Hindari: 🔥 💣 🕳️ ☠️
+      </div>
+
+      <div class="catch-board" id="catchBoard"></div>
+
+      <div class="target-box" id="targetBox">
+        <strong>Insting Rule:</strong><br>
+        Item baik menambah score. Item buruk mengurangi life. Bonus putih memberi poin besar.
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="control-btn start" id="startBtn" onclick="startGame()">Mulai Catch ⚡</button>
+      <button class="control-btn reset" onclick="resetGame()">Reset</button>
+    </div>
+
+    <div class="info" id="info">
+      Tekan mulai. Item akan muncul acak dan hilang cepat.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">🎯 Catch Selesai!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="restartGame()">Main Lagi</button>
+    </div>
+  </div>
+
+<script>
+  const goodItems = [
+    {icon:"⭐", points:25, label:"Peluang"},
+    {icon:"💧", points:20, label:"Tenang"},
+    {icon:"🛡️", points:30, label:"Perlindungan"},
+    {icon:"⚡", points:28, label:"Energi"}
+  ];
+
+  const badItems = [
+    {icon:"🔥", damage:1, label:"Bahaya"},
+    {icon:"💣", damage:1, label:"Ledakan"},
+    {icon:"🕳️", damage:1, label:"Jebakan"},
+    {icon:"☠️", damage:2, label:"Risiko Besar"}
+  ];
+
+  const bonusItems = [
+    {icon:"🌟", points:60, label:"Bonus Insting"},
+    {icon:"💎", points:75, label:"Rare Bonus"}
+  ];
+
+  let score = 0;
+  let level = 1;
+  let life = 3;
+  let timeLeft = 30;
+  let running = false;
+  let spawnTimer = null;
+  let gameTimer = null;
+  let combo = 0;
+  let missedGood = 0;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const lifeEl = document.getElementById("life");
+  const timeEl = document.getElementById("time");
+  const catchBoard = document.getElementById("catchBoard");
+  const arena = document.getElementById("arena");
+  const startBtn = document.getElementById("startBtn");
+  const info = document.getElementById("info");
+  const targetBox = document.getElementById("targetBox");
+
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function updateStats(){
+    scoreEl.innerText = score;
+    levelEl.innerText = level;
+    lifeEl.innerText = life;
+    timeEl.innerText = timeLeft;
+  }
+
+  function startGame(){
+    score = 0;
+    level = 1;
+    life = 3;
+    timeLeft = 30;
+    combo = 0;
+    missedGood = 0;
+    running = true;
+
+    gameOver.style.display = "none";
+    startBtn.style.display = "none";
+    catchBoard.innerHTML = "";
+
+    updateStats();
+
+    info.innerText = "Tangkap item baik. Jangan tap item bahaya!";
+    targetBox.innerHTML =
+      `<strong>Level 1:</strong><br>Item muncul cukup lambat. Baca tanda dengan cepat.`;
+
+    startTimers();
+  }
+
+  function startTimers(){
+    clearInterval(gameTimer);
+    clearInterval(spawnTimer);
+
+    gameTimer = setInterval(() => {
+      if(!running) return;
+
+      timeLeft--;
+      updateStats();
+
+      if(timeLeft <= 0){
+        finishGame();
+      }
+    }, 1000);
+
+    spawnTimer = setInterval(() => {
+      if(!running) return;
+      spawnItem();
+    }, getSpawnSpeed());
+  }
+
+  function getSpawnSpeed(){
+    return Math.max(480, 1000 - level * 90);
+  }
+
+  function getItemLife(){
+    return Math.max(650, 1500 - level * 110);
+  }
+
+  function randomFrom(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function spawnItem(){
+    const roll = Math.random();
+
+    let type = "good";
+    let data = randomFrom(goodItems);
+
+    if(roll > .68){
+      type = "bad";
+      data = randomFrom(badItems);
+    }
+
+    if(roll > .93){
+      type = "bonus";
+      data = randomFrom(bonusItems);
+    }
+
+    const item = document.createElement("button");
+    item.className = `item ${type}`;
+    item.innerText = data.icon;
+
+    const boardRect = catchBoard.getBoundingClientRect();
+    const size = 66;
+
+    const x = Math.random() * (boardRect.width - size - 10) + 5;
+    const y = Math.random() * (boardRect.height - size - 10) + 5;
+
+    item.style.left = x + "px";
+    item.style.top = y + "px";
+
+    item.onclick = () => catchItem(item, type, data);
+
+    catchBoard.appendChild(item);
+
+    setTimeout(() => {
+      if(!item.parentNode || !running) return;
+
+      if(type === "good" || type === "bonus"){
+        missedGood++;
+        combo = 0;
+
+        if(missedGood % 4 === 0){
+          life--;
+          info.innerText = "⚠️ Terlalu banyak peluang terlewat. Life berkurang.";
+          updateStats();
+
+          if(life <= 0){
+            finishGame();
+          }
+        }
+      }
+
+      item.remove();
+    }, getItemLife());
+  }
+
+  function catchItem(item, type, data){
+    if(!running) return;
+
+    item.remove();
+
+    if(type === "good"){
+      combo++;
+
+      const comboBonus = combo * 3;
+      const earned = data.points + comboBonus + level * 3;
+
+      score += earned;
+
+      flashGood();
+
+      info.innerText =
+        `✅ ${data.label} ditangkap! +${earned} poin. Combo ${combo}.`;
+
+      if(combo > 0 && combo % 6 === 0){
+        level++;
+        restartSpawnTimer();
+        targetBox.innerHTML =
+          `<strong>Level ${level}:</strong><br>Item muncul lebih cepat. Insting harus makin tajam.`;
+      }
+    }
+
+    if(type === "bonus"){
+      combo++;
+
+      const earned = data.points + combo * 5 + level * 5;
+      score += earned;
+
+      flashGood();
+
+      info.innerText =
+        `🌟 ${data.label}! +${earned} poin besar. Combo ${combo}.`;
+
+      level++;
+      restartSpawnTimer();
+      targetBox.innerHTML =
+        `<strong>Level ${level}:</strong><br>Bonus menaikkan level. Kecepatan bertambah.`;
+    }
+
+    if(type === "bad"){
+      combo = 0;
+      life -= data.damage;
+
+      flashBad();
+
+      info.innerText =
+        `❌ ${data.label} terkena! Life -${data.damage}. Hindari item bahaya.`;
+
+      if(life <= 0){
+        updateStats();
+        setTimeout(finishGame, 400);
+        return;
+      }
+    }
+
+    updateStats();
+  }
+
+  function restartSpawnTimer(){
+    clearInterval(spawnTimer);
+    spawnTimer = setInterval(() => {
+      if(!running) return;
+      spawnItem();
+    }, getSpawnSpeed());
+  }
+
+  function flashGood(){
+    arena.classList.remove("flash-good");
+    void arena.offsetWidth;
+    arena.classList.add("flash-good");
+  }
+
+  function flashBad(){
+    arena.classList.remove("flash-bad");
+    void arena.offsetWidth;
+    arena.classList.add("flash-bad");
+  }
+
+  function resetGame(){
+    running = false;
+    clearInterval(gameTimer);
+    clearInterval(spawnTimer);
+
+    score = 0;
+    level = 1;
+    life = 3;
+    timeLeft = 30;
+    combo = 0;
+
+    catchBoard.innerHTML = "";
+    startBtn.style.display = "block";
+    startBtn.innerText = "Mulai Catch ⚡";
+    gameOver.style.display = "none";
+
+    updateStats();
+
+    info.innerText = "Game direset. Tekan mulai untuk bermain lagi.";
+    targetBox.innerHTML =
+      `<strong>Insting Rule:</strong><br>Item baik menambah score. Item buruk mengurangi life. Bonus putih memberi poin besar.`;
+  }
+
+  function finishGame(){
+    if(!running) return;
+
+    running = false;
+    clearInterval(gameTimer);
+    clearInterval(spawnTimer);
+
+    const lifeBonus = Math.max(life, 0) * 60;
+    const levelBonus = level * 35;
+    const finalBonus = lifeBonus + levelBonus + combo * 10;
+
+    score += finalBonus;
+    finalScore.innerText = score;
+    updateStats();
+
+    let title = "🎯 Catch Selesai!";
+    let desc = "Insting kamu cukup baik dalam menangkap peluang dan menghindari bahaya.";
+
+    if(life >= 3 && level >= 4){
+      title = "🟡 Instinct Catch Master!";
+      desc = "Naluri tangkapmu tajam. Kamu cepat membaca peluang dan menghindari risiko.";
+    } else if(life <= 0){
+      title = "⚠️ Insting Perlu Diasah";
+      desc = "Terlalu banyak bahaya tertangkap. Tapi pola item mulai terbaca.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Bonus life: +${lifeBonus}<br>` +
+      `Bonus level: +${levelBonus}<br>` +
+      `Bonus combo akhir: +${combo * 10}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    startBtn.style.display = "block";
+    startBtn.innerText = "Main Lagi ⚡";
+    gameOver.style.display = "flex";
+  }
+
+  function restartGame(){
+    gameOver.style.display = "none";
+    startGame();
+  }
+
+  updateStats();
+</script>
+</body>
+</html>
