@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Harmony Cafe</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.32),transparent 35%),
+        radial-gradient(circle at top left,rgba(0,180,110,.24),transparent 32%),
+        linear-gradient(180deg,#00351f,#001f15,#000d08);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(150,255,190,.2);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#ddffec;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#ddffec}
+
+    .meter{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:14px;
+      margin-bottom:16px;
+    }
+
+    .meter-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#ddffec;
+      margin-bottom:8px;
+    }
+
+    .bar{
+      height:10px;
+      background:rgba(255,255,255,.13);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:55%;
+      background:linear-gradient(90deg,#9dffbf,#00b86b);
+      border-radius:999px;
+      transition:.35s;
+      box-shadow:0 0 14px rgba(76,255,130,.65);
+    }
+
+    .cafe-card{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.25),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.2);
+      border-radius:30px;
+      padding:22px 18px;
+      margin-bottom:16px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(0,140,80,.2);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .cafe-card::after{
+      content:"♡";
+      position:absolute;
+      right:20px;
+      top:14px;
+      color:rgba(255,255,255,.22);
+      font-size:28px;
+    }
+
+    .customer{
+      width:120px;
+      height:120px;
+      margin:0 auto 16px;
+      border-radius:36px;
+      background:white;
+      color:#00864d;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:62px;
+      box-shadow:
+        0 0 28px rgba(76,255,130,.42),
+        inset 0 0 18px rgba(0,160,90,.12);
+      animation:softFloat 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes softFloat{
+      from{transform:translateY(0) scale(1)}
+      to{transform:translateY(-7px) scale(1.03)}
+    }
+
+    .cafe-label{
+      color:#cffff0;
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .customer-title{
+      font-size:23px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .customer-text{
+      color:#ddffec;
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .order-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.55;
+      text-align:center;
+    }
+
+    .order-box strong{color:white}
+
+    .choices{
+      display:grid;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .choice-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(150,255,190,.2);
+      padding:15px;
+      text-align:left;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .choice-btn strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:6px;
+    }
+
+    .choice-btn:active{transform:scale(.97)}
+
+    .choice-btn.best{
+      background:white;
+      color:#00864d;
+      box-shadow:0 0 22px rgba(76,255,130,.75);
+    }
+
+    .choice-btn.okay{
+      outline:3px solid rgba(255,220,80,.8);
+    }
+
+    .choice-btn.bad{
+      outline:3px solid #ff6b6b;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .feedback-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .feedback-box strong{color:white}
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .control-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .skip{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .next{
+      background:white;
+      color:#00864d;
+    }
+
+    .next:disabled{opacity:.45}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#002817;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(150,255,190,.25);
+      box-shadow:0 0 34px rgba(76,255,130,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#ddffec;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#00864d;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>☕ Harmony Cafe</h1>
+      <p>Layani pelanggan sesuai mood mereka agar cafe tetap hangat dan harmonis.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="round">1/5</h2><span>Customer</span></div>
+      <div class="stat"><h2 id="heart">3</h2><span>Heart</span></div>
+    </div>
+
+    <div class="meter">
+      <div class="meter-row">
+        <span>☕ Cafe Harmony</span>
+        <strong id="harmonyText">55</strong>
+      </div>
+      <div class="bar">
+        <div class="fill" id="harmonyFill"></div>
+      </div>
+    </div>
+
+    <div class="cafe-card">
+      <div class="customer" id="customerIcon">😌</div>
+      <div class="cafe-label">Pelanggan Cafe</div>
+      <div class="customer-title" id="customerTitle">Pelanggan Baru</div>
+      <div class="customer-text" id="customerText">
+        Baca mood pelanggan, lalu pilih pelayanan terbaik.
+      </div>
+    </div>
+
+    <div class="order-box" id="orderBox">
+      <strong>Pesanan Emosi:</strong><br>
+      Pahami kebutuhan pelanggan sebelum merespon.
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="feedback-box" id="feedbackBox"></div>
+
+    <div class="controls">
+      <button class="control-btn skip" onclick="skipCustomer()">Lewati</button>
+      <button class="control-btn next" id="nextBtn" onclick="nextRound()" disabled>Lanjut ☕</button>
+    </div>
+
+    <div class="info" id="info">
+      Pelayanan terbaik bukan hanya cepat, tapi sesuai dengan suasana hati pelanggan.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">☕ Cafe Harmonis!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const customers = [
+    {
+      icon:"😔",
+      title:"Pelanggan Murung",
+      text:"Seorang pelanggan datang sendirian. Ia memesan minuman pelan-pelan dan terlihat seperti sedang menahan sedih.",
+      need:"Butuh suasana aman, tidak banyak ditanya, tapi tetap merasa diperhatikan.",
+      best:{
+        title:"Pelayanan Hangat dan Tenang",
+        text:"Sajikan minuman dengan lembut: 'Semoga minumannya bisa menemani hari Anda. Kalau butuh apa-apa, saya siap bantu.'",
+        harmony:24
+      },
+      okay:{
+        title:"Pelayanan Biasa",
+        text:"Sajikan minuman tanpa banyak bicara.",
+        harmony:8
+      },
+      bad:{
+        title:"Terlalu Banyak Tanya",
+        text:"Tanya terus: 'Kenapa sedih? Cerita dong, jangan dipendam.'",
+        harmony:-18
+      },
+      explanation:"Pelanggan murung sering butuh ruang aman. Kehangatan kecil lebih nyaman daripada pertanyaan yang memaksa."
+    },
+    {
+      icon:"😡",
+      title:"Pelanggan Kesal",
+      text:"Pelanggan mengeluh karena pesanannya datang terlambat. Nada bicaranya mulai meninggi.",
+      need:"Butuh diakui rasa tidak nyamannya dan diberi solusi jelas.",
+      best:{
+        title:"Akui dan Perbaiki",
+        text:"Katakan: 'Maaf sudah membuat Anda menunggu. Saya cek sekarang dan pastikan pesanan segera kami selesaikan.'",
+        harmony:25
+      },
+      okay:{
+        title:"Minta Sabar",
+        text:"Katakan: 'Mohon ditunggu sebentar lagi ya.'",
+        harmony:6
+      },
+      bad:{
+        title:"Membalas Defensif",
+        text:"Katakan: 'Kami juga sedang ramai, bukan cuma pesanan Anda saja.'",
+        harmony:-24
+      },
+      explanation:"Saat orang kesal, validasi dan solusi lebih menenangkan daripada pembelaan diri."
+    },
+    {
+      icon:"😰",
+      title:"Pelanggan Terburu-buru",
+      text:"Pelanggan tampak gelisah melihat jam. Ia berkata harus segera pergi dalam beberapa menit.",
+      need:"Butuh pelayanan praktis, cepat, dan jelas.",
+      best:{
+        title:"Beri Opsi Cepat",
+        text:"Katakan: 'Menu tercepat kami ini dan ini. Saya bantu pilih yang bisa selesai paling cepat.'",
+        harmony:23
+      },
+      okay:{
+        title:"Tetap Ikuti Antrian",
+        text:"Katakan: 'Baik, nanti kami panggil kalau sudah selesai.'",
+        harmony:5
+      },
+      bad:{
+        title:"Meremehkan",
+        text:"Katakan: 'Kalau buru-buru, kenapa mampir dulu?'",
+        harmony:-22
+      },
+      explanation:"Pelanggan terburu-buru butuh dibantu mengambil keputusan cepat, bukan disindir."
+    },
+    {
+      icon:"😊",
+      title:"Pelanggan Ceria",
+      text:"Pelanggan datang dengan senyum lebar dan tampak ingin ngobrol ringan.",
+      need:"Butuh sambutan ramah dan suasana positif.",
+      best:{
+        title:"Sambut dengan Ceria",
+        text:"Katakan: 'Selamat datang! Wah, mood-nya cerah sekali hari ini. Mau coba menu favorit kami?'",
+        harmony:20
+      },
+      okay:{
+        title:"Sapa Standar",
+        text:"Katakan: 'Selamat datang, mau pesan apa?'",
+        harmony:8
+      },
+      bad:{
+        title:"Dingin",
+        text:"Layani tanpa menatap dan jawab seperlunya.",
+        harmony:-15
+      },
+      explanation:"Mood positif bisa memperkuat suasana cafe jika disambut dengan kehangatan yang seimbang."
+    },
+    {
+      icon:"🥺",
+      title:"Pelanggan Bingung",
+      text:"Pelanggan melihat menu cukup lama. Ia tampak ragu dan beberapa kali bertanya, tapi takut merepotkan.",
+      need:"Butuh dibantu memilih tanpa dibuat merasa bodoh.",
+      best:{
+        title:"Bimbing dengan Ramah",
+        text:"Katakan: 'Nggak apa-apa, saya bantu pilihkan. Suka yang manis, segar, atau creamy?'",
+        harmony:24
+      },
+      okay:{
+        title:"Tunggu Saja",
+        text:"Biarkan ia memilih sampai siap.",
+        harmony:7
+      },
+      bad:{
+        title:"Buru-buru",
+        text:"Katakan: 'Cepat ya, masih ada pelanggan lain.'",
+        harmony:-23
+      },
+      explanation:"Orang yang bingung butuh panduan sederhana, bukan tekanan."
+    },
+    {
+      icon:"😳",
+      title:"Pelanggan Salah Pesan",
+      text:"Pelanggan salah menyebut menu dan terlihat malu ketika menyadarinya.",
+      need:"Butuh diselamatkan dari rasa malu dengan cara halus.",
+      best:{
+        title:"Bantu dengan Halus",
+        text:"Katakan: 'Tidak apa-apa, sering tertukar kok. Saya bantu ubah pesanannya ya.'",
+        harmony:22
+      },
+      okay:{
+        title:"Koreksi Singkat",
+        text:"Katakan: 'Oh, maksudnya menu yang ini ya?'",
+        harmony:8
+      },
+      bad:{
+        title:"Menertawakan",
+        text:"Katakan: 'Wah, jauh banget salahnya.'",
+        harmony:-24
+      },
+      explanation:"Empati sosial terlihat dari cara membantu orang tetap merasa aman saat salah."
+    },
+    {
+      icon:"😐",
+      title:"Pelanggan Pendiam",
+      text:"Pelanggan tidak banyak bicara, hanya menunjuk menu dan terlihat ingin suasana tenang.",
+      need:"Butuh dihormati ruang pribadinya.",
+      best:{
+        title:"Pelayanan Tenang",
+        text:"Katakan secukupnya: 'Baik, saya siapkan ya. Silakan duduk nyaman.'",
+        harmony:21
+      },
+      okay:{
+        title:"Sapa Ramah Panjang",
+        text:"Ajak ngobrol ringan tentang banyak hal.",
+        harmony:4
+      },
+      bad:{
+        title:"Memaksa Interaksi",
+        text:"Terus bertanya meskipun ia menjawab singkat.",
+        harmony:-18
+      },
+      explanation:"Tidak semua pelanggan ingin banyak interaksi. Menghormati diam juga bagian dari pelayanan hangat."
+    },
+    {
+      icon:"🤗",
+      title:"Pelanggan Langganan",
+      text:"Pelanggan lama datang kembali. Ia terlihat senang dikenali.",
+      need:"Butuh merasa dihargai dan diingat.",
+      best:{
+        title:"Kenali dengan Hangat",
+        text:"Katakan: 'Senang lihat Anda datang lagi. Menu favorit seperti biasa, atau mau coba yang baru?'",
+        harmony:23
+      },
+      okay:{
+        title:"Layani Normal",
+        text:"Katakan: 'Mau pesan apa hari ini?'",
+        harmony:7
+      },
+      bad:{
+        title:"Abaikan Kedekatan",
+        text:"Bersikap seolah tidak pernah bertemu.",
+        harmony:-12
+      },
+      explanation:"Mengingat pelanggan membuat mereka merasa punya tempat dan dihargai."
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let round = 1;
+  let heart = 3;
+  let harmony = 55;
+  let currentSet = [];
+  let currentCustomer = null;
+  let answered = false;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const roundEl = document.getElementById("round");
+  const heartEl = document.getElementById("heart");
+  const harmonyText = document.getElementById("harmonyText");
+  const harmonyFill = document.getElementById("harmonyFill");
+
+  const customerIcon = document.getElementById("customerIcon");
+  const customerTitle = document.getElementById("customerTitle");
+  const customerText = document.getElementById("customerText");
+  const orderBox = document.getElementById("orderBox");
+  const choicesEl = document.getElementById("choices");
+  const feedbackBox = document.getElementById("feedbackBox");
+  const nextBtn = document.getElementById("nextBtn");
+  const info = document.getElementById("info");
+
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function clamp(value){
+    return Math.max(0, Math.min(100, value));
+  }
+
+  function setupLevel(){
+    round = 1;
+    heart = 3;
+    harmony = 55;
+    answered = false;
+    currentSet = shuffle([...customers]).slice(0,5);
+
+    levelEl.innerText = level;
+    heartEl.innerText = heart;
+    gameOver.style.display = "none";
+
+    loadRound();
+  }
+
+  function updateHarmony(){
+    harmony = clamp(harmony);
+    harmonyText.innerText = harmony;
+    harmonyFill.style.width = harmony + "%";
+  }
+
+  function loadRound(){
+    answered = false;
+    currentCustomer = currentSet[round - 1];
+
+    roundEl.innerText = `${round}/5`;
+    heartEl.innerText = heart;
+    nextBtn.disabled = true;
+
+    customerIcon.innerText = currentCustomer.icon;
+    customerTitle.innerText = currentCustomer.title;
+    customerText.innerText = currentCustomer.text;
+
+    orderBox.innerHTML =
+      `<strong>Pesanan Emosi:</strong><br>${currentCustomer.need}`;
+
+    feedbackBox.style.display = "none";
+    feedbackBox.innerHTML = "";
+
+    renderChoices();
+    updateHarmony();
+
+    info.innerText = "Baca mood pelanggan, lalu pilih pelayanan paling tepat.";
+  }
+
+  function renderChoices(){
+    choicesEl.innerHTML = "";
+
+    const choices = [
+      {type:"best", ...currentCustomer.best},
+      {type:"okay", ...currentCustomer.okay},
+      {type:"bad", ...currentCustomer.bad}
+    ];
+
+    shuffle(choices).forEach(choice => {
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+
+      btn.innerHTML = `
+        <strong>${choice.title}</strong>
+        "${choice.text}"
+      `;
+
+      btn.onclick = () => chooseService(choice, btn);
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function chooseService(choice, button){
+    if(answered) return;
+
+    answered = true;
+    harmony += choice.harmony;
+
+    if(choice.type === "best"){
+      button.classList.add("best");
+
+      const earned = 55 + level * 6 + heart * 8;
+      score += earned;
+      scoreEl.innerText = score;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>☕ Pelayanan Paling Harmonis</strong><br>` +
+        `${currentCustomer.explanation}<br><br>` +
+        `Harmony +${choice.harmony} • Score +${earned}`;
+
+      info.innerText = "✅ Pelanggan merasa dipahami. Suasana cafe makin hangat.";
+    }
+
+    if(choice.type === "okay"){
+      button.classList.add("okay");
+
+      const earned = 22 + level * 3;
+      score += earned;
+      scoreEl.innerText = score;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🙂 Cukup Baik</strong><br>` +
+        `Pelayanan ini masih aman, tapi belum sepenuhnya sesuai mood pelanggan.<br><br>` +
+        `<strong>Yang lebih tepat:</strong><br>"${currentCustomer.best.text}"`;
+
+      info.innerText = "Cukup baik, tapi harmony belum naik maksimal.";
+    }
+
+    if(choice.type === "bad"){
+      button.classList.add("bad");
+      heart--;
+      heartEl.innerText = heart;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🌧️ Pelayanan Kurang Tepat</strong><br>` +
+        `Respon ini bisa membuat pelanggan tidak nyaman.<br><br>` +
+        `<strong>Yang lebih harmonis:</strong><br>"${currentCustomer.best.text}"`;
+
+      info.innerText = "❌ Suasana cafe menurun. Heart berkurang.";
+
+      if(heart <= 0){
+        updateHarmony();
+        setTimeout(finishLevel, 900);
+        return;
+      }
+    }
+
+    updateHarmony();
+    nextBtn.disabled = false;
+  }
+
+  function skipCustomer(){
+    if(answered) return;
+
+    answered = true;
+    heart--;
+    harmony -= 12;
+    heartEl.innerText = heart;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>Pelanggan dilewati.</strong><br>` +
+      `Pelayanan terbaik sebenarnya:<br>"${currentCustomer.best.text}"<br><br>` +
+      `${currentCustomer.explanation}`;
+
+    info.innerText = "Pelanggan dilewati. Harmony dan heart berkurang.";
+    updateHarmony();
+    nextBtn.disabled = false;
+
+    if(heart <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function nextRound(){
+    if(!answered) return;
+
+    round++;
+
+    if(round > 5){
+      finishLevel();
+      return;
+    }
+
+    loadRound();
+  }
+
+  function finishLevel(){
+    const bonus = harmony + heart * 25 + level * 30;
+    score += bonus;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    let title = "☕ Cafe Harmonis!";
+    let desc = "Kamu berhasil menjaga suasana cafe tetap hangat dengan pelayanan yang cukup peka.";
+
+    if(harmony >= 85 && heart >= 3){
+      title = "💚 Harmony Cafe Master!";
+      desc = "Cafe terasa sangat nyaman. Kamu membaca mood pelanggan dengan lembut dan tepat.";
+    } else if(heart === 0 || harmony <= 35){
+      title = "🌧️ Cafe Kurang Nyaman";
+      desc = "Beberapa pelayanan belum sesuai mood pelanggan. Tapi kamu mulai memahami pola emosinya.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Harmony akhir: <strong>${harmony}</strong><br>` +
+      `Bonus heart: +${heart * 25}<br>` +
+      `Bonus level: +${level * 30}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
