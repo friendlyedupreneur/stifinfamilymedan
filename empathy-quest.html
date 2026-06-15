@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Empathy Quest</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.32),transparent 35%),
+        radial-gradient(circle at top left,rgba(0,180,110,.24),transparent 32%),
+        linear-gradient(180deg,#00351f,#001f15,#000d08);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(150,255,190,.2);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#ddffec;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#ddffec}
+
+    .empathy-meter{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:14px;
+      margin-bottom:16px;
+    }
+
+    .meter-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#ddffec;
+      margin-bottom:8px;
+    }
+
+    .bar{
+      height:10px;
+      background:rgba(255,255,255,.13);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:50%;
+      background:linear-gradient(90deg,#9dffbf,#00b86b);
+      border-radius:999px;
+      transition:.35s;
+      box-shadow:0 0 14px rgba(76,255,130,.65);
+    }
+
+    .quest-card{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.25),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.2);
+      border-radius:30px;
+      padding:22px 18px;
+      margin-bottom:16px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(0,140,80,.2);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .quest-card::after{
+      content:"♡";
+      position:absolute;
+      right:20px;
+      top:14px;
+      color:rgba(255,255,255,.22);
+      font-size:28px;
+    }
+
+    .scene-icon{
+      width:120px;
+      height:120px;
+      margin:0 auto 16px;
+      border-radius:36px;
+      background:white;
+      color:#00864d;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:62px;
+      box-shadow:
+        0 0 28px rgba(76,255,130,.42),
+        inset 0 0 18px rgba(0,160,90,.12);
+      animation:softFloat 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes softFloat{
+      from{transform:translateY(0) scale(1)}
+      to{transform:translateY(-7px) scale(1.03)}
+    }
+
+    .quest-label{
+      color:#cffff0;
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .quest-title{
+      font-size:23px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .quest-text{
+      color:#ddffec;
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .need-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.55;
+      text-align:center;
+    }
+
+    .need-box strong{color:white}
+
+    .choices{
+      display:grid;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .choice-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(150,255,190,.2);
+      padding:15px;
+      text-align:left;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .choice-btn strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:6px;
+    }
+
+    .choice-btn:active{transform:scale(.97)}
+
+    .choice-btn.best{
+      background:white;
+      color:#00864d;
+      box-shadow:0 0 22px rgba(76,255,130,.75);
+    }
+
+    .choice-btn.okay{
+      outline:3px solid rgba(255,220,80,.8);
+    }
+
+    .choice-btn.bad{
+      outline:3px solid #ff6b6b;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .feedback-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .feedback-box strong{color:white}
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .control-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .skip{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .next{
+      background:white;
+      color:#00864d;
+    }
+
+    .next:disabled{opacity:.45}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#002817;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(150,255,190,.25);
+      box-shadow:0 0 34px rgba(76,255,130,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#ddffec;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#00864d;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🤲 Empathy Quest</h1>
+      <p>Baca situasi sosial, pahami kebutuhan emosinya, lalu pilih respon paling empatik.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="round">1/5</h2><span>Round</span></div>
+      <div class="stat"><h2 id="heart">3</h2><span>Heart</span></div>
+    </div>
+
+    <div class="empathy-meter">
+      <div class="meter-row">
+        <span>🤲 Empathy Energy</span>
+        <strong id="empathyText">50</strong>
+      </div>
+      <div class="bar">
+        <div class="fill" id="empathyFill"></div>
+      </div>
+    </div>
+
+    <div class="quest-card">
+      <div class="scene-icon" id="sceneIcon">🤲</div>
+      <div class="quest-label">Situasi Sosial</div>
+      <div class="quest-title" id="questTitle">Membaca Keadaan</div>
+      <div class="quest-text" id="questText">
+        Pilih respon yang paling sesuai.
+      </div>
+    </div>
+
+    <div class="need-box" id="needBox">
+      <strong>Kebutuhan emosi:</strong><br>
+      Baca situasinya terlebih dahulu.
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="feedback-box" id="feedbackBox"></div>
+
+    <div class="controls">
+      <button class="control-btn skip" onclick="skipQuest()">Lewati</button>
+      <button class="control-btn next" id="nextBtn" onclick="nextRound()" disabled>Lanjut 🤲</button>
+    </div>
+
+    <div class="info" id="info">
+      Empati bukan hanya memberi solusi, tapi memahami kebutuhan hati di balik situasi.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">🤲 Empathy Quest Selesai!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const quests = [
+    {
+      icon:"🧒",
+      title:"Anak Pulang Sekolah Diam",
+      text:"Anak biasanya langsung bercerita setelah pulang sekolah. Hari ini ia masuk kamar, menaruh tas, dan tidak banyak bicara.",
+      need:"Ruang aman tanpa dipaksa",
+      best:{
+        title:"Hadir Tanpa Memaksa",
+        text:"Hari ini kamu terlihat lebih diam. Nggak harus cerita sekarang, tapi kalau mau cerita, Ayah/Ibu siap dengar.",
+        empathy:24,
+        heartEffect:0
+      },
+      okay:{
+        title:"Tanya Langsung",
+        text:"Kamu kenapa? Ada masalah di sekolah?",
+        empathy:8,
+        heartEffect:0
+      },
+      bad:{
+        title:"Memaksa Cerita",
+        text:"Jangan diam saja. Cerita sekarang biar jelas masalahnya apa.",
+        empathy:-18,
+        heartEffect:-1
+      },
+      explanation:"Dalam situasi ini, anak mungkin butuh rasa aman dulu. Kehadiran lembut lebih baik daripada tekanan untuk langsung bercerita."
+    },
+    {
+      icon:"👥",
+      title:"Teman Tersisih di Grup",
+      text:"Dalam diskusi kelompok, satu teman jarang diberi kesempatan bicara. Ia mulai menunduk dan tidak lagi ikut menanggapi.",
+      need:"Dilibatkan dan dihargai",
+      best:{
+        title:"Buka Ruang Bicara",
+        text:"Aku penasaran dengan pendapatmu juga. Menurutmu bagian ini lebih baik bagaimana?",
+        empathy:25,
+        heartEffect:0
+      },
+      okay:{
+        title:"Tanya Setelah Selesai",
+        text:"Nanti setelah diskusi kamu cerita ke aku ya.",
+        empathy:9,
+        heartEffect:0
+      },
+      bad:{
+        title:"Abaikan",
+        text:"Kalau dia mau bicara, pasti dia bicara sendiri.",
+        empathy:-20,
+        heartEffect:-1
+      },
+      explanation:"Orang yang tersisih sering butuh diberi ruang dengan cara yang tidak mempermalukan."
+    },
+    {
+      icon:"😰",
+      title:"Rekan Kerja Kewalahan",
+      text:"Rekanmu terlihat panik karena tugas menumpuk. Ia berkali-kali membuka file, tapi tidak mulai mengerjakan apa pun.",
+      need:"Ditenangkan dan dibantu memecah langkah",
+      best:{
+        title:"Bantu Pecah Masalah",
+        text:"Tarik napas dulu. Kita pilih satu tugas paling penting, lalu kerjakan bagian paling kecil dulu.",
+        empathy:24,
+        heartEffect:0
+      },
+      okay:{
+        title:"Beri Motivasi",
+        text:"Kamu pasti bisa, semangat!",
+        empathy:8,
+        heartEffect:0
+      },
+      bad:{
+        title:"Menyalahkan",
+        text:"Makanya jangan ditunda-tunda sampai numpuk.",
+        empathy:-22,
+        heartEffect:-1
+      },
+      explanation:"Saat panik, orang biasanya sulit berpikir jernih. Bantuan kecil yang konkret lebih menenangkan daripada ceramah."
+    },
+    {
+      icon:"👵",
+      title:"Orang Tua Merasa Tidak Didengar",
+      text:"Ibu/Bapak bercerita panjang, tapi kamu sedang sibuk. Ia lalu berkata, 'Ya sudah, kamu memang nggak sempat dengar.'",
+      need:"Diperhatikan dan dihargai",
+      best:{
+        title:"Berhenti Sejenak dan Hadir",
+        text:"Maaf, tadi aku belum benar-benar mendengar. Cerita lagi ya, aku mau fokus dengar sekarang.",
+        empathy:26,
+        heartEffect:0
+      },
+      okay:{
+        title:"Jawab Sambil Sibuk",
+        text:"Aku dengar kok, lanjut saja.",
+        empathy:5,
+        heartEffect:0
+      },
+      bad:{
+        title:"Kesal",
+        text:"Aku kan lagi sibuk, nanti saja ceritanya.",
+        empathy:-20,
+        heartEffect:-1
+      },
+      explanation:"Yang dibutuhkan bukan hanya telinga, tapi rasa bahwa dirinya penting dan diperhatikan."
+    },
+    {
+      icon:"💔",
+      title:"Sahabat Baru Putus",
+      text:"Sahabatmu baru putus dan berkata, 'Aku capek banget. Rasanya kosong.'",
+      need:"Ditemani, divalidasi, dan tidak buru-buru dinasihati",
+      best:{
+        title:"Validasi Rasa Sakit",
+        text:"Aku ikut sedih dengarnya. Wajar kalau rasanya kosong. Aku di sini, kamu nggak harus kuat sendirian.",
+        empathy:25,
+        heartEffect:0
+      },
+      okay:{
+        title:"Cepat Menghibur",
+        text:"Sudahlah, nanti juga dapat yang lebih baik.",
+        empathy:7,
+        heartEffect:0
+      },
+      bad:{
+        title:"Menyalahkan",
+        text:"Dari awal juga aku sudah bilang dia kurang cocok buatmu.",
+        empathy:-24,
+        heartEffect:-1
+      },
+      explanation:"Saat luka emosional masih baru, validasi dan kehadiran lebih dibutuhkan daripada penilaian atau nasihat cepat."
+    },
+    {
+      icon:"😳",
+      title:"Teman Salah Bicara di Depan Umum",
+      text:"Temanmu salah menyebut nama saat presentasi. Beberapa orang tertawa, dan wajahnya langsung memerah.",
+      need:"Diselamatkan tanpa dipermalukan",
+      best:{
+        title:"Bantu Alihkan dengan Halus",
+        text:"Nggak apa-apa, lanjut. Poin yang tadi kamu sampaikan tetap jelas kok.",
+        empathy:23,
+        heartEffect:0
+      },
+      okay:{
+        title:"Diam Saja",
+        text:"Biarkan situasi lewat sendiri.",
+        empathy:5,
+        heartEffect:0
+      },
+      bad:{
+        title:"Ikut Menertawakan",
+        text:"Waduh, kok bisa salah begitu?",
+        empathy:-23,
+        heartEffect:-1
+      },
+      explanation:"Empati sosial terlihat dari cara membantu orang menyelamatkan muka tanpa membuatnya makin malu."
+    },
+    {
+      icon:"😞",
+      title:"Pasangan Merasa Jauh",
+      text:"Pasanganmu berkata, 'Aku merasa kita akhir-akhir ini cuma sibuk masing-masing.'",
+      need:"Koneksi, kehadiran, dan ajakan memperbaiki",
+      best:{
+        title:"Akui dan Ajak Dekat Lagi",
+        text:"Aku paham kamu merasa jauh. Aku juga nggak mau kita cuma berjalan sendiri-sendiri. Kita luangkan waktu khusus malam ini, ya?",
+        empathy:26,
+        heartEffect:0
+      },
+      okay:{
+        title:"Jelaskan Kesibukan",
+        text:"Aku memang lagi banyak kerjaan, tapi bukan berarti nggak sayang.",
+        empathy:8,
+        heartEffect:0
+      },
+      bad:{
+        title:"Defensif",
+        text:"Kamu selalu saja merasa kurang diperhatikan.",
+        empathy:-24,
+        heartEffect:-1
+      },
+      explanation:"Dalam hubungan dekat, rasa jauh lebih baik dijawab dengan kehadiran dan ajakan memperbaiki, bukan pembelaan diri."
+    },
+    {
+      icon:"🤝",
+      title:"Teman Mengaku Salah",
+      text:"Temanmu datang dan berkata, 'Aku salah kemarin. Aku takut kamu masih marah.'",
+      need:"Diberi ruang memperbaiki dan rasa aman untuk jujur",
+      best:{
+        title:"Terima Kejujurannya",
+        text:"Makasih sudah berani ngomong. Aku masih butuh waktu, tapi aku menghargai kamu mau memperbaiki.",
+        empathy:24,
+        heartEffect:0
+      },
+      okay:{
+        title:"Langsung Maafkan",
+        text:"Ya sudah, nggak apa-apa.",
+        empathy:9,
+        heartEffect:0
+      },
+      bad:{
+        title:"Mengungkit Keras",
+        text:"Baru sadar sekarang? Kemarin kamu parah banget.",
+        empathy:-20,
+        heartEffect:-1
+      },
+      explanation:"Empati bukan berarti langsung melupakan, tapi memberi ruang jujur sambil tetap menjaga batas diri."
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let round = 1;
+  let heart = 3;
+  let empathy = 50;
+  let currentSet = [];
+  let currentQuest = null;
+  let answered = false;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const roundEl = document.getElementById("round");
+  const heartEl = document.getElementById("heart");
+  const empathyText = document.getElementById("empathyText");
+  const empathyFill = document.getElementById("empathyFill");
+
+  const sceneIcon = document.getElementById("sceneIcon");
+  const questTitle = document.getElementById("questTitle");
+  const questText = document.getElementById("questText");
+  const needBox = document.getElementById("needBox");
+  const choicesEl = document.getElementById("choices");
+  const feedbackBox = document.getElementById("feedbackBox");
+  const nextBtn = document.getElementById("nextBtn");
+  const info = document.getElementById("info");
+
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function clamp(value){
+    return Math.max(0, Math.min(100, value));
+  }
+
+  function setupLevel(){
+    round = 1;
+    heart = 3;
+    empathy = 50;
+    answered = false;
+    currentSet = shuffle([...quests]).slice(0,5);
+
+    levelEl.innerText = level;
+    heartEl.innerText = heart;
+    gameOver.style.display = "none";
+
+    loadRound();
+  }
+
+  function updateEmpathy(){
+    empathy = clamp(empathy);
+    empathyText.innerText = empathy;
+    empathyFill.style.width = empathy + "%";
+  }
+
+  function loadRound(){
+    answered = false;
+    currentQuest = currentSet[round - 1];
+
+    roundEl.innerText = `${round}/5`;
+    heartEl.innerText = heart;
+    nextBtn.disabled = true;
+
+    sceneIcon.innerText = currentQuest.icon;
+    questTitle.innerText = currentQuest.title;
+    questText.innerText = currentQuest.text;
+
+    needBox.innerHTML =
+      `<strong>Kebutuhan emosi:</strong><br>${currentQuest.need}`;
+
+    feedbackBox.style.display = "none";
+    feedbackBox.innerHTML = "";
+
+    renderChoices();
+    updateEmpathy();
+
+    info.innerText = "Baca situasi sosialnya, lalu pilih respon yang paling berempati.";
+  }
+
+  function renderChoices(){
+    choicesEl.innerHTML = "";
+
+    const choices = [
+      {type:"best", ...currentQuest.best},
+      {type:"okay", ...currentQuest.okay},
+      {type:"bad", ...currentQuest.bad}
+    ];
+
+    shuffle(choices).forEach(choice => {
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+
+      btn.innerHTML = `
+        <strong>${choice.title}</strong>
+        "${choice.text}"
+      `;
+
+      btn.onclick = () => chooseResponse(choice, btn);
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function chooseResponse(choice, button){
+    if(answered) return;
+
+    answered = true;
+
+    empathy += choice.empathy;
+
+    if(choice.heartEffect < 0){
+      heart += choice.heartEffect;
+      heartEl.innerText = heart;
+    }
+
+    if(choice.type === "best"){
+      button.classList.add("best");
+
+      const earned = 55 + level * 6 + heart * 8;
+      score += earned;
+      scoreEl.innerText = score;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🤲 Respon Paling Empatik</strong><br>` +
+        `${currentQuest.explanation}<br><br>` +
+        `Empathy +${choice.empathy} • Score +${earned}`;
+
+      info.innerText = "✅ Kamu membaca kebutuhan emosinya dengan tepat.";
+    }
+
+    if(choice.type === "okay"){
+      button.classList.add("okay");
+
+      const earned = 22 + level * 3;
+      score += earned;
+      scoreEl.innerText = score;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🙂 Cukup Baik</strong><br>` +
+        `Respon ini tidak salah, tapi belum menyentuh kebutuhan emosi paling dalam.<br><br>` +
+        `<strong>Yang lebih empatik:</strong><br>"${currentQuest.best.text}"`;
+
+      info.innerText = "Cukup baik, tapi masih bisa lebih terasa memahami.";
+    }
+
+    if(choice.type === "bad"){
+      button.classList.add("bad");
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🌧️ Respon Kurang Empatik</strong><br>` +
+        `Respon ini bisa membuat orang merasa tidak dipahami atau makin tertutup.<br><br>` +
+        `<strong>Yang lebih tepat:</strong><br>"${currentQuest.best.text}"`;
+
+      info.innerText = "❌ Empathy energy turun. Heart berkurang.";
+
+      if(heart <= 0){
+        updateEmpathy();
+        setTimeout(finishLevel, 900);
+        return;
+      }
+    }
+
+    updateEmpathy();
+    nextBtn.disabled = false;
+  }
+
+  function skipQuest(){
+    if(answered) return;
+
+    answered = true;
+    heart--;
+    empathy -= 12;
+    heartEl.innerText = heart;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>Quest dilewati.</strong><br>` +
+      `Respon terbaik sebenarnya:<br>"${currentQuest.best.text}"<br><br>` +
+      `${currentQuest.explanation}`;
+
+    info.innerText = "Quest dilewati. Empathy energy dan heart berkurang.";
+    updateEmpathy();
+    nextBtn.disabled = false;
+
+    if(heart <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function nextRound(){
+    if(!answered) return;
+
+    round++;
+
+    if(round > 5){
+      finishLevel();
+      return;
+    }
+
+    loadRound();
+  }
+
+  function finishLevel(){
+    const bonus = empathy + heart * 25 + level * 30;
+    score += bonus;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    let title = "🤲 Empathy Quest Selesai!";
+    let desc = "Kamu berhasil membaca beberapa situasi sosial dan memilih respon yang cukup berempati.";
+
+    if(empathy >= 85 && heart >= 3){
+      title = "💚 Empathy Master!";
+      desc = "Kamu sangat peka membaca kebutuhan emosi. Responmu membuat orang merasa aman dan dipahami.";
+    } else if(heart === 0 || empathy <= 35){
+      title = "🌧️ Empathy Perlu Diasah";
+      desc = "Beberapa respon belum menyentuh kebutuhan emosinya. Tapi kamu mulai memahami polanya.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Empathy akhir: <strong>${empathy}</strong><br>` +
+      `Bonus heart: +${heart * 25}<br>` +
+      `Bonus level: +${level * 30}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
