@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Reflex</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.38),transparent 35%),
+        radial-gradient(circle at top left,rgba(255,170,0,.25),transparent 32%),
+        linear-gradient(180deg,#3b2a00,#1f1600,#0d0800);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,230,130,.24);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#fff4c7;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.2);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#fff4c7}
+
+    .arena{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.28),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.24);
+      border-radius:30px;
+      padding:22px 18px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(255,170,0,.18);
+      margin-bottom:16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .arena::after{
+      content:"⚡";
+      position:absolute;
+      right:20px;
+      top:14px;
+      color:rgba(255,255,255,.24);
+      font-size:30px;
+    }
+
+    .signal-label{
+      color:#fff4c7;
+      font-size:13px;
+      margin-bottom:12px;
+    }
+
+    .signal-box{
+      width:150px;
+      height:150px;
+      margin:0 auto 18px;
+      border-radius:42px;
+      background:white;
+      color:#a36d00;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:74px;
+      box-shadow:
+        0 0 32px rgba(255,220,70,.45),
+        inset 0 0 20px rgba(255,170,0,.14);
+      animation:pulseSignal .75s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseSignal{
+      from{transform:scale(1)}
+      to{transform:scale(1.05)}
+    }
+
+    .signal-title{
+      font-size:25px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .signal-desc{
+      color:#fff4c7;
+      font-size:14px;
+      line-height:1.6;
+      min-height:45px;
+    }
+
+    .timer-box{
+      margin-top:16px;
+      background:rgba(255,255,255,.09);
+      border:1px solid rgba(255,230,130,.2);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .timer-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#fff4c7;
+      margin-bottom:8px;
+    }
+
+    .bar{
+      height:10px;
+      background:rgba(255,255,255,.14);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:100%;
+      background:linear-gradient(90deg,#fff08a,#ffb300);
+      border-radius:999px;
+      transition:.08s linear;
+      box-shadow:0 0 14px rgba(255,220,70,.7);
+    }
+
+    .action-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .action-btn{
+      border:none;
+      border-radius:22px;
+      min-height:92px;
+      padding:12px 8px;
+      font-weight:bold;
+      color:#3b2a00;
+      background:white;
+      box-shadow:0 10px 24px rgba(255,170,0,.16);
+      font-size:14px;
+    }
+
+    .action-btn span{
+      display:block;
+      font-size:28px;
+      margin-bottom:7px;
+    }
+
+    .action-btn:active{transform:scale(.94)}
+
+    .start-btn{
+      width:100%;
+      border:none;
+      border-radius:20px;
+      padding:16px;
+      background:linear-gradient(135deg,#fff08a,#ffb300);
+      color:#3b2a00;
+      font-size:16px;
+      font-weight:bold;
+      margin-bottom:12px;
+    }
+
+    .info{
+      text-align:center;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .feedback{
+      animation:hitFlash .25s ease;
+    }
+
+    @keyframes hitFlash{
+      0%{transform:scale(1)}
+      50%{transform:scale(1.08)}
+      100%{transform:scale(1)}
+    }
+
+    .wrong-flash{
+      animation:wrongShake .25s ease;
+    }
+
+    @keyframes wrongShake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-5px)}
+      50%{transform:translateX(5px)}
+      75%{transform:translateX(-3px)}
+      100%{transform:translateX(0)}
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#2a1c00;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,230,130,.28);
+      box-shadow:0 0 34px rgba(255,220,70,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#fff4c7;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#a36d00;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>⚡ Quick Reflex</h1>
+      <p>Respon cepat terhadap sinyal yang muncul. Insting harus bergerak tepat!</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="life">3</h2><span>Life</span></div>
+      <div class="stat"><h2 id="combo">0</h2><span>Combo</span></div>
+    </div>
+
+    <div class="arena" id="arena">
+      <div class="signal-label">Sinyal Insting</div>
+      <div class="signal-box" id="signalBox">⚡</div>
+      <div class="signal-title" id="signalTitle">Siap?</div>
+      <div class="signal-desc" id="signalDesc">
+        Tekan mulai, lalu pilih respon sesuai sinyal yang muncul.
+      </div>
+
+      <div class="timer-box">
+        <div class="timer-row">
+          <span>Waktu Respon</span>
+          <strong id="timeText">100%</strong>
+        </div>
+        <div class="bar">
+          <div class="fill" id="timeFill"></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="start-btn" id="startBtn" onclick="startGame()">Mulai Reflex ⚡</button>
+
+    <div class="action-grid">
+      <button class="action-btn" onclick="chooseAction('safe')">
+        <span>🛡️</span>
+        Lindungi
+      </button>
+
+      <button class="action-btn" onclick="chooseAction('danger')">
+        <span>🏃</span>
+        Hindari
+      </button>
+
+      <button class="action-btn" onclick="chooseAction('chance')">
+        <span>🎯</span>
+        Ambil
+      </button>
+    </div>
+
+    <div class="info" id="info">
+      Sinyal hijau/aman = Lindungi, bahaya = Hindari, peluang = Ambil.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">⚡ Reflex Selesai!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="restartGame()">Main Lagi</button>
+    </div>
+  </div>
+
+<script>
+  const signals = [
+    {
+      type:"safe",
+      icon:"🟢",
+      title:"Zona Aman",
+      desc:"Kondisi stabil. Pilih Lindungi agar tetap aman.",
+      correct:"safe"
+    },
+    {
+      type:"danger",
+      icon:"🔥",
+      title:"Bahaya Muncul",
+      desc:"Ada ancaman mendadak. Pilih Hindari secepatnya.",
+      correct:"danger"
+    },
+    {
+      type:"chance",
+      icon:"⭐",
+      title:"Peluang Cepat",
+      desc:"Ada peluang singkat. Pilih Ambil sebelum hilang.",
+      correct:"chance"
+    },
+    {
+      type:"danger",
+      icon:"⚠️",
+      title:"Alarm Insting",
+      desc:"Sinyal bahaya aktif. Jangan diam, segera Hindari.",
+      correct:"danger"
+    },
+    {
+      type:"safe",
+      icon:"🛡️",
+      title:"Butuh Perlindungan",
+      desc:"Situasi perlu dijaga. Pilih Lindungi.",
+      correct:"safe"
+    },
+    {
+      type:"chance",
+      icon:"🎁",
+      title:"Bonus Muncul",
+      desc:"Kesempatan terbuka sebentar. Pilih Ambil.",
+      correct:"chance"
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let life = 3;
+  let combo = 0;
+  let round = 0;
+  let maxRound = 12;
+  let currentSignal = null;
+  let timeLeft = 100;
+  let timer = null;
+  let running = false;
+  let answered = false;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const lifeEl = document.getElementById("life");
+  const comboEl = document.getElementById("combo");
+
+  const arena = document.getElementById("arena");
+  const signalBox = document.getElementById("signalBox");
+  const signalTitle = document.getElementById("signalTitle");
+  const signalDesc = document.getElementById("signalDesc");
+  const timeText = document.getElementById("timeText");
+  const timeFill = document.getElementById("timeFill");
+  const startBtn = document.getElementById("startBtn");
+  const info = document.getElementById("info");
+
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function updateStats(){
+    scoreEl.innerText = score;
+    levelEl.innerText = level;
+    lifeEl.innerText = life;
+    comboEl.innerText = combo;
+  }
+
+  function startGame(){
+    score = 0;
+    level = 1;
+    life = 3;
+    combo = 0;
+    round = 0;
+    running = true;
+
+    gameOver.style.display = "none";
+    startBtn.style.display = "none";
+
+    updateStats();
+    nextSignal();
+  }
+
+  function getSpeed(){
+    return Math.max(18, 45 - level * 4);
+  }
+
+  function nextSignal(){
+    if(!running) return;
+
+    if(round >= maxRound){
+      finishGame();
+      return;
+    }
+
+    round++;
+    answered = false;
+    timeLeft = 100;
+
+    currentSignal = signals[Math.floor(Math.random() * signals.length)];
+
+    signalBox.innerText = currentSignal.icon;
+    signalTitle.innerText = currentSignal.title;
+    signalDesc.innerText = currentSignal.desc;
+
+    info.innerText = `Round ${round}/${maxRound}. Respon cepat dan tepat!`;
+
+    updateTimerUI();
+    clearInterval(timer);
+
+    timer = setInterval(() => {
+      timeLeft -= getSpeed() / 10;
+
+      if(timeLeft <= 0){
+        timeLeft = 0;
+        updateTimerUI();
+        clearInterval(timer);
+        timeoutSignal();
+        return;
+      }
+
+      updateTimerUI();
+    }, 100);
+  }
+
+  function updateTimerUI(){
+    timeText.innerText = Math.ceil(timeLeft) + "%";
+    timeFill.style.width = timeLeft + "%";
+  }
+
+  function chooseAction(action){
+    if(!running || answered || !currentSignal) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    if(action === currentSignal.correct){
+      correctAction();
+    } else {
+      wrongAction();
+    }
+  }
+
+  function correctAction(){
+    combo++;
+
+    const speedBonus = Math.ceil(timeLeft / 5);
+    const comboBonus = combo * 3;
+    const earned = 30 + speedBonus + comboBonus + level * 5;
+
+    score += earned;
+
+    signalBox.classList.remove("feedback");
+    void signalBox.offsetWidth;
+    signalBox.classList.add("feedback");
+
+    info.innerText =
+      `✅ Tepat! +${earned} poin. Speed bonus +${speedBonus}, combo +${comboBonus}.`;
+
+    if(combo > 0 && combo % 4 === 0){
+      level++;
+      info.innerText += ` Level naik ke ${level}!`;
+    }
+
+    updateStats();
+
+    setTimeout(nextSignal, 650);
+  }
+
+  function wrongAction(){
+    life--;
+    combo = 0;
+
+    arena.classList.remove("wrong-flash");
+    void arena.offsetWidth;
+    arena.classList.add("wrong-flash");
+
+    info.innerText = `❌ Respon salah. Life berkurang. Jawaban tepat: ${getActionName(currentSignal.correct)}.`;
+
+    updateStats();
+
+    if(life <= 0){
+      setTimeout(finishGame, 700);
+      return;
+    }
+
+    setTimeout(nextSignal, 800);
+  }
+
+  function timeoutSignal(){
+    if(answered) return;
+
+    answered = true;
+    life--;
+    combo = 0;
+
+    info.innerText =
+      `⌛ Terlambat! Insting harus lebih cepat. Jawaban tepat: ${getActionName(currentSignal.correct)}.`;
+
+    updateStats();
+
+    if(life <= 0){
+      setTimeout(finishGame, 700);
+      return;
+    }
+
+    setTimeout(nextSignal, 800);
+  }
+
+  function getActionName(action){
+    if(action === "safe") return "Lindungi 🛡️";
+    if(action === "danger") return "Hindari 🏃";
+    if(action === "chance") return "Ambil 🎯";
+    return action;
+  }
+
+  function finishGame(){
+    running = false;
+    clearInterval(timer);
+
+    const finalBonus = life * 50 + combo * 10 + level * 30;
+    score += finalBonus;
+
+    updateStats();
+    finalScore.innerText = score;
+
+    let title = "⚡ Reflex Selesai!";
+    let desc = "Insting kamu cukup sigap dalam membaca sinyal dan merespon keadaan.";
+
+    if(life >= 3 && level >= 3){
+      title = "🟡 Insting Master!";
+      desc = "Refleks kamu tajam, cepat, dan stabil. Naluri responmu mantap!";
+    } else if(life <= 0){
+      title = "⚠️ Insting Perlu Diasah";
+      desc = "Beberapa sinyal belum terespon tepat. Tapi pola bahayanya mulai terbaca.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Bonus life: +${life * 50}<br>` +
+      `Bonus combo akhir: +${combo * 10}<br>` +
+      `Bonus level: +${level * 30}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    startBtn.style.display = "block";
+    startBtn.innerText = "Main Lagi ⚡";
+
+    gameOver.style.display = "flex";
+  }
+
+  function restartGame(){
+    gameOver.style.display = "none";
+    startGame();
+  }
+
+  updateStats();
+</script>
+</body>
+</html>
