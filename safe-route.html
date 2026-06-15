@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Safe Route</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.38),transparent 35%),
+        radial-gradient(circle at top left,rgba(255,170,0,.25),transparent 32%),
+        linear-gradient(180deg,#3b2a00,#1f1600,#0d0800);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,230,130,.24);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#fff4c7;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.2);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#fff4c7}
+
+    .meter-box{
+      display:grid;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .meter{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .meter-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#fff4c7;
+      margin-bottom:7px;
+    }
+
+    .bar{
+      height:9px;
+      background:rgba(255,255,255,.13);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:50%;
+      background:linear-gradient(90deg,#fff08a,#ffb300);
+      border-radius:999px;
+      transition:.35s;
+      box-shadow:0 0 14px rgba(255,220,70,.7);
+    }
+
+    .timer-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:22px;
+      padding:14px;
+      margin-bottom:16px;
+    }
+
+    .timer-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#fff4c7;
+      margin-bottom:8px;
+    }
+
+    .time-fill{
+      height:100%;
+      width:100%;
+      background:linear-gradient(90deg,#fff08a,#ffb300);
+      border-radius:999px;
+      transition:.08s linear;
+      box-shadow:0 0 14px rgba(255,220,70,.7);
+    }
+
+    .route-card{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.28),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.24);
+      border-radius:30px;
+      padding:22px 18px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(255,170,0,.18);
+      margin-bottom:16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .route-card::after{
+      content:"🛣️";
+      position:absolute;
+      right:20px;
+      top:14px;
+      color:rgba(255,255,255,.24);
+      font-size:30px;
+    }
+
+    .route-icon{
+      width:130px;
+      height:130px;
+      margin:0 auto 16px;
+      border-radius:38px;
+      background:white;
+      color:#a36d00;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:66px;
+      box-shadow:
+        0 0 32px rgba(255,220,70,.45),
+        inset 0 0 20px rgba(255,170,0,.14);
+      animation:routePulse 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes routePulse{
+      from{transform:translateY(0) scale(1)}
+      to{transform:translateY(-6px) scale(1.04)}
+    }
+
+    .route-label{
+      color:#fff4c7;
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .route-title{
+      font-size:24px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .route-text{
+      color:#fff4c7;
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .map{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    }
+
+    .map-dot{
+      height:38px;
+      border-radius:14px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,230,130,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      color:#fff4c7;
+    }
+
+    .map-dot.active{
+      background:white;
+      color:#a36d00;
+      box-shadow:0 0 18px rgba(255,220,70,.7);
+    }
+
+    .choices{
+      display:grid;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .choice-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(255,230,130,.22);
+      padding:15px;
+      text-align:left;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .choice-btn strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:6px;
+    }
+
+    .choice-btn:active{transform:scale(.97)}
+
+    .choice-btn.best{
+      background:white;
+      color:#a36d00;
+      box-shadow:0 0 22px rgba(255,220,70,.78);
+    }
+
+    .choice-btn.okay{
+      outline:3px solid rgba(255,220,80,.85);
+    }
+
+    .choice-btn.bad{
+      outline:3px solid #ff6b6b;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .feedback-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .feedback-box strong{color:white}
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .control-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .skip{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .next{
+      background:white;
+      color:#a36d00;
+    }
+
+    .next:disabled{opacity:.45}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#2a1c00;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,230,130,.28);
+      box-shadow:0 0 34px rgba(255,220,70,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#fff4c7;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#a36d00;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🛣️ Safe Route</h1>
+      <p>Pilih jalur aman dalam waktu singkat. Cepat, adaptif, dan tetap selamat.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="round">1/6</h2><span>Route</span></div>
+      <div class="stat"><h2 id="life">3</h2><span>Life</span></div>
+    </div>
+
+    <div class="meter-box">
+      <div class="meter">
+        <div class="meter-row"><span>🛡️ Safety</span><strong id="safetyText">60</strong></div>
+        <div class="bar"><div class="fill" id="safetyFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>⚡ Speed</span><strong id="speedText">60</strong></div>
+        <div class="bar"><div class="fill" id="speedFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>🟡 Instinct</span><strong id="instinctText">60</strong></div>
+        <div class="bar"><div class="fill" id="instinctFill"></div></div>
+      </div>
+    </div>
+
+    <div class="timer-box">
+      <div class="timer-row">
+        <span>Waktu Pilih Jalur</span>
+        <strong id="timeText">100%</strong>
+      </div>
+      <div class="bar">
+        <div class="time-fill" id="timeFill"></div>
+      </div>
+    </div>
+
+    <div class="route-card">
+      <div class="route-icon" id="routeIcon">🛣️</div>
+      <div class="route-label">Situasi Jalur</div>
+      <div class="route-title" id="routeTitle">Pilih Rute Aman</div>
+      <div class="route-text" id="routeText">
+        Baca kondisi jalur, lalu pilih rute paling aman.
+      </div>
+
+      <div class="map" id="mapDots">
+        <div class="map-dot active">🚩</div>
+        <div class="map-dot">•</div>
+        <div class="map-dot">•</div>
+        <div class="map-dot">•</div>
+        <div class="map-dot">🛣️</div>
+        <div class="map-dot">•</div>
+        <div class="map-dot">•</div>
+        <div class="map-dot">•</div>
+        <div class="map-dot">🏁</div>
+      </div>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="feedback-box" id="feedbackBox"></div>
+
+    <div class="controls">
+      <button class="control-btn skip" onclick="skipRoute()">Lewati</button>
+      <button class="control-btn next" id="nextBtn" onclick="nextRound()" disabled>Lanjut 🛣️</button>
+    </div>
+
+    <div class="info" id="info">
+      Jalur terbaik bukan selalu yang tercepat, tapi yang paling aman untuk sampai tujuan.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">🛣️ Route Selesai!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const routes = [
+    {
+      icon:"🌧️",
+      title:"Jalan Licin Setelah Hujan",
+      text:"Ada tiga jalur menuju tujuan. Jalur utama cepat tapi licin, jalur tengah ramai, jalur memutar lebih aman.",
+      best:{
+        title:"Jalur Memutar Aman",
+        text:"Ambil rute sedikit lebih jauh, tapi kondisi jalan lebih stabil dan minim risiko.",
+        safety:24, speed:-6, instinct:18
+      },
+      okay:{
+        title:"Jalur Tengah Ramai",
+        text:"Ambil rute ramai agar ada banyak orang, meski perjalanan agak tersendat.",
+        safety:10, speed:-10, instinct:6
+      },
+      bad:{
+        title:"Jalur Utama Licin",
+        text:"Ambil jalur tercepat meski licin karena ingin segera sampai.",
+        safety:-24, speed:10, instinct:-15
+      },
+      explanation:"Saat jalan licin, rute aman lebih penting daripada rute tercepat."
+    },
+    {
+      icon:"🌲",
+      title:"Jalur Hutan Bercabang",
+      text:"Penanda jalan rusak. Satu jalur terlihat pendek, satu jalur punya bekas pijakan jelas, satu jalur gelap.",
+      best:{
+        title:"Ikuti Bekas Pijakan",
+        text:"Pilih jalur yang punya tanda paling jelas dan mudah dilacak kembali.",
+        safety:22, speed:2, instinct:20
+      },
+      okay:{
+        title:"Jalur Pendek",
+        text:"Ambil jalur pendek karena terlihat cepat sampai.",
+        safety:2, speed:14, instinct:3
+      },
+      bad:{
+        title:"Jalur Gelap",
+        text:"Pilih jalur gelap karena terlihat sepi dan mungkin lebih cepat.",
+        safety:-28, speed:5, instinct:-18
+      },
+      explanation:"Dalam jalur asing, tanda yang bisa dilacak lebih aman daripada tebakan cepat."
+    },
+    {
+      icon:"🚧",
+      title:"Ada Perbaikan Jalan",
+      text:"Jalur depan sedang diperbaiki. Ada petugas memberi tanda, tapi beberapa orang tetap menerobos.",
+      best:{
+        title:"Ikuti Jalur Petugas",
+        text:"Ikuti pengalihan resmi meskipun agak memutar.",
+        safety:26, speed:-8, instinct:18
+      },
+      okay:{
+        title:"Tunggu Sebentar",
+        text:"Berhenti sebentar untuk melihat apakah jalur bisa terbuka.",
+        safety:12, speed:-12, instinct:5
+      },
+      bad:{
+        title:"Ikut Menerobos",
+        text:"Ikuti orang yang menerobos karena terlihat bisa lewat.",
+        safety:-30, speed:12, instinct:-20
+      },
+      explanation:"Tanda resmi biasanya dibuat untuk mengurangi risiko yang tidak terlihat dari luar."
+    },
+    {
+      icon:"🌫️",
+      title:"Kabut Tebal",
+      text:"Jarak pandang menurun. Ada jalur cepat yang menurun tajam dan jalur datar yang lebih panjang.",
+      best:{
+        title:"Jalur Datar",
+        text:"Ambil jalur datar agar lebih mudah mengontrol arah saat pandangan terbatas.",
+        safety:24, speed:-7, instinct:16
+      },
+      okay:{
+        title:"Berhenti Sementara",
+        text:"Tunggu kabut sedikit berkurang sebelum lanjut.",
+        safety:15, speed:-18, instinct:8
+      },
+      bad:{
+        title:"Turunan Cepat",
+        text:"Ambil jalur turun karena lebih cepat sampai ke bawah.",
+        safety:-26, speed:15, instinct:-15
+      },
+      explanation:"Saat pandangan terbatas, rute yang mudah dikontrol adalah pilihan paling aman."
+    },
+    {
+      icon:"👥",
+      title:"Kerumunan Event",
+      text:"Kamu ingin keluar dari area ramai. Ada pintu dekat tapi padat, lorong samping lebih sepi, dan jalur belakang belum jelas.",
+      best:{
+        title:"Lorong Samping Sepi",
+        text:"Pilih lorong yang lebih longgar dan tetap terlihat jelas arahnya.",
+        safety:22, speed:8, instinct:18
+      },
+      okay:{
+        title:"Pintu Dekat Padat",
+        text:"Ikuti arus ke pintu terdekat meski sangat ramai.",
+        safety:4, speed:6, instinct:4
+      },
+      bad:{
+        title:"Jalur Belakang Gelap",
+        text:"Ambil jalur belakang yang belum jelas karena terlihat tidak ramai.",
+        safety:-24, speed:8, instinct:-16
+      },
+      explanation:"Di kerumunan, jalur aman adalah yang longgar, terlihat, dan tidak melawan arus."
+    },
+    {
+      icon:"📱",
+      title:"Maps Menunjukkan Jalan Pintas",
+      text:"Aplikasi memberi jalan pintas lewat gang kecil. Jalan utama lebih panjang, tapi ramai dan terang.",
+      best:{
+        title:"Jalan Utama Terang",
+        text:"Ambil jalan utama yang lebih ramai dan terang meski lebih panjang.",
+        safety:25, speed:-8, instinct:16
+      },
+      okay:{
+        title:"Cek Gang dari Depan",
+        text:"Lihat kondisi gang dulu dari luar, lalu putuskan jika cukup aman.",
+        safety:10, speed:0, instinct:8
+      },
+      bad:{
+        title:"Masuk Gang Langsung",
+        text:"Ikuti maps tanpa mengecek kondisi sekitar.",
+        safety:-25, speed:14, instinct:-14
+      },
+      explanation:"Teknologi membantu, tapi Insting tetap perlu membaca kondisi nyata di sekitar."
+    },
+    {
+      icon:"⚡",
+      title:"Waktu Hampir Habis",
+      text:"Kamu harus sampai cepat. Ada rute cepat berisiko, rute sedang cukup aman, dan rute aman tapi sangat lambat.",
+      best:{
+        title:"Rute Sedang Stabil",
+        text:"Pilih rute yang masih cukup cepat tapi tetap punya risiko terkendali.",
+        safety:18, speed:12, instinct:20
+      },
+      okay:{
+        title:"Rute Sangat Aman",
+        text:"Pilih rute paling aman meski kemungkinan terlambat.",
+        safety:24, speed:-20, instinct:6
+      },
+      bad:{
+        title:"Rute Cepat Berisiko",
+        text:"Pilih rute paling cepat dan abaikan tanda bahaya kecil.",
+        safety:-26, speed:20, instinct:-18
+      },
+      explanation:"Saat waktu sempit, pilihan terbaik adalah kompromi stabil: cukup cepat, tapi tidak nekat."
+    },
+    {
+      icon:"🌉",
+      title:"Jembatan Sempit",
+      text:"Ada jembatan sempit. Satu sisi terlihat rapuh, sisi lain lebih jauh tapi punya pegangan.",
+      best:{
+        title:"Sisi dengan Pegangan",
+        text:"Ambil sisi yang punya pegangan meskipun sedikit lebih jauh.",
+        safety:25, speed:-5, instinct:17
+      },
+      okay:{
+        title:"Tunggu Orang Lewat",
+        text:"Tunggu sampai jembatan kosong dulu.",
+        safety:14, speed:-10, instinct:7
+      },
+      bad:{
+        title:"Sisi Rapuh",
+        text:"Lewat sisi yang rapuh karena jaraknya paling dekat.",
+        safety:-30, speed:12, instinct:-20
+      },
+      explanation:"Pegangan dan stabilitas lebih penting daripada jarak pendek saat melewati area berisiko."
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let round = 1;
+  let life = 3;
+
+  let safety = 60;
+  let speed = 60;
+  let instinct = 60;
+
+  let currentSet = [];
+  let currentRoute = null;
+  let answered = false;
+  let timer = null;
+  let timeLeft = 100;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const roundEl = document.getElementById("round");
+  const lifeEl = document.getElementById("life");
+
+  const safetyText = document.getElementById("safetyText");
+  const speedText = document.getElementById("speedText");
+  const instinctText = document.getElementById("instinctText");
+  const safetyFill = document.getElementById("safetyFill");
+  const speedFill = document.getElementById("speedFill");
+  const instinctFill = document.getElementById("instinctFill");
+
+  const timeText = document.getElementById("timeText");
+  const timeFill = document.getElementById("timeFill");
+
+  const routeIcon = document.getElementById("routeIcon");
+  const routeTitle = document.getElementById("routeTitle");
+  const routeText = document.getElementById("routeText");
+  const mapDots = document.getElementById("mapDots");
+  const choicesEl = document.getElementById("choices");
+  const feedbackBox = document.getElementById("feedbackBox");
+  const nextBtn = document.getElementById("nextBtn");
+  const info = document.getElementById("info");
+
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function clamp(value){
+    return Math.max(0, Math.min(100, value));
+  }
+
+  function setupLevel(){
+    round = 1;
+    life = 3;
+
+    safety = 60;
+    speed = 60;
+    instinct = 60;
+
+    answered = false;
+    currentSet = shuffle([...routes]).slice(0,6);
+
+    levelEl.innerText = level;
+    lifeEl.innerText = life;
+    gameOver.style.display = "none";
+
+    loadRound();
+  }
+
+  function updateMeters(){
+    safety = clamp(safety);
+    speed = clamp(speed);
+    instinct = clamp(instinct);
+
+    safetyText.innerText = safety;
+    speedText.innerText = speed;
+    instinctText.innerText = instinct;
+
+    safetyFill.style.width = safety + "%";
+    speedFill.style.width = speed + "%";
+    instinctFill.style.width = instinct + "%";
+
+    scoreEl.innerText = score;
+    lifeEl.innerText = life;
+  }
+
+  function startTimer(){
+    clearInterval(timer);
+    timeLeft = 100;
+    updateTimer();
+
+    const drain = Math.max(2.2, 4.2 - level * 0.25);
+
+    timer = setInterval(() => {
+      if(answered){
+        clearInterval(timer);
+        return;
+      }
+
+      timeLeft -= drain;
+      speed -= 0.4;
+
+      if(timeLeft <= 0){
+        timeLeft = 0;
+        updateTimer();
+        timeoutRoute();
+        return;
+      }
+
+      updateTimer();
+      updateMeters();
+    }, 100);
+  }
+
+  function updateTimer(){
+    timeText.innerText = Math.ceil(timeLeft) + "%";
+    timeFill.style.width = timeLeft + "%";
+  }
+
+  function loadRound(){
+    answered = false;
+    currentRoute = currentSet[round - 1];
+
+    roundEl.innerText = `${round}/6`;
+    nextBtn.disabled = true;
+
+    routeIcon.innerText = currentRoute.icon;
+    routeTitle.innerText = currentRoute.title;
+    routeText.innerText = currentRoute.text;
+
+    feedbackBox.style.display = "none";
+    feedbackBox.innerHTML = "";
+
+    renderMap();
+    renderChoices();
+    updateMeters();
+    startTimer();
+
+    info.innerText = "Pilih jalur cepat, tapi jangan mengorbankan keselamatan.";
+  }
+
+  function renderMap(){
+    const icons = ["🚩","•","•","•","🛣️","•","•","•","🏁"];
+    mapDots.innerHTML = "";
+
+    icons.forEach((icon, index) => {
+      const dot = document.createElement("div");
+      dot.className = "map-dot";
+
+      if(index <= round){
+        dot.classList.add("active");
+      }
+
+      dot.innerText = icon;
+      mapDots.appendChild(dot);
+    });
+  }
+
+  function renderChoices(){
+    choicesEl.innerHTML = "";
+
+    const choices = [
+      {type:"best", ...currentRoute.best},
+      {type:"okay", ...currentRoute.okay},
+      {type:"bad", ...currentRoute.bad}
+    ];
+
+    shuffle(choices).forEach(choice => {
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+      btn.innerHTML = `
+        <strong>${choice.title}</strong>
+        "${choice.text}"
+      `;
+
+      btn.onclick = () => chooseRoute(choice, btn);
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function applyEffect(choice){
+    safety += choice.safety;
+    speed += choice.speed;
+    instinct += choice.instinct;
+  }
+
+  function chooseRoute(choice, button){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    applyEffect(choice);
+
+    if(choice.type === "best"){
+      button.classList.add("best");
+
+      const speedBonus = Math.ceil(timeLeft / 5);
+      const safeBonus = Math.ceil((safety + instinct) / 8);
+      const earned = 55 + level * 6 + speedBonus + safeBonus;
+
+      score += earned;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🛣️ Jalur Paling Aman</strong><br>` +
+        `${currentRoute.explanation}<br><br>` +
+        `Safety ${formatEffect(choice.safety)} • Speed ${formatEffect(choice.speed)} • Instinct ${formatEffect(choice.instinct)}<br>` +
+        `Speed bonus +${speedBonus} • Score +${earned}`;
+
+      info.innerText = "✅ Jalur aman dipilih. Instingmu membaca risiko dengan baik.";
+    }
+
+    if(choice.type === "okay"){
+      button.classList.add("okay");
+
+      const speedBonus = Math.ceil(timeLeft / 10);
+      const earned = 24 + level * 3 + speedBonus;
+
+      score += earned;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🙂 Jalur Cukup Aman</strong><br>` +
+        `Pilihan ini masih bisa digunakan, tapi belum paling stabil untuk kondisi saat ini.<br><br>` +
+        `<strong>Yang lebih tepat:</strong><br>"${currentRoute.best.text}"`;
+
+      info.innerText = "Cukup aman, tapi masih ada rute yang lebih kuat.";
+    }
+
+    if(choice.type === "bad"){
+      button.classList.add("bad");
+      life--;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>⚠️ Jalur Berisiko</strong><br>` +
+        `Rute ini terlihat cepat, tapi risikonya terlalu besar.<br><br>` +
+        `<strong>Yang lebih aman:</strong><br>"${currentRoute.best.text}"`;
+
+      info.innerText = "❌ Jalur berbahaya. Life berkurang.";
+    }
+
+    if(safety <= 10 || instinct <= 10){
+      life--;
+      info.innerText += " Kondisi safety/instinct kritis, life berkurang lagi.";
+    }
+
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(life <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function timeoutRoute(){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    life--;
+    safety -= 14;
+    speed -= 12;
+    instinct -= 14;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>⌛ Terlambat Memilih Jalur</strong><br>` +
+      `Dalam situasi berubah cepat, terlalu lama diam bisa membuat semua rute makin berisiko.<br><br>` +
+      `<strong>Rute terbaik:</strong><br>"${currentRoute.best.text}"<br><br>` +
+      `${currentRoute.explanation}`;
+
+    info.innerText = "Terlambat memilih. Safety, speed, dan instinct turun.";
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(life <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function skipRoute(){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    life--;
+    safety -= 12;
+    speed -= 10;
+    instinct -= 12;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>Route dilewati.</strong><br>` +
+      `Tidak memilih jalur membuat kondisi makin tidak pasti.<br><br>` +
+      `<strong>Rute terbaik:</strong><br>"${currentRoute.best.text}"`;
+
+    info.innerText = "Route dilewati. Kondisi perjalanan menurun.";
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(life <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function formatEffect(value){
+    if(value > 0) return `+${value}`;
+    return value;
+  }
+
+  function nextRound(){
+    if(!answered) return;
+
+    if(life <= 0){
+      finishLevel();
+      return;
+    }
+
+    round++;
+
+    if(round > 6){
+      finishLevel();
+      return;
+    }
+
+    loadRound();
+  }
+
+  function finishLevel(){
+    clearInterval(timer);
+
+    const average = Math.round((safety + speed + instinct) / 3);
+    const bonus = Math.max(average, 0) + life * 45 + level * 35;
+
+    score += bonus;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    let title = "🛣️ Route Selesai!";
+    let desc = "Kamu berhasil memilih beberapa jalur dengan naluri yang cukup aman.";
+
+    if(safety >= 75 && instinct >= 75 && life >= 3){
+      title = "🟡 Safe Route Master!";
+      desc = "Insting jalurmu sangat tajam. Kamu cepat membaca risiko dan tetap menjaga keselamatan.";
+    } else if(life <= 0 || safety <= 25){
+      title = "⚠️ Route Terlalu Berisiko";
+      desc = "Beberapa jalur terlalu berbahaya. Tapi kamu mulai membaca pola aman dan tidak aman.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Safety akhir: <strong>${safety}</strong><br>` +
+      `Speed akhir: <strong>${speed}</strong><br>` +
+      `Instinct akhir: <strong>${instinct}</strong><br>` +
+      `Bonus life: +${life * 45}<br>` +
+      `Bonus level: +${level * 35}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
