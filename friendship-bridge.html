@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Friendship Bridge</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.32),transparent 35%),
+        radial-gradient(circle at top left,rgba(0,180,110,.24),transparent 32%),
+        linear-gradient(180deg,#00351f,#001f15,#000d08);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(150,255,190,.2);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#ddffec;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#ddffec}
+
+    .meter-box{
+      display:grid;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .meter{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.16);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .meter-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#ddffec;
+      margin-bottom:7px;
+    }
+
+    .bar{
+      height:9px;
+      background:rgba(255,255,255,.13);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:50%;
+      background:linear-gradient(90deg,#9dffbf,#00b86b);
+      border-radius:999px;
+      transition:.35s;
+      box-shadow:0 0 14px rgba(76,255,130,.65);
+    }
+
+    .bridge-card{
+      background:
+        radial-gradient(circle at top right,rgba(76,255,130,.25),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.2);
+      border-radius:30px;
+      padding:20px;
+      margin-bottom:16px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(0,140,80,.2);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .bridge-card::after{
+      content:"♡";
+      position:absolute;
+      right:20px;
+      top:14px;
+      color:rgba(255,255,255,.22);
+      font-size:28px;
+    }
+
+    .bridge-label{
+      color:#cffff0;
+      font-size:13px;
+      margin-bottom:10px;
+    }
+
+    .bridge-visual{
+      min-height:120px;
+      border-radius:26px;
+      background:
+        radial-gradient(circle at bottom,rgba(120,255,170,.20),transparent 48%),
+        rgba(0,0,0,.18);
+      border:1px dashed rgba(150,255,190,.22);
+      padding:18px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+      margin-bottom:16px;
+    }
+
+    .side{
+      width:44px;
+      height:58px;
+      border-radius:18px;
+      background:white;
+      color:#00864d;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:28px;
+      box-shadow:0 0 18px rgba(76,255,130,.35);
+      flex-shrink:0;
+    }
+
+    .bridge-piece{
+      width:34px;
+      height:18px;
+      border-radius:8px;
+      background:rgba(255,255,255,.13);
+      border:1px solid rgba(150,255,190,.18);
+      transition:.3s;
+    }
+
+    .bridge-piece.active{
+      background:white;
+      box-shadow:0 0 18px rgba(76,255,130,.7);
+      animation:bridgeGlow 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes bridgeGlow{
+      from{transform:translateY(0)}
+      to{transform:translateY(-4px)}
+    }
+
+    .situation-title{
+      font-size:23px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .situation-text{
+      color:#ddffec;
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .choices{
+      display:grid;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .choice-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(150,255,190,.2);
+      padding:15px;
+      text-align:left;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .choice-btn strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:6px;
+    }
+
+    .choice-btn:active{transform:scale(.97)}
+
+    .choice-btn.best{
+      background:white;
+      color:#00864d;
+      box-shadow:0 0 22px rgba(76,255,130,.75);
+    }
+
+    .choice-btn.okay{
+      outline:3px solid rgba(255,220,80,.8);
+    }
+
+    .choice-btn.bad{
+      outline:3px solid #ff6b6b;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .feedback-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .feedback-box strong{color:white}
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .control-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .skip{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .next{
+      background:white;
+      color:#00864d;
+    }
+
+    .next:disabled{opacity:.45}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#ddffec;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#002817;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(150,255,190,.25);
+      box-shadow:0 0 34px rgba(76,255,130,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#ddffec;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#00864d;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🌉 Friendship Bridge</h1>
+      <p>Bangun jembatan hubungan lewat pilihan sikap yang hangat dan bijak.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="round">1/5</h2><span>Round</span></div>
+      <div class="stat"><h2 id="heart">3</h2><span>Heart</span></div>
+    </div>
+
+    <div class="meter-box">
+      <div class="meter">
+        <div class="meter-row"><span>🤝 Trust</span><strong id="trustText">45</strong></div>
+        <div class="bar"><div class="fill" id="trustFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>💚 Care</span><strong id="careText">45</strong></div>
+        <div class="bar"><div class="fill" id="careFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>🌿 Harmony</span><strong id="harmonyText">45</strong></div>
+        <div class="bar"><div class="fill" id="harmonyFill"></div></div>
+      </div>
+    </div>
+
+    <div class="bridge-card">
+      <div class="bridge-label">Jembatan Persahabatan</div>
+
+      <div class="bridge-visual" id="bridgeVisual">
+        <div class="side">🙂</div>
+        <div class="bridge-piece"></div>
+        <div class="bridge-piece"></div>
+        <div class="bridge-piece"></div>
+        <div class="bridge-piece"></div>
+        <div class="bridge-piece"></div>
+        <div class="side">😊</div>
+      </div>
+
+      <div class="situation-title" id="situationTitle">Situasi Hubungan</div>
+      <div class="situation-text" id="situationText">
+        Pilih sikap yang paling menjaga hubungan.
+      </div>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="feedback-box" id="feedbackBox"></div>
+
+    <div class="controls">
+      <button class="control-btn skip" onclick="skipChoice()">Lewati</button>
+      <button class="control-btn next" id="nextBtn" onclick="nextRound()" disabled>Lanjut 🌉</button>
+    </div>
+
+    <div class="info" id="info">
+      Hubungan yang kuat dibangun dengan kejujuran, empati, dan sikap saling menjaga.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">🌉 Bridge Terbangun!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const situations = [
+    {
+      title:"Teman Merasa Diabaikan",
+      text:"Temanmu berkata, 'Akhir-akhir ini kamu kayak nggak peduli lagi sama aku.'",
+      best:{
+        title:"Dengarkan dan Akui",
+        desc:"Terima perasaannya tanpa defensif.",
+        text:"Makasih sudah jujur. Aku nggak mau kamu merasa diabaikan. Boleh ceritakan bagian mana yang paling terasa?",
+        trust:18, care:22, harmony:15
+      },
+      okay:{
+        title:"Jelaskan Kesibukan",
+        desc:"Beri alasan dengan sopan.",
+        text:"Maaf, aku memang lagi sibuk akhir-akhir ini, bukan berarti nggak peduli.",
+        trust:8, care:8, harmony:5
+      },
+      bad:{
+        title:"Menyangkal",
+        desc:"Anggap ia terlalu sensitif.",
+        text:"Kamu aja yang terlalu mikir begitu.",
+        trust:-18, care:-20, harmony:-15
+      },
+      explanation:"Saat seseorang merasa diabaikan, yang paling dibutuhkan adalah didengar dan diakui dulu."
+    },
+    {
+      title:"Rahasia Terbocorkan",
+      text:"Kamu tidak sengaja menceritakan hal pribadi temanmu kepada orang lain. Temanmu kecewa.",
+      best:{
+        title:"Minta Maaf Tulus",
+        desc:"Akui kesalahan dan pulihkan kepercayaan.",
+        text:"Aku salah karena tidak menjaga ceritamu. Maaf. Aku akan bertanggung jawab dan tidak mengulanginya.",
+        trust:24, care:15, harmony:12
+      },
+      okay:{
+        title:"Jelaskan Niat",
+        desc:"Beri tahu bahwa kamu tidak bermaksud buruk.",
+        text:"Aku nggak bermaksud menyebarkan. Aku cuma keceplosan.",
+        trust:5, care:5, harmony:4
+      },
+      bad:{
+        title:"Membela Diri",
+        desc:"Mengecilkan kesalahan.",
+        text:"Lagian itu bukan rahasia besar, kan?",
+        trust:-25, care:-16, harmony:-18
+      },
+      explanation:"Kepercayaan pulih ketika kesalahan diakui dengan jelas, bukan dibela atau dikecilkan."
+    },
+    {
+      title:"Berbeda Pendapat",
+      text:"Kamu dan sahabatmu berbeda pendapat tentang rencana acara. Suasana mulai tegang.",
+      best:{
+        title:"Cari Titik Tengah",
+        desc:"Tetap menghargai sambil mencari solusi.",
+        text:"Aku lihat kita punya sudut pandang beda. Yuk cari bagian yang bisa kita gabungkan supaya sama-sama nyaman.",
+        trust:14, care:14, harmony:24
+      },
+      okay:{
+        title:"Mengalah Saja",
+        desc:"Agar konflik cepat selesai.",
+        text:"Ya sudah, ikut pendapatmu saja.",
+        trust:5, care:7, harmony:9
+      },
+      bad:{
+        title:"Memaksa",
+        desc:"Anggap pendapat sendiri paling benar.",
+        text:"Pokoknya idemu kurang cocok. Pakai caraku saja.",
+        trust:-16, care:-12, harmony:-24
+      },
+      explanation:"Perbedaan pendapat lebih sehat jika dicari titik tengah, bukan dipaksa atau dipendam."
+    },
+    {
+      title:"Teman Butuh Dukungan",
+      text:"Temanmu sedang menghadapi masalah keluarga dan tampak lebih pendiam dari biasanya.",
+      best:{
+        title:"Hadir dengan Lembut",
+        desc:"Temani tanpa memaksa cerita.",
+        text:"Aku ada di sini. Kamu nggak harus cerita sekarang, tapi kalau butuh ditemani, aku siap.",
+        trust:18, care:24, harmony:13
+      },
+      okay:{
+        title:"Tanya Langsung",
+        desc:"Minta ia segera cerita.",
+        text:"Kamu kenapa? Cerita aja biar lega.",
+        trust:6, care:9, harmony:4
+      },
+      bad:{
+        title:"Menghindar",
+        desc:"Takut ikut terbawa masalah.",
+        text:"Aku nggak mau ikut campur urusan keluarga orang.",
+        trust:-16, care:-24, harmony:-10
+      },
+      explanation:"Dalam masalah pribadi, kehadiran aman lebih penting daripada memaksa orang segera terbuka."
+    },
+    {
+      title:"Janji Terlupakan",
+      text:"Kamu lupa janji bertemu dengan temanmu. Ia sudah menunggu cukup lama.",
+      best:{
+        title:"Akui dan Perbaiki",
+        desc:"Minta maaf plus tawarkan tindakan nyata.",
+        text:"Maaf aku lupa dan membuatmu menunggu. Aku paham kamu kecewa. Aku ingin mengganti waktumu, kapan kamu nyaman?",
+        trust:20, care:18, harmony:14
+      },
+      okay:{
+        title:"Minta Maaf Singkat",
+        desc:"Minta maaf tanpa solusi.",
+        text:"Maaf ya, aku benar-benar lupa.",
+        trust:8, care:7, harmony:5
+      },
+      bad:{
+        title:"Menyalahkan Keadaan",
+        desc:"Banyak alasan tanpa tanggung jawab.",
+        text:"Ya gimana, aku juga banyak urusan. Kamu harusnya ingetin.",
+        trust:-22, care:-14, harmony:-18
+      },
+      explanation:"Permintaan maaf terasa lebih tulus saat disertai pengakuan dampak dan niat memperbaiki."
+    },
+    {
+      title:"Teman Berhasil",
+      text:"Temanmu mendapat pencapaian besar. Di sisi lain kamu juga sedang merasa tertinggal.",
+      best:{
+        title:"Apresiasi Tulus",
+        desc:"Rayakan keberhasilannya tanpa mengecilkan diri.",
+        text:"Aku ikut senang lihat usahamu berhasil. Semoga aku juga bisa belajar dari semangatmu.",
+        trust:15, care:17, harmony:18
+      },
+      okay:{
+        title:"Pujian Pendek",
+        desc:"Tetap memberi selamat.",
+        text:"Selamat ya, keren.",
+        trust:7, care:7, harmony:8
+      },
+      bad:{
+        title:"Membandingkan",
+        desc:"Buat suasana jadi tidak nyaman.",
+        text:"Enak ya kamu, hidupmu lancar terus. Aku mah susah.",
+        trust:-12, care:-10, harmony:-18
+      },
+      explanation:"Feeling yang sehat mampu ikut bahagia tanpa meniadakan perasaan diri sendiri."
+    }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let round = 1;
+  let heart = 3;
+  let trust = 45;
+  let care = 45;
+  let harmony = 45;
+  let currentSet = [];
+  let currentSituation = null;
+  let answered = false;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const roundEl = document.getElementById("round");
+  const heartEl = document.getElementById("heart");
+
+  const trustText = document.getElementById("trustText");
+  const careText = document.getElementById("careText");
+  const harmonyText = document.getElementById("harmonyText");
+  const trustFill = document.getElementById("trustFill");
+  const careFill = document.getElementById("careFill");
+  const harmonyFill = document.getElementById("harmonyFill");
+
+  const bridgeVisual = document.getElementById("bridgeVisual");
+  const situationTitle = document.getElementById("situationTitle");
+  const situationText = document.getElementById("situationText");
+  const choicesEl = document.getElementById("choices");
+  const feedbackBox = document.getElementById("feedbackBox");
+  const nextBtn = document.getElementById("nextBtn");
+  const info = document.getElementById("info");
+
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function setupLevel(){
+    round = 1;
+    heart = 3;
+    trust = 45;
+    care = 45;
+    harmony = 45;
+    answered = false;
+    currentSet = shuffle([...situations]).slice(0,5);
+
+    levelEl.innerText = level;
+    heartEl.innerText = heart;
+    gameOver.style.display = "none";
+
+    loadRound();
+  }
+
+  function clamp(value){
+    return Math.max(0, Math.min(100, value));
+  }
+
+  function updateMeters(){
+    trust = clamp(trust);
+    care = clamp(care);
+    harmony = clamp(harmony);
+
+    trustText.innerText = trust;
+    careText.innerText = care;
+    harmonyText.innerText = harmony;
+
+    trustFill.style.width = trust + "%";
+    careFill.style.width = care + "%";
+    harmonyFill.style.width = harmony + "%";
+
+    renderBridge();
+  }
+
+  function renderBridge(){
+    const average = Math.round((trust + care + harmony) / 3);
+    const activePieces = Math.max(1, Math.ceil(average / 20));
+
+    bridgeVisual.innerHTML = `<div class="side">🙂</div>`;
+
+    for(let i = 0; i < 5; i++){
+      const piece = document.createElement("div");
+      piece.className = "bridge-piece";
+      if(i < activePieces) piece.classList.add("active");
+      bridgeVisual.appendChild(piece);
+    }
+
+    bridgeVisual.innerHTML += `<div class="side">😊</div>`;
+  }
+
+  function loadRound(){
+    answered = false;
+    currentSituation = currentSet[round - 1];
+
+    roundEl.innerText = `${round}/5`;
+    heartEl.innerText = heart;
+    nextBtn.disabled = true;
+
+    situationTitle.innerText = currentSituation.title;
+    situationText.innerText = currentSituation.text;
+
+    feedbackBox.style.display = "none";
+    feedbackBox.innerHTML = "";
+
+    renderChoices();
+    updateMeters();
+
+    info.innerText = "Pilih sikap yang paling menjaga hubungan dan membangun trust.";
+  }
+
+  function renderChoices(){
+    choicesEl.innerHTML = "";
+
+    const choices = [
+      {type:"best", ...currentSituation.best},
+      {type:"okay", ...currentSituation.okay},
+      {type:"bad", ...currentSituation.bad}
+    ];
+
+    shuffle(choices).forEach(choice => {
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+
+      btn.innerHTML = `
+        <strong>${choice.title}</strong>
+        "${choice.text}"
+      `;
+
+      btn.onclick = () => chooseAction(choice, btn);
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function chooseAction(choice, button){
+    if(answered) return;
+
+    answered = true;
+
+    trust += choice.trust;
+    care += choice.care;
+    harmony += choice.harmony;
+
+    if(choice.type === "best"){
+      button.classList.add("best");
+
+      const earned = 50 + level * 6 + heart * 8;
+      score += earned;
+      scoreEl.innerText = score;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🌉 Sikap Terbaik</strong><br>` +
+        `${currentSituation.explanation}<br><br>` +
+        `Trust +${choice.trust} • Care +${choice.care} • Harmony +${choice.harmony}<br>` +
+        `Score +${earned}`;
+
+      info.innerText = "✅ Jembatan hubungan makin kuat.";
+    }
+
+    if(choice.type === "okay"){
+      button.classList.add("okay");
+
+      const earned = 20 + level * 3;
+      score += earned;
+      scoreEl.innerText = score;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🙂 Cukup Menjaga</strong><br>` +
+        `Respon ini masih cukup baik, tapi belum sepenuhnya menyentuh kebutuhan hubungan.<br><br>` +
+        `<strong>Yang lebih membangun:</strong><br>"${currentSituation.best.text}"`;
+
+      info.innerText = "Cukup baik, tapi bridge belum kokoh sepenuhnya.";
+    }
+
+    if(choice.type === "bad"){
+      button.classList.add("bad");
+      heart--;
+      heartEl.innerText = heart;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>🌧️ Sikap Kurang Tepat</strong><br>` +
+        `Respon ini bisa membuat hubungan terasa tidak aman.<br><br>` +
+        `<strong>Yang lebih menjaga:</strong><br>"${currentSituation.best.text}"`;
+
+      info.innerText = "❌ Bridge melemah. Heart berkurang.";
+
+      if(heart <= 0){
+        updateMeters();
+        setTimeout(finishLevel, 900);
+        return;
+      }
+    }
+
+    updateMeters();
+    nextBtn.disabled = false;
+  }
+
+  function skipChoice(){
+    if(answered) return;
+
+    answered = true;
+    heart--;
+
+    trust -= 8;
+    care -= 10;
+    harmony -= 8;
+
+    heartEl.innerText = heart;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>Situasi dilewati.</strong><br>` +
+      `Sikap terbaik sebenarnya:<br>"${currentSituation.best.text}"<br><br>` +
+      `${currentSituation.explanation}`;
+
+    info.innerText = "Situasi dilewati. Bridge sedikit melemah.";
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(heart <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function nextRound(){
+    if(!answered) return;
+
+    round++;
+
+    if(round > 5){
+      finishLevel();
+      return;
+    }
+
+    loadRound();
+  }
+
+  function finishLevel(){
+    const average = Math.round((trust + care + harmony) / 3);
+    const bonus = average + heart * 25 + level * 30;
+
+    score += bonus;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    let title = "🌉 Bridge Terbangun!";
+    let desc = "Kamu berhasil menjaga hubungan dengan sikap yang cukup hangat dan membangun.";
+
+    if(average >= 85 && heart >= 3){
+      title = "💚 Friendship Master!";
+      desc = "Jembatan persahabatan terbangun sangat kokoh. Trust, care, dan harmony terjaga dengan indah.";
+    } else if(heart === 0 || average <= 40){
+      title = "🌧️ Bridge Masih Rapuh";
+      desc = "Beberapa pilihan membuat hubungan terasa kurang aman. Tapi kamu mulai memahami cara membangunnya.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Trust: <strong>${trust}</strong><br>` +
+      `Care: <strong>${care}</strong><br>` +
+      `Harmony: <strong>${harmony}</strong><br>` +
+      `Bonus rata-rata: +${average}<br>` +
+      `Bonus heart: +${heart * 25}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
