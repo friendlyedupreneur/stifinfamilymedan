@@ -1,197 +1,338 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Empathy Sync: Harmony Quest</title>
-    <style>
-        html, body {
-            margin: 0; padding: 0; width: 100vw; height: 100vh;
-            background-color: #2d0a1f; color: #ff8fa3; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-            overflow: hidden; touch-action: none; text-align: center;
-        }
-        .header { margin-top: 30px; }
-        h1 { margin: 0; font-size: 28px; color: #ffb3c6; text-transform: uppercase; letter-spacing: 2px;}
-        h2 { margin: 5px 0 10px 0; font-size: 18px; color: #00e676; }
-        
-        #harmony-container {
-            width: 280px; height: 12px; background-color: #4a0e2e; border-radius: 6px;
-            margin: 10px auto; overflow: hidden; border: 1px solid #ff4081;
-        }
-        #harmony-bar {
-            width: 100%; height: 100%; background-color: #00e676;
-            transition: width 0.1s linear, background-color 0.3s;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feeling Game Arena</title>
 
-        #mood-display {
-            font-size: 100px; margin: 20px 0;
-            text-shadow: 0 0 30px rgba(255, 64, 129, 0.5);
-            transition: transform 0.2s;
-        }
-        .pop { transform: scale(1.2); }
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
 
-        .btn-container {
-            display: flex; justify-content: center; gap: 15px; margin-bottom: 50px; width: 100%;
-        }
-        .reaction-btn {
-            width: 70px; height: 70px; font-size: 35px;
-            background-color: #4a0e2e; border: 2px solid #ff8fa3; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            transition: transform 0.1s, background-color 0.2s;
-        }
-        .reaction-btn:active { transform: scale(0.9); background-color: #ff4081; }
+    body{
+      background:
+        radial-gradient(circle at top right, rgba(76,255,130,.32), transparent 35%),
+        radial-gradient(circle at top left, rgba(0,180,110,.24), transparent 32%),
+        linear-gradient(180deg,#00351f,#001f15,#000d08);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
 
-        #overlay {
-            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(45, 10, 31, 0.95); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 10;
-        }
-        #overlay h1 { font-size: 36px; margin-bottom: 10px; color: #ff4081; }
-        .start-btn {
-            margin-top: 20px; padding: 12px 28px; font-size: 18px; font-weight: bold;
-            color: #fff; background-color: #ff4081; border: none; border-radius: 8px; cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
-        }
-        .start-btn:active { transform: translateY(2px); }
-    </style>
+    .page{
+      max-width:480px;
+      margin:auto;
+      padding:22px 18px 50px;
+    }
+
+    .badge{
+      display:inline-block;
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(150,255,190,.28);
+      padding:8px 14px;
+      border-radius:999px;
+      font-size:13px;
+      margin-bottom:18px;
+      box-shadow:0 0 18px rgba(76,255,130,.18);
+    }
+
+    .hero{
+      background:
+        radial-gradient(circle at top right,rgba(100,255,155,.42),transparent 38%),
+        linear-gradient(135deg,#007a45,#00351f 65%,#00140c);
+      border:1px solid rgba(150,255,190,.25);
+      border-radius:30px;
+      padding:30px 22px;
+      box-shadow:0 18px 45px rgba(0,160,90,.25);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      width:180px;
+      height:180px;
+      right:-70px;
+      top:-60px;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,.12);
+      box-shadow:0 0 38px rgba(76,255,130,.3);
+    }
+
+    .hero::after{
+      content:"♡ ✦ ♡";
+      position:absolute;
+      right:22px;
+      bottom:20px;
+      color:rgba(255,255,255,.25);
+      font-size:24px;
+      letter-spacing:7px;
+    }
+
+    .hero h1,.hero p,.hero button{
+      position:relative;
+      z-index:2;
+    }
+
+    .hero h1{
+      font-size:34px;
+      line-height:1.05;
+      margin-bottom:12px;
+    }
+
+    .hero p{
+      font-size:15px;
+      line-height:1.6;
+      color:#ddffec;
+    }
+
+    .hero button{
+      margin-top:22px;
+      width:100%;
+      border:none;
+      padding:15px;
+      border-radius:18px;
+      background:white;
+      color:#007a45;
+      font-size:16px;
+      font-weight:bold;
+    }
+
+    .section{
+      margin-top:28px;
+    }
+
+    .section h2{
+      font-size:21px;
+      margin-bottom:10px;
+    }
+
+    .intro{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:18px;
+      line-height:1.6;
+      color:#ddffec;
+      font-size:14px;
+    }
+
+    .games{
+      display:grid;
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .game-card{
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.045));
+      border:1px solid rgba(150,255,190,.18);
+      border-radius:22px;
+      padding:16px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+      box-shadow:0 10px 25px rgba(0,120,70,.18);
+    }
+
+    .icon{
+      width:56px;
+      height:56px;
+      border-radius:19px;
+      background:linear-gradient(135deg,#9dffbf,#00a65f);
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:26px;
+      flex-shrink:0;
+      box-shadow:0 0 18px rgba(76,255,130,.35);
+    }
+
+    .game-info{
+      flex:1;
+    }
+
+    .game-info h3{
+      font-size:16px;
+      margin-bottom:5px;
+    }
+
+    .game-info p{
+      font-size:13px;
+      color:#ddffec;
+      line-height:1.4;
+    }
+
+    .status{
+      margin-top:8px;
+      display:inline-block;
+      font-size:11px;
+      padding:5px 9px;
+      border-radius:999px;
+      background:rgba(255,255,255,.13);
+      color:#fff;
+    }
+
+    .available{
+      background:#ffffff;
+      color:#00864d;
+      font-weight:bold;
+    }
+
+    .play-btn{
+      margin-top:10px;
+      border:none;
+      background:#ffffff;
+      color:#00864d;
+      padding:10px 14px;
+      border-radius:14px;
+      font-weight:bold;
+    }
+
+    .footer-cta{
+      margin-top:30px;
+      text-align:center;
+      background:
+        radial-gradient(circle at top,rgba(76,255,130,.34),transparent 45%),
+        linear-gradient(135deg,#00864d,#002b1a);
+      border:1px solid rgba(150,255,190,.22);
+      border-radius:24px;
+      padding:24px 18px;
+      box-shadow:0 18px 38px rgba(0,140,80,.22);
+    }
+
+    .footer-cta h2{
+      font-size:22px;
+      margin-bottom:10px;
+    }
+
+    .footer-cta p{
+      font-size:14px;
+      color:#ddffec;
+      margin-bottom:18px;
+      line-height:1.5;
+    }
+
+    .footer-cta button{
+      width:100%;
+      border:none;
+      padding:15px;
+      border-radius:18px;
+      background:white;
+      color:#00864d;
+      font-weight:bold;
+      font-size:15px;
+    }
+  </style>
 </head>
+
 <body>
+  <main class="page">
 
-    <div class="header">
-        <h1>Empathy Sync</h1>
-        <h2 id="level-text">Level 1</h2>
-        <div id="harmony-container"><div id="harmony-bar"></div></div>
-    </div>
-    
-    <div id="mood-display">😊</div>
+    <div class="badge">🟢 STIFIn Feeling Game</div>
 
-    <div class="btn-container">
-        <div class="reaction-btn" onclick="sendReaction('calm')">🌊</div>
-        <div class="reaction-btn" onclick="sendReaction('comfort')">💖</div>
-        <div class="reaction-btn" onclick="sendReaction('warmth')">🔥</div>
-    </div>
+    <section class="hero">
+      <h1>Feeling<br>Game Arena</h1>
+      <p>
+        Latih empati, komunikasi, kepekaan emosi, dan kemampuan menjaga harmoni
+        melalui mini game khas Feeling.
+      </p>
+      <button onclick="scrollToGames()">Mulai Bermain</button>
+    </section>
 
-    <div id="overlay">
-        <h1 id="end-title">HARMONY QUEST</h1>
-        <p id="end-desc" style="color: #ffb3c6;">Berikan empati yang tepat sebelum kesabaran habis!</p>
-        <p style="color: #fff; font-size: 12px; margin-bottom: 20px;">😡 ➔ 🌊 | 😭 ➔ 💖 | 🥶 ➔ 🔥</p>
-        <button class="start-btn" onclick="startGame()">Mulai Pendekatan</button>
-    </div>
+    <section class="section">
+      <h2>Karakter Arena</h2>
+      <div class="intro">
+        Feeling kuat dalam memahami suasana hati, membaca perasaan orang lain,
+        memilih kata yang tepat, dan membangun hubungan yang hangat. Arena ini
+        dirancang untuk melatih empati, komunikasi lembut, dan kemampuan menjaga
+        keharmonisan dalam berbagai situasi.
+      </div>
+    </section>
 
-    <script>
-        const moodDisplay = document.getElementById('mood-display');
-        const harmonyBar = document.getElementById('harmony-bar');
-        const levelText = document.getElementById('level-text');
-        const overlay = document.getElementById('overlay');
-        const endTitle = document.getElementById('end-title');
-        const endDesc = document.getElementById('end-desc');
+    <section class="section" id="games">
+      <h2>Pilih Game Feeling</h2>
 
-        const emotions = [
-            { id: 'angry', icon: '😡', correctReaction: 'calm' },
-            { id: 'sad', icon: '😭', correctReaction: 'comfort' },
-            { id: 'fear', icon: '🥶', correctReaction: 'warmth' }
-        ];
+      <div class="games">
 
-        let level = 1;
-        let scoreInLevel = 0;
-        let currentEmotion = null;
-        let isPlaying = false;
-        
-        let timeLeft = 100; // Persentase
-        let drainRate = 0.5; // Kecepatan berkurang
-        let gameLoop;
+        <div class="game-card">
+          <div class="icon">😊</div>
+          <div class="game-info">
+            <h3>Emotion Match</h3>
+            <p>Cocokkan ekspresi wajah dengan emosi yang paling tepat.</p>
+            <span class="status available">Available</span><br>
+            <button class="play-btn" onclick="openGame('emotion-match.html')">Mainkan</button>
+          </div>
+        </div>
 
-        function startGame() {
-            overlay.style.display = 'none';
-            level = 1;
-            scoreInLevel = 0;
-            drainRate = 0.5;
-            levelText.innerText = `Level ${level}`;
-            isPlaying = true;
-            nextMood();
-            
-            clearInterval(gameLoop);
-            gameLoop = setInterval(updateHarmony, 50); // Update setiap 50ms
-        }
+        <div class="game-card">
+          <div class="icon">💬</div>
+          <div class="game-info">
+            <h3>Kind Words</h3>
+            <p>Pilih kalimat paling menenangkan untuk situasi emosional.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-        function nextMood() {
-            // Pilih emosi acak
-            let randIndex = Math.floor(Math.random() * emotions.length);
-            currentEmotion = emotions[randIndex];
-            
-            // Animasi pop
-            moodDisplay.innerText = currentEmotion.icon;
-            moodDisplay.classList.add('pop');
-            setTimeout(() => moodDisplay.classList.remove('pop'), 200);
+        <div class="game-card">
+          <div class="icon">🌷</div>
+          <div class="game-info">
+            <h3>Mood Garden</h3>
+            <p>Rawat taman suasana hati agar tetap hangat dan seimbang.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-            // Reset waktu untuk emosi baru
-            timeLeft = 100;
-            harmonyBar.style.width = '100%';
-            updateBarColor();
-        }
+        <div class="game-card">
+          <div class="icon">🌉</div>
+          <div class="game-info">
+            <h3>Friendship Bridge</h3>
+            <p>Bangun jembatan hubungan lewat pilihan sikap yang tepat.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-        function sendReaction(reactionId) {
-            if (!isPlaying) return;
+        <div class="game-card">
+          <div class="icon">🤲</div>
+          <div class="game-info">
+            <h3>Empathy Quest</h3>
+            <p>Baca situasi sosial dan pilih respon paling berempati.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-            if (reactionId === currentEmotion.correctReaction) {
-                // Berhasil empati
-                scoreInLevel++;
-                
-                // Naik level setiap 5 empati yang berhasil
-                if (scoreInLevel >= 5) {
-                    level++;
-                    scoreInLevel = 0;
-                    levelText.innerText = `Level ${level}`;
-                    drainRate += 0.2; // Semakin cepat habis
-                    
-                    // JEMBATAN FLUTTER: Kirim Skor saat menang level
-                    if (window.SuperAppChannel) {
-                        window.SuperAppChannel.postMessage(level.toString());
-                    }
-                }
-                
-                nextMood();
-            } else {
-                // Salah empati = Game Over
-                gameOver("SALAH RESPON!", "Hubungan memburuk karena empati tidak tepat.");
-            }
-        }
+        <div class="game-card">
+          <div class="icon">☕</div>
+          <div class="game-info">
+            <h3>Harmony Cafe</h3>
+            <p>Layani pelanggan sesuai mood mereka agar suasana tetap nyaman.</p>
+            <span class="status">Coming Soon</span>
+          </div>
+        </div>
 
-        function updateHarmony() {
-            timeLeft -= drainRate;
-            harmonyBar.style.width = timeLeft + '%';
-            updateBarColor();
+      </div>
+    </section>
 
-            if (timeLeft <= 0) {
-                gameOver("KESABARAN HABIS!", "Kamu terlalu lama merespon perasaannya.");
-            }
-        }
+    <section class="footer-cta">
+      <h2>Siap melatih empati?</h2>
+      <p>Mulai dari game pertama dan rasakan kekuatan Feeling dalam memahami hati.</p>
+      <button onclick="openGame('emotion-match.html')">Main Game Pertama</button>
+    </section>
 
-        function updateBarColor() {
-            if (timeLeft > 60) {
-                harmonyBar.style.backgroundColor = '#00e676'; // Hijau aman
-            } else if (timeLeft > 30) {
-                harmonyBar.style.backgroundColor = '#ffea00'; // Kuning waspada
-            } else {
-                harmonyBar.style.backgroundColor = '#ff4081'; // Merah bahaya
-            }
-        }
+  </main>
 
-        function gameOver(title, desc) {
-            isPlaying = false;
-            clearInterval(gameLoop);
-            
-            // JEMBATAN FLUTTER: Kirim Skor Akhir saat kalah
-            if (window.SuperAppChannel) {
-                window.SuperAppChannel.postMessage((level - 1).toString());
-            }
+  <script>
+    function scrollToGames(){
+      document.getElementById("games").scrollIntoView({
+        behavior:"smooth"
+      });
+    }
 
-            overlay.style.display = 'flex';
-            endTitle.innerText = title;
-            endDesc.innerText = `${desc} Terhenti di Level ${level}.`;
-        }
-    </script>
+    function openGame(url){
+      window.location.href = url;
+    }
+  </script>
 </body>
 </html>
