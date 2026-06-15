@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Balance Master</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.38),transparent 35%),
+        radial-gradient(circle at top left,rgba(255,170,0,.25),transparent 32%),
+        linear-gradient(180deg,#3b2a00,#1f1600,#0d0800);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{
+      max-width:480px;
+      margin:auto;
+      padding:20px 16px 120px;
+    }
+
+    .back-btn{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,230,130,.24);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#fff4c7;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.2);
+      border-radius:16px;
+      padding:12px 6px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:20px}
+    .stat span{font-size:10px;color:#fff4c7}
+
+    .meter-box{
+      display:grid;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .meter{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .meter-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#fff4c7;
+      margin-bottom:7px;
+    }
+
+    .bar{
+      height:9px;
+      background:rgba(255,255,255,.13);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:50%;
+      background:linear-gradient(90deg,#fff08a,#ffb300);
+      border-radius:999px;
+      transition:.35s;
+      box-shadow:0 0 14px rgba(255,220,70,.7);
+    }
+
+    .balance-card{
+      background:
+        radial-gradient(circle at top right,rgba(255,220,70,.28),transparent 42%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.24);
+      border-radius:30px;
+      padding:22px 18px;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(255,170,0,.18);
+      margin-bottom:16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .balance-card::after{
+      content:"⚖️";
+      position:absolute;
+      right:20px;
+      top:14px;
+      color:rgba(255,255,255,.24);
+      font-size:28px;
+    }
+
+    .balance-icon{
+      width:130px;
+      height:130px;
+      margin:0 auto 16px;
+      border-radius:38px;
+      background:white;
+      color:#a36d00;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:66px;
+      box-shadow:
+        0 0 32px rgba(255,220,70,.45),
+        inset 0 0 20px rgba(255,170,0,.14);
+      animation:pulseBalance 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseBalance{
+      from{transform:scale(1)}
+      to{transform:scale(1.04)}
+    }
+
+    .event-label{
+      color:#fff4c7;
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .event-title{
+      font-size:24px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .event-text{
+      color:#fff4c7;
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .timer-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:22px;
+      padding:14px;
+      margin-bottom:16px;
+    }
+
+    .timer-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:#fff4c7;
+      margin-bottom:8px;
+    }
+
+    .time-fill{
+      height:100%;
+      width:100%;
+      background:linear-gradient(90deg,#fff08a,#ffb300);
+      border-radius:999px;
+      transition:.08s linear;
+      box-shadow:0 0 14px rgba(255,220,70,.7);
+    }
+
+    .choices{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .choice-btn{
+      border:none;
+      border-radius:20px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      border:1px solid rgba(255,230,130,.22);
+      padding:14px 10px;
+      min-height:92px;
+      text-align:center;
+      line-height:1.4;
+      font-size:13px;
+      font-weight:bold;
+    }
+
+    .choice-btn span{
+      display:block;
+      font-size:30px;
+      margin-bottom:8px;
+    }
+
+    .choice-btn:active{transform:scale(.96)}
+
+    .choice-btn.best{
+      background:white;
+      color:#a36d00;
+      box-shadow:0 0 22px rgba(255,220,70,.78);
+    }
+
+    .choice-btn.bad{
+      outline:3px solid #ff6b6b;
+      animation:shake .25s ease;
+    }
+
+    @keyframes shake{
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      50%{transform:translateX(4px)}
+      75%{transform:translateX(-2px)}
+      100%{transform:translateX(0)}
+    }
+
+    .feedback-box{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,230,130,.18);
+      border-radius:22px;
+      padding:15px;
+      margin-bottom:16px;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .feedback-box strong{color:white}
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .control-btn{
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .skip{
+      background:rgba(255,255,255,.12);
+      color:white;
+    }
+
+    .next{
+      background:white;
+      color:#a36d00;
+    }
+
+    .next:disabled{opacity:.45}
+
+    .info{
+      margin-top:14px;
+      text-align:center;
+      color:#fff4c7;
+      font-size:13px;
+      line-height:1.5;
+      min-height:40px;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.84);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#2a1c00;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,230,130,.28);
+      box-shadow:0 0 34px rgba(255,220,70,.28);
+    }
+
+    .popup h2{font-size:30px;margin-bottom:12px}
+    .popup p{color:#fff4c7;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:white;
+      color:#a36d00;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>⚖️ Balance Master</h1>
+      <p>Jaga beberapa kondisi sekaligus. Jangan sampai satu aspek jatuh terlalu rendah.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+      <div class="stat"><h2 id="round">1/6</h2><span>Event</span></div>
+      <div class="stat"><h2 id="life">3</h2><span>Life</span></div>
+    </div>
+
+    <div class="meter-box">
+      <div class="meter">
+        <div class="meter-row"><span>❤️ Health</span><strong id="healthText">60</strong></div>
+        <div class="bar"><div class="fill" id="healthFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>⚡ Energy</span><strong id="energyText">60</strong></div>
+        <div class="bar"><div class="fill" id="energyFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>🎯 Focus</span><strong id="focusText">60</strong></div>
+        <div class="bar"><div class="fill" id="focusFill"></div></div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-row"><span>🧘 Calm</span><strong id="calmText">60</strong></div>
+        <div class="bar"><div class="fill" id="calmFill"></div></div>
+      </div>
+    </div>
+
+    <div class="timer-box">
+      <div class="timer-row">
+        <span>Waktu Menyeimbangkan</span>
+        <strong id="timeText">100%</strong>
+      </div>
+      <div class="bar">
+        <div class="time-fill" id="timeFill"></div>
+      </div>
+    </div>
+
+    <div class="balance-card">
+      <div class="balance-icon" id="eventIcon">⚖️</div>
+      <div class="event-label">Situasi Insting</div>
+      <div class="event-title" id="eventTitle">Siap Menjaga Balance?</div>
+      <div class="event-text" id="eventText">
+        Pilih aksi yang paling tepat untuk menjaga kondisi tetap seimbang.
+      </div>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="feedback-box" id="feedbackBox"></div>
+
+    <div class="controls">
+      <button class="control-btn skip" onclick="skipEvent()">Lewati</button>
+      <button class="control-btn next" id="nextBtn" onclick="nextRound()" disabled>Lanjut ⚖️</button>
+    </div>
+
+    <div class="info" id="info">
+      Insting terbaik bukan hanya cepat, tapi mampu menjaga semua kondisi tetap hidup.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2 id="popupTitle">⚖️ Balance Selesai!</h2>
+      <p id="popupText">
+        Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="nextLevel()">Level Berikutnya</button>
+    </div>
+  </div>
+
+<script>
+  const events = [
+    {
+      icon:"😵",
+      title:"Terlalu Banyak Tugas",
+      text:"Banyak hal datang bersamaan. Kepala mulai penuh, tapi semuanya terasa penting.",
+      best:"prioritize",
+      explanation:"Saat semua terasa penting, Insting perlu cepat memilih prioritas agar focus dan calm tidak runtuh."
+    },
+    {
+      icon:"🥱",
+      title:"Energi Mulai Turun",
+      text:"Tubuh terasa lelah, tapi kamu masih punya beberapa hal yang harus diselesaikan.",
+      best:"rest",
+      explanation:"Ketika energy terlalu rendah, memaksa terus bergerak bisa menjatuhkan health dan focus."
+    },
+    {
+      icon:"📢",
+      title:"Terlalu Banyak Gangguan",
+      text:"Notifikasi, suara, dan permintaan kecil membuat fokusmu pecah.",
+      best:"focus",
+      explanation:"Gangguan perlu dipotong cepat agar focus kembali stabil."
+    },
+    {
+      icon:"😰",
+      title:"Situasi Menekan",
+      text:"Ada tekanan mendadak. Kamu merasa ingin bergerak cepat, tapi napas mulai tidak teratur.",
+      best:"calm",
+      explanation:"Tekanan butuh calm. Tenang sebentar membuat keputusan berikutnya lebih aman."
+    },
+    {
+      icon:"🏃",
+      title:"Harus Bergerak Cepat",
+      text:"Ada peluang singkat. Kamu harus mengambil tindakan tanpa menunggu terlalu lama.",
+      best:"move",
+      explanation:"Ada momen yang butuh aksi cepat. Terlalu lama ragu bisa membuat peluang hilang."
+    },
+    {
+      icon:"🧩",
+      title:"Masalah Campur Aduk",
+      text:"Masalah datang dari beberapa arah: badan capek, pikiran penuh, dan suasana mulai tegang.",
+      best:"balance",
+      explanation:"Masalah campur aduk butuh langkah paling seimbang, bukan ekstrem pada satu aspek saja."
+    },
+    {
+      icon:"⚠️",
+      title:"Tanda Bahaya Kecil",
+      text:"Ada sinyal kecil bahwa kondisi bisa memburuk jika dibiarkan.",
+      best:"protect",
+      explanation:"Tanda bahaya kecil harus diamankan sebelum menjadi masalah besar."
+    },
+    {
+      icon:"🌪️",
+      title:"Ritme Jadi Kacau",
+      text:"Rencana berubah tiba-tiba. Kamu harus menyesuaikan diri tanpa kehilangan arah.",
+      best:"adapt",
+      explanation:"Insting kuat saat mampu beradaptasi cepat tanpa kehilangan keseimbangan utama."
+    }
+  ];
+
+  const actions = {
+    prioritize:{
+      icon:"📌",
+      title:"Pilih Prioritas",
+      health:0,
+      energy:-5,
+      focus:22,
+      calm:12
+    },
+    rest:{
+      icon:"🛌",
+      title:"Istirahat Singkat",
+      health:16,
+      energy:24,
+      focus:4,
+      calm:12
+    },
+    focus:{
+      icon:"🎯",
+      title:"Potong Gangguan",
+      health:0,
+      energy:-4,
+      focus:26,
+      calm:8
+    },
+    calm:{
+      icon:"🧘",
+      title:"Atur Napas",
+      health:5,
+      energy:0,
+      focus:8,
+      calm:26
+    },
+    move:{
+      icon:"⚡",
+      title:"Gerak Cepat",
+      health:-5,
+      energy:-12,
+      focus:12,
+      calm:-4
+    },
+    balance:{
+      icon:"⚖️",
+      title:"Seimbangkan Semua",
+      health:10,
+      energy:10,
+      focus:10,
+      calm:10
+    },
+    protect:{
+      icon:"🛡️",
+      title:"Amankan Risiko",
+      health:22,
+      energy:-6,
+      focus:8,
+      calm:10
+    },
+    adapt:{
+      icon:"🔄",
+      title:"Adaptasi Cepat",
+      health:4,
+      energy:-6,
+      focus:14,
+      calm:16
+    }
+  };
+
+  let score = 0;
+  let level = 1;
+  let round = 1;
+  let life = 3;
+
+  let health = 60;
+  let energy = 60;
+  let focus = 60;
+  let calm = 60;
+
+  let currentSet = [];
+  let currentEvent = null;
+  let answered = false;
+  let timer = null;
+  let timeLeft = 100;
+
+  const scoreEl = document.getElementById("score");
+  const levelEl = document.getElementById("level");
+  const roundEl = document.getElementById("round");
+  const lifeEl = document.getElementById("life");
+
+  const healthText = document.getElementById("healthText");
+  const energyText = document.getElementById("energyText");
+  const focusText = document.getElementById("focusText");
+  const calmText = document.getElementById("calmText");
+
+  const healthFill = document.getElementById("healthFill");
+  const energyFill = document.getElementById("energyFill");
+  const focusFill = document.getElementById("focusFill");
+  const calmFill = document.getElementById("calmFill");
+
+  const timeText = document.getElementById("timeText");
+  const timeFill = document.getElementById("timeFill");
+
+  const eventIcon = document.getElementById("eventIcon");
+  const eventTitle = document.getElementById("eventTitle");
+  const eventText = document.getElementById("eventText");
+  const choicesEl = document.getElementById("choices");
+  const feedbackBox = document.getElementById("feedbackBox");
+  const nextBtn = document.getElementById("nextBtn");
+  const info = document.getElementById("info");
+
+  const gameOver = document.getElementById("gameOver");
+  const popupTitle = document.getElementById("popupTitle");
+  const popupText = document.getElementById("popupText");
+  const finalScore = document.getElementById("finalScore");
+
+  function shuffle(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function clamp(value){
+    return Math.max(0, Math.min(100, value));
+  }
+
+  function setupLevel(){
+    round = 1;
+    life = 3;
+
+    health = 60;
+    energy = 60;
+    focus = 60;
+    calm = 60;
+
+    answered = false;
+    currentSet = shuffle([...events]).slice(0,6);
+
+    levelEl.innerText = level;
+    lifeEl.innerText = life;
+    gameOver.style.display = "none";
+
+    loadRound();
+  }
+
+  function updateMeters(){
+    health = clamp(health);
+    energy = clamp(energy);
+    focus = clamp(focus);
+    calm = clamp(calm);
+
+    healthText.innerText = health;
+    energyText.innerText = energy;
+    focusText.innerText = focus;
+    calmText.innerText = calm;
+
+    healthFill.style.width = health + "%";
+    energyFill.style.width = energy + "%";
+    focusFill.style.width = focus + "%";
+    calmFill.style.width = calm + "%";
+
+    scoreEl.innerText = score;
+    lifeEl.innerText = life;
+  }
+
+  function startTimer(){
+    clearInterval(timer);
+    timeLeft = 100;
+    updateTimer();
+
+    const drain = Math.max(2.3, 4.1 - level * 0.25);
+
+    timer = setInterval(() => {
+      if(answered){
+        clearInterval(timer);
+        return;
+      }
+
+      timeLeft -= drain;
+
+      if(timeLeft <= 0){
+        timeLeft = 0;
+        updateTimer();
+        timeoutEvent();
+        return;
+      }
+
+      updateTimer();
+    }, 100);
+  }
+
+  function updateTimer(){
+    timeText.innerText = Math.ceil(timeLeft) + "%";
+    timeFill.style.width = timeLeft + "%";
+  }
+
+  function loadRound(){
+    answered = false;
+    currentEvent = currentSet[round - 1];
+
+    roundEl.innerText = `${round}/6`;
+    nextBtn.disabled = true;
+
+    eventIcon.innerText = currentEvent.icon;
+    eventTitle.innerText = currentEvent.title;
+    eventText.innerText = currentEvent.text;
+
+    feedbackBox.style.display = "none";
+    feedbackBox.innerHTML = "";
+
+    renderChoices();
+    updateMeters();
+    startTimer();
+
+    info.innerText = "Pilih aksi yang paling menjaga keseimbangan kondisi.";
+  }
+
+  function renderChoices(){
+    choicesEl.innerHTML = "";
+
+    const actionKeys = Object.keys(actions);
+    const mustShow = [currentEvent.best];
+
+    const otherActions = shuffle(
+      actionKeys.filter(key => key !== currentEvent.best)
+    ).slice(0,3);
+
+    const shown = shuffle([...mustShow, ...otherActions]);
+
+    shown.forEach(key => {
+      const action = actions[key];
+
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+      btn.innerHTML = `
+        <span>${action.icon}</span>
+        ${action.title}
+      `;
+
+      btn.onclick = () => chooseAction(key, btn);
+
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function applyAction(action){
+    health += action.health;
+    energy += action.energy;
+    focus += action.focus;
+    calm += action.calm;
+  }
+
+  function getLowestStat(){
+    const stats = [
+      {name:"Health", value:health},
+      {name:"Energy", value:energy},
+      {name:"Focus", value:focus},
+      {name:"Calm", value:calm}
+    ];
+
+    stats.sort((a,b) => a.value - b.value);
+    return stats[0];
+  }
+
+  function getBalanceGap(){
+    const values = [health, energy, focus, calm];
+    return Math.max(...values) - Math.min(...values);
+  }
+
+  function chooseAction(key, button){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    const action = actions[key];
+    const correct = key === currentEvent.best;
+
+    applyAction(action);
+
+    const lowest = getLowestStat();
+    const gap = getBalanceGap();
+
+    if(correct){
+      button.classList.add("best");
+
+      const speedBonus = Math.ceil(timeLeft / 5);
+      const balanceBonus = Math.max(25 - Math.floor(gap / 4), 0);
+      const earned = 50 + level * 6 + speedBonus + balanceBonus;
+
+      score += earned;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>⚖️ Aksi Paling Seimbang</strong><br>` +
+        `${currentEvent.explanation}<br><br>` +
+        `Speed bonus +${speedBonus}<br>` +
+        `Balance bonus +${balanceBonus}<br>` +
+        `Score +${earned}`;
+
+      info.innerText = "✅ Kondisi tetap terkendali. Balance terjaga.";
+    } else {
+      button.classList.add("bad");
+
+      life--;
+
+      feedbackBox.style.display = "block";
+      feedbackBox.innerHTML =
+        `<strong>⚠️ Aksi Kurang Tepat</strong><br>` +
+        `Aksi ini masih bisa membantu sebagian kondisi, tapi bukan yang paling sesuai dengan situasi.<br><br>` +
+        `<strong>Aksi terbaik:</strong> ${actions[currentEvent.best].icon} ${actions[currentEvent.best].title}<br>` +
+        `${currentEvent.explanation}`;
+
+      info.innerText = `❌ Balance terganggu. Kondisi terendah saat ini: ${lowest.name}.`;
+    }
+
+    if(lowest.value <= 10){
+      life--;
+      info.innerText += " Salah satu kondisi kritis, life berkurang lagi.";
+    }
+
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(life <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function timeoutEvent(){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    life--;
+    focus -= 12;
+    calm -= 15;
+    energy -= 8;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>⌛ Terlambat Menyeimbangkan</strong><br>` +
+      `Saat kondisi berubah cepat, terlalu lama diam membuat balance turun.<br><br>` +
+      `<strong>Aksi terbaik:</strong> ${actions[currentEvent.best].icon} ${actions[currentEvent.best].title}<br>` +
+      `${currentEvent.explanation}`;
+
+    info.innerText = "Terlambat memilih. Focus, calm, dan energy turun.";
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(life <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function skipEvent(){
+    if(answered) return;
+
+    answered = true;
+    clearInterval(timer);
+
+    life--;
+    health -= 8;
+    energy -= 8;
+    focus -= 8;
+    calm -= 8;
+
+    feedbackBox.style.display = "block";
+    feedbackBox.innerHTML =
+      `<strong>Event dilewati.</strong><br>` +
+      `Semua kondisi turun karena tidak ada aksi penyeimbang.<br><br>` +
+      `<strong>Aksi terbaik:</strong> ${actions[currentEvent.best].icon} ${actions[currentEvent.best].title}`;
+
+    info.innerText = "Event dilewati. Semua kondisi sedikit turun.";
+    updateMeters();
+    nextBtn.disabled = false;
+
+    if(life <= 0){
+      setTimeout(finishLevel, 900);
+    }
+  }
+
+  function nextRound(){
+    if(!answered) return;
+
+    if(life <= 0){
+      finishLevel();
+      return;
+    }
+
+    round++;
+
+    if(round > 6){
+      finishLevel();
+      return;
+    }
+
+    loadRound();
+  }
+
+  function finishLevel(){
+    clearInterval(timer);
+
+    const average = Math.round((health + energy + focus + calm) / 4);
+    const gap = getBalanceGap();
+    const balanceBonus = Math.max(80 - gap, 0);
+    const bonus = Math.max(average, 0) + balanceBonus + life * 40 + level * 30;
+
+    score += bonus;
+    scoreEl.innerText = score;
+    finalScore.innerText = score;
+
+    let title = "⚖️ Balance Selesai!";
+    let desc = "Kamu berhasil menjaga beberapa kondisi tetap berjalan, meski belum selalu stabil.";
+
+    if(average >= 70 && gap <= 30 && life >= 3){
+      title = "🟡 Balance Instinct Master!";
+      desc = "Kondisi sangat stabil. Instingmu cepat, adaptif, dan seimbang.";
+    } else if(life <= 0 || average <= 35){
+      title = "⚠️ Balance Runtuh";
+      desc = "Beberapa kondisi terlalu turun. Tapi kamu mulai membaca cara menjaga keseimbangan.";
+    }
+
+    popupTitle.innerText = title;
+    popupText.innerHTML =
+      `${desc}<br><br>` +
+      `Health: <strong>${health}</strong><br>` +
+      `Energy: <strong>${energy}</strong><br>` +
+      `Focus: <strong>${focus}</strong><br>` +
+      `Calm: <strong>${calm}</strong><br>` +
+      `Bonus balance: +${balanceBonus}<br>` +
+      `Bonus life: +${life * 40}<br><br>` +
+      `Score kamu:<br><br>` +
+      `<span style="font-size:42px;font-weight:bold;">${score}</span>`;
+
+    gameOver.style.display = "flex";
+  }
+
+  function nextLevel(){
+    level++;
+    setupLevel();
+  }
+
+  setupLevel();
+</script>
+</body>
+</html>
