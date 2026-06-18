@@ -1,1 +1,39 @@
-
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Undangan Pernikahan</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="loader" class="loader"><div class="loader-card"><h2>Memuat Undangan</h2><p>Mohon tunggu sebentar...</p></div></div>
+  <div id="cover" class="cover hidden">
+    <div class="cover-card">
+      <p class="small">The Wedding of</p>
+      <h1><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h1>
+      <p class="date" data-field="weddingDateText">Sabtu, 06 September 2026</p>
+      <div class="guest-box"><p>Kepada Yth.</p><h3 id="guestName">Bapak/Ibu/Saudara/i</h3><p class="note">Mohon maaf apabila ada kesalahan penulisan nama/gelar</p></div>
+      <button id="openBtn">Buka Undangan</button>
+    </div>
+  </div>
+  <audio id="bgMusic" loop></audio>
+  <main id="content" class="hidden">
+    <section class="hero"><div class="overlay"></div><div class="hero-content"><p class="small">The Wedding of</p><h1><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h1><p data-field="weddingDateText">Sabtu, 06 September 2026</p></div></section>
+    <section class="section intro"><p class="arabic">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</p><p>Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami.</p></section>
+    <section class="section couple"><div class="person"><img id="groomPhoto" src="assets/groom.jpg" alt="Mempelai Pria"><h2 data-field="groomName">Reza</h2><p>Putra dari <span data-field="groomFather">Bapak</span> & <span data-field="groomMother">Ibu</span></p></div><div class="and">&</div><div class="person"><img id="bridePhoto" src="assets/bride.jpg" alt="Mempelai Wanita"><h2 data-field="brideName">Intan</h2><p>Putri dari <span data-field="brideFather">Bapak</span> & <span data-field="brideMother">Ibu</span></p></div></section>
+    <section class="section countdown"><h2>Menuju Hari Bahagia</h2><div class="timer"><div><span id="days">0</span><small>Hari</small></div><div><span id="hours">0</span><small>Jam</small></div><div><span id="minutes">0</span><small>Menit</small></div><div><span id="seconds">0</span><small>Detik</small></div></div></section>
+    <section class="section event"><h2>Akad Nikah</h2><p data-field="weddingDateText"></p><p data-field="akadTime"></p><p data-field="akadLocation"></p><h2>Resepsi</h2><p data-field="weddingDateText"></p><p data-field="receptionTime"></p><p data-field="location"></p><a class="btn" id="mapsBtn" href="#" target="_blank">Buka Google Maps</a></section>
+    <section class="section story"><h2>Cerita Kami</h2><p data-field="story">Berawal dari pertemuan sederhana...</p></section>
+    <section class="section gallery"><h2>Galeri</h2><div class="grid"><img id="gallery1" src="assets/gallery1.jpg" alt="Galeri 1"><img id="gallery2" src="assets/gallery2.jpg" alt="Galeri 2"><img id="gallery3" src="assets/gallery3.jpg" alt="Galeri 3"><img id="gallery4" src="assets/gallery4.jpg" alt="Galeri 4"></div></section>
+    <section class="section rsvp"><h2>Konfirmasi Kehadiran</h2><form id="rsvpForm"><input id="rsvpName" type="text" placeholder="Nama Anda" required><input id="rsvpPhone" type="tel" placeholder="Nomor WhatsApp"><select id="attendance" required><option value="">Pilih Kehadiran</option><option value="hadir">InsyaAllah Hadir</option><option value="tidak_hadir">Maaf, Belum Bisa Hadir</option></select><input id="guestCount" type="number" min="1" value="1" placeholder="Jumlah tamu"><textarea id="rsvpNote" placeholder="Catatan tambahan"></textarea><button type="submit">Kirim RSVP</button></form><p id="rsvpStatus" class="status-text"></p></section>
+    <section class="section gift"><h2>Amplop Digital</h2><p>Doa restu Bapak/Ibu adalah hadiah terbaik bagi kami.</p><div class="bank-card"><p><span data-field="bankName1">Bank</span> - <span data-field="bankNumber1">000000</span></p><strong data-field="bankHolder1">Nama Pemilik</strong></div><div class="bank-card"><p><span data-field="bankName2">Bank</span> - <span data-field="bankNumber2">000000</span></p><strong data-field="bankHolder2">Nama Pemilik</strong></div></section>
+    <section class="section wishes"><h2>Ucapan & Doa</h2><form id="wishForm"><input id="wishName" type="text" placeholder="Nama Anda" required><textarea id="wishText" placeholder="Tulis ucapan terbaik..." required></textarea><button type="submit">Kirim Ucapan</button></form><div id="wishList"></div></section>
+    <section class="section stifin"><h2>Pesan Cinta</h2><p>"Pernikahan bukan mencari pasangan yang sempurna, tetapi belajar memahami potensi unik satu sama lain."</p><span>STIFIn Couple Edition</span></section>
+    <footer><h2><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h2><p>Terima kasih atas doa dan restunya.</p></footer>
+  </main>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
