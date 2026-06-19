@@ -256,11 +256,7 @@ async function submitRsvp(event) {
       // Tambahkan 1 ke totalTidakHadir
       updateData.totalTidakHadir = increment(1);
       
-      // Update angka 'Tidak Hadir' di layar secara instan
-      // const statTidakHadir = document.getElementById("statTidakHadir");
-      //if (statTidakHadir) {
-        // statTidakHadir.innerText = parseInt(statTidakHadir.innerText || 0) + 1;
-      // }
+    
     }
 
     // 4. Eksekusi update statistik ke Firestore
