@@ -581,4 +581,41 @@ footer h2 {
   .form-wrapper, .wishes-wrapper {
     padding: 40px;
   }
+  
+  /* =========================================
+   15. FALLING LEAVES / FLOWERS EFFECT
+   ========================================= */
+#falling-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Penting: agar tidak menghalangi tombol saat diklik */
+  z-index: 998; /* Di bawah loader & cover, tapi di atas konten */
+  overflow: hidden;
+}
+
+.falling-leaf {
+  position: absolute;
+  top: -10%;
+  color: #d4af37; /* Warna emas/cokelat muda ala tema earthy */
+  font-size: 1.2rem;
+  user-select: none;
+  animation-name: fall, sway;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+  animation-direction: normal, alternate;
+  opacity: 0.7;
+}
+
+@keyframes fall {
+  0% { top: -10%; }
+  100% { top: 110%; }
+}
+
+@keyframes sway {
+  0% { transform: translateX(0px) rotate(0deg); }
+  100% { transform: translateX(25px) rotate(45deg); }
+}
 }
