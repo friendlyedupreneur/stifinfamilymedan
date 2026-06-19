@@ -1,78 +1,88 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wedding Admin</title>
-  <link rel="stylesheet" href="admin.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Wedding Admin V2</title>
+<link rel="stylesheet" href="admin.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <section id="loginPage" class="login-page">
-    <div class="login-card">
-      <p class="eyebrow">Wedding Admin</p>
-      <h1>Masuk Dashboard</h1>
-      <p class="muted">Kelola foto, musik, RSVP, ucapan, dan link tamu.</p>
-      <form id="loginForm">
-        <input id="email" type="email" placeholder="Email admin" required>
-        <input id="password" type="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-      </form>
-      <p id="loginStatus" class="status"></p>
-    </div>
+<section id="loginPage" class="login-page">
+  <div class="login-card">
+    <p class="eyebrow">Wedding Admin</p><h1>Masuk Dashboard</h1>
+    <p class="muted">Kelola undangan, media, RSVP, ucapan, visitor, dan export Excel.</p>
+    <form id="loginForm"><input id="email" type="email" placeholder="Email admin" required><input id="password" type="password" placeholder="Password" required><button type="submit">Login</button></form>
+    <p id="loginStatus" class="status"></p>
+  </div>
+</section>
+
+<main id="dashboard" class="dashboard hidden">
+  <header class="topbar"><div><p class="eyebrow">Wedding Admin V2</p><h1>Dashboard</h1></div><button id="logoutBtn" class="btn-light">Logout</button></header>
+
+  <section class="card"><h2>Wedding ID</h2><div class="row"><input id="weddingIdInput" value="wedding_001"><button id="loadWeddingBtn">Load</button></div></section>
+
+  <section class="stats-grid">
+    <div class="stat-card"><span id="totalVisitors">0</span><p>Visitors</p></div>
+    <div class="stat-card"><span id="totalRsvp">0</span><p>RSVP</p></div>
+    <div class="stat-card"><span id="totalHadir">0</span><p>Hadir</p></div>
+    <div class="stat-card"><span id="totalWishes">0</span><p>Ucapan</p></div>
   </section>
 
-  <main id="dashboard" class="dashboard hidden">
-    <header class="topbar">
-      <div><p class="eyebrow">Wedding Admin</p><h1>Dashboard</h1></div>
-      <button id="logoutBtn" class="btn-light">Logout</button>
-    </header>
+  <section class="card">
+    <h2>Edit Data Pernikahan</h2>
+    <h3>Mempelai Pria</h3>
+    <div class="form-grid">
+      <input id="groomName" placeholder="Nama panggilan pria"><input id="groomFullName" placeholder="Nama lengkap pria">
+      <input id="groomFather" placeholder="Ayah pria"><input id="groomMother" placeholder="Ibu pria">
+      <input id="groomIgHandle" placeholder="@instagram pria"><input id="groomIgLink" placeholder="Link IG pria">
+    </div>
+    <h3>Mempelai Wanita</h3>
+    <div class="form-grid">
+      <input id="brideName" placeholder="Nama panggilan wanita"><input id="brideFullName" placeholder="Nama lengkap wanita">
+      <input id="brideFather" placeholder="Ayah wanita"><input id="brideMother" placeholder="Ibu wanita">
+      <input id="brideIgHandle" placeholder="@instagram wanita"><input id="brideIgLink" placeholder="Link IG wanita">
+    </div>
+    <h3>Detail Acara</h3>
+    <div class="form-grid">
+      <input id="weddingDate" type="date"><input id="akadTime" placeholder="Jam akad">
+      <input id="akadLocation" placeholder="Lokasi akad"><input id="receptionTime" placeholder="Jam resepsi">
+      <input id="location" placeholder="Lokasi resepsi"><input id="mapsLink" placeholder="Link Google Maps">
+      <input id="phoneNumber" placeholder="Nomor WhatsApp"><input id="status" placeholder="Status">
+    </div>
+    <h3>Amplop Digital</h3>
+    <div class="form-grid">
+      <input id="bankName1" placeholder="Bank 1"><input id="bankNumber1" placeholder="Rekening 1"><input id="bankHolder1" placeholder="Pemilik 1">
+      <input id="bankName2" placeholder="Bank 2"><input id="bankNumber2" placeholder="Rekening 2"><input id="bankHolder2" placeholder="Pemilik 2">
+    </div>
+    <h3>Cerita</h3><textarea id="story" placeholder="Cerita cinta / narasi undangan"></textarea>
+    <button id="saveWeddingBtn">Simpan Data Wedding</button><p id="saveWeddingStatus" class="status"></p>
+  </section>
 
-    <section class="card">
-      <h2>Wedding ID</h2>
-      <div class="row">
-        <input id="weddingIdInput" value="wedding_001">
-        <button id="loadWeddingBtn">Load</button>
-      </div>
-      <p class="muted">Default: wedding_001</p>
-    </section>
+  <section class="card"><h2>Generate Link Tamu</h2><input id="guestInput" placeholder="Contoh: Keluarga Andi"><button id="generateLinkBtn">Generate Link</button><textarea id="guestLinkOutput" readonly></textarea><button id="copyLinkBtn" class="btn-light">Copy Link</button></section>
 
-    <section class="stats-grid">
-      <div class="stat-card"><span id="totalVisitors">0</span><p>Visitors</p></div>
-      <div class="stat-card"><span id="totalRsvp">0</span><p>RSVP</p></div>
-      <div class="stat-card"><span id="totalWishes">0</span><p>Ucapan</p></div>
-    </section>
+  <section class="card">
+    <h2>Upload Media</h2><p class="muted">Upload ke Firebase Storage, URL otomatis masuk Firestore.</p>
+    <div class="upload-grid">
+      <div class="upload-item"><label>Cover</label><input type="file" data-field="coverImage" data-name="cover.jpg" accept="image/*"></div>
+      <div class="upload-item"><label>Hero</label><input type="file" data-field="heroImage" data-name="hero.jpg" accept="image/*"></div>
+      <div class="upload-item"><label>Pria</label><input type="file" data-field="groomPhoto" data-name="groom.jpg" accept="image/*"></div>
+      <div class="upload-item"><label>Wanita</label><input type="file" data-field="bridePhoto" data-name="bride.jpg" accept="image/*"></div>
+      <div class="upload-item"><label>Gallery 1</label><input type="file" data-field="gallery1" data-name="gallery1.jpg" accept="image/*"></div>
+      <div class="upload-item"><label>Gallery 2</label><input type="file" data-field="gallery2" data-name="gallery2.jpg" accept="image/*"></div>
+      <div class="upload-item"><label>Gallery 3</label><input type="file" data-field="gallery3" data-name="gallery3.jpg" accept="image/*"></div>
+      <div class="upload-item"><label>Gallery 4</label><input type="file" data-field="gallery4" data-name="gallery4.jpg" accept="image/*"></div>
+      <div class="upload-item"><label>Musik</label><input type="file" data-field="musicUrl" data-name="music.mp3" accept="audio/*"></div>
+    </div><p id="uploadStatus" class="status"></p>
+  </section>
 
-    <section class="card">
-      <h2>Generate Link Tamu</h2>
-      <input id="guestInput" placeholder="Contoh: Keluarga Andi">
-      <button id="generateLinkBtn">Generate Link</button>
-      <textarea id="guestLinkOutput" readonly placeholder="Link akan muncul di sini"></textarea>
-      <button id="copyLinkBtn" class="btn-light">Copy Link</button>
-    </section>
+  <section class="card">
+    <div class="section-head"><h2>Data RSVP</h2><button id="exportRsvpBtn" class="btn-light small-btn">Export Excel RSVP</button></div>
+    <p class="muted">Excel bisa dipakai untuk daftar tamu dan undian 5 orang gratis Tes STIFIn.</p>
+    <div class="table-wrap"><table><thead><tr><th>Nama</th><th>Hadir</th><th>Jumlah</th><th>WA</th><th>Catatan</th><th>Source</th></tr></thead><tbody id="rsvpTable"></tbody></table></div>
+  </section>
 
-    <section class="card">
-      <h2>Upload Media</h2>
-      <p class="muted">Upload masuk ke Firebase Storage dan URL otomatis masuk ke Firestore.</p>
-      <div class="upload-grid">
-        <div class="upload-item"><label>Cover Image</label><input type="file" data-field="coverImage" data-name="cover.jpg" accept="image/*"></div>
-        <div class="upload-item"><label>Hero Image</label><input type="file" data-field="heroImage" data-name="hero.jpg" accept="image/*"></div>
-        <div class="upload-item"><label>Foto Mempelai Pria</label><input type="file" data-field="groomPhoto" data-name="groom.jpg" accept="image/*"></div>
-        <div class="upload-item"><label>Foto Mempelai Wanita</label><input type="file" data-field="bridePhoto" data-name="bride.jpg" accept="image/*"></div>
-        <div class="upload-item"><label>Gallery 1</label><input type="file" data-field="gallery1" data-name="gallery1.jpg" accept="image/*"></div>
-        <div class="upload-item"><label>Gallery 2</label><input type="file" data-field="gallery2" data-name="gallery2.jpg" accept="image/*"></div>
-        <div class="upload-item"><label>Gallery 3</label><input type="file" data-field="gallery3" data-name="gallery3.jpg" accept="image/*"></div>
-        <div class="upload-item"><label>Gallery 4</label><input type="file" data-field="gallery4" data-name="gallery4.jpg" accept="image/*"></div>
-        <div class="upload-item"><label>Musik</label><input type="file" data-field="musicUrl" data-name="music.mp3" accept="audio/*"></div>
-      </div>
-      <p id="uploadStatus" class="status"></p>
-    </section>
-
-    <section class="card"><h2>Data RSVP</h2><div class="table-wrap"><table><thead><tr><th>Nama</th><th>Hadir</th><th>Jumlah</th><th>WA</th><th>Catatan</th></tr></thead><tbody id="rsvpTable"></tbody></table></div></section>
-    <section class="card"><h2>Ucapan & Doa</h2><div id="wishesList" class="list"></div></section>
-    <section class="card"><h2>Visitors Terbaru</h2><div id="visitorsList" class="list"></div></section>
-  </main>
-
-  <script type="module" src="admin.js"></script>
-</body>
-</html>
+  <section class="card"><h2>Ucapan & Doa</h2><div id="wishesList" class="list"></div></section>
+  <section class="card"><h2>Visitors Terbaru</h2><div id="visitorsList" class="list"></div></section>
+</main>
+<script type="module" src="admin.js"></script>
+</body></html>
