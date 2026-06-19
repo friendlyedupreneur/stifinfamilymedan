@@ -605,6 +605,43 @@ textarea {
   color: white;
 }
 
+.gift-notice {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: #f7f5f2;
+  border: 1px solid #ded7cf;
+  border-left: 4px solid #8f8073;
+  padding: 16px;
+  margin-bottom: 22px;
+  border-radius: 16px;
+  text-align: left;
+}
+
+.gift-notice i {
+  font-size: 22px;
+  color: #8f8073;
+  margin-top: 3px;
+}
+
+.gift-notice strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #5f554d;
+  font-weight: 700;
+}
+
+.gift-notice p {
+  margin: 0;
+  font-size: 14px;
+  color: #7a716a;
+  line-height: 1.6;
+}
+
+.gift-notice.mini {
+  margin-bottom: 18px;
+}
+
 /* =========================================
    13. PRAYER / STIFIN / FOOTER
    ========================================= */
