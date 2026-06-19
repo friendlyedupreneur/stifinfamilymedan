@@ -123,10 +123,16 @@ function applyWeddingData(data) {
   }
   
     // Set Statistik Data
-  document.getElementById("statVisitors").innerText = data.totalVisitors || 0;
-  document.getElementById("statHadir").innerText = data.totalHadir || 0;
- 
-  document.getElementById("statWishes").innerText = data.totalWishes || 0;
+    // Set Statistik Data
+  if (document.getElementById("statVisitors")) {
+    document.getElementById("statVisitors").innerText = data.totalVisitors || 0;
+  }
+  if (document.getElementById("statHadir")) {
+    document.getElementById("statHadir").innerText = data.totalHadir || 0;
+  }
+  if (document.getElementById("statWishes")) {
+    document.getElementById("statWishes").innerText = data.totalWishes || 0;
+  }
 
 
 }
