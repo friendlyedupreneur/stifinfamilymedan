@@ -110,6 +110,18 @@ function applyWeddingData(data) {
   if (data.weddingDate) {
     weddingDateTarget = new Date(`${data.weddingDate}T09:00:00`).getTime();
   }
+  
+    // Set Link Instagram
+  const groomIgBtn = document.getElementById("groomIgBtn");
+  if (groomIgBtn && data.groomIgLink) {
+    groomIgBtn.href = data.groomIgLink;
+  }
+
+  const brideIgBtn = document.getElementById("brideIgBtn");
+  if (brideIgBtn && data.brideIgLink) {
+    brideIgBtn.href = data.brideIgLink;
+  }
+
 }
 
 // ==========================================
