@@ -3,37 +3,313 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Undangan Pernikahan</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>Undangan Pernikahan | Reza & Intan</title>
+  
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Icons (FontAwesome) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Animation on Scroll (AOS) -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div id="loader" class="loader"><div class="loader-card"><h2>Memuat Undangan</h2><p>Mohon tunggu sebentar...</p></div></div>
-  <div id="cover" class="cover hidden">
-    <div class="cover-card">
-      <p class="small">The Wedding of</p>
-      <h1><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h1>
-      <p class="date" data-field="weddingDateText">Sabtu, 06 September 2026</p>
-      <div class="guest-box"><p>Kepada Yth.</p><h3 id="guestName">Bapak/Ibu/Saudara/i</h3><p class="note">Mohon maaf apabila ada kesalahan penulisan nama/gelar</p></div>
-      <button id="openBtn">Buka Undangan</button>
+  <!-- Loader -->
+  <div id="loader" class="loader">
+    <div class="loader-card">
+      <i class="fa-solid fa-heart fa-beat" style="color: #d4af37; font-size: 2rem; margin-bottom: 15px;"></i>
+      <h2>Memuat Undangan</h2>
+      <p>Mohon tunggu sebentar...</p>
     </div>
   </div>
+
+  <!-- Cover / Sampul Undangan -->
+  <div id="cover" class="cover hidden">
+    <div class="cover-card" data-aos="zoom-in" data-aos-duration="1500">
+      <p class="small">The Wedding of</p>
+      <h1><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h1>
+      <p class="date"><i class="fa-regular fa-calendar-days"></i> <span data-field="weddingDateText">Sabtu, 06 September 2026</span></p>
+      
+      <div class="guest-box">
+        <p>Kepada Yth.</p>
+        <h3 id="guestName">Bapak/Ibu/Saudara/i</h3>
+        <p class="note">Mohon maaf apabila ada kesalahan penulisan nama/gelar</p>
+      </div>
+      
+      <button id="openBtn" class="btn-primary">
+        <i class="fa-solid fa-envelope-open-text"></i> Buka Undangan
+      </button>
+    </div>
+  </div>
+
+  <!-- Background Music -->
   <audio id="bgMusic" loop></audio>
+
+  <!-- Floating Music Controller -->
+  <button id="musicToggle" class="floating-btn hidden">
+    <i class="fa-solid fa-music"></i>
+  </button>
+
+  <!-- Main Content -->
   <main id="content" class="hidden">
-    <section class="hero"><div class="overlay"></div><div class="hero-content"><p class="small">The Wedding of</p><h1><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h1><p data-field="weddingDateText">Sabtu, 06 September 2026</p></div></section>
-    <section class="section intro"><p class="arabic">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</p><p>Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami.</p></section>
-    <section class="section couple"><div class="person"><img id="groomPhoto" src="assets/groom.jpg" alt="Mempelai Pria"><h2 data-field="groomName">Reza</h2><p>Putra dari <span data-field="groomFather">Bapak</span> & <span data-field="groomMother">Ibu</span></p></div><div class="and">&</div><div class="person"><img id="bridePhoto" src="assets/bride.jpg" alt="Mempelai Wanita"><h2 data-field="brideName">Intan</h2><p>Putri dari <span data-field="brideFather">Bapak</span> & <span data-field="brideMother">Ibu</span></p></div></section>
-    <section class="section countdown"><h2>Menuju Hari Bahagia</h2><div class="timer"><div><span id="days">0</span><small>Hari</small></div><div><span id="hours">0</span><small>Jam</small></div><div><span id="minutes">0</span><small>Menit</small></div><div><span id="seconds">0</span><small>Detik</small></div></div></section>
-    <section class="section event"><h2>Akad Nikah</h2><p data-field="weddingDateText"></p><p data-field="akadTime"></p><p data-field="akadLocation"></p><h2>Resepsi</h2><p data-field="weddingDateText"></p><p data-field="receptionTime"></p><p data-field="location"></p><a class="btn" id="mapsBtn" href="#" target="_blank">Buka Google Maps</a></section>
-    <section class="section story"><h2>Cerita Kami</h2><p data-field="story">Berawal dari pertemuan sederhana...</p></section>
-    <section class="section gallery"><h2>Galeri</h2><div class="grid"><img id="gallery1" src="assets/gallery1.jpg" alt="Galeri 1"><img id="gallery2" src="assets/gallery2.jpg" alt="Galeri 2"><img id="gallery3" src="assets/gallery3.jpg" alt="Galeri 3"><img id="gallery4" src="assets/gallery4.jpg" alt="Galeri 4"></div></section>
-    <section class="section rsvp"><h2>Konfirmasi Kehadiran</h2><form id="rsvpForm"><input id="rsvpName" type="text" placeholder="Nama Anda" required><input id="rsvpPhone" type="tel" placeholder="Nomor WhatsApp"><select id="attendance" required><option value="">Pilih Kehadiran</option><option value="hadir">InsyaAllah Hadir</option><option value="tidak_hadir">Maaf, Belum Bisa Hadir</option></select><input id="guestCount" type="number" min="1" value="1" placeholder="Jumlah tamu"><textarea id="rsvpNote" placeholder="Catatan tambahan"></textarea><button type="submit">Kirim RSVP</button></form><p id="rsvpStatus" class="status-text"></p></section>
-    <section class="section gift"><h2>Amplop Digital</h2><p>Doa restu Bapak/Ibu adalah hadiah terbaik bagi kami.</p><div class="bank-card"><p><span data-field="bankName1">Bank</span> - <span data-field="bankNumber1">000000</span></p><strong data-field="bankHolder1">Nama Pemilik</strong></div><div class="bank-card"><p><span data-field="bankName2">Bank</span> - <span data-field="bankNumber2">000000</span></p><strong data-field="bankHolder2">Nama Pemilik</strong></div></section>
-    <section class="section wishes"><h2>Ucapan & Doa</h2><form id="wishForm"><input id="wishName" type="text" placeholder="Nama Anda" required><textarea id="wishText" placeholder="Tulis ucapan terbaik..." required></textarea><button type="submit">Kirim Ucapan</button></form><div id="wishList"></div></section>
-    <section class="section stifin"><h2>Pesan Cinta</h2><p>"Pernikahan bukan mencari pasangan yang sempurna, tetapi belajar memahami potensi unik satu sama lain."</p><span>STIFIn Couple Edition</span></section>
-    <footer><h2><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h2><p>Terima kasih atas doa dan restunya.</p></footer>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="overlay"></div>
+      <div class="hero-content" data-aos="fade-up" data-aos-duration="1500">
+        <p class="small">We Are Getting Married</p>
+        <h1><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h1>
+        <p class="date" data-field="weddingDateText">Sabtu, 06 September 2026</p>
+        <div class="scroll-down">
+          <p>Scroll ke bawah</p>
+          <i class="fa-solid fa-chevron-down fa-bounce"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- Intro Section -->
+    <section class="section intro" id="intro">
+      <div class="container" data-aos="fade-up">
+        <p class="arabic">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
+        <p class="salam">Assalamu'alaikum Warahmatullahi Wabarakatuh</p>
+        <p>Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami.</p>
+      </div>
+    </section>
+
+    <!-- Couple Section -->
+    <section class="section couple" id="couple">
+      <div class="container">
+        <!-- Groom -->
+        <div class="person" data-aos="fade-right">
+          <div class="img-wrapper">
+            <img id="groomPhoto" src="assets/groom.jpg" alt="Mempelai Pria">
+          </div>
+          <h2 data-field="groomName">Reza</h2>
+          <p>Putra dari <br><strong>Bapak <span data-field="groomFather"></span> & Ibu <span data-field="groomMother"></span></strong></p>
+          <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i> @reza_ig</a>
+        </div>
+        
+        <div class="and" data-aos="zoom-in"><i class="fa-solid fa-heart"></i></div>
+        
+        <!-- Bride -->
+        <div class="person" data-aos="fade-left">
+          <div class="img-wrapper">
+            <img id="bridePhoto" src="assets/bride.jpg" alt="Mempelai Wanita">
+          </div>
+          <h2 data-field="brideName">Intan</h2>
+          <p>Putri dari <br><strong>Bapak <span data-field="brideFather"></span> & Ibu <span data-field="brideMother"></span></strong></p>
+          <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i> @intan_ig</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section class="section countdown" id="countdown">
+      <div class="container" data-aos="zoom-in">
+        <h2>Menuju Hari Bahagia</h2>
+        <p>Doa dan restu Anda adalah karunia yang sangat berarti bagi kami.</p>
+        <div class="timer">
+          <div class="time-box"><span id="days">0</span><small>Hari</small></div>
+          <div class="time-box"><span id="hours">0</span><small>Jam</small></div>
+          <div class="time-box"><span id="minutes">0</span><small>Menit</small></div>
+          <div class="time-box"><span id="seconds">0</span><small>Detik</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Event Section -->
+    <section class="section event" id="event">
+      <div class="container">
+        <h2>Detail Acara</h2>
+        <div class="event-grid">
+          
+          <!-- Akad -->
+          <div class="event-card" data-aos="flip-left">
+            <i class="fa-solid fa-ring event-icon"></i>
+            <h3>Akad Nikah</h3>
+            <div class="event-details">
+              <p><i class="fa-regular fa-calendar"></i> <span data-field="weddingDateText"></span></p>
+              <p><i class="fa-regular fa-clock"></i> Pukul <span data-field="akadTime"></span> - Selesai</p>
+              <p><i class="fa-solid fa-location-dot"></i> <strong><span data-field="akadLocation"></span></strong></p>
+            </div>
+          </div>
+          
+          <!-- Resepsi -->
+          <div class="event-card" data-aos="flip-right">
+            <i class="fa-solid fa-champagne-glasses event-icon"></i>
+            <h3>Resepsi</h3>
+            <div class="event-details">
+              <p><i class="fa-regular fa-calendar"></i> <span data-field="weddingDateText"></span></p>
+              <p><i class="fa-regular fa-clock"></i> Pukul <span data-field="receptionTime"></span> - Selesai</p>
+              <p><i class="fa-solid fa-location-dot"></i> <strong><span data-field="location"></span></strong></p>
+            </div>
+          </div>
+
+        </div>
+        <div class="maps-container" data-aos="fade-up">
+          <a class="btn-primary" id="mapsBtn" href="#" target="_blank">
+            <i class="fa-solid fa-map-location-dot"></i> Buka Google Maps
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Story Section -->
+    <section class="section story" id="story">
+      <div class="container" data-aos="fade-up">
+        <h2>Cerita Kami</h2>
+        <div class="story-content">
+          <i class="fa-solid fa-quote-left quote-icon"></i>
+          <p data-field="story">Berawal dari pertemuan sederhana...</p>
+          <i class="fa-solid fa-quote-right quote-icon"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="section gallery" id="gallery">
+      <div class="container">
+        <h2 data-aos="fade-down">Momen Bahagia</h2>
+        <div class="grid">
+          <div class="grid-item" data-aos="zoom-in" data-aos-delay="100"><img id="gallery1" src="assets/gallery1.jpg" alt="Galeri 1"></div>
+          <div class="grid-item" data-aos="zoom-in" data-aos-delay="200"><img id="gallery2" src="assets/gallery2.jpg" alt="Galeri 2"></div>
+          <div class="grid-item" data-aos="zoom-in" data-aos-delay="300"><img id="gallery3" src="assets/gallery3.jpg" alt="Galeri 3"></div>
+          <div class="grid-item" data-aos="zoom-in" data-aos-delay="400"><img id="gallery4" src="assets/gallery4.jpg" alt="Galeri 4"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section class="section rsvp" id="rsvp">
+      <div class="container" data-aos="fade-up">
+        <h2>Konfirmasi Kehadiran</h2>
+        <p>Kehadiran Anda sangat berarti bagi kami.</p>
+        <div class="form-wrapper">
+          <form id="rsvpForm">
+            <div class="input-group">
+              <i class="fa-regular fa-user"></i>
+              <input id="rsvpName" type="text" placeholder="Nama Lengkap Anda" required>
+            </div>
+            <div class="input-group">
+              <i class="fa-brands fa-whatsapp"></i>
+              <input id="rsvpPhone" type="tel" placeholder="Nomor WhatsApp">
+            </div>
+            <div class="input-group">
+              <i class="fa-solid fa-clipboard-check"></i>
+              <select id="attendance" required>
+                <option value="" disabled selected>Pilih Kehadiran</option>
+                <option value="hadir">InsyaAllah Hadir</option>
+                <option value="tidak_hadir">Maaf, Belum Bisa Hadir</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <i class="fa-solid fa-users"></i>
+              <input id="guestCount" type="number" min="1" value="1" placeholder="Jumlah tamu">
+            </div>
+            <div class="input-group align-top">
+              <i class="fa-regular fa-comment-dots"></i>
+              <textarea id="rsvpNote" placeholder="Catatan tambahan (Opsional)" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Kirim Konfirmasi</button>
+          </form>
+          <p id="rsvpStatus" class="status-text"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gift Section -->
+    <section class="section gift" id="gift">
+      <div class="container" data-aos="fade-up">
+        <h2>Amplop Digital</h2>
+        <p>Doa restu Bapak/Ibu/Saudara/i merupakan karunia terindah bagi kami. Bagi yang ingin memberikan tanda kasih, dapat mengirimkan melalui fitur di bawah ini:</p>
+        
+        <div class="bank-container">
+          <!-- Bank 1 -->
+          <div class="bank-card">
+            <i class="fa-solid fa-building-columns bank-icon"></i>
+            <h3 data-field="bankName1">Bank BCA</h3>
+            <p class="account-number" id="norek1" data-field="bankNumber1">1234567890</p>
+            <p class="account-name">a.n <strong data-field="bankHolder1">Reza</strong></p>
+            <button class="btn-copy" onclick="copyToClipboard('norek1')"><i class="fa-regular fa-copy"></i> Salin Nomor Rekening</button>
+          </div>
+          
+          <!-- Bank 2 -->
+          <div class="bank-card">
+            <i class="fa-solid fa-building-columns bank-icon"></i>
+            <h3 data-field="bankName2">Bank Mandiri</h3>
+            <p class="account-number" id="norek2" data-field="bankNumber2">0987654321</p>
+            <p class="account-name">a.n <strong data-field="bankHolder2">Intan</strong></p>
+            <button class="btn-copy" onclick="copyToClipboard('norek2')"><i class="fa-regular fa-copy"></i> Salin Nomor Rekening</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Wishes Section -->
+    <section class="section wishes" id="wishes">
+      <div class="container" data-aos="fade-up">
+        <h2>Ucapan & Doa</h2>
+        <div class="wishes-wrapper">
+          <form id="wishForm">
+            <input id="wishName" type="text" placeholder="Nama Anda" required>
+            <textarea id="wishText" placeholder="Tulis ucapan dan doa terbaik untuk kedua mempelai..." required rows="4"></textarea>
+            <button type="submit" class="btn-primary">Kirim Ucapan</button>
+          </form>
+          <div id="wishList" class="wish-messages">
+            <!-- Komentar akan muncul di sini via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STIFIn Quote Section -->
+    <section class="section stifin" id="quote">
+      <div class="container" data-aos="zoom-in">
+        <i class="fa-solid fa-leaf quote-decoration"></i>
+        <p>"Pernikahan bukan mencari pasangan yang sempurna, tetapi belajar memahami potensi unik satu sama lain."</p>
+        <span class="badge">STIFIn Couple Edition</span>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <h2><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h2>
+        <p>Terima kasih atas doa dan restunya.</p>
+        <div class="footer-credit">
+          <small>Dibuat dengan <i class="fa-solid fa-heart" style="color: red;"></i> untuk Hari Bahagia</small>
+        </div>
+      </div>
+    </footer>
   </main>
+
+  <!-- Script AOS (Animasi) -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Inisialisasi Animasi AOS
+    AOS.init({
+      once: true, // Animasi hanya berjalan sekali
+      offset: 100, // Jarak trigger animasi
+    });
+
+    // Fungsi sederhana untuk copy rekening (bisa dipindah ke script.js nanti)
+    function copyToClipboard(elementId) {
+      var copyText = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(copyText).then(function() {
+        alert("Nomor rekening berhasil disalin: " + copyText);
+      }, function(err) {
+        console.error('Gagal menyalin teks: ', err);
+      });
+    }
+  </script>
+  
+  <!-- Main Script Bosku -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
