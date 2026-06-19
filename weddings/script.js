@@ -125,7 +125,7 @@ function applyWeddingData(data) {
     // Set Statistik Data
   document.getElementById("statVisitors").innerText = data.totalVisitors || 0;
   document.getElementById("statHadir").innerText = data.totalHadir || 0;
-  document.getElementById("statTidakHadir").innerText = data.totalTidakHadir || 0;
+  // document.getElementById("statTidakHadir").innerText = data.totalTidakHadir || 0;
   document.getElementById("statWishes").innerText = data.totalWishes || 0;
 
 
@@ -257,10 +257,10 @@ async function submitRsvp(event) {
       updateData.totalTidakHadir = increment(1);
       
       // Update angka 'Tidak Hadir' di layar secara instan
-      const statTidakHadir = document.getElementById("statTidakHadir");
-      if (statTidakHadir) {
-        statTidakHadir.innerText = parseInt(statTidakHadir.innerText || 0) + 1;
-      }
+      // const statTidakHadir = document.getElementById("statTidakHadir");
+      //if (statTidakHadir) {
+        // statTidakHadir.innerText = parseInt(statTidakHadir.innerText || 0) + 1;
+      // }
     }
 
     // 4. Eksekusi update statistik ke Firestore
