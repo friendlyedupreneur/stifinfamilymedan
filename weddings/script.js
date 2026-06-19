@@ -125,7 +125,7 @@ function applyWeddingData(data) {
     // Set Statistik Data
   document.getElementById("statVisitors").innerText = data.totalVisitors || 0;
   document.getElementById("statHadir").innerText = data.totalHadir || 0;
-  // document.getElementById("statTidakHadir").innerText = data.totalTidakHadir || 0;
+ 
   document.getElementById("statWishes").innerText = data.totalWishes || 0;
 
 
