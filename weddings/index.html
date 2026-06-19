@@ -29,7 +29,7 @@
     </div>
   </div>
 
-  <!-- Cover / Sampul Undangan -->
+  <!-- Cover / Sampul Undangan (Menggunakan Nama Singkat) -->
   <div id="cover" class="cover hidden">
     <div class="cover-card" data-aos="zoom-in" data-aos-duration="1500">
       <p class="small">The Wedding of</p>
@@ -59,7 +59,7 @@
   <!-- Main Content -->
   <main id="content" class="hidden">
     
-    <!-- Hero Section -->
+    <!-- Hero Section (Menggunakan Nama Singkat) -->
     <section class="hero">
       <div class="overlay"></div>
       <div class="hero-content" data-aos="fade-up" data-aos-duration="1500">
@@ -82,7 +82,7 @@
       </div>
     </section>
 
-    <!-- Couple Section -->
+    <!-- Couple Section (Menggunakan Nama Lengkap) -->
     <section class="section couple" id="couple">
       <div class="container">
         <!-- Groom -->
@@ -90,7 +90,8 @@
           <div class="img-wrapper">
             <img id="groomPhoto" src="assets/groom.jpg" alt="Mempelai Pria">
           </div>
-          <h2 data-field="groomName">Reza</h2>
+          <!-- Nama Lengkap Mempelai Pria -->
+          <h2 data-field="groomFullName">Reza Pahlawan, S.Kom</h2>
           <p>Putra dari <br><strong>Bapak <span data-field="groomFather"></span> & Ibu <span data-field="groomMother"></span></strong></p>
           <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i> @reza_ig</a>
         </div>
@@ -102,7 +103,8 @@
           <div class="img-wrapper">
             <img id="bridePhoto" src="assets/bride.jpg" alt="Mempelai Wanita">
           </div>
-          <h2 data-field="brideName">Intan</h2>
+          <!-- Nama Lengkap Mempelai Wanita -->
+          <h2 data-field="brideFullName">Intan Permatasari, S.E</h2>
           <p>Putri dari <br><strong>Bapak <span data-field="brideFather"></span> & Ibu <span data-field="brideMother"></span></strong></p>
           <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i> @intan_ig</a>
         </div>
@@ -268,16 +270,17 @@
       </div>
     </section>
 
-    <!-- STIFIn Quote Section -->
-    <section class="section stifin" id="quote">
+    <!-- Doa / Prayer Section -->
+    <section class="section prayer" id="prayer">
       <div class="container" data-aos="zoom-in">
-        <i class="fa-solid fa-leaf quote-decoration"></i>
-        <p>"Pernikahan bukan mencari pasangan yang sempurna, tetapi belajar memahami potensi unik satu sama lain."</p>
-        <span class="badge">STIFIn Couple Edition</span>
+        <i class="fa-solid fa-hands-praying prayer-icon"></i>
+        <p class="arabic" style="font-size: 1.5rem; margin-bottom: 10px; font-weight: 600;">بَارَكَ اللّٰهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا وَجَمَعَ بَيْنَكُمَا فِيْ خَيْرٍ</p>
+        <p class="transliteration" style="font-style: italic; margin-bottom: 10px; font-size: 0.95rem;">"Barakallahu lakuma wa baaraka 'alaikuma wa jama'a bainakuma fii khair."</p>
+        <p class="translation">"Semoga Allah memberkahi kalian berdua, melimpahkan keberkahan atas kalian berdua, dan mengumpulkan kalian berdua dalam kebaikan."</p>
       </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer (Menggunakan Nama Singkat) -->
     <footer>
       <div class="container">
         <h2><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h2>
@@ -294,11 +297,11 @@
   <script>
     // Inisialisasi Animasi AOS
     AOS.init({
-      once: true, // Animasi hanya berjalan sekali
-      offset: 100, // Jarak trigger animasi
+      once: true,
+      offset: 100,
     });
 
-    // Fungsi sederhana untuk copy rekening (bisa dipindah ke script.js nanti)
+    // Copy ke Clipboard
     function copyToClipboard(elementId) {
       var copyText = document.getElementById(elementId).innerText;
       navigator.clipboard.writeText(copyText).then(function() {
@@ -309,7 +312,7 @@
     }
   </script>
   
-  <!-- Main Script Bosku -->
+  <!-- Main Script -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
