@@ -121,6 +121,13 @@ function applyWeddingData(data) {
   if (brideIgBtn && data.brideIgLink) {
     brideIgBtn.href = data.brideIgLink;
   }
+  
+    // Set Statistik Data
+  document.getElementById("statVisitors").innerText = data.totalVisitors || 0;
+  document.getElementById("statHadir").innerText = data.totalHadir || 0;
+  document.getElementById("statTidakHadir").innerText = data.totalTidakHadir || 0;
+  document.getElementById("statWishes").innerText = data.totalWishes || 0;
+
 
 }
 
@@ -217,20 +224,53 @@ async function submitRsvp(event) {
   status.innerText = "Mengirim Konfirmasi...";
 
   try {
+    // 1. Ambil nilai kehadiran dan jumlah tamu
+    const attendanceValue = document.getElementById("attendance").value;
+    const guestCountValue = Number(document.getElementById("guestCount").value || 1);
+
+    // 2. Simpan detail form ke dalam koleksi RSVP
     await addDoc(rsvpRef, {
       guestName: document.getElementById("rsvpName").value.trim(),
       phone: document.getElementById("rsvpPhone").value.trim(),
-      attendance: document.getElementById("attendance").value,
-      guestCount: Number(document.getElementById("guestCount").value || 1),
+      attendance: attendanceValue,
+      guestCount: guestCountValue,
       note: document.getElementById("rsvpNote").value.trim(),
       sourceGuestName: decodeURIComponent(guest),
       createdAt: serverTimestamp()
     });
     
-    await updateDoc(weddingRef, { totalRsvp: increment(1) });
+    // 3. Siapkan data statistik untuk di-update ke dokumen utama
+    const updateData = { totalRsvp: increment(1) };
+    
+    if (attendanceValue === "hadir") {
+      // Tambahkan jumlah tamu ke totalHadir (sangat berguna untuk hitung katering)
+      updateData.totalHadir = increment(guestCountValue);
+      
+      // Update angka 'Hadir' di layar secara instan
+      const statHadir = document.getElementById("statHadir");
+      if (statHadir) {
+        statHadir.innerText = parseInt(statHadir.innerText || 0) + guestCountValue;
+      }
+      
+    } else if (attendanceValue === "tidak_hadir") {
+      // Tambahkan 1 ke totalTidakHadir
+      updateData.totalTidakHadir = increment(1);
+      
+      // Update angka 'Tidak Hadir' di layar secara instan
+      const statTidakHadir = document.getElementById("statTidakHadir");
+      if (statTidakHadir) {
+        statTidakHadir.innerText = parseInt(statTidakHadir.innerText || 0) + 1;
+      }
+    }
+
+    // 4. Eksekusi update statistik ke Firestore
+    await updateDoc(weddingRef, updateData);
+
+    // 5. Pesan sukses dan reset form
     status.style.color = "#4CAF50";
     status.innerText = "Konfirmasi berhasil dikirim. Terima kasih! 🙏";
     event.target.reset();
+    
   } catch (error) {
     console.error(error);
     status.style.color = "red";
@@ -239,6 +279,7 @@ async function submitRsvp(event) {
     button.disabled = false;
   }
 }
+
 
 async function submitWish(event) {
   event.preventDefault();
@@ -256,6 +297,10 @@ async function submitWish(event) {
     });
     
     await updateDoc(weddingRef, { totalWishes: increment(1) });
+        // Animasi tambah angka instan di layar
+    const statWishes = document.getElementById("statWishes");
+    statWishes.innerText = parseInt(statWishes.innerText) + 1;
+
     document.getElementById("wishText").value = "";
   } catch (error) {
     console.error(error);
