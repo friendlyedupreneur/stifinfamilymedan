@@ -826,7 +826,7 @@ footer p {
    ========================================= */
 .stats-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 15px;
   margin-top: 40px;
   border-top: 1px dashed var(--border-color);
@@ -865,7 +865,7 @@ footer p {
 /* Responsif untuk Layar HP */
 @media (max-width: 480px) {
   .stats-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
   }
 }
