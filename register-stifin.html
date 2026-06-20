@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Daftar Tes STIFIn | STIFIn Family</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #a94f54;
+      --primary-dark: #84383d;
+      --soft: #ffe7df;
+      --cream: #fff7f0;
+      --text: #2d2d2d;
+      --muted: #777;
+      --white: #ffffff;
+      --border: #f3c7bd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      background:
+        radial-gradient(circle at top left, #ffd8ce 0, transparent 35%),
+        radial-gradient(circle at bottom right, #ffc4d0 0, transparent 32%),
+        linear-gradient(135deg, #fff8f4, #ffe9e2);
+      min-height: 100vh;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(132, 56, 61, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      background: var(--soft);
+      border-radius: 50%;
+      right: -90px;
+      top: -90px;
+      z-index: 0;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      background: #ffd1dc;
+      border-radius: 50%;
+      left: -90px;
+      bottom: -90px;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-box {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .logo-box img {
+      width: 190px;
+      max-width: 80%;
+      background: #fff;
+      border-radius: 18px;
+      padding: 10px 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #fff1ed;
+      color: var(--primary-dark);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.05;
+      color: var(--primary-dark);
+      text-align: center;
+      font-family: 'Pacifico', cursive;
+      font-weight: 400;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      margin: 14px 0 24px;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 7px;
+      color: #503133;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1.5px solid #f0c2b8;
+      background: #fffdfb;
+      border-radius: 16px;
+      padding: 14px 15px;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s ease;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(169, 79, 84, 0.12);
+      background: #fff;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #7a5a5c;
+      background: #fff2ef;
+      border: 1px dashed #eba9a2;
+      padding: 12px 14px;
+      border-radius: 16px;
+      line-height: 1.5;
+      margin: 8px 0 18px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 18px;
+      padding: 15px 18px;
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      box-shadow: 0 12px 24px rgba(132, 56, 61, 0.25);
+      transition: 0.2s ease;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 28px rgba(132, 56, 61, 0.32);
+    }
+
+    .footer-text {
+      text-align: center;
+      font-size: 12px;
+      color: #8a6f70;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 16px;
+      }
+
+      .card {
+        padding: 24px 20px;
+        border-radius: 24px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <section class="card">
+      <div class="content">
+
+        <div class="logo-box">
+          <!-- Ganti src logo sesuai file Bos -->
+          <img src="images/logo-stifin-family.png" alt="STIFIn Family">
+        </div>
+
+        <div style="text-align:center;">
+          <div class="badge">✨ Form Pendaftaran Tes STIFIn</div>
+        </div>
+
+        <h1>Daftar Tes STIFIn</h1>
+
+        <p class="subtitle">
+          Isi data berikut untuk pendaftaran awal.  
+          Admin kami akan menghubungi Anda melalui WhatsApp untuk konfirmasi jadwal tes.
+        </p>
+
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="nama">Nama Lengkap</label>
+            <input type="text" id="nama" placeholder="Contoh: Reza Syahrurrozi" required>
+          </div>
+
+          <div class="form-group">
+            <label for="tanggalLahir">Tanggal Lahir</label>
+            <input type="date" id="tanggalLahir" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Aktif</label>
+            <input type="email" id="email" placeholder="Contoh: nama@email.com" required>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="goldar">Golongan Darah</label>
+              <select id="goldar" required>
+                <option value="">Pilih</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="AB">AB</option>
+                <option value="O">O</option>
+                <option value="Belum Tahu">Belum Tahu</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select id="gender" required>
+                <option value="">Pilih</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="paket">Paket Tes</label>
+            <select id="paket" required>
+              <option value="">Pilih Paket</option>
+              <option value="Pelajar - Rp 550.000 / Tes">Pelajar - Rp 550.000 / Tes</option>
+              <option value="Pasangan - Rp 500.000 / Tes">Pasangan - Rp 500.000 / Tes</option>
+              <option value="Keluarga - Rp 500.000 / Tes, Tes 3 Gratis 1">Keluarga - Rp 500.000 / Tes, Tes 3 Gratis 1</option>
+            </select>
+          </div>
+
+          <div class="note">
+            📌 Data ini akan dikirim ke WhatsApp admin untuk proses konfirmasi. 
+            Pastikan data sudah benar sebelum menekan tombol daftar.
+          </div>
+
+          <button type="submit">Daftar via WhatsApp</button>
+        </form>
+
+        <p class="footer-text">
+          STIFIn Family Medan · Kenali Potensi Genetikmu
+        </p>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const phoneNumber = "6281238173518"; // Ganti dengan nomor WhatsApp admin/promotor
+
+      const nama = document.getElementById("nama").value.trim();
+      const tanggalLahir = document.getElementById("tanggalLahir").value;
+      const email = document.getElementById("email").value.trim();
+      const goldar = document.getElementById("goldar").value;
+      const gender = document.getElementById("gender").value;
+      const paket = document.getElementById("paket").value;
+
+      if (!nama || !tanggalLahir || !email || !goldar || !gender || !paket) {
+        alert("Mohon lengkapi semua data terlebih dahulu.");
+        return;
+      }
+
+      const message =
+`Halo Admin STIFIn Family, saya ingin mendaftar Tes STIFIn.
+
+Berikut data saya:
+
+Nama Lengkap:
+${nama}
+
+Tanggal Lahir:
+${tanggalLahir}
+
+Email:
+${email}
+
+Golongan Darah:
+${goldar}
+
+Gender:
+${gender}
+
+Paket Tes:
+${paket}
+
+Mohon info jadwal dan proses selanjutnya. Terima kasih.`;
+
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+      window.open(whatsappUrl, "_blank");
+    });
+  </script>
+</body>
+</html>
