@@ -1,7 +1,16 @@
 import { db } from "./firebase-config.js";
-import { 
-  doc, getDoc, collection, addDoc, serverTimestamp, 
-  increment, updateDoc, query, orderBy, limit, onSnapshot 
+import {
+  doc,
+  getDoc,
+  collection,
+  addDoc,
+  serverTimestamp,
+  increment,
+  updateDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 // ==========================================
@@ -19,37 +28,42 @@ const visitorsRef = collection(db, "weddings", weddingId, "visitors");
 
 // Elemen DOM Utama
 const loader = document.getElementById("loader");
-const coverCard = document.getElementById("cover");           // Kartu 3D
-const coverScene = document.getElementById("cover-scene");     // Pembungkus Perspektif Cover
+const coverCard = document.getElementById("cover");
+const coverScene = document.getElementById("cover-scene");
 const content = document.getElementById("content");
 const bgMusic = document.getElementById("bgMusic");
 const musicToggle = document.getElementById("musicToggle");
 
 let weddingDateTarget = null;
+let fallingLeavesStarted = false;
+let gyroAttached = false;
+let parallaxStarted = false;
 
 // Tulis Nama Tamu di Sampul
-document.getElementById("guestName").innerText = decodeURIComponent(guest);
+const guestNameEl = document.getElementById("guestName");
+if (guestNameEl) {
+  guestNameEl.innerText = decodeURIComponent(guest);
+}
 
 // Mulai Aplikasi saat DOM siap
 document.addEventListener("DOMContentLoaded", initWedding);
 
 // ==========================================
-// 2. FUNGSI UTAMA (INIT)
+// 2. FUNGSI UTAMA
 // ==========================================
 async function initWedding() {
-  // Kunci scroll saat di halaman cover
   document.body.style.overflow = "hidden";
 
   try {
     const snapshot = await getDoc(weddingRef);
+
     if (!snapshot.exists()) {
       loader.innerHTML = "<p>Data undangan tidak ditemukan.</p>";
       return;
     }
 
     const data = snapshot.data();
-    
-    // Terapkan fallback nama lengkap (jika kosong, pakai nama panggilan)
+
     data.groomFullName = data.groomFullName || data.groomName;
     data.brideFullName = data.brideFullName || data.brideName;
 
@@ -59,12 +73,12 @@ async function initWedding() {
     listenWishes();
     await trackVisitor();
 
-    // Hilangkan loader, munculkan cover scene
     loader.classList.add("hidden");
     coverScene.classList.remove("hidden");
 
-    // Refresh Animasi AOS setelah data masuk
-    setTimeout(() => { if (typeof AOS !== 'undefined') AOS.refresh(); }, 500);
+    setTimeout(() => {
+      if (typeof AOS !== "undefined") AOS.refresh();
+    }, 500);
 
   } catch (error) {
     console.error(error);
@@ -73,23 +87,23 @@ async function initWedding() {
 }
 
 // ==========================================
-// 3. MENERAPKAN DATA DARI FIREBASE KE HTML
+// 3. MENERAPKAN DATA FIREBASE KE HTML
 // ==========================================
 function applyWeddingData(data) {
   document.title = `Undangan Pernikahan | ${data.groomName || ""} & ${data.brideName || ""}`;
   data.weddingDateText = formatWeddingDate(data.weddingDate);
 
-  // Otomatis isi semua elemen yang punya atribut data-field
   document.querySelectorAll("[data-field]").forEach(el => {
     const field = el.getAttribute("data-field");
+
     if (data[field] !== undefined && data[field] !== "") {
       el.innerText = data[field];
     }
   });
 
-  // Set Background & Gambar (Menyesuaikan dengan HTML 3D Wrapper baru)
   setBackground("#cover-scene", data.coverImage, "assets/cover.jpg");
   setBackground(".hero", data.heroImage, "assets/hero.jpg");
+
   setImage("groomPhoto", data.groomPhoto, "assets/groom.jpg");
   setImage("bridePhoto", data.bridePhoto, "assets/bride.jpg");
   setImage("gallery1", data.gallery1, "assets/gallery1.jpg");
@@ -97,22 +111,27 @@ function applyWeddingData(data) {
   setImage("gallery3", data.gallery3, "assets/gallery3.jpg");
   setImage("gallery4", data.gallery4, "assets/gallery4.jpg");
 
-  // Set Link Maps & Musik
   bgMusic.src = data.musicUrl || "assets/music.mp3";
-  if (data.mapsLink) document.getElementById("mapsBtn").href = data.mapsLink;
 
-  // Auto-fill nama tamu di form RSVP & Ucapan
-  if (guest && guest !== "Bapak/Ibu/Saudara/i") {
-    document.getElementById("rsvpName").value = decodeURIComponent(guest);
-    document.getElementById("wishName").value = decodeURIComponent(guest);
+  const mapsBtn = document.getElementById("mapsBtn");
+  if (mapsBtn && data.mapsLink) {
+    mapsBtn.href = data.mapsLink;
   }
 
-  // Set Target Waktu Countdown
+  if (guest && guest !== "Bapak/Ibu/Saudara/i") {
+    const decodedGuest = decodeURIComponent(guest);
+
+    const rsvpName = document.getElementById("rsvpName");
+    const wishName = document.getElementById("wishName");
+
+    if (rsvpName) rsvpName.value = decodedGuest;
+    if (wishName) wishName.value = decodedGuest;
+  }
+
   if (data.weddingDate) {
     weddingDateTarget = new Date(`${data.weddingDate}T09:00:00`).getTime();
   }
-  
-  // Set Link Instagram
+
   const groomIgBtn = document.getElementById("groomIgBtn");
   if (groomIgBtn && data.groomIgLink) {
     groomIgBtn.href = data.groomIgLink;
@@ -122,36 +141,33 @@ function applyWeddingData(data) {
   if (brideIgBtn && data.brideIgLink) {
     brideIgBtn.href = data.brideIgLink;
   }
-  
-  // Set Statistik Data
-  if (document.getElementById("statVisitors")) {
-    document.getElementById("statVisitors").innerText = data.totalVisitors || 0;
-  }
-  if (document.getElementById("statHadir")) {
-    document.getElementById("statHadir").innerText = data.totalHadir || 0;
-  }
-  if (document.getElementById("statWishes")) {
-    document.getElementById("statWishes").innerText = data.totalWishes || 0;
-  }
+
+  setText("statVisitors", data.totalVisitors || 0);
+  setText("statHadir", data.totalHadir || 0);
+  setText("statWishes", data.totalWishes || 0);
 }
 
 // ==========================================
-// 4. PENGATURAN EVENT (KLIK & SUBMIT)
+// 4. EVENT
 // ==========================================
 function setupEvents() {
-  document.getElementById("openBtn").addEventListener("click", openInvitation);
-  document.getElementById("rsvpForm").addEventListener("submit", submitRsvp);
-  document.getElementById("wishForm").addEventListener("submit", submitWish);
-  musicToggle.addEventListener("click", toggleMusic);
+  const openBtn = document.getElementById("openBtn");
+  const rsvpForm = document.getElementById("rsvpForm");
+  const wishForm = document.getElementById("wishForm");
+
+  if (openBtn) openBtn.addEventListener("click", openInvitation);
+  if (rsvpForm) rsvpForm.addEventListener("submit", submitRsvp);
+  if (wishForm) wishForm.addEventListener("submit", submitWish);
+  if (musicToggle) musicToggle.addEventListener("click", toggleMusic);
 }
 
-// BUKA UNDANGAN (TOMBOL COVER 3D)
 function openInvitation() {
-  // 1. Trigger animasi flip 3D CSS
+  if (!coverCard || !coverScene || !content) return;
+
   coverCard.classList.add("is-open");
 
-  // 2. Mainkan musik
   musicToggle.classList.remove("hidden");
+
   bgMusic.play().then(() => {
     musicToggle.classList.add("playing");
     musicToggle.innerHTML = '<i class="fa-solid fa-music"></i>';
@@ -161,23 +177,25 @@ function openInvitation() {
     musicToggle.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
   });
 
-  // 3. Tunggu animasi flip 3D selesai, baru buka kunci scroll & tampilkan konten
   setTimeout(() => {
     coverScene.style.display = "none";
     content.classList.remove("hidden");
-    document.body.style.overflow = "auto"; 
-    
-    // Refresh AOS agar kalkulasi animasi scroll akurat
-    if (typeof AOS !== 'undefined') AOS.refresh();
+    document.body.style.overflow = "auto";
 
-    // Mulai animasi
+    if (typeof AOS !== "undefined") AOS.refresh();
+
     createFallingLeaves();
-    initGyroscope3D(); // Inisialisasi Parallax Gyroscope
-  }, 1200); // 1.2 Detik menyesuaikan transition CSS
+    init3DSectionReveal();
+    initScrollParallax();
+    initGyroscope3D();
+    activateFirstVisibleSections();
+
+  }, 1200);
 }
 
-// TOGGLE MUSIK PLAY/PAUSE
 function toggleMusic() {
+  if (!bgMusic || !musicToggle) return;
+
   if (bgMusic.paused) {
     bgMusic.play();
     musicToggle.classList.add("playing");
@@ -190,64 +208,145 @@ function toggleMusic() {
 }
 
 // ==========================================
-// 5. GYROSCOPE 3D PARALLAX (NEW FEATURE)
+// 5. 3D SECTION REVEAL
+// ==========================================
+function init3DSectionReveal() {
+  const sections = document.querySelectorAll(".reveal-3d");
+  if (!sections.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show-3d");
+      } else {
+        entry.target.classList.remove("show-3d");
+      }
+    });
+  }, {
+    threshold: 0.18,
+    rootMargin: "0px 0px -8% 0px"
+  });
+
+  sections.forEach(section => observer.observe(section));
+}
+
+function activateFirstVisibleSections() {
+  const sections = document.querySelectorAll(".reveal-3d");
+
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+
+    if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
+      section.classList.add("show-3d");
+    }
+  });
+}
+
+// ==========================================
+// 6. SCROLL PARALLAX PREMIUM
+// ==========================================
+function initScrollParallax() {
+  if (parallaxStarted) return;
+  parallaxStarted = true;
+
+  const heroContent = document.querySelector(".hero-content");
+  const hero = document.querySelector(".hero");
+
+  if (!hero || !heroContent) return;
+
+  let ticking = false;
+
+  window.addEventListener("scroll", () => {
+    if (ticking) return;
+
+    window.requestAnimationFrame(() => {
+      const scrollY = window.scrollY;
+      const heroHeight = hero.offsetHeight || window.innerHeight;
+
+      if (scrollY <= heroHeight) {
+        const move = scrollY * 0.18;
+        const fade = Math.max(0.25, 1 - scrollY / heroHeight);
+
+        heroContent.style.transform = `translateY(${move}px) translateZ(50px)`;
+        heroContent.style.opacity = fade;
+      }
+
+      ticking = false;
+    });
+
+    ticking = true;
+  }, { passive: true });
+}
+
+// ==========================================
+// 7. GYROSCOPE 3D PARALLAX
 // ==========================================
 function initGyroscope3D() {
-  const layer3D = document.querySelector('.content-3d-layer');
-  
-  if (window.DeviceOrientationEvent && layer3D) {
-    // Meminta izin sensor untuk iOS 13+
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission().then(permissionState => {
-        if (permissionState === 'granted') {
-          attachGyroListener(layer3D);
-        }
-      }).catch(console.error);
+  const layer3D = document.querySelector(".content-3d-layer");
+
+  if (!layer3D || gyroAttached) return;
+
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+  if (!isMobile) return;
+
+  if (window.DeviceOrientationEvent) {
+    if (typeof DeviceOrientationEvent.requestPermission === "function") {
+      DeviceOrientationEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState === "granted") {
+            attachGyroListener(layer3D);
+          }
+        })
+        .catch(console.error);
     } else {
-      // Perangkat Android atau iOS lama
       attachGyroListener(layer3D);
     }
   }
 }
 
 function attachGyroListener(layer3D) {
-  window.addEventListener('deviceorientation', (event) => {
-    let tiltX = event.beta;  // Depan - Belakang [-180, 180]
-    let tiltY = event.gamma; // Kiri - Kanan [-90, 90]
+  if (gyroAttached) return;
+  gyroAttached = true;
+
+  window.addEventListener("deviceorientation", (event) => {
+    const tiltX = event.beta;
+    const tiltY = event.gamma;
 
     if (tiltX === null || tiltY === null) return;
 
-    // Hitung rotasi dengan batasan sudut yang elegan (maksimal 8 derajat)
-    let rotateX = Math.max(-8, Math.min(8, (tiltX - 45) * 0.2)); 
-    let rotateY = Math.max(-8, Math.min(8, tiltY * 0.3));
+    const rotateX = clamp((tiltX - 45) * 0.08, -3, 3);
+    const rotateY = clamp(tiltY * 0.08, -3, 3);
 
-    // Terapkan ke kontainer utama agar terasa hidup saat HP digerakkan
     layer3D.style.transform = `rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
-  });
+  }, { passive: true });
 }
 
 // ==========================================
-// 6. EFEK BUNGA BERJATUHAN
+// 8. FALLING FLOWERS
 // ==========================================
 function createFallingLeaves() {
+  if (fallingLeavesStarted) return;
+  fallingLeavesStarted = true;
+
   const container = document.getElementById("falling-elements");
   if (!container) return;
 
-  const maxLeaves = 25; 
-  const symbols = ['🌸', '🍃', '✨', '🤍']; 
+  const maxLeaves = 25;
+  const symbols = ["🌸", "🍃", "✨", "🤍"];
 
   setInterval(() => {
     if (container.childElementCount > maxLeaves) return;
 
-    const leaf = document.createElement('div');
-    leaf.classList.add('falling-leaf');
+    const leaf = document.createElement("div");
+    leaf.classList.add("falling-leaf");
     leaf.innerText = symbols[Math.floor(Math.random() * symbols.length)];
 
-    leaf.style.left = Math.random() * 100 + 'vw';
-    leaf.style.fontSize = (Math.random() * 0.8 + 0.8) + 'rem';
-    
+    leaf.style.left = Math.random() * 100 + "vw";
+    leaf.style.fontSize = (Math.random() * 0.8 + 0.8) + "rem";
+
     const fallDuration = Math.random() * 3 + 5;
     const swayDuration = Math.random() * 2 + 3;
+
     leaf.style.animationDuration = `${fallDuration}s, ${swayDuration}s`;
 
     container.appendChild(leaf);
@@ -255,18 +354,20 @@ function createFallingLeaves() {
     setTimeout(() => {
       leaf.remove();
     }, fallDuration * 1000);
-
-  }, 400); 
+  }, 420);
 }
 
 // ==========================================
-// 7. FIREBASE: RSVP, WISHES, & TRACKING
+// 9. FIREBASE: RSVP, WISHES, VISITOR
 // ==========================================
 async function submitRsvp(event) {
   event.preventDefault();
+
   const button = event.target.querySelector("button");
   const status = document.getElementById("rsvpStatus");
+
   button.disabled = true;
+  status.style.color = "";
   status.innerText = "Mengirim Konfirmasi...";
 
   try {
@@ -282,15 +383,19 @@ async function submitRsvp(event) {
       sourceGuestName: decodeURIComponent(guest),
       createdAt: serverTimestamp()
     });
-    
-    const updateData = { totalRsvp: increment(1) };
-    
+
+    const updateData = {
+      totalRsvp: increment(1)
+    };
+
     if (attendanceValue === "hadir") {
       updateData.totalHadir = increment(guestCountValue);
+
       const statHadir = document.getElementById("statHadir");
       if (statHadir) {
-        statHadir.innerText = parseInt(statHadir.innerText || 0) + guestCountValue;
+        statHadir.innerText = parseInt(statHadir.innerText || 0, 10) + guestCountValue;
       }
+
     } else if (attendanceValue === "tidak_hadir") {
       updateData.totalTidakHadir = increment(1);
     }
@@ -300,7 +405,7 @@ async function submitRsvp(event) {
     status.style.color = "#4CAF50";
     status.innerText = "Konfirmasi berhasil dikirim. Terima kasih! 🙏";
     event.target.reset();
-    
+
   } catch (error) {
     console.error(error);
     status.style.color = "red";
@@ -312,9 +417,11 @@ async function submitRsvp(event) {
 
 async function submitWish(event) {
   event.preventDefault();
+
   const button = event.target.querySelector("button");
-  button.disabled = true;
   const originalText = button.innerText;
+
+  button.disabled = true;
   button.innerText = "Mengirim...";
 
   try {
@@ -324,12 +431,18 @@ async function submitWish(event) {
       sourceGuestName: decodeURIComponent(guest),
       createdAt: serverTimestamp()
     });
-    
-    await updateDoc(weddingRef, { totalWishes: increment(1) });
+
+    await updateDoc(weddingRef, {
+      totalWishes: increment(1)
+    });
+
     const statWishes = document.getElementById("statWishes");
-    statWishes.innerText = parseInt(statWishes.innerText) + 1;
+    if (statWishes) {
+      statWishes.innerText = parseInt(statWishes.innerText || 0, 10) + 1;
+    }
 
     document.getElementById("wishText").value = "";
+
   } catch (error) {
     console.error(error);
     alert("Gagal mengirim ucapan. Coba lagi ya.");
@@ -341,23 +454,29 @@ async function submitWish(event) {
 
 function listenWishes() {
   const q = query(wishesRef, orderBy("createdAt", "desc"), limit(30));
+
   onSnapshot(q, snapshot => {
     const list = document.getElementById("wishList");
+    if (!list) return;
+
     list.innerHTML = "";
-    
+
     snapshot.forEach(docItem => {
       const data = docItem.data();
+
       const item = document.createElement("div");
-      item.className = "wish-item";
-      
+      item.className = "wish-item box-3d";
+
       item.innerHTML = `
         <strong style="color: var(--primary); font-size: 1.1rem;">
-          <i class="fa-regular fa-circle-user"></i> ${escapeHtml(data.guestName || "Tamu")}
+          <i class="fa-regular fa-circle-user"></i>
+          ${escapeHtml(data.guestName || "Tamu")}
         </strong>
         <p style="margin-top: 8px; font-size: 0.95rem; line-height: 1.5;">
           ${escapeHtml(data.message || "")}
         </p>
       `;
+
       list.appendChild(item);
     });
   });
@@ -370,14 +489,18 @@ async function trackVisitor() {
       userAgent: navigator.userAgent,
       openedAt: serverTimestamp()
     });
-    await updateDoc(weddingRef, { totalVisitors: increment(1) });
+
+    await updateDoc(weddingRef, {
+      totalVisitors: increment(1)
+    });
+
   } catch (error) {
     console.warn("Visitor tracking gagal:", error);
   }
 }
 
 // ==========================================
-// 8. FUNGSI UTILITAS (COUNTDOWN, FORMAT, HELPER)
+// 10. UTILITAS
 // ==========================================
 function setupCountdown() {
   updateCountdown();
@@ -386,14 +509,15 @@ function setupCountdown() {
 
 function updateCountdown() {
   if (!weddingDateTarget) return;
+
   const now = new Date().getTime();
   const distance = weddingDateTarget - now;
-  
+
   if (distance <= 0) {
     setCountdownValue(0, 0, 0, 0);
     return;
   }
-  
+
   setCountdownValue(
     Math.floor(distance / (1000 * 60 * 60 * 24)),
     Math.floor((distance / (1000 * 60 * 60)) % 24),
@@ -403,35 +527,55 @@ function updateCountdown() {
 }
 
 function setCountdownValue(days, hours, minutes, seconds) {
-  document.getElementById("days").innerText = days;
-  document.getElementById("hours").innerText = hours;
-  document.getElementById("minutes").innerText = minutes;
-  document.getElementById("seconds").innerText = seconds;
+  setText("days", days);
+  setText("hours", hours);
+  setText("minutes", minutes);
+  setText("seconds", seconds);
 }
 
 function formatWeddingDate(dateString) {
   if (!dateString) return "";
+
   const date = new Date(`${dateString}T00:00:00`);
+
   return new Intl.DateTimeFormat("id-ID", {
-    weekday: "long", day: "2-digit", month: "long", year: "numeric"
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
   }).format(date);
 }
 
 function setBackground(selector, url, fallback) {
   const el = document.querySelector(selector);
   if (!el) return;
+
   const finalUrl = url || fallback;
-  
-  el.style.backgroundImage = `linear-gradient(to bottom, rgba(63,42,31,0.4), rgba(63,42,31,0.7)), url('${finalUrl}')`;
+
+  el.style.backgroundImage =
+    `linear-gradient(to bottom, rgba(63,42,31,0.4), rgba(63,42,31,0.7)), url('${finalUrl}')`;
 }
 
 function setImage(id, url, fallback) {
   const el = document.getElementById(id);
-  if (el) el.src = url || fallback;
+  if (!el) return;
+
+  el.src = url || fallback;
+}
+
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.innerText = value;
 }
 
 function escapeHtml(text) {
   const div = document.createElement("div");
   div.innerText = text;
   return div.innerHTML;
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
 }
