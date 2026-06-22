@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Undangan Pernikahan | Reza & Intan</title>
   
   <!-- Font -->
@@ -21,6 +21,7 @@
 </head>
 <body>
   <div id="falling-elements"></div>
+  
   <!-- Loader -->
   <div id="loader" class="loader">
     <div class="loader-card">
@@ -30,22 +31,36 @@
     </div>
   </div>
 
-  <!-- Cover / Sampul Undangan (Menggunakan Nama Singkat) -->
-  <div id="cover" class="cover hidden">
-    <div class="cover-card" data-aos="zoom-in" data-aos-duration="1500">
-      <p class="small">The Wedding of</p>
-      <h1><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h1>
-      <p class="date"><i class="fa-regular fa-calendar-days"></i> <span data-field="weddingDateText">Sabtu, 06 September 2026</span></p>
+  <!-- 3D SCENE WRAPPER UNTUK COVER -->
+  <div id="cover-scene" class="scene hidden">
+    <!-- Cover / Sampul Undangan -->
+    <div id="cover" class="cover 3d-card">
       
-      <div class="guest-box">
-        <p>Kepada Yth.</p>
-        <h3 id="guestName">Bapak/Ibu/Saudara/i</h3>
-        <p class="note">Mohon maaf apabila ada kesalahan penulisan nama/gelar</p>
+      <!-- Sisi Depan Cover -->
+      <div class="card-face cover-front">
+        <div class="cover-content" data-aos="zoom-in" data-aos-duration="1500">
+          <p class="small">The Wedding of</p>
+          <h1><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h1>
+          <p class="date"><i class="fa-regular fa-calendar-days"></i> <span data-field="weddingDateText">Sabtu, 06 September 2026</span></p>
+          
+          <div class="guest-box">
+            <p>Kepada Yth.</p>
+            <h3 id="guestName">Bapak/Ibu/Saudara/i</h3>
+            <p class="note">Mohon maaf apabila ada kesalahan penulisan nama/gelar</p>
+          </div>
+          
+          <button id="openBtn" class="btn-primary">
+            <i class="fa-solid fa-envelope-open-text"></i> Buka Undangan
+          </button>
+        </div>
       </div>
-      
-      <button id="openBtn" class="btn-primary">
-        <i class="fa-solid fa-envelope-open-text"></i> Buka Undangan
-      </button>
+
+      <!-- Sisi Belakang Cover (Untuk Efek Flip 3D) -->
+      <div class="card-face cover-back">
+        <div class="envelope-flap"></div>
+        <i class="fa-solid fa-heart" style="color: #d4af37; font-size: 3rem;"></i>
+      </div>
+
     </div>
   </div>
 
@@ -57,292 +72,287 @@
     <i class="fa-solid fa-music"></i>
   </button>
 
-  <!-- Main Content -->
-  <main id="content" class="hidden">
-    
-    <!-- Hero Section (Menggunakan Nama Singkat) -->
-    <section class="hero">
-      <div class="overlay"></div>
-      <div class="hero-content" data-aos="fade-up" data-aos-duration="1500">
-        <p class="small">We Are Getting Married</p>
-        <h1><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h1>
-        <p class="date" data-field="weddingDateText">Sabtu, 06 September 2026</p>
-        <div class="scroll-down">
-          <p>Scroll ke bawah</p>
-          <i class="fa-solid fa-chevron-down fa-bounce"></i>
-        </div>
-      </div>
-    </section>
-
-    <!-- Intro Section -->
-    <section class="section intro" id="intro">
-      <div class="container" data-aos="fade-up">
-        <p class="arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-        <p class="salam">Assalamu'alaikum Warahmatullahi Wabarakatuh</p>
-        <p>Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami.</p>
-      </div>
-    </section>
-
-    <!-- Couple Section (Menggunakan Nama Lengkap) -->
-    <section class="section couple" id="couple">
-      <div class="container">
-        <!-- Groom -->
-        <div class="person" data-aos="fade-right">
-          <div class="img-wrapper">
-            <img id="groomPhoto" src="assets/groom.jpg" alt="Mempelai Pria">
-          </div>
-          <!-- Nama Lengkap Mempelai Pria -->
-          <h2 data-field="groomFullName">Reza Pahlawan, S.Kom</h2>
-          <p>Putra dari <br><strong>Bapak <span data-field="groomFather"></span> & Ibu <span data-field="groomMother"></span></strong></p>
-          <a id="groomIgBtn" href="#" target="_blank" class="social-link">
-  <i class="fa-brands fa-instagram"></i> <span data-field="groomIgHandle">@reza_ig</span>
-</a>
-
-        </div>
-        
-        <div class="and" data-aos="zoom-in"><i class="fa-solid fa-heart"></i></div>
-        
-        <!-- Bride -->
-        <div class="person" data-aos="fade-left">
-          <div class="img-wrapper">
-            <img id="bridePhoto" src="assets/bride.jpg" alt="Mempelai Wanita">
-          </div>
-          <!-- Nama Lengkap Mempelai Wanita -->
-          <h2 data-field="brideFullName">Intan Permatasari, S.E</h2>
-          <p>Putri dari <br><strong>Bapak <span data-field="brideFather"></span> & Ibu <span data-field="brideMother"></span></strong></p>
-          <a id="brideIgBtn" href="#" target="_blank" class="social-link">
-  <i class="fa-brands fa-instagram"></i> <span data-field="brideIgHandle">@intan_ig</span>
-</a>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Countdown Section -->
-    <section class="section countdown" id="countdown">
-      <div class="container" data-aos="zoom-in">
-        <h2>Menuju Hari Bahagia</h2>
-        <p>Doa dan restu Anda adalah karunia yang sangat berarti bagi kami.</p>
-        <div class="timer">
-          <div class="time-box"><span id="days">0</span><small>Hari</small></div>
-          <div class="time-box"><span id="hours">0</span><small>Jam</small></div>
-          <div class="time-box"><span id="minutes">0</span><small>Menit</small></div>
-          <div class="time-box"><span id="seconds">0</span><small>Detik</small></div>
-        </div>
-                <div class="stats-container" data-aos="fade-up" data-aos-delay="200">
-          <div class="stat-box">
-            <i class="fa-regular fa-eye"></i>
-            <h4 id="statVisitors">0</h4>
-            <small>Pengunjung</small>
-          </div>
-          <div class="stat-box">
-            <i class="fa-solid fa-user-check"></i>
-            <h4 id="statHadir">0</h4>
-            <small>Hadir</small>
-          </div>
-         
-          <div class="stat-box">
-            <i class="fa-regular fa-comments"></i>
-            <h4 id="statWishes">0</h4>
-            <small>Ucapan & Doa</small>
+  <!-- Main Content dengan 3D Perspective -->
+  <main id="content" class="hidden perspective-wrapper">
+    <div class="content-3d-layer">
+      
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="overlay"></div>
+        <div class="hero-content" data-aos="fade-up" data-aos-duration="1500">
+          <p class="small">We Are Getting Married</p>
+          <h1><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h1>
+          <p class="date" data-field="weddingDateText">Sabtu, 06 September 2026</p>
+          <div class="scroll-down">
+            <p>Scroll ke bawah</p>
+            <i class="fa-solid fa-chevron-down fa-bounce"></i>
           </div>
         </div>
+      </section>
 
-      </div>
-    </section>
+      <!-- Intro Section -->
+      <section class="section intro" id="intro">
+        <div class="container" data-aos="fade-up">
+          <p class="arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+          <p class="salam">Assalamu'alaikum Warahmatullahi Wabarakatuh</p>
+          <p>Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami.</p>
+        </div>
+      </section>
 
-    <!-- Event Section -->
-    <section class="section event" id="event">
-      <div class="container">
-        <h2>Detail Acara</h2>
-        <div class="event-grid">
-          
-          <!-- Akad -->
-          <div class="event-card" data-aos="flip-left">
-            <i class="fa-solid fa-ring event-icon"></i>
-            <h3>Akad Nikah</h3>
-            <div class="event-details">
-              <p><i class="fa-regular fa-calendar"></i> <span data-field="weddingDateText"></span></p>
-              <p><i class="fa-regular fa-clock"></i> Pukul <span data-field="akadTime"></span> - Selesai</p>
-              <p><i class="fa-solid fa-location-dot"></i> <strong><span data-field="akadLocation"></span></strong></p>
+      <!-- Couple Section -->
+      <section class="section couple" id="couple">
+        <div class="container">
+          <!-- Groom -->
+          <div class="person" data-aos="fade-right">
+            <div class="img-wrapper 3d-hover">
+              <img id="groomPhoto" src="assets/groom.jpg" alt="Mempelai Pria">
             </div>
+            <h2 data-field="groomFullName">Reza Pahlawan, S.Kom</h2>
+            <p>Putra dari <br><strong>Bapak <span data-field="groomFather"></span> & Ibu <span data-field="groomMother"></span></strong></p>
+            <a id="groomIgBtn" href="#" target="_blank" class="social-link">
+              <i class="fa-brands fa-instagram"></i> <span data-field="groomIgHandle">@reza_ig</span>
+            </a>
           </div>
           
-          <!-- Resepsi -->
-          <div class="event-card" data-aos="flip-right">
-            <i class="fa-solid fa-champagne-glasses event-icon"></i>
-            <h3>Resepsi</h3>
-            <div class="event-details">
-              <p><i class="fa-regular fa-calendar"></i> <span data-field="weddingDateText"></span></p>
-              <p><i class="fa-regular fa-clock"></i> Pukul <span data-field="receptionTime"></span> - Selesai</p>
-              <p><i class="fa-solid fa-location-dot"></i> <strong><span data-field="location"></span></strong></p>
-            </div>
-          </div>
-
-        </div>
-        <div class="maps-container" data-aos="fade-up">
-          <a class="btn-primary" id="mapsBtn" href="#" target="_blank">
-            <i class="fa-solid fa-map-location-dot"></i> Buka Google Maps
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Story Section -->
-    <section class="section story" id="story">
-      <div class="container" data-aos="fade-up">
-        <h2>Cerita Kami</h2>
-        <div class="story-content">
-          <i class="fa-solid fa-quote-left quote-icon"></i>
-          <p data-field="story">Berawal dari pertemuan sederhana...</p>
-          <i class="fa-solid fa-quote-right quote-icon"></i>
-        </div>
-      </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section class="section gallery" id="gallery">
-      <div class="container">
-        <h2 data-aos="fade-down">Momen Bahagia</h2>
-        <div class="grid">
-          <div class="grid-item" data-aos="zoom-in" data-aos-delay="100"><img id="gallery1" src="assets/gallery1.jpg" alt="Galeri 1"></div>
-          <div class="grid-item" data-aos="zoom-in" data-aos-delay="200"><img id="gallery2" src="assets/gallery2.jpg" alt="Galeri 2"></div>
-          <div class="grid-item" data-aos="zoom-in" data-aos-delay="300"><img id="gallery3" src="assets/gallery3.jpg" alt="Galeri 3"></div>
-          <div class="grid-item" data-aos="zoom-in" data-aos-delay="400"><img id="gallery4" src="assets/gallery4.jpg" alt="Galeri 4"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- RSVP Section -->
-    <section class="section rsvp" id="rsvp">
-      <div class="container" data-aos="fade-up">
-        <h2>Konfirmasi Kehadiran</h2>
-        <p>Kehadiran Anda sangat berarti bagi kami.</p>
-        <div class="form-wrapper">
-          <div class="gift-notice">
-  <i class="fa-solid fa-gift"></i>
-  <div>
-    <strong>Hadiah Spesial Untuk Tamu</strong>
-    <p>Pastikan mengisi data dengan lengkap ya. Akan ada hadiah menarik yang menunggu di akhir acara 😊</p>
-  </div>
-</div>
-          <form id="rsvpForm">
-            <div class="input-group">
-              <i class="fa-regular fa-user"></i>
-              <input id="rsvpName" type="text" placeholder="Nama Lengkap Anda (untuk data undian)" required>
-            </div>
-            <div class="input-group">
-              <i class="fa-brands fa-whatsapp"></i>
-              <input id="rsvpPhone" type="tel" placeholder="Nomor WhatsApp aktif">
-            </div>
-            <div class="input-group">
-              <i class="fa-solid fa-clipboard-check"></i>
-              <select id="attendance" required>
-                <option value="" disabled selected>Pilih Kehadiran</option>
-                <option value="hadir">InsyaAllah Hadir</option>
-                <option value="tidak_hadir">Maaf, Belum Bisa Hadir</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <i class="fa-solid fa-users"></i>
-              <input id="guestCount" type="number" min="1" value="1" placeholder="Jumlah tamu">
-            </div>
-            <div class="input-group align-top">
-              <i class="fa-regular fa-comment-dots"></i>
-              <textarea id="rsvpNote" placeholder="Catatan tambahan / nama keluarga (Opsional)" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Kirim Konfirmasi</button>
-          </form>
-          <p id="rsvpStatus" class="status-text"></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Gift Section -->
-    <section class="section gift" id="gift">
-      <div class="container" data-aos="fade-up">
-        <h2>Amplop Digital</h2>
-        <p>Doa restu Bapak/Ibu/Saudara/i merupakan karunia terindah bagi kami. Bagi yang ingin memberikan tanda kasih, dapat mengirimkan melalui fitur di bawah ini:</p>
-        
-        <div class="bank-container">
-          <!-- Bank 1 -->
-          <div class="bank-card">
-            <i class="fa-solid fa-building-columns bank-icon"></i>
-            <h3 data-field="bankName1">Bank BCA</h3>
-            <p class="account-number" id="norek1" data-field="bankNumber1">1234567890</p>
-            <p class="account-name">a.n <strong data-field="bankHolder1">Reza</strong></p>
-            <button class="btn-copy" onclick="copyToClipboard('norek1')"><i class="fa-regular fa-copy"></i> Salin Nomor Rekening</button>
-          </div>
+          <div class="and" data-aos="zoom-in"><i class="fa-solid fa-heart"></i></div>
           
-          <!-- Bank 2 -->
-          <div class="bank-card">
-            <i class="fa-solid fa-building-columns bank-icon"></i>
-            <h3 data-field="bankName2">Bank Mandiri</h3>
-            <p class="account-number" id="norek2" data-field="bankNumber2">0987654321</p>
-            <p class="account-name">a.n <strong data-field="bankHolder2">Intan</strong></p>
-            <button class="btn-copy" onclick="copyToClipboard('norek2')"><i class="fa-regular fa-copy"></i> Salin Nomor Rekening</button>
+          <!-- Bride -->
+          <div class="person" data-aos="fade-left">
+            <div class="img-wrapper 3d-hover">
+              <img id="bridePhoto" src="assets/bride.jpg" alt="Mempelai Wanita">
+            </div>
+            <h2 data-field="brideFullName">Intan Permatasari, S.E</h2>
+            <p>Putri dari <br><strong>Bapak <span data-field="brideFather"></span> & Ibu <span data-field="brideMother"></span></strong></p>
+            <a id="brideIgBtn" href="#" target="_blank" class="social-link">
+              <i class="fa-brands fa-instagram"></i> <span data-field="brideIgHandle">@intan_ig</span>
+            </a>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Wishes Section -->
-    <section class="section wishes" id="wishes">
-      <div class="container" data-aos="fade-up">
-        <h2>Ucapan & Doa</h2>
-        <div class="wishes-wrapper">
-          <div class="gift-notice mini">
-  <i class="fa-solid fa-circle-info"></i>
-  <div>
-    <strong>Jangan lupa isi ucapan</strong>
-    <p>Ucapan dan doa terbaik Anda akan menjadi kenangan manis untuk kedua mempelai.</p>
-  </div>
-</div>
+      <!-- Countdown Section -->
+      <section class="section countdown" id="countdown">
+        <div class="container" data-aos="zoom-in">
+          <h2>Menuju Hari Bahagia</h2>
+          <p>Doa dan restu Anda adalah karunia yang sangat berarti bagi kami.</p>
+          <div class="timer">
+            <div class="time-box 3d-box"><span id="days">0</span><small>Hari</small></div>
+            <div class="time-box 3d-box"><span id="hours">0</span><small>Jam</small></div>
+            <div class="time-box 3d-box"><span id="minutes">0</span><small>Menit</small></div>
+            <div class="time-box 3d-box"><span id="seconds">0</span><small>Detik</small></div>
+          </div>
+          <div class="stats-container" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-box">
+              <i class="fa-regular fa-eye"></i>
+              <h4 id="statVisitors">0</h4>
+              <small>Pengunjung</small>
+            </div>
+            <div class="stat-box">
+              <i class="fa-solid fa-user-check"></i>
+              <h4 id="statHadir">0</h4>
+              <small>Hadir</small>
+            </div>
+            <div class="stat-box">
+              <i class="fa-regular fa-comments"></i>
+              <h4 id="statWishes">0</h4>
+              <small>Ucapan & Doa</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Event Section -->
+      <section class="section event" id="event">
+        <div class="container">
+          <h2>Detail Acara</h2>
+          <div class="event-grid">
+            
+            <!-- Akad -->
+            <div class="event-card 3d-float" data-aos="flip-left">
+              <i class="fa-solid fa-ring event-icon"></i>
+              <h3>Akad Nikah</h3>
+              <div class="event-details">
+                <p><i class="fa-regular fa-calendar"></i> <span data-field="weddingDateText"></span></p>
+                <p><i class="fa-regular fa-clock"></i> Pukul <span data-field="akadTime"></span> - Selesai</p>
+                <p><i class="fa-solid fa-location-dot"></i> <strong><span data-field="akadLocation"></span></strong></p>
+              </div>
+            </div>
+            
+            <!-- Resepsi -->
+            <div class="event-card 3d-float" data-aos="flip-right">
+              <i class="fa-solid fa-champagne-glasses event-icon"></i>
+              <h3>Resepsi</h3>
+              <div class="event-details">
+                <p><i class="fa-regular fa-calendar"></i> <span data-field="weddingDateText"></span></p>
+                <p><i class="fa-regular fa-clock"></i> Pukul <span data-field="receptionTime"></span> - Selesai</p>
+                <p><i class="fa-solid fa-location-dot"></i> <strong><span data-field="location"></span></strong></p>
+              </div>
+            </div>
+
+          </div>
+          <div class="maps-container" data-aos="fade-up">
+            <a class="btn-primary" id="mapsBtn" href="#" target="_blank">
+              <i class="fa-solid fa-map-location-dot"></i> Buka Google Maps
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Story Section -->
+      <section class="section story" id="story">
+        <div class="container" data-aos="fade-up">
+          <h2>Cerita Kami</h2>
+          <div class="story-content 3d-box">
+            <i class="fa-solid fa-quote-left quote-icon"></i>
+            <p data-field="story">Berawal dari pertemuan sederhana...</p>
+            <i class="fa-solid fa-quote-right quote-icon"></i>
+          </div>
+        </div>
+      </section>
+
+      <!-- Gallery Section -->
+      <section class="section gallery" id="gallery">
+        <div class="container">
+          <h2 data-aos="fade-down">Momen Bahagia</h2>
+          <div class="grid">
+            <div class="grid-item 3d-hover" data-aos="zoom-in" data-aos-delay="100"><img id="gallery1" src="assets/gallery1.jpg" alt="Galeri 1"></div>
+            <div class="grid-item 3d-hover" data-aos="zoom-in" data-aos-delay="200"><img id="gallery2" src="assets/gallery2.jpg" alt="Galeri 2"></div>
+            <div class="grid-item 3d-hover" data-aos="zoom-in" data-aos-delay="300"><img id="gallery3" src="assets/gallery3.jpg" alt="Galeri 3"></div>
+            <div class="grid-item 3d-hover" data-aos="zoom-in" data-aos-delay="400"><img id="gallery4" src="assets/gallery4.jpg" alt="Galeri 4"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RSVP Section -->
+      <section class="section rsvp" id="rsvp">
+        <div class="container" data-aos="fade-up">
+          <h2>Konfirmasi Kehadiran</h2>
+          <p>Kehadiran Anda sangat berarti bagi kami.</p>
+          <div class="form-wrapper 3d-box">
+            <div class="gift-notice">
+              <i class="fa-solid fa-gift"></i>
+              <div>
+                <strong>Hadiah Spesial Untuk Tamu</strong>
+                <p>Pastikan mengisi data dengan lengkap ya. Akan ada hadiah menarik yang menunggu di akhir acara 😊</p>
+              </div>
+            </div>
+            <form id="rsvpForm">
+              <div class="input-group">
+                <i class="fa-regular fa-user"></i>
+                <input id="rsvpName" type="text" placeholder="Nama Lengkap Anda (untuk data undian)" required>
+              </div>
+              <div class="input-group">
+                <i class="fa-brands fa-whatsapp"></i>
+                <input id="rsvpPhone" type="tel" placeholder="Nomor WhatsApp aktif">
+              </div>
+              <div class="input-group">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <select id="attendance" required>
+                  <option value="" disabled selected>Pilih Kehadiran</option>
+                  <option value="hadir">InsyaAllah Hadir</option>
+                  <option value="tidak_hadir">Maaf, Belum Bisa Hadir</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <i class="fa-solid fa-users"></i>
+                <input id="guestCount" type="number" min="1" value="1" placeholder="Jumlah tamu">
+              </div>
+              <div class="input-group align-top">
+                <i class="fa-regular fa-comment-dots"></i>
+                <textarea id="rsvpNote" placeholder="Catatan tambahan / nama keluarga (Opsional)" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Kirim Konfirmasi</button>
+            </form>
+            <p id="rsvpStatus" class="status-text"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Gift Section -->
+      <section class="section gift" id="gift">
+        <div class="container" data-aos="fade-up">
+          <h2>Amplop Digital</h2>
+          <p>Doa restu Bapak/Ibu/Saudara/i merupakan karunia terindah bagi kami. Bagi yang ingin memberikan tanda kasih, dapat mengirimkan melalui fitur di bawah ini:</p>
           
-          <form id="wishForm">
-            <input id="wishName" type="text" placeholder="Nama Anda" required>
-            <textarea id="wishText" placeholder="Tulis ucapan dan doa terbaik untuk kedua mempelai..." required rows="4"></textarea>
-            <button type="submit" class="btn-primary">Kirim Ucapan</button>
-          </form>
-          <div id="wishList" class="wish-messages">
-            <!-- Komentar akan muncul di sini via JS -->
+          <div class="bank-container">
+            <!-- Bank 1 -->
+            <div class="bank-card 3d-float">
+              <i class="fa-solid fa-building-columns bank-icon"></i>
+              <h3 data-field="bankName1">Bank BCA</h3>
+              <p class="account-number" id="norek1" data-field="bankNumber1">1234567890</p>
+              <p class="account-name">a.n <strong data-field="bankHolder1">Reza</strong></p>
+              <button class="btn-copy" onclick="copyToClipboard('norek1')"><i class="fa-regular fa-copy"></i> Salin Nomor Rekening</button>
+            </div>
+            
+            <!-- Bank 2 -->
+            <div class="bank-card 3d-float">
+              <i class="fa-solid fa-building-columns bank-icon"></i>
+              <h3 data-field="bankName2">Bank Mandiri</h3>
+              <p class="account-number" id="norek2" data-field="bankNumber2">0987654321</p>
+              <p class="account-name">a.n <strong data-field="bankHolder2">Intan</strong></p>
+              <button class="btn-copy" onclick="copyToClipboard('norek2')"><i class="fa-regular fa-copy"></i> Salin Nomor Rekening</button>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Doa / Prayer Section -->
-    <section class="section prayer" id="prayer">
-      <div class="container" data-aos="zoom-in">
-        <i class="fa-solid fa-hands-praying prayer-icon"></i>
-        <p class="arabic" style="font-size: 1.5rem; margin-bottom: 10px; font-weight: 600;">بَارَكَ اللّٰهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا وَجَمَعَ بَيْنَكُمَا فِيْ خَيْرٍ</p>
-        <p class="transliteration" style="font-style: italic; margin-bottom: 10px; font-size: 0.95rem;">"Barakallahu lakuma wa baaraka 'alaikuma wa jama'a bainakuma fii khair."</p>
-        <p class="translation">"Semoga Allah memberkahi kalian berdua, melimpahkan keberkahan atas kalian berdua, dan mengumpulkan kalian berdua dalam kebaikan."</p>
-      </div>
-    </section>
-
-    <!-- Footer (Menggunakan Nama Singkat) -->
-    <footer>
-      <div class="container">
-        <h2><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h2>
-        <p>Terima kasih atas doa dan restunya.</p>
-        <div class="footer-credit">
-          <small>Dibuat dengan <i class="fa-solid fa-heart" style="color: red;"></i> untuk Hari Bahagia</small>
+      <!-- Wishes Section -->
+      <section class="section wishes" id="wishes">
+        <div class="container" data-aos="fade-up">
+          <h2>Ucapan & Doa</h2>
+          <div class="wishes-wrapper 3d-box">
+            <div class="gift-notice mini">
+              <i class="fa-solid fa-circle-info"></i>
+              <div>
+                <strong>Jangan lupa isi ucapan</strong>
+                <p>Ucapan dan doa terbaik Anda akan menjadi kenangan manis untuk kedua mempelai.</p>
+              </div>
+            </div>
+            
+            <form id="wishForm">
+              <input id="wishName" type="text" placeholder="Nama Anda" required>
+              <textarea id="wishText" placeholder="Tulis ucapan dan doa terbaik untuk kedua mempelai..." required rows="4"></textarea>
+              <button type="submit" class="btn-primary">Kirim Ucapan</button>
+            </form>
+            <div id="wishList" class="wish-messages">
+              <!-- Komentar akan muncul di sini via JS -->
+            </div>
+          </div>
         </div>
-      </div>
-    </footer>
+      </section>
+
+      <!-- Doa / Prayer Section -->
+      <section class="section prayer" id="prayer">
+        <div class="container" data-aos="zoom-in">
+          <i class="fa-solid fa-hands-praying prayer-icon"></i>
+          <p class="arabic" style="font-size: 1.5rem; margin-bottom: 10px; font-weight: 600;">بَارَكَ اللّٰهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا وَجَمَعَ بَيْنَكُمَا فِيْ خَيْرٍ</p>
+          <p class="transliteration" style="font-style: italic; margin-bottom: 10px; font-size: 0.95rem;">"Barakallahu lakuma wa baaraka 'alaikuma wa jama'a bainakuma fii khair."</p>
+          <p class="translation">"Semoga Allah memberkahi kalian berdua, melimpahkan keberkahan atas kalian berdua, dan mengumpulkan kalian berdua dalam kebaikan."</p>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer>
+        <div class="container">
+          <h2><span data-field="groomName">Reza</span> & <span data-field="brideName">Intan</span></h2>
+          <p>Terima kasih atas doa dan restunya.</p>
+          <div class="footer-credit">
+            <small>Dibuat dengan <i class="fa-solid fa-heart" style="color: red;"></i> untuk Hari Bahagia</small>
+          </div>
+        </div>
+      </footer>
+      
+    </div>
   </main>
 
   <!-- Script AOS (Animasi) -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    // Inisialisasi Animasi AOS
     AOS.init({
       once: true,
       offset: 100,
     });
 
-    // Copy ke Clipboard
     function copyToClipboard(elementId) {
       var copyText = document.getElementById(elementId).innerText;
       navigator.clipboard.writeText(copyText).then(function() {
