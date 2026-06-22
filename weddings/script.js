@@ -187,7 +187,7 @@ function openInvitation() {
     createFallingLeaves();
     init3DSectionReveal();
     initScrollParallax();
-    initGyroscope3D();
+    //initGyroscope3D();
     activateFirstVisibleSections();
 
   }, 1200);
