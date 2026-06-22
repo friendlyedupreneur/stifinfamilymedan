@@ -778,23 +778,16 @@ footer p {
 }
 
 /* =========================================
-   15. 3D SYSTEM & EFFECTS (CORE UPGRADE)
+   15. 3D SYSTEM & EFFECTS
    ========================================= */
-/* Wrapper Perspektif Utama */
 .perspective-wrapper {
-  perspective: 1200px;
+  perspective: 1400px;
   transform-style: preserve-3d;
 }
 
 .content-3d-layer {
   transform-style: preserve-3d;
-}
-
-/* Efek Floating 3D (Animasi Melayang Berkelanjutan) */
-@keyframes float3D {
-  0% { transform: translateY(0) translateZ(0) rotateX(0deg); }
-  50% { transform: translateY(-8px) translateZ(15px) rotateX(2deg); }
-  100% { transform: translateY(0) translateZ(0) rotateX(0deg); }
+  transition: transform 0.25s ease-out;
 }
 
 .float-3d {
@@ -803,34 +796,48 @@ footer p {
   box-shadow: 0 15px 35px var(--soft-shadow);
 }
 
-/* Efek Pop-out Statis (Neumorphism 3D) */
 .box-3d {
   transform: translateZ(15px);
-  box-shadow: 
-    12px 12px 30px var(--soft-shadow), 
+  box-shadow:
+    12px 12px 30px var(--soft-shadow),
     -12px -12px 30px #ffffff;
   transition: transform 0.4s ease;
 }
 
-/* Interaksi Hover/Touch 3D */
 .hover-3d {
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
+  transition:
+    transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.5s ease;
   transform-style: preserve-3d;
 }
 
-.hover-3d:hover, 
+.hover-3d:hover,
 .hover-3d:active {
   transform: translateY(-10px) translateZ(40px) rotateX(6deg) rotateY(4deg) scale(1.03);
   box-shadow: 0 30px 50px var(--deep-shadow);
   z-index: 10;
 }
 
-/* Perbaikan transisi gambar di dalam 3D Hover */
 .hover-3d img {
   transition: transform 0.5s ease;
 }
+
 .hover-3d:hover img {
   transform: translateZ(20px);
+}
+
+@keyframes float3D {
+  0% {
+    transform: translateY(0) translateZ(0) rotateX(0deg);
+  }
+
+  50% {
+    transform: translateY(-8px) translateZ(15px) rotateX(2deg);
+  }
+
+  100% {
+    transform: translateY(0) translateZ(0) rotateX(0deg);
+  }
 }
 
 /* =========================================
@@ -890,49 +897,37 @@ footer p {
 /* =========================================
    REVISI GLOBAL SECTIONS UNTUK ELEMEN 3D
    ========================================= */
-body {
-  font-family: 'Poppins', sans-serif;
-  background: var(--bg-color);
-  color: var(--text-main);
-  overflow-x: hidden;
-  line-height: 1.7;
-  /* Mengaktifkan ruang kamera 3D untuk seluruh halaman */
-  perspective: 1600px;
-  perspective-origin: 50% 30%;
-}
 
 .section {
   padding: 60px 20px;
   text-align: center;
   background: var(--card-bg);
-  max-width: 90% !important; /* Agar di HP terlihat pinggirannya melayang */
-  margin: 40px auto !important;
+  max-width: 90%;
+  margin: 40px auto;
   border-radius: 24px;
   border: 1px solid rgba(222, 215, 207, 0.7);
-  
-  /* CORE 3D SETTINGS PER SECTION */
   transform-style: preserve-3d;
   backface-visibility: hidden;
-  will-change: transform, opacity;
-  
-  /* Efek Awal Sebelum di-Scroll (Agak miring ke belakang & melayang) */
+}
+
+.section.reveal-3d {
   transform: rotateX(12deg) translateY(50px) translateZ(-60px) scale(0.92);
   opacity: 0.4;
   box-shadow: 0 10px 20px rgba(95, 85, 77, 0.05);
-  
-  /* Transisi perubahan sudut saat scroll */
-  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), 
-              opacity 0.8s ease, 
-              box-shadow 0.8s ease;
+  transition:
+    transform 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.8s ease,
+    box-shadow 0.8s ease;
 }
 
-/* Saat Section Aktif di Layar HP (Masuk Viewport) */
-.section.section-active {
+.section.reveal-3d.show-3d {
   transform: rotateX(0deg) translateY(0) translateZ(0) scale(1);
   opacity: 1;
-  box-shadow: 0 25px 50px rgba(95, 85, 77, 0.18), 
-              0 10px 20px rgba(95, 85, 77, 0.12);
+  box-shadow:
+    0 25px 50px rgba(95, 85, 77, 0.18),
+    0 10px 20px rgba(95, 85, 77, 0.12);
 }
+
 
 /* KONTEN DI DALAM SECTION HARUS MEMILIKI EFEK POP-OUT (MELAYANG LEBIH TINGGI) */
 .section h2 {
@@ -992,4 +987,79 @@ body {
 /* Efek Overlapping 3D Layer saat disentuh di HP */
 .event-card:active, .bank-card:active {
   transform: translateZ(55px) scale(1.02);
+}
+
+/* =========================================
+   FINAL SAFETY PATCH - 3D PREMIUM
+   ========================================= */
+
+.section.reveal-3d {
+  will-change: transform, opacity;
+}
+
+.section.reveal-3d.show-3d {
+  pointer-events: auto;
+}
+
+.form-wrapper,
+.wishes-wrapper,
+.event-card,
+.bank-card,
+.story-content,
+.time-box,
+.stat-box {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.card-3d,
+.card-face,
+.cover-content,
+.guest-box {
+  backface-visibility: hidden;
+}
+
+@media (max-width: 480px) {
+  #cover-scene {
+    perspective: 1000px;
+  }
+
+  .card-3d.is-open {
+    transform: rotateY(-160deg) translateZ(160px) scale(1.12);
+  }
+
+  .section.reveal-3d {
+    transform: rotateX(8deg) translateY(38px) translateZ(-30px) scale(0.96);
+    opacity: 0.55;
+  }
+
+  .section.reveal-3d.show-3d {
+    transform: rotateX(0deg) translateY(0) translateZ(0) scale(1);
+    opacity: 1;
+  }
+
+  .float-3d {
+    animation-duration: 6s;
+  }
+
+  .hover-3d:hover,
+  .hover-3d:active {
+    transform: translateY(-6px) scale(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .section.reveal-3d,
+  .section.reveal-3d.show-3d {
+    transform: none;
+    opacity: 1;
+  }
 }
