@@ -411,3 +411,275 @@ function escapeHtml(text) {
   div.innerText = text;
   return div.innerHTML;
 }
+
+// ============================================
+// SCRIPT.JS - UPGRADE VERSION
+// ============================================
+
+// ===== INIT AOS =====
+AOS.init({
+  once: true,
+  offset: 100,
+  duration: 800,
+});
+
+// ===== LOADER =====
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    document.getElementById('loader').classList.add('hidden');
+    document.getElementById('cover').classList.remove('hidden');
+    
+    // Update visitor count di Firebase
+    if (typeof updateVisitorCount === 'function') {
+      updateVisitorCount();
+    }
+  }, 1500);
+});
+
+// ===== OPEN INVITATION =====
+document.getElementById('openBtn').addEventListener('click', function() {
+  document.getElementById('cover').classList.add('hidden');
+  document.getElementById('content').classList.remove('hidden');
+  document.getElementById('musicToggle').classList.remove('hidden');
+  
+  // Play music
+  var audio = document.getElementById('bgMusic');
+  audio.src = 'https://www.bensound.com/bensound-music/bensound-romantic.mp3';
+  audio.volume = 0.3;
+  audio.play().catch(function(e) {
+    console.log('Autoplay blocked, user must interact.');
+  });
+  
+  // Load realtime data dari Firebase
+  loadRealtimeData();
+});
+
+// ===== MUSIC TOGGLE =====
+let isPlaying = false;
+document.getElementById('musicToggle').addEventListener('click', function() {
+  var audio = document.getElementById('bgMusic');
+  if (isPlaying) {
+    audio.pause();
+    this.innerHTML = '<i class="fa-solid fa-music-slash"></i>';
+  } else {
+    audio.play().catch(function(e) {});
+    this.innerHTML = '<i class="fa-solid fa-music"></i>';
+  }
+  isPlaying = !isPlaying;
+});
+
+// ===== COUNTDOWN TIMER =====
+function updateTimer() {
+  const target = new Date('September 6, 2026 00:00:00').getTime();
+  const now = new Date().getTime();
+  let diff = target - now;
+  if (diff < 0) diff = 0;
+  
+  document.getElementById('days').textContent = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+  document.getElementById('hours').textContent = String(Math.floor((diff % (86400000)) / (3600000))).padStart(2, '0');
+  document.getElementById('minutes').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+  document.getElementById('seconds').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+}
+updateTimer();
+setInterval(updateTimer, 1000);
+
+// ===== FALLING PARTICLES =====
+(function createParticles() {
+  const container = document.getElementById('falling-elements');
+  const icons = ['✦', '♥️', '✧', '🌸', '⭐', '❀'];
+  for (let i = 0; i < 30; i++) {
+    const el = document.createElement('div');
+    el.className = 'particle';
+    el.textContent = icons[i % icons.length];
+    el.style.left = Math.random() * 100 + '%';
+    el.style.fontSize = (0.6 + Math.random() * 1.2) + 'rem';
+    el.style.animationDuration = (10 + Math.random() * 20) + 's';
+    el.style.animationDelay = (Math.random() * 15) + 's';
+    el.style.opacity = 0.2 + Math.random() * 0.3;
+    container.appendChild(el);
+  }
+})();
+
+// ===== 3D TILT EFFECT ON COVER =====
+document.querySelector('.cover-card')?.addEventListener('mousemove', function(e) {
+  const rect = this.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width - 0.5;
+  const y = (e.clientY - rect.top) / rect.height - 0.5;
+  this.querySelector('.card-3d').style.transform = `rotateX(${y * 8}deg) rotateY(${x * 8}deg) translateZ(30px)`;
+});
+
+document.querySelector('.cover-card')?.addEventListener('mouseleave', function(e) {
+  this.querySelector('.card-3d').style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0px)';
+});
+
+// ===== LOAD REALTIME DATA FROM FIREBASE =====
+function loadRealtimeData() {
+  // 1. Load Wishes
+  if (typeof getWishes === 'function') {
+    getWishes(function(wishes) {
+      const wishList = document.getElementById('wishList');
+      wishList.innerHTML = '';
+      wishes.forEach(function(wish) {
+        const div = document.createElement('div');
+        div.className = 'wish-item';
+        div.innerHTML = `
+          <strong>${wish.name}</strong>
+          <p>${wish.text}</p>
+          <small>${new Date(wish.timestamp).toLocaleDateString('id-ID')}</small>
+        `;
+        wishList.appendChild(div);
+      });
+    });
+  }
+  
+  // 2. Load RSVP Stats
+  if (typeof getRSVPStats === 'function') {
+    getRSVPStats(function(stats) {
+      document.getElementById('statHadir').textContent = stats.hadir || 0;
+    });
+  }
+  
+  // 3. Load Visitor Count
+  if (typeof getVisitorCount === 'function') {
+    getVisitorCount(function(count) {
+      document.getElementById('statVisitors').textContent = count || 0;
+    });
+  }
+  
+  // 4. Load Total Wishes
+  if (typeof getTotalWishes === 'function') {
+    getTotalWishes(function(count) {
+      document.getElementById('statWishes').textContent = count || 0;
+    });
+  }
+}
+
+// ===== RSVP FORM =====
+document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const name = document.getElementById('rsvpName').value.trim();
+  const phone = document.getElementById('rsvpPhone').value.trim();
+  const attendance = document.getElementById('attendance').value;
+  const guestCount = parseInt(document.getElementById('guestCount').value) || 1;
+  const note = document.getElementById('rsvpNote').value.trim();
+  
+  if (!name) {
+    document.getElementById('rsvpStatus').textContent = '⚠️ Nama wajib diisi!';
+    return;
+  }
+  
+  if (!attendance) {
+    document.getElementById('rsvpStatus').textContent = '⚠️ Pilih kehadiran terlebih dahulu!';
+    return;
+  }
+  
+  const data = { name, phone, attendance, guestCount, note };
+  
+  // Save ke Firebase
+  if (typeof saveRSVP === 'function') {
+    saveRSVP(data)
+      .then(function() {
+        document.getElementById('rsvpStatus').textContent = '✅ Terima kasih, konfirmasi berhasil dikirim!';
+        document.getElementById('rsvpStatus').style.color = '#d4af37';
+        document.getElementById('rsvpForm').reset();
+      })
+      .catch(function(error) {
+        document.getElementById('rsvpStatus').textContent = '❌ Gagal mengirim, coba lagi!';
+        console.error(error);
+      });
+  } else {
+    // Fallback jika Firebase tidak terhubung
+    document.getElementById('rsvpStatus').textContent = '✅ Terima kasih, konfirmasi berhasil dikirim! (Offline Mode)';
+    document.getElementById('rsvpForm').reset();
+    let hadir = parseInt(document.getElementById('statHadir').textContent) || 0;
+    document.getElementById('statHadir').textContent = hadir + 1;
+  }
+});
+
+// ===== WISHES FORM =====
+document.getElementById('wishForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const name = document.getElementById('wishName').value.trim();
+  const text = document.getElementById('wishText').value.trim();
+  
+  if (!name) {
+    alert('Nama tidak boleh kosong!');
+    return;
+  }
+  
+  if (!text) {
+    alert('Ucapan tidak boleh kosong!');
+    return;
+  }
+  
+  const data = { name, text };
+  
+  // Save ke Firebase
+  if (typeof saveWish === 'function') {
+    saveWish(data)
+      .then(function() {
+        document.getElementById('wishForm').reset();
+        // Tambahkan ucapan baru ke list (akan otomatis muncul via realtime)
+      })
+      .catch(function(error) {
+        alert('Gagal mengirim ucapan, coba lagi!');
+        console.error(error);
+      });
+  } else {
+    // Fallback offline mode
+    const div = document.createElement('div');
+    div.className = 'wish-item';
+    div.innerHTML = `
+      <strong>${name}</strong>
+      <p>${text}</p>
+      <small>${new Date().toLocaleDateString('id-ID')}</small>
+    `;
+    document.getElementById('wishList').prepend(div);
+    document.getElementById('wishForm').reset();
+    
+    let wishes = parseInt(document.getElementById('statWishes').textContent) || 0;
+    document.getElementById('statWishes').textContent = wishes + 1;
+  }
+});
+
+// ===== COPY TO CLIPBOARD =====
+function copyToClipboard(elementId) {
+  var copyText = document.getElementById(elementId).innerText;
+  navigator.clipboard.writeText(copyText).then(function() {
+    alert("Nomor rekening berhasil disalin: " + copyText);
+  }, function(err) {
+    // Fallback
+    var textArea = document.createElement("textarea");
+    textArea.value = copyText;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    alert("Nomor rekening berhasil disalin: " + copyText);
+  });
+}
+
+// ===== SIMULATE OFFLINE MODE WISHES (jika tidak ada Firebase) =====
+// Ini akan jalan jika Firebase tidak terdeteksi
+setTimeout(function() {
+  if (typeof getWishes !== 'function') {
+    const wishList = document.getElementById('wishList');
+    const sampleWishes = [
+      { name: 'Ahmad', text: 'Semoga pernikahan kalian diberkahi dan menjadi keluarga sakinah, mawaddah, warahmah. Aamiin! 🤲' },
+      { name: 'Siti', text: 'Selamat ya Reza & Intan! Semoga langgeng sampai kakek nenek nanti. 😊' },
+      { name: 'Budi', text: 'Barakallah! Semoga menjadi keluarga yang sakinah.' },
+    ];
+    sampleWishes.forEach(function(w) {
+      const div = document.createElement('div');
+      div.className = 'wish-item';
+      div.innerHTML = `
+        <strong>${w.name}</strong>
+        <p>${w.text}</p>
+        <small>${new Date().toLocaleDateString('id-ID')}</small>
+      `;
+      wishList.appendChild(div);
+    });
+  }
+}, 2000);
