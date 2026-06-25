@@ -2,445 +2,166 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Undangan Pernikahan | Reza & Intan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#08090f" />
+  <meta name="description" content="Katalog template undangan digital STIFIn Family Medan." />
+  <title>Katalog Template Wedding Invitation</title>
 
-  <!-- Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- AOS -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
 </head>
-
 <body>
-  <div id="falling-elements"></div>
+  <div class="page-glow page-glow-left" aria-hidden="true"></div>
+  <div class="page-glow page-glow-right" aria-hidden="true"></div>
 
-  <!-- Loader -->
-  <div id="loader" class="loader">
-    <div class="loader-card">
-      <i class="fa-solid fa-heart fa-beat loader-icon"></i>
-      <h2>Memuat Undangan</h2>
-      <p>Mohon tunggu sebentar...</p>
-    </div>
-  </div>
+  <header class="site-header">
+    <a class="brand" href="./index.html" aria-label="Kembali ke katalog template">
+      <span class="brand-mark">✦</span>
+      <span>
+        <strong>Wedding Templates</strong>
+        <small>STIFIn Family Medan</small>
+      </span>
+    </a>
 
-  <!-- Cover 3D Scene -->
-  <div id="cover-scene" class="scene hidden">
-    <div id="cover" class="cover card-3d">
+    <nav class="header-actions" aria-label="Navigasi utama">
+      <a href="#templates">Template</a>
+      <a href="#workflow">Alur</a>
+      <a class="btn btn-ghost" href="./admin/index.html">Login Editor</a>
+    </nav>
+  </header>
 
-      <div class="card-face cover-front">
-        <div class="cover-content" data-aos="zoom-in" data-aos-duration="1500">
-          <p class="small">The Wedding of</p>
+  <main>
+    <section class="hero-section">
+      <div class="hero-copy">
+        <p class="eyebrow">Digital Wedding Invitation</p>
+        <h1>Pick template, isi data, undangan siap dibagikan.</h1>
+        <p class="hero-desc">
+          Halaman ini menjadi katalog desain undangan digital. Klien bisa melihat demo template,
+          memilih gaya desain, lalu admin membuatkan akun editor khusus untuk mengisi data undangan.
+        </p>
 
-          <h1>
-            <span data-field="groomName">Reza</span>
-            &
-            <span data-field="brideName">Intan</span>
-          </h1>
-
-          <p class="date">
-            <i class="fa-regular fa-calendar-days"></i>
-            <span data-field="weddingDateText">Sabtu, 06 September 2026</span>
-          </p>
-
-          <div class="guest-box">
-            <p>Kepada Yth.</p>
-            <h3 id="guestName">Bapak/Ibu/Saudara/i</h3>
-            <p class="note">Mohon maaf apabila ada kesalahan penulisan nama/gelar</p>
-          </div>
-
-          <button id="openBtn" class="btn-primary">
-            <i class="fa-solid fa-envelope-open-text"></i>
-            Buka Undangan
-          </button>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#templates">Lihat Template</a>
+          <a class="btn btn-soft" href="./admin/index.html">Masuk Admin</a>
         </div>
       </div>
 
-      <div class="card-face cover-back">
-        <div class="envelope-flap"></div>
-        <i class="fa-solid fa-heart cover-back-icon"></i>
+      <aside class="hero-card" aria-label="Ringkasan sistem">
+        <div class="hero-card-top">
+          <span class="status-dot"></span>
+          <span>Sistem Multi Template</span>
+        </div>
+        <div class="hero-stat">
+          <strong id="totalTemplates">0</strong>
+          <span>Template tersedia</span>
+        </div>
+        <div class="mini-list">
+          <div>
+            <span>GitHub</span>
+            <strong>HTML/CSS/JS</strong>
+          </div>
+          <div>
+            <span>Firebase</span>
+            <strong>Data & Editor</strong>
+          </div>
+          <div>
+            <span>Akses</span>
+            <strong>Maks. 2 Editor</strong>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="toolbar-section" id="templates" aria-label="Filter template">
+      <div>
+        <p class="eyebrow">Template Gallery</p>
+        <h2>Pilih desain undangan</h2>
       </div>
 
-    </div>
-  </div>
+      <div class="toolbar-controls">
+        <label class="sr-only" for="guestNameInput">Nama tamu demo</label>
+        <input id="guestNameInput" class="input-control" type="text" value="Bapak/Ibu/Saudara/i" placeholder="Nama tamu untuk preview" />
 
-  <!-- Music -->
-  <audio id="bgMusic" loop></audio>
+        <label class="sr-only" for="templateSearch">Cari template</label>
+        <input id="templateSearch" class="input-control" type="search" placeholder="Cari template..." />
+      </div>
+    </section>
 
-  <button id="musicToggle" class="floating-btn hidden">
-    <i class="fa-solid fa-music"></i>
-  </button>
+    <section class="template-grid" id="templateGrid" aria-live="polite"></section>
 
-  <!-- Main Content -->
-  <main id="content" class="hidden perspective-wrapper">
-    <div class="content-3d-layer">
+    <section class="workflow-section" id="workflow">
+      <div class="section-heading centered">
+        <p class="eyebrow">Client Flow</p>
+        <h2>Alur penggunaan template</h2>
+        <p>
+          Satu halaman katalog, banyak template, dan satu admin panel untuk mengatur data undangan klien.
+        </p>
+      </div>
 
-      <!-- Hero -->
-      <section class="hero">
-        <div class="overlay"></div>
-
-        <div class="hero-content" data-aos="fade-up" data-aos-duration="1500">
-          <p class="small">We Are Getting Married</p>
-
-          <h1>
-            <span data-field="groomName">Reza</span>
-            &
-            <span data-field="brideName">Intan</span>
-          </h1>
-
-          <p class="date" data-field="weddingDateText">Sabtu, 06 September 2026</p>
-
-          <div class="scroll-down">
-            <p>Scroll ke bawah</p>
-            <i class="fa-solid fa-chevron-down fa-bounce"></i>
-          </div>
-        </div>
-      </section>
-
-      <!-- Intro -->
-      <section class="section intro reveal-3d" id="intro">
-        <div class="container">
-          <p class="arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-          <p class="salam">Assalamu'alaikum Warahmatullahi Wabarakatuh</p>
-          <p>Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami.</p>
-        </div>
-      </section>
-
-      <!-- Couple -->
-      <section class="section couple reveal-3d" id="couple">
-        <div class="container">
-
-          <div class="person">
-            <div class="img-wrapper hover-3d">
-              <img id="groomPhoto" src="assets/groom.jpg" alt="Mempelai Pria">
-            </div>
-
-            <h2 data-field="groomFullName">Reza Pahlawan, S.Kom</h2>
-
-            <p>
-              Putra dari <br>
-              <strong>
-                Bapak <span data-field="groomFather"></span>
-                & Ibu <span data-field="groomMother"></span>
-              </strong>
-            </p>
-
-            <a id="groomIgBtn" href="#" target="_blank" class="social-link">
-              <i class="fa-brands fa-instagram"></i>
-              <span data-field="groomIgHandle">@reza_ig</span>
-            </a>
-          </div>
-
-          <div class="and">
-            <i class="fa-solid fa-heart"></i>
-          </div>
-
-          <div class="person">
-            <div class="img-wrapper hover-3d">
-              <img id="bridePhoto" src="assets/bride.jpg" alt="Mempelai Wanita">
-            </div>
-
-            <h2 data-field="brideFullName">Intan Permatasari, S.E</h2>
-
-            <p>
-              Putri dari <br>
-              <strong>
-                Bapak <span data-field="brideFather"></span>
-                & Ibu <span data-field="brideMother"></span>
-              </strong>
-            </p>
-
-            <a id="brideIgBtn" href="#" target="_blank" class="social-link">
-              <i class="fa-brands fa-instagram"></i>
-              <span data-field="brideIgHandle">@intan_ig</span>
-            </a>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- Countdown -->
-      <section class="section countdown reveal-3d" id="countdown">
-        <div class="container">
-          <h2>Menuju Hari Bahagia</h2>
-          <p>Doa dan restu Anda adalah karunia yang sangat berarti bagi kami.</p>
-
-          <div class="timer">
-            <div class="time-box box-3d"><span id="days">0</span><small>Hari</small></div>
-            <div class="time-box box-3d"><span id="hours">0</span><small>Jam</small></div>
-            <div class="time-box box-3d"><span id="minutes">0</span><small>Menit</small></div>
-            <div class="time-box box-3d"><span id="seconds">0</span><small>Detik</small></div>
-          </div>
-
-          <div class="stats-container">
-            <div class="stat-box box-3d">
-              <i class="fa-regular fa-eye"></i>
-              <h4 id="statVisitors">0</h4>
-              <small>Pengunjung</small>
-            </div>
-
-            <div class="stat-box box-3d">
-              <i class="fa-solid fa-user-check"></i>
-              <h4 id="statHadir">0</h4>
-              <small>Hadir</small>
-            </div>
-
-            <div class="stat-box box-3d">
-              <i class="fa-regular fa-comments"></i>
-              <h4 id="statWishes">0</h4>
-              <small>Ucapan & Doa</small>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Event -->
-      <section class="section event reveal-3d" id="event">
-        <div class="container">
-          <h2>Detail Acara</h2>
-
-          <div class="event-grid">
-            <div class="event-card float-3d">
-              <i class="fa-solid fa-ring event-icon"></i>
-              <h3>Akad Nikah</h3>
-
-              <div class="event-details">
-                <p><i class="fa-regular fa-calendar"></i> <span data-field="weddingDateText"></span></p>
-                <p><i class="fa-regular fa-clock"></i> Pukul <span data-field="akadTime"></span> - Selesai</p>
-                <p><i class="fa-solid fa-location-dot"></i> <strong><span data-field="akadLocation"></span></strong></p>
-              </div>
-            </div>
-
-            <div class="event-card float-3d">
-              <i class="fa-solid fa-champagne-glasses event-icon"></i>
-              <h3>Resepsi</h3>
-
-              <div class="event-details">
-                <p><i class="fa-regular fa-calendar"></i> <span data-field="weddingDateText"></span></p>
-                <p><i class="fa-regular fa-clock"></i> Pukul <span data-field="receptionTime"></span> - Selesai</p>
-                <p><i class="fa-solid fa-location-dot"></i> <strong><span data-field="location"></span></strong></p>
-              </div>
-            </div>
-          </div>
-
-          <div class="maps-container">
-            <a class="btn-primary" id="mapsBtn" href="#" target="_blank">
-              <i class="fa-solid fa-map-location-dot"></i>
-              Buka Google Maps
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Story -->
-      <section class="section story reveal-3d" id="story">
-        <div class="container">
-          <h2>Cerita Kami</h2>
-
-          <div class="story-content box-3d">
-            <i class="fa-solid fa-quote-left quote-icon"></i>
-            <p data-field="story">Berawal dari pertemuan sederhana...</p>
-            <i class="fa-solid fa-quote-right quote-icon"></i>
-          </div>
-        </div>
-      </section>
-
-      <!-- Gallery -->
-      <section class="section gallery reveal-3d" id="gallery">
-        <div class="container">
-          <h2>Momen Bahagia</h2>
-
-          <div class="grid">
-            <div class="grid-item hover-3d"><img id="gallery1" src="assets/gallery1.jpg" alt="Galeri 1"></div>
-            <div class="grid-item hover-3d"><img id="gallery2" src="assets/gallery2.jpg" alt="Galeri 2"></div>
-            <div class="grid-item hover-3d"><img id="gallery3" src="assets/gallery3.jpg" alt="Galeri 3"></div>
-            <div class="grid-item hover-3d"><img id="gallery4" src="assets/gallery4.jpg" alt="Galeri 4"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- RSVP -->
-      <section class="section rsvp reveal-3d" id="rsvp">
-        <div class="container">
-          <h2>Konfirmasi Kehadiran</h2>
-          <p>Kehadiran Anda sangat berarti bagi kami.</p>
-
-          <div class="form-wrapper box-3d">
-            <div class="gift-notice">
-              <i class="fa-solid fa-gift"></i>
-              <div>
-                <strong>Hadiah Spesial Untuk Tamu</strong>
-                <p>Pastikan mengisi data dengan lengkap ya. Akan ada hadiah menarik yang menunggu di akhir acara 😊</p>
-              </div>
-            </div>
-
-            <form id="rsvpForm">
-              <div class="input-group">
-                <i class="fa-regular fa-user"></i>
-                <input id="rsvpName" type="text" placeholder="Nama Lengkap Anda (untuk data undian)" required>
-              </div>
-
-              <div class="input-group">
-                <i class="fa-brands fa-whatsapp"></i>
-                <input id="rsvpPhone" type="tel" placeholder="Nomor WhatsApp aktif">
-              </div>
-
-              <div class="input-group">
-                <i class="fa-solid fa-clipboard-check"></i>
-                <select id="attendance" required>
-                  <option value="" disabled selected>Pilih Kehadiran</option>
-                  <option value="hadir">InsyaAllah Hadir</option>
-                  <option value="tidak_hadir">Maaf, Belum Bisa Hadir</option>
-                </select>
-              </div>
-
-              <div class="input-group">
-                <i class="fa-solid fa-users"></i>
-                <input id="guestCount" type="number" min="1" value="1" placeholder="Jumlah tamu">
-              </div>
-
-              <div class="input-group align-top">
-                <i class="fa-regular fa-comment-dots"></i>
-                <textarea id="rsvpNote" placeholder="Catatan tambahan / nama keluarga (Opsional)" rows="3"></textarea>
-              </div>
-
-              <button type="submit" class="btn-primary">
-                <i class="fa-solid fa-paper-plane"></i>
-                Kirim Konfirmasi
-              </button>
-            </form>
-
-            <p id="rsvpStatus" class="status-text"></p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Gift -->
-      <section class="section gift reveal-3d" id="gift">
-        <div class="container">
-          <h2>Amplop Digital</h2>
-          <p>Doa restu Bapak/Ibu/Saudara/i merupakan karunia terindah bagi kami. Bagi yang ingin memberikan tanda kasih, dapat mengirimkan melalui fitur di bawah ini:</p>
-
-          <div class="bank-container">
-            <div class="bank-card float-3d">
-              <i class="fa-solid fa-building-columns bank-icon"></i>
-              <h3 data-field="bankName1">Bank BCA</h3>
-              <p class="account-number" id="norek1" data-field="bankNumber1">1234567890</p>
-              <p class="account-name">a.n <strong data-field="bankHolder1">Reza</strong></p>
-              <button class="btn-copy" onclick="copyToClipboard('norek1')">
-                <i class="fa-regular fa-copy"></i>
-                Salin Nomor Rekening
-              </button>
-            </div>
-
-            <div class="bank-card float-3d">
-              <i class="fa-solid fa-building-columns bank-icon"></i>
-              <h3 data-field="bankName2">Bank Mandiri</h3>
-              <p class="account-number" id="norek2" data-field="bankNumber2">0987654321</p>
-              <p class="account-name">a.n <strong data-field="bankHolder2">Intan</strong></p>
-              <button class="btn-copy" onclick="copyToClipboard('norek2')">
-                <i class="fa-regular fa-copy"></i>
-                Salin Nomor Rekening
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Wishes -->
-      <section class="section wishes reveal-3d" id="wishes">
-        <div class="container">
-          <h2>Ucapan & Doa</h2>
-
-          <div class="wishes-wrapper box-3d">
-            <div class="gift-notice mini">
-              <i class="fa-solid fa-circle-info"></i>
-              <div>
-                <strong>Jangan lupa isi ucapan</strong>
-                <p>Ucapan dan doa terbaik Anda akan menjadi kenangan manis untuk kedua mempelai.</p>
-              </div>
-            </div>
-
-            <form id="wishForm">
-              <input id="wishName" type="text" placeholder="Nama Anda" required>
-              <textarea id="wishText" placeholder="Tulis ucapan dan doa terbaik untuk kedua mempelai..." required rows="4"></textarea>
-              <button type="submit" class="btn-primary">Kirim Ucapan</button>
-            </form>
-
-            <div id="wishList" class="wish-messages"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Prayer -->
-      <section class="section prayer reveal-3d" id="prayer">
-        <div class="container">
-          <i class="fa-solid fa-hands-praying prayer-icon"></i>
-
-          <p class="arabic prayer-arabic">
-            بَارَكَ اللّٰهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا وَجَمَعَ بَيْنَكُمَا فِيْ خَيْرٍ
-          </p>
-
-          <p class="transliteration">
-            "Barakallahu lakuma wa baaraka 'alaikuma wa jama'a bainakuma fii khair."
-          </p>
-
-          <p class="translation">
-            "Semoga Allah memberkahi kalian berdua, melimpahkan keberkahan atas kalian berdua, dan mengumpulkan kalian berdua dalam kebaikan."
-          </p>
-        </div>
-      </section>
-
-      <!-- Footer -->
-      <footer>
-        <div class="container">
-          <h2>
-            <span data-field="groomName">Reza</span>
-            &
-            <span data-field="brideName">Intan</span>
-          </h2>
-
-          <p>Terima kasih atas doa dan restunya.</p>
-
-          <div class="footer-credit">
-            <small>
-              Dibuat dengan <i class="fa-solid fa-heart footer-heart"></i>
-              untuk Hari Bahagia
-            </small>
-          </div>
-        </div>
-      </footer>
-
-    </div>
+      <div class="workflow-grid">
+        <article class="workflow-card">
+          <span>01</span>
+          <h3>Klien lihat demo</h3>
+          <p>Klien membuka katalog dan mencoba preview setiap desain template yang tersedia.</p>
+        </article>
+        <article class="workflow-card">
+          <span>02</span>
+          <h3>Klien pilih template</h3>
+          <p>Template ID dipilih, lalu admin membuat dokumen wedding baru di Firebase.</p>
+        </article>
+        <article class="workflow-card">
+          <span>03</span>
+          <h3>Admin buat akun</h3>
+          <p>Admin membuat akun editor klien dan memasukkan UID ke data wedding terkait.</p>
+        </article>
+        <article class="workflow-card">
+          <span>04</span>
+          <h3>Klien edit data</h3>
+          <p>Klien login ke admin panel dan hanya melihat undangan yang boleh diedit.</p>
+        </article>
+      </div>
+    </section>
   </main>
 
-  <!-- AOS -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <footer class="site-footer">
+    <p>©️ <span id="yearNow"></span> STIFIn Family Medan — Wedding Invitation Template System</p>
+  </footer>
 
-  <script>
-    AOS.init({
-      once: true,
-      offset: 100,
-    });
+  <div class="modal" id="templateModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" data-close-modal aria-label="Tutup popup">×</button>
+      <p class="eyebrow" id="modalTemplateId">Template ID</p>
+      <h2 id="modalTitle">Nama Template</h2>
+      <p id="modalDescription">Deskripsi template.</p>
 
-    function copyToClipboard(elementId) {
-      const copyText = document.getElementById(elementId).innerText;
-      navigator.clipboard.writeText(copyText).then(function() {
-        alert("Nomor rekening berhasil disalin: " + copyText);
-      }, function(err) {
-        console.error("Gagal menyalin teks: ", err);
-      });
-    }
-  </script>
+      <div class="modal-info">
+        <div>
+          <span>Folder Template</span>
+          <strong id="modalFolder">-</strong>
+        </div>
+        <div>
+          <span>Demo Data</span>
+          <strong id="modalDemoId">-</strong>
+        </div>
+      </div>
 
-  <script type="module" src="script.js"></script>
+      <div class="modal-actions">
+        <a class="btn btn-primary" id="modalPreviewLink" href="#" target="_blank" rel="noopener">Preview Demo</a>
+        <button class="btn btn-soft" id="copyTemplateBtn" type="button">Copy Template ID</button>
+        <a class="btn btn-ghost" id="modalAdminLink" href="./admin/index.html">Buka Admin</a>
+      </div>
+
+      <p class="modal-note">
+        Catatan: akun editor dibuat oleh admin. Maksimal 2 akun editor untuk 1 undangan.
+      </p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Berhasil disalin</div>
+
+  <script src="./script.js" defer></script>
 </body>
 </html>
