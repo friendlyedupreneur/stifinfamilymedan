@@ -1,581 +1,247 @@
-import { db } from "./firebase-config.js";
-import {
-  doc,
-  getDoc,
-  collection,
-  addDoc,
-  serverTimestamp,
-  increment,
-  updateDoc,
-  query,
-  orderBy,
-  limit,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-// ==========================================
-// 1. INISIALISASI VARIABEL & PARAMETER URL
-// ==========================================
-const params = new URLSearchParams(window.location.search);
-const weddingId = params.get("id") || "wedding_001";
-const guest = params.get("to") || "Bapak/Ibu/Saudara/i";
-
-// Referensi Firebase
-const weddingRef = doc(db, "weddings", weddingId);
-const rsvpRef = collection(db, "weddings", weddingId, "rsvp");
-const wishesRef = collection(db, "weddings", weddingId, "wishes");
-const visitorsRef = collection(db, "weddings", weddingId, "visitors");
-
-// Elemen DOM Utama
-const loader = document.getElementById("loader");
-const coverCard = document.getElementById("cover");
-const coverScene = document.getElementById("cover-scene");
-const content = document.getElementById("content");
-const bgMusic = document.getElementById("bgMusic");
-const musicToggle = document.getElementById("musicToggle");
-
-let weddingDateTarget = null;
-let fallingLeavesStarted = false;
-let gyroAttached = false;
-let parallaxStarted = false;
-
-// Tulis Nama Tamu di Sampul
-const guestNameEl = document.getElementById("guestName");
-if (guestNameEl) {
-  guestNameEl.innerText = decodeURIComponent(guest);
-}
-
-// Mulai Aplikasi saat DOM siap
-document.addEventListener("DOMContentLoaded", initWedding);
-
-// ==========================================
-// 2. FUNGSI UTAMA
-// ==========================================
-async function initWedding() {
-  document.body.style.overflow = "hidden";
-
-  try {
-    const snapshot = await getDoc(weddingRef);
-
-    if (!snapshot.exists()) {
-      loader.innerHTML = "<p>Data undangan tidak ditemukan.</p>";
-      return;
-    }
-
-    const data = snapshot.data();
-
-    data.groomFullName = data.groomFullName || data.groomName;
-    data.brideFullName = data.brideFullName || data.brideName;
-
-    applyWeddingData(data);
-    setupCountdown();
-    setupEvents();
-    listenWishes();
-    await trackVisitor();
-
-    loader.classList.add("hidden");
-    coverScene.classList.remove("hidden");
-
-    setTimeout(() => {
-      if (typeof AOS !== "undefined") AOS.refresh();
-    }, 500);
-
-  } catch (error) {
-    console.error(error);
-    loader.innerHTML = "<p>Gagal memuat undangan. Coba refresh halaman.</p>";
+const TEMPLATE_DATA = [
+  {
+    id: 'wedding_001',
+    name: 'Classic Romantic Wedding',
+    folder: 'wedding_001',
+    demoId: 'demo_wedding_001',
+    status: 'Available',
+    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1100',
+    description: 'Template klasik, lembut, dan formal untuk undangan digital bernuansa romantis.',
+    tags: ['Classic', 'Elegant', 'Soft Romantic'],
+    features: ['Countdown', 'Gallery', 'Ucapan Tamu', 'Amplop Digital']
+  },
+  {
+    id: 'wedding_002',
+    name: 'Dark Luxury Cinematic',
+    folder: 'wedding_002',
+    demoId: 'demo_wedding_002',
+    status: 'New Template',
+    image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1100',
+    description: 'Template premium bernuansa gelap, cinematic, glassmorphism, fingerprint opening, dan particle animation.',
+    tags: ['Dark Luxury', 'Cinematic', 'Premium'],
+    features: ['Fingerprint Opening', 'Particle Canvas', 'Gallery Marquee', 'Amplop Digital']
   }
-}
-
-// ==========================================
-// 3. MENERAPKAN DATA FIREBASE KE HTML
-// ==========================================
-function applyWeddingData(data) {
-  document.title = `Undangan Pernikahan | ${data.groomName || ""} & ${data.brideName || ""}`;
-  data.weddingDateText = formatWeddingDate(data.weddingDate);
-
-  document.querySelectorAll("[data-field]").forEach(el => {
-    const field = el.getAttribute("data-field");
-
-    if (data[field] !== undefined && data[field] !== "") {
-      el.innerText = data[field];
-    }
-  });
-
-  setBackground("#cover-scene", data.coverImage, "assets/cover.jpg");
-  setBackground(".hero", data.heroImage, "assets/hero.jpg");
-
-  setImage("groomPhoto", data.groomPhoto, "assets/groom.jpg");
-  setImage("bridePhoto", data.bridePhoto, "assets/bride.jpg");
-  setImage("gallery1", data.gallery1, "assets/gallery1.jpg");
-  setImage("gallery2", data.gallery2, "assets/gallery2.jpg");
-  setImage("gallery3", data.gallery3, "assets/gallery3.jpg");
-  setImage("gallery4", data.gallery4, "assets/gallery4.jpg");
-
-  bgMusic.src = data.musicUrl || "assets/music.mp3";
-
-  const mapsBtn = document.getElementById("mapsBtn");
-  if (mapsBtn && data.mapsLink) {
-    mapsBtn.href = data.mapsLink;
-  }
-
-  if (guest && guest !== "Bapak/Ibu/Saudara/i") {
-    const decodedGuest = decodeURIComponent(guest);
-
-    const rsvpName = document.getElementById("rsvpName");
-    const wishName = document.getElementById("wishName");
-
-    if (rsvpName) rsvpName.value = decodedGuest;
-    if (wishName) wishName.value = decodedGuest;
-  }
-
-  if (data.weddingDate) {
-    weddingDateTarget = new Date(`${data.weddingDate}T09:00:00`).getTime();
-  }
-
-  const groomIgBtn = document.getElementById("groomIgBtn");
-  if (groomIgBtn && data.groomIgLink) {
-    groomIgBtn.href = data.groomIgLink;
-  }
-
-  const brideIgBtn = document.getElementById("brideIgBtn");
-  if (brideIgBtn && data.brideIgLink) {
-    brideIgBtn.href = data.brideIgLink;
-  }
-
-  setText("statVisitors", data.totalVisitors || 0);
-  setText("statHadir", data.totalHadir || 0);
-  setText("statWishes", data.totalWishes || 0);
-}
-
-// ==========================================
-// 4. EVENT
-// ==========================================
-function setupEvents() {
-  const openBtn = document.getElementById("openBtn");
-  const rsvpForm = document.getElementById("rsvpForm");
-  const wishForm = document.getElementById("wishForm");
-
-  if (openBtn) openBtn.addEventListener("click", openInvitation);
-  if (rsvpForm) rsvpForm.addEventListener("submit", submitRsvp);
-  if (wishForm) wishForm.addEventListener("submit", submitWish);
-  if (musicToggle) musicToggle.addEventListener("click", toggleMusic);
-}
-
-function openInvitation() {
-  if (!coverCard || !coverScene || !content) return;
-
-  coverCard.classList.add("is-open");
-
-  musicToggle.classList.remove("hidden");
-
-  bgMusic.play().then(() => {
-    musicToggle.classList.add("playing");
-    musicToggle.innerHTML = '<i class="fa-solid fa-music"></i>';
-  }).catch(() => {
-    console.log("Autoplay diblokir browser.");
-    musicToggle.classList.remove("playing");
-    musicToggle.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-  });
-
-  setTimeout(() => {
-    coverScene.style.display = "none";
-    content.classList.remove("hidden");
-    document.body.style.overflow = "auto";
-
-    if (typeof AOS !== "undefined") AOS.refresh();
-
-    createFallingLeaves();
-    init3DSectionReveal();
-    initScrollParallax();
-    //initGyroscope3D();
-    activateFirstVisibleSections();
-
-  }, 1200);
-}
-
-function toggleMusic() {
-  if (!bgMusic || !musicToggle) return;
-
-  if (bgMusic.paused) {
-    bgMusic.play();
-    musicToggle.classList.add("playing");
-    musicToggle.innerHTML = '<i class="fa-solid fa-music"></i>';
-  } else {
-    bgMusic.pause();
-    musicToggle.classList.remove("playing");
-    musicToggle.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-  }
-}
-
-// ==========================================
-// 5. 3D SECTION REVEAL
-// ==========================================
-function init3DSectionReveal() {
-  const sections = document.querySelectorAll(".reveal-3d");
-  if (!sections.length) return;
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("show-3d");
-      } else {
-        entry.target.classList.remove("show-3d");
-      }
-    });
-  }, {
-    threshold: 0.18,
-    rootMargin: "0px 0px -8% 0px"
-  });
-
-  sections.forEach(section => observer.observe(section));
-}
-
-function activateFirstVisibleSections() {
-  const sections = document.querySelectorAll(".reveal-3d");
-
-  sections.forEach(section => {
-    const rect = section.getBoundingClientRect();
-
-    if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
-      section.classList.add("show-3d");
-    }
-  });
-}
-
-// ==========================================
-// 6. SCROLL PARALLAX PREMIUM
-// ==========================================
-function initScrollParallax() {
-  if (parallaxStarted) return;
-  parallaxStarted = true;
-
-  const heroContent = document.querySelector(".hero-content");
-  const hero = document.querySelector(".hero");
-
-  if (!hero || !heroContent) return;
-
-  let ticking = false;
-
-  window.addEventListener("scroll", () => {
-    if (ticking) return;
-
-    window.requestAnimationFrame(() => {
-      const scrollY = window.scrollY;
-      const heroHeight = hero.offsetHeight || window.innerHeight;
-
-      if (scrollY <= heroHeight) {
-        const move = scrollY * 0.18;
-        const fade = Math.max(0.25, 1 - scrollY / heroHeight);
-
-        heroContent.style.transform = `translateY(${move}px) translateZ(50px)`;
-        heroContent.style.opacity = fade;
-      }
-
-      ticking = false;
-    });
-
-    ticking = true;
-  }, { passive: true });
-}
-
-// ==========================================
-// 7. GYROSCOPE 3D PARALLAX
-// ==========================================
-function initGyroscope3D() {
-  const layer3D = document.querySelector(".content-3d-layer");
-
-  if (!layer3D || gyroAttached) return;
-
-  const isMobile = window.matchMedia("(max-width: 768px)").matches;
-  if (!isMobile) return;
-
-  if (window.DeviceOrientationEvent) {
-    if (typeof DeviceOrientationEvent.requestPermission === "function") {
-      DeviceOrientationEvent.requestPermission()
-        .then(permissionState => {
-          if (permissionState === "granted") {
-            attachGyroListener(layer3D);
-          }
-        })
-        .catch(console.error);
-    } else {
-      attachGyroListener(layer3D);
-    }
-  }
-}
-
-function attachGyroListener(layer3D) {
-  if (gyroAttached) return;
-  gyroAttached = true;
-
-  window.addEventListener("deviceorientation", (event) => {
-    const tiltX = event.beta;
-    const tiltY = event.gamma;
-
-    if (tiltX === null || tiltY === null) return;
-
-    const rotateX = clamp((tiltX - 45) * 0.08, -3, 3);
-    const rotateY = clamp(tiltY * 0.08, -3, 3);
-
-    layer3D.style.transform = `rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
-  }, { passive: true });
-}
-
-// ==========================================
-// 8. FALLING FLOWERS
-// ==========================================
-function createFallingLeaves() {
-  if (fallingLeavesStarted) return;
-  fallingLeavesStarted = true;
-
-  const container = document.getElementById("falling-elements");
-  if (!container) return;
-
-  const maxLeaves = 25;
-  const symbols = ["🌸", "🍃", "✨", "🤍"];
-
-  setInterval(() => {
-    if (container.childElementCount > maxLeaves) return;
-
-    const leaf = document.createElement("div");
-    leaf.classList.add("falling-leaf");
-    leaf.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-
-    leaf.style.left = Math.random() * 100 + "vw";
-    leaf.style.fontSize = (Math.random() * 0.8 + 0.8) + "rem";
-
-    const fallDuration = Math.random() * 3 + 5;
-    const swayDuration = Math.random() * 2 + 3;
-
-    leaf.style.animationDuration = `${fallDuration}s, ${swayDuration}s`;
-
-    container.appendChild(leaf);
-
-    setTimeout(() => {
-      leaf.remove();
-    }, fallDuration * 1000);
-  }, 420);
-}
-
-// ==========================================
-// 9. FIREBASE: RSVP, WISHES, VISITOR
-// ==========================================
-async function submitRsvp(event) {
-  event.preventDefault();
-
-  const button = event.target.querySelector("button");
-  const status = document.getElementById("rsvpStatus");
-
-  button.disabled = true;
-  status.style.color = "";
-  status.innerText = "Mengirim Konfirmasi...";
-
-  try {
-    const attendanceValue = document.getElementById("attendance").value;
-    const guestCountValue = Number(document.getElementById("guestCount").value || 1);
-
-    await addDoc(rsvpRef, {
-      guestName: document.getElementById("rsvpName").value.trim(),
-      phone: document.getElementById("rsvpPhone").value.trim(),
-      attendance: attendanceValue,
-      guestCount: guestCountValue,
-      note: document.getElementById("rsvpNote").value.trim(),
-      sourceGuestName: decodeURIComponent(guest),
-      createdAt: serverTimestamp()
-    });
-
-    const updateData = {
-      totalRsvp: increment(1)
+];
+
+const SELECTORS = {
+  grid: document.getElementById('templateGrid'),
+  total: document.getElementById('totalTemplates'),
+  search: document.getElementById('templateSearch'),
+  guestInput: document.getElementById('guestNameInput'),
+  yearNow: document.getElementById('yearNow'),
+  modal: document.getElementById('templateModal'),
+  modalTemplateId: document.getElementById('modalTemplateId'),
+  modalTitle: document.getElementById('modalTitle'),
+  modalDescription: document.getElementById('modalDescription'),
+  modalFolder: document.getElementById('modalFolder'),
+  modalDemoId: document.getElementById('modalDemoId'),
+  modalPreviewLink: document.getElementById('modalPreviewLink'),
+  modalAdminLink: document.getElementById('modalAdminLink'),
+  copyTemplateBtn: document.getElementById('copyTemplateBtn'),
+  toast: document.getElementById('toast')
+};
+
+const state = {
+  activeTemplate: null,
+  toastTimer: null
+};
+
+function sanitizeText(value = '') {
+  return String(value).replace(/[&<>'"]/g, (char) => {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#039;',
+      '"': '&quot;'
     };
-
-    if (attendanceValue === "hadir") {
-      updateData.totalHadir = increment(guestCountValue);
-
-      const statHadir = document.getElementById("statHadir");
-      if (statHadir) {
-        statHadir.innerText = parseInt(statHadir.innerText || 0, 10) + guestCountValue;
-      }
-
-    } else if (attendanceValue === "tidak_hadir") {
-      updateData.totalTidakHadir = increment(1);
-    }
-
-    await updateDoc(weddingRef, updateData);
-
-    status.style.color = "#4CAF50";
-    status.innerText = "Konfirmasi berhasil dikirim. Terima kasih! 🙏";
-    event.target.reset();
-
-  } catch (error) {
-    console.error(error);
-    status.style.color = "red";
-    status.innerText = "Gagal mengirim. Coba lagi ya.";
-  } finally {
-    button.disabled = false;
-  }
-}
-
-async function submitWish(event) {
-  event.preventDefault();
-
-  const button = event.target.querySelector("button");
-  const originalText = button.innerText;
-
-  button.disabled = true;
-  button.innerText = "Mengirim...";
-
-  try {
-    await addDoc(wishesRef, {
-      guestName: document.getElementById("wishName").value.trim(),
-      message: document.getElementById("wishText").value.trim(),
-      sourceGuestName: decodeURIComponent(guest),
-      createdAt: serverTimestamp()
-    });
-
-    await updateDoc(weddingRef, {
-      totalWishes: increment(1)
-    });
-
-    const statWishes = document.getElementById("statWishes");
-    if (statWishes) {
-      statWishes.innerText = parseInt(statWishes.innerText || 0, 10) + 1;
-    }
-
-    document.getElementById("wishText").value = "";
-
-  } catch (error) {
-    console.error(error);
-    alert("Gagal mengirim ucapan. Coba lagi ya.");
-  } finally {
-    button.innerText = originalText;
-    button.disabled = false;
-  }
-}
-
-function listenWishes() {
-  const q = query(wishesRef, orderBy("createdAt", "desc"), limit(30));
-
-  onSnapshot(q, snapshot => {
-    const list = document.getElementById("wishList");
-    if (!list) return;
-
-    list.innerHTML = "";
-
-    snapshot.forEach(docItem => {
-      const data = docItem.data();
-
-      const item = document.createElement("div");
-      item.className = "wish-item box-3d";
-
-      item.innerHTML = `
-        <strong style="color: var(--primary); font-size: 1.1rem;">
-          <i class="fa-regular fa-circle-user"></i>
-          ${escapeHtml(data.guestName || "Tamu")}
-        </strong>
-        <p style="margin-top: 8px; font-size: 0.95rem; line-height: 1.5;">
-          ${escapeHtml(data.message || "")}
-        </p>
-      `;
-
-      list.appendChild(item);
-    });
+    return map[char];
   });
 }
 
-async function trackVisitor() {
-  try {
-    await addDoc(visitorsRef, {
-      guestName: decodeURIComponent(guest),
-      userAgent: navigator.userAgent,
-      openedAt: serverTimestamp()
-    });
-
-    await updateDoc(weddingRef, {
-      totalVisitors: increment(1)
-    });
-
-  } catch (error) {
-    console.warn("Visitor tracking gagal:", error);
-  }
+function getGuestName() {
+  const value = SELECTORS.guestInput?.value?.trim();
+  return value || 'Bapak/Ibu/Saudara/i';
 }
 
-// ==========================================
-// 10. UTILITAS
-// ==========================================
-function setupCountdown() {
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+function buildPreviewUrl(template) {
+  const guestName = encodeURIComponent(getGuestName());
+  return `./${template.folder}/index.html?id=${encodeURIComponent(template.demoId)}&to=${guestName}`;
 }
 
-function updateCountdown() {
-  if (!weddingDateTarget) return;
+function buildAdminUrl(template) {
+  return `./admin/index.html?template=${encodeURIComponent(template.id)}`;
+}
 
-  const now = new Date().getTime();
-  const distance = weddingDateTarget - now;
+function renderTemplates(list = TEMPLATE_DATA) {
+  if (!SELECTORS.grid) return;
 
-  if (distance <= 0) {
-    setCountdownValue(0, 0, 0, 0);
+  SELECTORS.total.textContent = String(TEMPLATE_DATA.length).padStart(2, '0');
+
+  if (!list.length) {
+    SELECTORS.grid.innerHTML = `
+      <div class="empty-state">
+        <h3>Template tidak ditemukan</h3>
+        <p>Coba gunakan kata kunci lain ya, Bos.</p>
+      </div>
+    `;
     return;
   }
 
-  setCountdownValue(
-    Math.floor(distance / (1000 * 60 * 60 * 24)),
-    Math.floor((distance / (1000 * 60 * 60)) % 24),
-    Math.floor((distance / (1000 * 60)) % 60),
-    Math.floor((distance / 1000) % 60)
-  );
+  SELECTORS.grid.innerHTML = list.map((template) => {
+    const tags = template.tags.map((tag) => `<span>${sanitizeText(tag)}</span>`).join('');
+    const features = template.features.map((feature) => `<span>${sanitizeText(feature)}</span>`).join('');
+
+    return `
+      <article class="template-card" data-template-card="${sanitizeText(template.id)}">
+        <div class="template-preview">
+          <span class="template-badge">${sanitizeText(template.status)}</span>
+          <img src="${sanitizeText(template.image)}" alt="Preview ${sanitizeText(template.name)}" loading="lazy" />
+        </div>
+        <div class="template-content">
+          <p class="eyebrow">${sanitizeText(template.id)}</p>
+          <h3>${sanitizeText(template.name)}</h3>
+          <p>${sanitizeText(template.description)}</p>
+
+          <div class="template-meta" aria-label="Kategori template">
+            ${tags}
+          </div>
+
+          <div class="template-meta" aria-label="Fitur template">
+            ${features}
+          </div>
+
+          <div class="template-actions">
+            <a class="btn btn-primary" href="${buildPreviewUrl(template)}" target="_blank" rel="noopener" data-preview-link="${sanitizeText(template.id)}">Preview Demo</a>
+            <button class="btn btn-soft" type="button" data-open-template="${sanitizeText(template.id)}">Pilih Template</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
 }
 
-function setCountdownValue(days, hours, minutes, seconds) {
-  setText("days", days);
-  setText("hours", hours);
-  setText("minutes", minutes);
-  setText("seconds", seconds);
+function filterTemplates() {
+  const keyword = SELECTORS.search.value.trim().toLowerCase();
+
+  const filtered = TEMPLATE_DATA.filter((template) => {
+    const searchable = [
+      template.id,
+      template.name,
+      template.description,
+      ...template.tags,
+      ...template.features
+    ].join(' ').toLowerCase();
+
+    return searchable.includes(keyword);
+  });
+
+  renderTemplates(filtered);
 }
 
-function formatWeddingDate(dateString) {
-  if (!dateString) return "";
+function refreshPreviewLinks() {
+  document.querySelectorAll('[data-preview-link]').forEach((link) => {
+    const template = TEMPLATE_DATA.find((item) => item.id === link.dataset.previewLink);
+    if (template) link.href = buildPreviewUrl(template);
+  });
 
-  const date = new Date(`${dateString}T00:00:00`);
-
-  return new Intl.DateTimeFormat("id-ID", {
-    weekday: "long",
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
-  }).format(date);
+  if (state.activeTemplate) {
+    SELECTORS.modalPreviewLink.href = buildPreviewUrl(state.activeTemplate);
+  }
 }
 
-function setBackground(selector, url, fallback) {
-  const el = document.querySelector(selector);
-  if (!el) return;
+function openTemplateModal(templateId) {
+  const template = TEMPLATE_DATA.find((item) => item.id === templateId);
+  if (!template) return;
 
-  const finalUrl = url || fallback;
+  state.activeTemplate = template;
 
-  el.style.backgroundImage =
-    `linear-gradient(to bottom, rgba(63,42,31,0.4), rgba(63,42,31,0.7)), url('${finalUrl}')`;
+  SELECTORS.modalTemplateId.textContent = template.id;
+  SELECTORS.modalTitle.textContent = template.name;
+  SELECTORS.modalDescription.textContent = template.description;
+  SELECTORS.modalFolder.textContent = `/weddings/${template.folder}/`;
+  SELECTORS.modalDemoId.textContent = template.demoId;
+  SELECTORS.modalPreviewLink.href = buildPreviewUrl(template);
+  SELECTORS.modalAdminLink.href = buildAdminUrl(template);
+
+  SELECTORS.modal.classList.add('show');
+  SELECTORS.modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
 }
 
-function setImage(id, url, fallback) {
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  el.src = url || fallback;
+function closeTemplateModal() {
+  SELECTORS.modal.classList.remove('show');
+  SELECTORS.modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
 }
 
-function setText(id, value) {
-  const el = document.getElementById(id);
-  if (!el) return;
+function showToast(message) {
+  SELECTORS.toast.textContent = message;
+  SELECTORS.toast.classList.add('show');
 
-  el.innerText = value;
+  clearTimeout(state.toastTimer);
+  state.toastTimer = setTimeout(() => {
+    SELECTORS.toast.classList.remove('show');
+  }, 1700);
 }
 
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.innerText = text;
-  return div.innerHTML;
+async function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const input = document.createElement('input');
+  input.value = text;
+  input.setAttribute('readonly', '');
+  input.style.position = 'absolute';
+  input.style.left = '-9999px';
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
 }
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+function bindEvents() {
+  SELECTORS.search?.addEventListener('input', filterTemplates);
+  SELECTORS.guestInput?.addEventListener('input', refreshPreviewLinks);
+
+  document.addEventListener('click', (event) => {
+    const openButton = event.target.closest('[data-open-template]');
+    const closeButton = event.target.closest('[data-close-modal]');
+
+    if (openButton) {
+      openTemplateModal(openButton.dataset.openTemplate);
+    }
+
+    if (closeButton) {
+      closeTemplateModal();
+    }
+  });
+
+  SELECTORS.copyTemplateBtn?.addEventListener('click', async () => {
+    if (!state.activeTemplate) return;
+
+    try {
+      await copyText(state.activeTemplate.id);
+      showToast(`Template ID ${state.activeTemplate.id} berhasil disalin ✨`);
+    } catch (error) {
+      console.warn('Gagal menyalin template ID:', error);
+      showToast('Gagal menyalin template ID');
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeTemplateModal();
+    }
+  });
 }
+
+function initPage() {
+  SELECTORS.yearNow.textContent = new Date().getFullYear();
+  renderTemplates();
+  bindEvents();
+}
+
+initPage();
