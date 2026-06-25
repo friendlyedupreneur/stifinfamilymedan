@@ -1,89 +1,296 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Wedding Admin V2</title>
-<link rel="stylesheet" href="admin.css">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10131f">
+  <title>Wedding Admin Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-<section id="loginPage" class="login-page">
-  <div class="login-card">
-    <p class="eyebrow">Wedding Admin</p><h1>Masuk Dashboard</h1>
-    <p class="muted">Kelola undangan, media, RSVP, ucapan, visitor, dan export Excel.</p>
-    <form id="loginForm"><input id="email" type="email" placeholder="Email admin" required><input id="password" type="password" placeholder="Password" required><button type="submit">Login</button></form>
-    <p id="loginStatus" class="status"></p>
-  </div>
-</section>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<main id="dashboard" class="dashboard hidden">
-  <header class="topbar"><div><p class="eyebrow">Wedding Admin V2</p><h1>Dashboard</h1></div><button id="logoutBtn" class="btn-light">Logout</button></header>
-
-  <section class="card"><h2>Wedding ID</h2><div class="row"><input id="weddingIdInput" value="wedding_001"><button id="loadWeddingBtn">Load</button></div></section>
-
-  <section class="stats-grid">
-    <div class="stat-card"><span id="totalVisitors">0</span><p>Visitors</p></div>
-    <div class="stat-card"><span id="totalRsvp">0</span><p>RSVP</p></div>
-    <div class="stat-card"><span id="totalHadir">0</span><p>Hadir</p></div>
-    <div class="stat-card"><span id="totalWishes">0</span><p>Ucapan</p></div>
+  <section id="loginPage" class="login-page">
+    <div class="login-card">
+      <p class="eyebrow">Wedding Admin</p>
+      <h1>Masuk Dashboard</h1>
+      <p class="muted">Kelola template, data klien, media, RSVP, ucapan, visitor, dan link tamu.</p>
+      <form id="loginForm" class="auth-form">
+        <label>
+          <span>Email</span>
+          <input id="email" type="email" placeholder="Email admin / klien" autocomplete="email" required>
+        </label>
+        <label>
+          <span>Password</span>
+          <input id="password" type="password" placeholder="Password" autocomplete="current-password" required>
+        </label>
+        <button type="submit">Login</button>
+      </form>
+      <p id="loginStatus" class="status"></p>
+    </div>
   </section>
 
-  <section class="card">
-    <h2>Edit Data Pernikahan</h2>
-    <h3>Mempelai Pria</h3>
-    <div class="form-grid">
-      <input id="groomName" placeholder="Nama panggilan pria"><input id="groomFullName" placeholder="Nama lengkap pria">
-      <input id="groomFather" placeholder="Ayah pria"><input id="groomMother" placeholder="Ibu pria">
-      <input id="groomIgHandle" placeholder="@instagram pria"><input id="groomIgLink" placeholder="Link IG pria">
-    </div>
-    <h3>Mempelai Wanita</h3>
-    <div class="form-grid">
-      <input id="brideName" placeholder="Nama panggilan wanita"><input id="brideFullName" placeholder="Nama lengkap wanita">
-      <input id="brideFather" placeholder="Ayah wanita"><input id="brideMother" placeholder="Ibu wanita">
-      <input id="brideIgHandle" placeholder="@instagram wanita"><input id="brideIgLink" placeholder="Link IG wanita">
-    </div>
-    <h3>Detail Acara</h3>
-    <div class="form-grid">
-      <input id="weddingDate" type="date"><input id="akadTime" placeholder="Jam akad">
-      <input id="akadLocation" placeholder="Lokasi akad"><input id="receptionTime" placeholder="Jam resepsi">
-      <input id="location" placeholder="Lokasi resepsi"><input id="mapsLink" placeholder="Link Google Maps">
-      <input id="phoneNumber" placeholder="Nomor WhatsApp"><input id="status" placeholder="Status">
-    </div>
-    <h3>Amplop Digital</h3>
-    <div class="form-grid">
-      <input id="bankName1" placeholder="Bank 1"><input id="bankNumber1" placeholder="Rekening 1"><input id="bankHolder1" placeholder="Pemilik 1">
-      <input id="bankName2" placeholder="Bank 2"><input id="bankNumber2" placeholder="Rekening 2"><input id="bankHolder2" placeholder="Pemilik 2">
-    </div>
-    <h3>Cerita</h3><textarea id="story" placeholder="Cerita cinta / narasi undangan"></textarea>
-    <button id="saveWeddingBtn">Simpan Data Wedding</button><p id="saveWeddingStatus" class="status"></p>
-  </section>
+  <main id="dashboard" class="dashboard hidden">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Wedding Admin Manager</p>
+        <h1>Dashboard</h1>
+        <p id="userInfo" class="muted small-text">Memuat akun...</p>
+      </div>
+      <div class="topbar-actions">
+        <a id="catalogBtn" class="btn-light" href="../index.html">Katalog</a>
+        <button id="logoutBtn" class="btn-light" type="button">Logout</button>
+      </div>
+    </header>
 
-  <section class="card"><h2>Generate Link Tamu</h2><input id="guestInput" placeholder="Contoh: Keluarga Andi"><button id="generateLinkBtn">Generate Link</button><textarea id="guestLinkOutput" readonly></textarea><button id="copyLinkBtn" class="btn-light">Copy Link</button></section>
+    <section class="workspace-grid">
+      <aside class="sidebar card">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Wedding Access</p>
+            <h2>Undangan Saya</h2>
+          </div>
+          <button id="refreshWeddingListBtn" class="btn-light small-btn" type="button">Refresh</button>
+        </div>
+        <div id="weddingList" class="wedding-list empty-state">Belum ada data wedding yang bisa ditampilkan.</div>
 
-  <section class="card">
-    <h2>Upload Media</h2><p class="muted">Upload ke Firebase Storage, URL otomatis masuk Firestore.</p>
-    <div class="upload-grid">
-      <div class="upload-item"><label>Cover</label><input type="file" data-field="coverImage" data-name="cover.jpg" accept="image/*"></div>
-      <div class="upload-item"><label>Hero</label><input type="file" data-field="heroImage" data-name="hero.jpg" accept="image/*"></div>
-      <div class="upload-item"><label>Pria</label><input type="file" data-field="groomPhoto" data-name="groom.jpg" accept="image/*"></div>
-      <div class="upload-item"><label>Wanita</label><input type="file" data-field="bridePhoto" data-name="bride.jpg" accept="image/*"></div>
-      <div class="upload-item"><label>Gallery 1</label><input type="file" data-field="gallery1" data-name="gallery1.jpg" accept="image/*"></div>
-      <div class="upload-item"><label>Gallery 2</label><input type="file" data-field="gallery2" data-name="gallery2.jpg" accept="image/*"></div>
-      <div class="upload-item"><label>Gallery 3</label><input type="file" data-field="gallery3" data-name="gallery3.jpg" accept="image/*"></div>
-      <div class="upload-item"><label>Gallery 4</label><input type="file" data-field="gallery4" data-name="gallery4.jpg" accept="image/*"></div>
-      <div class="upload-item"><label>Musik</label><input type="file" data-field="musicUrl" data-name="music.mp3" accept="audio/*"></div>
-    </div><p id="uploadStatus" class="status"></p>
-  </section>
+        <div class="manual-loader">
+          <label for="weddingIdInput">Load Manual Wedding ID</label>
+          <div class="row tight">
+            <input id="weddingIdInput" value="wedding_002" autocomplete="off">
+            <button id="loadWeddingBtn" type="button">Load</button>
+          </div>
+          <p class="hint">Contoh: <strong>wedding_002</strong>, <strong>wedding_015</strong>, atau <strong>demo_wedding_002</strong>.</p>
+        </div>
+      </aside>
 
-  <section class="card">
-    <div class="section-head"><h2>Data RSVP</h2><button id="exportRsvpBtn" class="btn-light small-btn">Export Excel RSVP</button></div>
-    <p class="muted">Excel bisa dipakai untuk daftar tamu dan undian 5 orang gratis Tes STIFIn.</p>
-    <div class="table-wrap"><table><thead><tr><th>Nama</th><th>Hadir</th><th>Jumlah</th><th>WA</th><th>Catatan</th><th>Source</th></tr></thead><tbody id="rsvpTable"></tbody></table></div>
-  </section>
+      <div class="main-column">
+        <section class="stats-grid">
+          <div class="stat-card"><span id="totalVisitors">0</span><p>Visitors</p></div>
+          <div class="stat-card"><span id="totalRsvp">0</span><p>RSVP</p></div>
+          <div class="stat-card"><span id="totalHadir">0</span><p>Hadir</p></div>
+          <div class="stat-card"><span id="totalWishes">0</span><p>Ucapan</p></div>
+        </section>
 
-  <section class="card"><h2>Ucapan & Doa</h2><div id="wishesList" class="list"></div></section>
-  <section class="card"><h2>Visitors Terbaru</h2><div id="visitorsList" class="list"></div></section>
-</main>
+        <section class="card active-wedding-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Active Wedding</p>
+              <h2 id="activeWeddingTitle">Belum ada wedding dipilih</h2>
+              <p id="activeWeddingSubtitle" class="muted">Pilih wedding dari daftar atau load manual ID.</p>
+            </div>
+            <div class="section-actions">
+              <a id="previewWeddingBtn" class="btn-light" href="#" target="_blank" rel="noopener">Preview</a>
+              <button id="copyPreviewBtn" class="btn-light" type="button">Copy Preview</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <h2>Buat / Duplikat Data Wedding</h2>
+              <p class="muted">Gunakan untuk membuat dokumen klien baru dari template yang dipilih.</p>
+            </div>
+          </div>
+          <div class="form-grid three">
+            <label>
+              <span>Wedding ID Baru</span>
+              <input id="newWeddingId" placeholder="contoh: wedding_015">
+            </label>
+            <label>
+              <span>Template</span>
+              <select id="newTemplateId">
+                <option value="wedding_001">Wedding 001 - Classic</option>
+                <option value="wedding_002" selected>Wedding 002 - Dark Luxury</option>
+              </select>
+            </label>
+            <label>
+              <span>Email Editor Klien</span>
+              <input id="newEditorEmail" type="email" placeholder="klien@email.com">
+            </label>
+          </div>
+          <div class="row responsive-actions">
+            <button id="createWeddingBtn" type="button">Buat Data Wedding</button>
+            <p id="createWeddingStatus" class="status"></p>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <h2>Edit Data Pernikahan</h2>
+              <p class="muted">Data akan disimpan ke <strong>weddings/{weddingId}</strong> dan langsung dibaca oleh template.</p>
+            </div>
+            <button id="saveWeddingBtn" type="button">Simpan Data</button>
+          </div>
+          <p id="saveWeddingStatus" class="status"></p>
+
+          <div class="admin-tabs" role="tablist" aria-label="Bagian editor">
+            <button class="tab-btn active" type="button" data-tab="tab-basic">Utama</button>
+            <button class="tab-btn" type="button" data-tab="tab-couple">Mempelai</button>
+            <button class="tab-btn" type="button" data-tab="tab-event">Acara</button>
+            <button class="tab-btn" type="button" data-tab="tab-gift">Amplop</button>
+            <button class="tab-btn" type="button" data-tab="tab-media">Media</button>
+            <button class="tab-btn" type="button" data-tab="tab-access">Akses</button>
+          </div>
+
+          <div id="tab-basic" class="tab-panel active">
+            <h3>Pengaturan Utama</h3>
+            <div class="form-grid three">
+              <label><span>Template ID</span><select id="templateId"><option value="wedding_001">wedding_001</option><option value="wedding_002">wedding_002</option></select></label>
+              <label><span>Nama Template</span><input id="templateName" placeholder="Dark Luxury Cinematic"></label>
+              <label><span>Status</span><select id="isActive"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></label>
+              <label><span>Path Template</span><input id="templatePath" placeholder="/weddings/wedding_002/index.html"></label>
+              <label><span>Meta Title</span><input id="metaTitle" placeholder="Undangan Pernikahan Romeo & Juliet"></label>
+              <label><span>Meta Description</span><input id="metaDescription" placeholder="Deskripsi undangan"></label>
+              <label><span>Judul Opening</span><input id="openingTitle" placeholder="Wedding Invitation"></label>
+              <label><span>Nama Tamu Default</span><input id="guestName" placeholder="Bapak/Ibu/Saudara/i"></label>
+              <label><span>Tanggal Tampil</span><input id="weddingDateText" placeholder="Sabtu, 10 Oktober 2026"></label>
+              <label><span>Countdown / Tanggal ISO</span><input id="weddingDatetime" type="datetime-local"></label>
+              <label><span>Nama Pendek Pria</span><input id="groomShortName" placeholder="Romeo"></label>
+              <label><span>Nama Pendek Wanita</span><input id="brideShortName" placeholder="Juliet"></label>
+            </div>
+            <label class="full-label"><span>Pesan Opening</span><textarea id="openingMessage" placeholder="Tanpa mengurangi rasa hormat..."></textarea></label>
+            <label class="full-label"><span>Deskripsi Hero</span><textarea id="heroDescription" placeholder="Dua hati yang Allah pertemukan..."></textarea></label>
+            <label class="full-label"><span>Doa Pembuka</span><textarea id="openingPrayer" placeholder="Assalamu’alaikum..."></textarea></label>
+          </div>
+
+          <div id="tab-couple" class="tab-panel">
+            <h3>Data Mempelai</h3>
+            <div class="form-grid two">
+              <label><span>Nama Pria</span><input id="groomName" placeholder="Romeo"></label>
+              <label><span>Nama Wanita</span><input id="brideName" placeholder="Juliet"></label>
+              <label><span>Badge Pria</span><input id="groomBadge" placeholder="Ti • Penjaga Arah"></label>
+              <label><span>Badge Wanita</span><input id="brideBadge" placeholder="Fe • Penjaga Rasa"></label>
+              <label><span>Foto Pria URL</span><input id="groomPhotoUrl" placeholder="https://..."></label>
+              <label><span>Foto Wanita URL</span><input id="bridePhotoUrl" placeholder="https://..."></label>
+            </div>
+            <label class="full-label"><span>Orang Tua Pria</span><textarea id="groomParent" placeholder="Putra dari<br>Bapak ... & Ibu ..."></textarea></label>
+            <label class="full-label"><span>Orang Tua Wanita</span><textarea id="brideParent" placeholder="Putri dari<br>Bapak ... & Ibu ..."></textarea></label>
+            <label class="full-label"><span>Cerita / Narasi Mempelai</span><textarea id="coupleStory" placeholder="Romeo hadir dengan..."></textarea></label>
+          </div>
+
+          <div id="tab-event" class="tab-panel">
+            <h3>Detail Acara & Lokasi</h3>
+            <div class="form-grid two">
+              <label><span>Judul Akad</span><input id="akadTitle" placeholder="Akad Nikah"></label>
+              <label><span>Judul Resepsi</span><input id="receptionTitle" placeholder="Resepsi"></label>
+              <label><span>Google Maps</span><input id="mapUrl" placeholder="https://maps.google.com/..."></label>
+              <label><span>Nomor WhatsApp</span><input id="phoneNumber" placeholder="62812..."></label>
+            </div>
+            <label class="full-label"><span>Detail Akad</span><textarea id="akadDetail" placeholder="Sabtu, 10 Oktober 2026<br>09.00 WIB - Selesai<br><strong>Gedung...</strong>"></textarea></label>
+            <label class="full-label"><span>Detail Resepsi</span><textarea id="receptionDetail" placeholder="Sabtu, 10 Oktober 2026<br>11.00 WIB - Selesai<br>Jl..."></textarea></label>
+            <label class="full-label"><span>Closing Message</span><textarea id="closingMessage" placeholder="Merupakan suatu kehormatan..."></textarea></label>
+          </div>
+
+          <div id="tab-gift" class="tab-panel">
+            <h3>Amplop Digital</h3>
+            <div class="form-grid three">
+              <label><span>Bank 1</span><input id="giftBank1" placeholder="Bank BCA"></label>
+              <label><span>No. Rekening 1</span><input id="giftNumber1" placeholder="1234567890"></label>
+              <label><span>Nama Pemilik 1</span><input id="giftName1" placeholder="a.n. Romeo"></label>
+              <label><span>Tipe 1</span><input id="giftType1" placeholder="Transfer Rekening"></label>
+              <label><span>Icon 1</span><input id="giftIcon1" placeholder="💳"></label>
+              <label><span>Bank/E-Wallet 2</span><input id="giftBank2" placeholder="DANA / GoPay"></label>
+              <label><span>No. Rekening 2</span><input id="giftNumber2" placeholder="081234567890"></label>
+              <label><span>Nama Pemilik 2</span><input id="giftName2" placeholder="a.n. Juliet"></label>
+              <label><span>Tipe 2</span><input id="giftType2" placeholder="E-Wallet"></label>
+              <label><span>Icon 2</span><input id="giftIcon2" placeholder="🎁"></label>
+              <label><span>QRIS Image URL</span><input id="qrisImageUrl" placeholder="https://..."></label>
+            </div>
+            <label class="full-label"><span>Deskripsi Amplop</span><textarea id="giftDescription" placeholder="Doa restu merupakan hadiah terindah..."></textarea></label>
+            <label class="full-label"><span>Catatan QRIS</span><textarea id="qrisNote" placeholder="Scan QRIS untuk mengirim tanda kasih."></textarea></label>
+            <label class="full-label"><span>Ucapan Terima Kasih Amplop</span><textarea id="giftThanks" placeholder="Terima kasih atas setiap doa..."></textarea></label>
+          </div>
+
+          <div id="tab-media" class="tab-panel">
+            <h3>Media, Gallery, Musik</h3>
+            <div class="form-grid two">
+              <label><span>Musik URL</span><input id="musicUrl" placeholder="https://.../music.mp3"></label>
+              <label><span>Closing Couple Names</span><input id="closingCoupleNames" placeholder="ROMEO & JULIET"></label>
+            </div>
+            <label class="full-label"><span>Gallery Images — satu URL per baris</span><textarea id="galleryImages" class="tall-textarea" placeholder="https://.../gallery1.jpg&#10;https://.../gallery2.jpg"></textarea></label>
+            <div class="upload-box">
+              <div class="section-head compact">
+                <div>
+                  <h3>Upload Media ke Firebase Storage</h3>
+                  <p class="muted">URL otomatis masuk ke field yang sesuai.</p>
+                </div>
+              </div>
+              <div class="upload-grid">
+                <div class="upload-item"><label>Foto Pria</label><input type="file" data-field="groom_photo_url" data-name="groom.jpg" accept="image/*"></div>
+                <div class="upload-item"><label>Foto Wanita</label><input type="file" data-field="bride_photo_url" data-name="bride.jpg" accept="image/*"></div>
+                <div class="upload-item"><label>Gallery 1</label><input type="file" data-field="gallery_images" data-index="0" data-name="gallery1.jpg" accept="image/*"></div>
+                <div class="upload-item"><label>Gallery 2</label><input type="file" data-field="gallery_images" data-index="1" data-name="gallery2.jpg" accept="image/*"></div>
+                <div class="upload-item"><label>Gallery 3</label><input type="file" data-field="gallery_images" data-index="2" data-name="gallery3.jpg" accept="image/*"></div>
+                <div class="upload-item"><label>Gallery 4</label><input type="file" data-field="gallery_images" data-index="3" data-name="gallery4.jpg" accept="image/*"></div>
+                <div class="upload-item"><label>QRIS</label><input type="file" data-field="qris_image_url" data-name="qris.jpg" accept="image/*"></div>
+                <div class="upload-item"><label>Musik</label><input type="file" data-field="music_url" data-name="music.mp3" accept="audio/*"></div>
+              </div>
+              <p id="uploadStatus" class="status"></p>
+            </div>
+          </div>
+
+          <div id="tab-access" class="tab-panel">
+            <h3>Akses Editor</h3>
+            <p class="muted">Maksimal 2 akun editor per wedding. Untuk keamanan, UID lebih utama daripada email.</p>
+            <div class="form-grid two">
+              <label><span>Editor Emails — satu per baris</span><textarea id="editorEmails" placeholder="admin@email.com&#10;klien@email.com"></textarea></label>
+              <label><span>Editor UIDs — satu per baris</span><textarea id="editorUids" placeholder="UID_ADMIN&#10;UID_KLIEN"></textarea></label>
+              <label><span>Maksimal Editor</span><input id="maxEditors" type="number" min="1" max="2" value="2"></label>
+            </div>
+            <p class="hint">Akun klien bisa dibuat dulu dari Firebase Authentication Console. Nanti jika ingin otomatis dari admin, kita tambah Cloud Functions.</p>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Generate Link Tamu</h2>
+          <div class="form-grid two">
+            <label><span>Nama Tamu</span><input id="guestInput" placeholder="Contoh: Keluarga Andi"></label>
+            <label><span>Template Path</span><input id="linkTemplatePath" placeholder="/weddings/wedding_002/index.html"></label>
+          </div>
+          <div class="row responsive-actions">
+            <button id="generateLinkBtn" type="button">Generate Link</button>
+            <button id="copyLinkBtn" class="btn-light" type="button">Copy Link</button>
+          </div>
+          <textarea id="guestLinkOutput" readonly placeholder="Link akan muncul di sini..."></textarea>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <h2>Data RSVP</h2>
+              <p class="muted">CSV bisa dibuka di Excel untuk daftar tamu dan kebutuhan event.</p>
+            </div>
+            <button id="exportRsvpBtn" class="btn-light small-btn" type="button">Export CSV</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Nama</th><th>Hadir</th><th>Jumlah</th><th>WA</th><th>Catatan</th><th>Source</th></tr></thead>
+              <tbody id="rsvpTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="two-column">
+          <div class="card">
+            <h2>Ucapan & Doa</h2>
+            <div id="wishesList" class="list empty-state">Belum ada ucapan.</div>
+          </div>
+          <div class="card">
+            <h2>Visitors Terbaru</h2>
+            <div id="visitorsList" class="list empty-state">Belum ada visitor.</div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
   <script src="../firebase-config.js"></script>
-<script src="./admin.js" defer></script>
-</body></html>
+  <script src="./admin.js" defer></script>
+</body>
+</html>
