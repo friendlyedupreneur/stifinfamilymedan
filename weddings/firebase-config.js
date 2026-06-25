@@ -33,7 +33,7 @@
   const weddingSettings = {
     firebaseEnabled: true,
     collectionName: 'weddings',
-    defaultWeddingId: 'wedding_002',
+    defaultWeddingId: 'wedding_001',
     demoPrefix: 'demo_',
     maxEditorsPerWedding: 2,
     appName: 'STIFIn Wedding Invitation'
