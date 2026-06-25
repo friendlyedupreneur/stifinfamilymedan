@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#070e14">
+    <meta name="description" content="Undangan Pernikahan Romeo & Juliet - Dua hati, satu janji, satu perjalanan baru.">
+    <title>Undangan Pernikahan Romeo & Juliet</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@200;300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-template="dark-luxury-cinematic">
+
+    <audio id="bgMusic" loop preload="none">
+        <source id="bgMusicSource" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg" data-src-field="music_url">
+    </audio>
+
+    <button id="musicBtn" class="fab-music" type="button" aria-label="Putar atau jeda musik">🎵</button>
+    <div id="giftToast" class="gift-toast" role="status" aria-live="polite">Nomor berhasil disalin</div>
+
+    <canvas id="dualityCanvas" aria-hidden="true"></canvas>
+    <div class="tree-frame tree-left" aria-hidden="true"></div>
+    <div class="tree-frame tree-right" aria-hidden="true"></div>
+
+    <!-- OPENING UNDANGAN -->
+    <div class="gatekeeper" id="gatekeeper">
+        <div class="gate-title" data-field="opening_title">Wedding Invitation</div>
+        <p class="guest-line">
+            Kepada Yth.<br>
+            <span class="guest-name" id="guestName" data-field="guest_name">Bapak/Ibu/Saudara/i</span>
+            <span data-field="opening_message">Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di hari bahagia kami.</span>
+        </p>
+
+        <div class="biometric-wrapper">
+            <svg class="progress-ring" width="130" height="130" aria-hidden="true">
+                <defs>
+                    <linearGradient id="gradientTiFe" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#8bb8d6" />
+                        <stop offset="50%" stop-color="#dfb85b" />
+                        <stop offset="100%" stop-color="#e2a39a" />
+                    </linearGradient>
+                </defs>
+                <circle cx="65" cy="65" r="60"></circle>
+                <circle class="progress" id="scanProgress" cx="65" cy="65" r="60"></circle>
+            </svg>
+
+            <button class="scan-btn" id="scanBtn" type="button" aria-label="Tekan dan tahan untuk membuka undangan">
+                <svg class="fingerprint-icon" viewBox="0 0 24 24" fill="none" stroke="url(#gradientTiFe)" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <path d="M12 2C8.13 2 5 5.13 5 9v3c0 3.87 3.13 7 7 7s7-3.13 7-7V9c0-3.87-3.13-7-7-7z"/>
+                    <path d="M8 9v2M16 9v2M12 6v6M10 16.5c1.2.6 2.8.6 4 0"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="auth-text" id="authText">
+            Buka Undangan<br>
+            <span class="opening-hint">Tekan & Tahan</span>
+        </div>
+    </div>
+
+    <main class="main-layout" id="mainApp">
+
+        <!-- HERO -->
+        <section class="hero-section">
+            <div class="observe-fade hero-content">
+                <div class="sub-title" data-field="hero_subtitle">The Wedding Of</div>
+                <h1 class="hero-title">
+                    <span data-field="groom_short_name">Romeo</span><br>
+                    <span class="hero-amp">&</span><br>
+                    <span data-field="bride_short_name">Juliet</span>
+                </h1>
+                <p class="small-gold" data-field="wedding_date_text">Sabtu, 10 Oktober 2026</p>
+                <div class="divider"></div>
+                <p class="body-copy" data-field="hero_description">
+                    Dua hati yang Allah pertemukan, dua karakter yang saling melengkapi,
+                    dan satu janji suci untuk berjalan bersama dalam cinta, doa, dan keberkahan.
+                </p>
+            </div>
+        </section>
+
+        <!-- OPENING DOA -->
+        <section>
+            <div class="glass-panel observe-fade">
+                <div class="arabic" data-field="bismillah_text">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+                <div class="sub-title" data-field="prayer_subtitle">Dengan Penuh Syukur</div>
+                <p class="body-copy" data-field="opening_prayer">
+                    Assalamu’alaikum Warahmatullahi Wabarakatuh.
+                    Dengan memohon rahmat dan ridha Allah SWT, kami bermaksud menyelenggarakan
+                    pernikahan putra-putri kami. Merupakan kebahagiaan bagi kami apabila
+                    Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+                </p>
+                <div class="quote-box">
+                    <p data-field="quran_quote">“Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup agar kamu merasa tenteram kepadanya.”</p>
+                    <div class="small-gold quote-source" data-field="quran_source">QS. Ar-Rum: 21</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COUPLE -->
+        <section>
+            <div class="glass-panel observe-fade">
+                <div class="sub-title" data-field="couple_subtitle">Mempelai</div>
+                <h2 class="section-title" data-field="couple_section_title">Dua Hati</h2>
+                <p class="body-copy" data-field="couple_intro">Dengan izin Allah, kami melangkah menuju babak baru kehidupan.</p>
+
+                <div class="couple-grid">
+                    <article class="couple-card">
+                        <img class="couple-img couple-img-groom" src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=180" alt="Foto mempelai pria" data-src-field="groom_photo_url">
+                        <div class="couple-name groom-name" data-field="groom_name">Romeo</div>
+                        <span class="badge-ti" data-field="groom_badge">Ti • Penjaga Arah</span>
+                        <p class="couple-parent" data-field="groom_parent">Putra dari<br>Bapak Lorem & Ibu Ipsum</p>
+                    </article>
+
+                    <div class="couple-separator" aria-hidden="true">✦</div>
+
+                    <article class="couple-card">
+                        <img class="couple-img couple-img-bride" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=180" alt="Foto mempelai wanita" data-src-field="bride_photo_url">
+                        <div class="couple-name bride-name" data-field="bride_name">Juliet</div>
+                        <span class="badge-fe" data-field="bride_badge">Fe • Penjaga Rasa</span>
+                        <p class="couple-parent" data-field="bride_parent">Putri dari<br>Bapak Dolor & Ibu Sit</p>
+                    </article>
+                </div>
+
+                <p class="body-copy text-justify" data-field="couple_story">
+                    Romeo hadir dengan ketenangan berpikir dan keteguhan arah.
+                    Juliet hadir dengan kelembutan rasa dan kehangatan yang menyatukan.
+                    Dalam perbedaan itulah, kami menemukan cara untuk saling menjaga,
+                    saling menguatkan, dan saling pulang.
+                </p>
+            </div>
+        </section>
+
+        <!-- GALLERY -->
+        <section class="gallery-section">
+            <div class="observe-fade gallery-content">
+                <div class="sub-title" data-field="gallery_subtitle">Our Beautiful Moments</div>
+                <h2 class="section-title" data-field="gallery_title">Jejak Kisah Kami</h2>
+                <p class="body-copy gallery-description" data-field="gallery_description">
+                    Beberapa momen sederhana yang menjadi bagian dari perjalanan kami menuju hari bahagia.
+                </p>
+                <div class="gallery-wrapper">
+                    <div class="marquee" id="galleryTrack" data-gallery="gallery_images">
+                        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400" alt="Momen pernikahan 1">
+                        <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=400" alt="Momen pernikahan 2">
+                        <img src="https://images.unsplash.com/photo-1519225424756-32d43fa58a4d?auto=format&fit=crop&q=80&w=400" alt="Momen pernikahan 3">
+                        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400" alt="Momen pernikahan 4">
+                        <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=400" alt="Momen pernikahan 5">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIME & LOCATION -->
+        <section>
+            <div class="glass-panel observe-fade">
+                <div class="sub-title" data-field="date_subtitle">Save The Date</div>
+                <h2 class="section-title" data-field="date_title">Hari Bahagia</h2>
+                <p class="body-copy" data-field="date_description">Menghitung hari menuju momen sakral yang insyaAllah menjadi awal perjalanan kami.</p>
+
+                <div class="timer-grid" id="timerGrid" aria-label="Hitung mundur acara">
+                    <div class="timer-box"><span class="timer-num" id="d">00</span><span class="timer-label">Hari</span></div>
+                    <div class="timer-box"><span class="timer-num" id="h">00</span><span class="timer-label">Jam</span></div>
+                    <div class="timer-box"><span class="timer-num" id="m">00</span><span class="timer-label">Mnt</span></div>
+                    <div class="timer-box"><span class="timer-num" id="s">00</span><span class="timer-label">Dtk</span></div>
+                </div>
+
+                <article class="event-card">
+                    <h3 data-field="akad_title">Akad Nikah</h3>
+                    <p data-field="akad_detail">Sabtu, 10 Oktober 2026<br>09.00 WIB - Selesai<br><strong>Gedung Estetik Nusantara</strong></p>
+                </article>
+                <article class="event-card">
+                    <h3 data-field="reception_title">Resepsi</h3>
+                    <p data-field="reception_detail">Sabtu, 10 Oktober 2026<br>11.00 WIB - Selesai<br>Jl. Bahagia Bersama No. 10, Medan</p>
+                </article>
+
+                <button class="btn-gold btn-small" id="openLocationBtn" type="button" data-link-field="map_url">Buka Lokasi</button>
+            </div>
+        </section>
+
+        <!-- AMPLOP DIGITAL -->
+        <section>
+            <div class="glass-panel observe-fade">
+                <div class="sub-title" data-field="gift_subtitle">Wedding Gift</div>
+                <h2 class="section-title" data-field="gift_title">Amplop Digital</h2>
+                <p class="body-copy" data-field="gift_description">
+                    Doa restu Bapak/Ibu/Saudara/i merupakan hadiah terindah bagi kami.
+                    Namun apabila berkenan memberikan tanda kasih, dapat disampaikan melalui amplop digital berikut.
+                </p>
+
+                <div class="gift-stack" id="giftStack" data-list="gift_accounts">
+                    <article class="gift-card">
+                        <div class="gift-head">
+                            <div>
+                                <div class="gift-bank" data-field="gift_bank_1">Bank BCA</div>
+                                <div class="gift-type" data-field="gift_type_1">Transfer Rekening</div>
+                            </div>
+                            <div class="gift-icon" data-field="gift_icon_1">💳</div>
+                        </div>
+                        <div class="gift-number" id="rekeningBca" data-field="gift_number_1">1234567890</div>
+                        <div class="gift-name" data-field="gift_name_1">a.n. Romeo Pratama</div>
+                        <button class="btn-copy" type="button" data-copy-target="rekeningBca">Salin Rekening</button>
+                    </article>
+
+                    <article class="gift-card">
+                        <div class="gift-head">
+                            <div>
+                                <div class="gift-bank" data-field="gift_bank_2">DANA / GoPay</div>
+                                <div class="gift-type" data-field="gift_type_2">E-Wallet</div>
+                            </div>
+                            <div class="gift-icon" data-field="gift_icon_2">🎁</div>
+                        </div>
+                        <div class="gift-number" id="ewalletGift" data-field="gift_number_2">0812 3456 7890</div>
+                        <div class="gift-name" data-field="gift_name_2">a.n. Juliet Amelia</div>
+                        <button class="btn-copy" type="button" data-copy-target="ewalletGift">Salin Nomor</button>
+                    </article>
+                </div>
+
+                <div class="qris-wrap">
+                    <img class="qris-image is-hidden" id="qrisImage" src="" alt="QRIS amplop digital" data-src-field="qris_image_url">
+                    <div class="qris-placeholder" id="qrisPlaceholder">QRIS<br>PLACEHOLDER</div>
+                    <p class="body-copy qris-note" data-field="qris_note">
+                        Ganti kotak ini dengan gambar QRIS asli jika ingin menerima tanda kasih melalui scan QR.
+                    </p>
+                </div>
+
+                <div class="quote-box gift-thanks">
+                    <p data-field="gift_thanks">
+                        Terima kasih atas setiap doa, perhatian, dan tanda kasih yang diberikan.
+                        Semoga Allah membalas dengan keberkahan yang berlipat.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- WISHES -->
+        <section>
+            <div class="glass-panel observe-fade">
+                <div class="sub-title" data-field="wishes_subtitle">Wedding Wishes</div>
+                <h2 class="section-title" data-field="wishes_title">Doa & Ucapan</h2>
+                <div class="wish-prayer">
+                    <div class="arabic wish-arabic" data-field="wishes_arabic">بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ</div>
+                    <span data-field="wishes_prayer_translation">“Semoga Allah memberkahi kalian, melimpahkan keberkahan atas kalian, dan mempertemukan kalian berdua dalam kebaikan.”</span>
+                </div>
+
+                <form id="wishForm" autocomplete="on">
+                    <input type="text" class="input-clean" id="wishName" name="name" placeholder="Nama Anda" data-placeholder-field="wish_name_placeholder" required>
+                    <textarea class="input-clean textarea-clean" id="wishMessage" name="message" placeholder="Tulis doa dan ucapan terbaik..." data-placeholder-field="wish_message_placeholder" required></textarea>
+                    <button type="submit" class="btn-gold btn-small" data-field="wish_button_text">Kirim Ucapan</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- CLOSING -->
+        <section class="closing-section">
+            <div class="observe-fade closing-content">
+                <h3 class="section-title closing-title" data-field="closing_title">Terima Kasih</h3>
+                <p class="body-copy" data-field="closing_message">
+                    Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i
+                    berkenan hadir dan memberikan doa restu.
+                </p>
+                <div class="divider"></div>
+                <p class="closing-couple" data-field="closing_couple_names">ROMEO & JULIET</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="firebase-config.js"></script>
+    <script src="script.js" defer></script>
+</body>
+</html>
