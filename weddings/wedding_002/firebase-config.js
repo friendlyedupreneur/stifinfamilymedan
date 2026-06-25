@@ -1,7 +1,11 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+/*
+ * Firebase config - Dark Luxury Cinematic Wedding Template
+ */
 
-const firebaseConfig = {
+window.WEDDING_FIREBASE_ENABLED = true;
+window.WEDDING_COLLECTION = "weddings";
+
+window.firebaseConfig = {
   apiKey: "AIzaSyAfI1UUHUqnpImUpX_fsH_pTeJGZcUcG8s",
   authDomain: "rezaintan-wedding.firebaseapp.com",
   projectId: "rezaintan-wedding",
@@ -10,7 +14,3 @@ const firebaseConfig = {
   appId: "1:834037181305:web:4d8335917243a408759da8",
   measurementId: "G-WDJEYXSV6M"
 };
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-export { db };
