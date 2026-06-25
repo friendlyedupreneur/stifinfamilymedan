@@ -129,13 +129,31 @@
     const email = getValue('email');
     const password = getValue('password');
 
+    if (!state.firebase?.auth || !state.firebase?.modules?.auth) {
+      setStatus('loginStatus', 'Firebase Auth belum siap. Cek apakah ../firebase-config.js sudah benar-benar terbaca.', 'error');
+      return;
+    }
+
     setStatus('loginStatus', 'Memproses login...');
     try {
       const authModule = state.firebase.modules.auth;
-      await authModule.signInWithEmailAndPassword(state.firebase.auth, email, password);
-      setStatus('loginStatus', 'Login berhasil.', 'success');
+      const credential = await authModule.signInWithEmailAndPassword(state.firebase.auth, email, password);
+
+      // Force masuk dashboard setelah login sukses.
+      // onAuthStateChanged tetap aktif, tapi ini membuat UI tidak diam kalau listener lambat.
+      state.user = credential.user;
+      showDashboard(credential.user);
+      setStatus('loginStatus', 'Login berhasil. Membuka dashboard...', 'success');
+
+      try {
+        await loadAccessibleWeddings();
+      } catch (firestoreError) {
+        console.warn('Login berhasil, tetapi daftar wedding belum bisa dimuat.', firestoreError);
+        setWeddingListState('Login berhasil, tetapi data wedding belum bisa dimuat. Cek Firestore Rules atau tambahkan UID/email akun ini ke dokumen wedding.');
+        showToast('Login berhasil, data wedding belum termuat.');
+      }
     } catch (error) {
-      console.error(error);
+      console.error('LOGIN ERROR DETAIL:', error);
       setStatus('loginStatus', getFriendlyAuthError(error), 'error');
     }
   }
@@ -945,9 +963,27 @@
 
   function getFriendlyAuthError(error) {
     const code = error?.code || '';
-    if (code.includes('auth/invalid-credential') || code.includes('auth/wrong-password')) return 'Email atau password salah.';
-    if (code.includes('auth/user-not-found')) return 'Akun tidak ditemukan.';
-    if (code.includes('auth/too-many-requests')) return 'Terlalu banyak percobaan. Coba lagi nanti.';
-    return 'Login gagal. Cek email, password, dan koneksi.';
+    const message = error?.message || '';
+
+    if (code.includes('auth/invalid-credential') || code.includes('auth/wrong-password')) {
+      return 'Email atau password salah. Cek kembali akun Firebase Auth-nya.';
+    }
+    if (code.includes('auth/user-not-found')) {
+      return 'Akun tidak ditemukan di Firebase Authentication.';
+    }
+    if (code.includes('auth/operation-not-allowed')) {
+      return 'Login Email/Password belum diaktifkan di Firebase Authentication > Sign-in method.';
+    }
+    if (code.includes('auth/unauthorized-domain')) {
+      return 'Domain website belum diizinkan di Firebase Auth. Tambahkan domain ini di Authentication > Settings > Authorized domains.';
+    }
+    if (code.includes('auth/network-request-failed')) {
+      return 'Koneksi ke Firebase gagal. Cek internet, domain, atau adblock/browser protection.';
+    }
+    if (code.includes('auth/too-many-requests')) {
+      return 'Terlalu banyak percobaan login. Coba lagi nanti atau reset password dari Firebase.';
+    }
+
+    return `Login gagal (${code || 'tanpa kode'}). ${message || 'Cek Console browser untuk detail.'}`;
   }
 })();
