@@ -166,8 +166,8 @@
               <label><span>Nama Wanita</span><input id="brideName" placeholder="Juliet"></label>
               <label><span>Badge Pria</span><input id="groomBadge" placeholder="Ti • Penjaga Arah"></label>
               <label><span>Badge Wanita</span><input id="brideBadge" placeholder="Fe • Penjaga Rasa"></label>
-              <label><span>Foto Pria URL</span><input id="groomPhotoUrl" placeholder="https://..."></label>
-              <label><span>Foto Wanita URL</span><input id="bridePhotoUrl" placeholder="https://..."></label>
+              <label><span>Foto Pria</span><input id="groomPhotoUrl" class="readonly-url" placeholder="Upload foto melalui tab Media" readonly></label>
+              <label><span>Foto Wanita</span><input id="bridePhotoUrl" class="readonly-url" placeholder="Upload foto melalui tab Media" readonly></label>
             </div>
             <label class="full-label"><span>Orang Tua Pria</span><textarea id="groomParent" placeholder="Putra dari<br>Bapak ... & Ibu ..."></textarea></label>
             <label class="full-label"><span>Orang Tua Wanita</span><textarea id="brideParent" placeholder="Putri dari<br>Bapak ... & Ibu ..."></textarea></label>
@@ -200,7 +200,7 @@
               <label><span>Nama Pemilik 2</span><input id="giftName2" placeholder="a.n. Juliet"></label>
               <label><span>Tipe 2</span><input id="giftType2" placeholder="E-Wallet"></label>
               <label><span>Icon 2</span><input id="giftIcon2" placeholder="🎁"></label>
-              <label><span>QRIS Image URL</span><input id="qrisImageUrl" placeholder="https://..."></label>
+              <label><span>QRIS</span><input id="qrisImageUrl" class="readonly-url" placeholder="Upload QRIS melalui tab Media" readonly></label>
             </div>
             <label class="full-label"><span>Deskripsi Amplop</span><textarea id="giftDescription" placeholder="Doa restu merupakan hadiah terindah..."></textarea></label>
             <label class="full-label"><span>Catatan QRIS</span><textarea id="qrisNote" placeholder="Scan QRIS untuk mengirim tanda kasih."></textarea></label>
@@ -210,15 +210,15 @@
           <div id="tab-media" class="tab-panel">
             <h3>Media, Gallery, Musik</h3>
             <div class="form-grid two">
-              <label><span>Musik URL</span><input id="musicUrl" placeholder="https://.../music.mp3"></label>
+              <label><span>Musik</span><input id="musicUrl" class="readonly-url" placeholder="Upload musik melalui tab Media" readonly></label>
               <label><span>Closing Couple Names</span><input id="closingCoupleNames" placeholder="ROMEO & JULIET"></label>
             </div>
-            <label class="full-label"><span>Gallery Images — satu URL per baris</span><textarea id="galleryImages" class="tall-textarea" placeholder="https://.../gallery1.jpg&#10;https://.../gallery2.jpg"></textarea></label>
+            <label class="full-label"><span>Gallery Images</span><textarea id="galleryImages" class="tall-textarea readonly-url" placeholder="Upload gallery melalui tombol upload di bawah" readonly></textarea></label>
             <div class="upload-box">
               <div class="section-head compact">
                 <div>
                   <h3>Upload Media ke Firebase Storage</h3>
-                  <p class="muted">URL otomatis masuk ke field yang sesuai.</p>
+                  <p class="muted">Media wajib diupload. Link akan otomatis tersimpan ke field yang sesuai, tanpa input manual.</p>
                 </div>
               </div>
               <div class="upload-grid">

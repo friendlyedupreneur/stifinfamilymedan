@@ -536,14 +536,32 @@
     const field = input.dataset.field;
     const index = input.dataset.index !== undefined ? Number(input.dataset.index) : null;
     const fileName = input.dataset.name || safeFileName(file.name);
-    const path = `weddings/${state.currentWeddingId}/media/${Date.now()}-${fileName}`;
+
+    const validation = validateMediaFile(file, field);
+    if (!validation.ok) {
+      setStatus('uploadStatus', validation.message, 'error');
+      input.value = '';
+      return;
+    }
+
+    const path = `weddings/${state.currentWeddingId}/media/${Date.now()}-${field}-${fileName}`;
 
     setStatus('uploadStatus', `Mengupload ${file.name}...`);
     try {
       const storageModule = state.firebase.modules.storage;
       const firestore = state.firebase.modules.firestore;
       const storageRef = storageModule.ref(state.firebase.storage, path);
-      await storageModule.uploadBytes(storageRef, file);
+      const metadata = {
+        contentType: file.type,
+        customMetadata: {
+          weddingId: state.currentWeddingId,
+          field,
+          index: index === null ? '' : String(index),
+          uploadedBy: state.user?.uid || '',
+          uploadedByEmail: state.user?.email || ''
+        }
+      };
+      await storageModule.uploadBytes(storageRef, file, metadata);
       const downloadUrl = await storageModule.getDownloadURL(storageRef);
 
       const updateData = { updatedAt: firestore.serverTimestamp() };
@@ -581,6 +599,31 @@
       music_url: 'musicUrl'
     };
     if (map[field]) setValue(map[field], url);
+  }
+
+  function validateMediaFile(file, field) {
+    const isAudioField = field === 'music_url';
+    const isImageField = ['groom_photo_url', 'bride_photo_url', 'qris_image_url', 'gallery_images'].includes(field);
+    const maxImageSize = 7 * 1024 * 1024;
+    const maxAudioSize = 15 * 1024 * 1024;
+
+    if (isImageField && !file.type.startsWith('image/')) {
+      return { ok: false, message: 'File harus berupa gambar.' };
+    }
+
+    if (isAudioField && !file.type.startsWith('audio/')) {
+      return { ok: false, message: 'File musik harus berupa audio.' };
+    }
+
+    if (isImageField && file.size > maxImageSize) {
+      return { ok: false, message: 'Ukuran gambar maksimal 7MB.' };
+    }
+
+    if (isAudioField && file.size > maxAudioSize) {
+      return { ok: false, message: 'Ukuran musik maksimal 15MB.' };
+    }
+
+    return { ok: true, message: '' };
   }
 
   async function loadCollections(weddingId) {

@@ -622,3 +622,21 @@ td {
     white-space: nowrap;
   }
 }
+
+
+/* Upload-only media fields */
+.readonly-url {
+  background: rgba(15, 23, 42, 0.045);
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+textarea.readonly-url {
+  min-height: 98px;
+}
+
+.media-hint {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: #64748b;
+}
