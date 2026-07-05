@@ -119,15 +119,19 @@ h1, h2, h3, .and, .arabic {
 
 .cover-front{
 
-    background:rgba(255,255,255,.18);
+    background:
+    linear-gradient(
 
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
+        rgba(255,255,255,.20),
 
-    border:1px solid rgba(255,255,255,.18);
+        rgba(255,255,255,.08)
 
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.18);
+    );
+
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+
+    border:1px solid rgba(255,255,255,.22);
 
 }
 
