@@ -20,17 +20,21 @@ let visitorsRef;
 // ==========================================
 // 1. INISIALISASI VARIABEL & PARAMETER URL
 // ==========================================
-// --- AMBIL ID DARI PATH URL (UNTUK GITHUB PAGES CLEAN URL) ---
-// Mengambil bagian akhir URL (misal: /reza-intan akan menghasilkan "reza-intan")
+// --- AMBIL ID DARI PATH URL ---
 const pathSegments = window.location.pathname.split('/').filter(Boolean);
-const weddingId = pathSegments[pathSegments.length - 1] || 'wedding_001';
+const folderName = pathSegments[pathSegments.length - 1] || 'wedding_001'; 
 
-// --- AMBIL NAMA TAMU DARI PARAMETER ?to= ---
-const params = new URLSearchParams(window.location.search);
-const guestName = params.get('to') || "Bapak/Ibu/Saudara/i"; // Menghasilkan "Keluarga Budi"
+// --- MAP FOLDER KE ID FIRESTORE ---
+// Ini adalah "peta" agar sistem tahu folder apa memanggil ID Firestore mana
+const weddingMap = {
+    'wedding_001': 'Wedding_011',
+    'reza-intan': 'Wedding_011' // Tambahkan mapping lain jika perlu
+};
 
-// Selesai! Selanjutnya gunakan variabel `weddingId` ini untuk query data ke Firestore Bos seperti biasa.
-console.log("Memuat data untuk ID:", weddingId);
+// Mengambil ID Firestore berdasarkan folder, atau default ke wedding_001 jika tidak ada di map
+const weddingId = weddingMap[folderName] || 'Wedding_011'; 
+
+console.log("Memuat data untuk folder:", folderName, "-> ID Firestore:", weddingId);
 
 // Referensi Firebase
 
