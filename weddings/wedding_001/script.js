@@ -151,17 +151,17 @@ function applyWeddingData(data) {
     }
   });
 
-  setBackground("#cover-scene", data.coverImage, "assets/cover.jpg");
-  setBackground(".hero", data.heroImage, "assets/hero.jpg");
+  setBackground("#cover-scene", data.coverImage, "/weddings/wedding_001/assets/cover.jpg");
+  setBackground(".hero", data.heroImage, "/weddings/wedding_001/assets/hero.jpg");
 
-  setImage("groomPhoto", data.groomPhoto, "assets/groom.jpg");
-  setImage("bridePhoto", data.bridePhoto, "assets/bride.jpg");
-  setImage("gallery1", data.gallery1, "assets/gallery1.jpg");
-  setImage("gallery2", data.gallery2, "assets/gallery2.jpg");
-  setImage("gallery3", data.gallery3, "assets/gallery3.jpg");
-  setImage("gallery4", data.gallery4, "assets/gallery4.jpg");
+  setImage("groomPhoto", data.groomPhoto, "/weddings/wedding_001/assets/groom.jpg");
+  setImage("bridePhoto", data.bridePhoto, "/weddings/wedding_001/assets/bride.jpg");
+  setImage("gallery1", data.gallery1, "/weddings/wedding_001/assets/gallery1.jpg");
+  setImage("gallery2", data.gallery2, "/weddings/wedding_001/assets/gallery2.jpg");
+  setImage("gallery3", data.gallery3, "/weddings/wedding_001/assets/gallery3.jpg");
+  setImage("gallery4", data.gallery4, "/weddings/wedding_001/assets/gallery4.jpg");
 
-  bgMusic.src = data.musicUrl || "assets/music.mp3";
+  bgMusic.src = data.musicUrl || "/weddings/wedding_001/assets/music.mp3";
 
   const mapsBtn = document.getElementById("mapsBtn");
   if (mapsBtn && data.mapsLink) {
