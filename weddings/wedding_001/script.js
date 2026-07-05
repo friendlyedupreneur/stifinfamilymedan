@@ -20,9 +20,17 @@ let visitorsRef;
 // ==========================================
 // 1. INISIALISASI VARIABEL & PARAMETER URL
 // ==========================================
+// --- AMBIL ID DARI PATH URL (UNTUK GITHUB PAGES CLEAN URL) ---
+// Mengambil bagian akhir URL (misal: /reza-intan akan menghasilkan "reza-intan")
+const pathSegments = window.location.pathname.split('/').filter(Boolean);
+const weddingId = pathSegments[pathSegments.length - 1] || 'wedding_002';
+
+// --- AMBIL NAMA TAMU DARI PARAMETER ?to= ---
 const params = new URLSearchParams(window.location.search);
-const weddingId = params.get("id") || "wedding_001";
-const guest = params.get("to") || "Bapak/Ibu/Saudara/i";
+const guestName = params.get('to') || "Bapak/Ibu/Saudara/i"; // Menghasilkan "Keluarga Budi"
+
+// Selesai! Selanjutnya gunakan variabel `weddingId` ini untuk query data ke Firestore Bos seperti biasa.
+console.log("Memuat data untuk ID:", weddingId);
 
 // Referensi Firebase
 
