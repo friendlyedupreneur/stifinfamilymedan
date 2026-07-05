@@ -50,7 +50,7 @@ let parallaxStarted = false;
 // Tulis Nama Tamu di Sampul
 const guestNameEl = document.getElementById("guestName");
 if (guestNameEl) {
-  guestNameEl.innerText = decodeURIComponent(guest);
+  guestNameEl.innerText = guestName;
 }
 
 // Mulai Aplikasi saat DOM siap
@@ -168,14 +168,12 @@ function applyWeddingData(data) {
     mapsBtn.href = data.mapsLink;
   }
 
-  if (guest && guest !== "Bapak/Ibu/Saudara/i") {
-    const decodedGuest = decodeURIComponent(guest);
+  if (guestName !== "Bapak/Ibu/Saudara/i") {
+    const rsvpNameInput = document.getElementById("rsvpName");
+    const wishNameInput = document.getElementById("wishName");
 
-    const rsvpName = document.getElementById("rsvpName");
-    const wishName = document.getElementById("wishName");
-
-    if (rsvpName) rsvpName.value = decodedGuest;
-    if (wishName) wishName.value = decodedGuest;
+    if (rsvpNameInput) rsvpNameInput.value = guestName;
+    if (wishNameInput) wishNameInput.value = guestName;
   }
 
   if (data.weddingDate) {
@@ -460,7 +458,7 @@ async function submitRsvp(event) {
       attendance: attendanceValue,
       guestCount: guestCountValue,
       note: document.getElementById("rsvpNote").value.trim(),
-      sourceGuestName: decodeURIComponent(guest),
+      sourceGuestName: guestName,
       createdAt: serverTimestamp()
     });
 
@@ -508,7 +506,7 @@ async function submitWish(event) {
     await addDoc(wishesRef, {
       guestName: document.getElementById("wishName").value.trim(),
       message: document.getElementById("wishText").value.trim(),
-      sourceGuestName: decodeURIComponent(guest),
+      sourceGuestName: guestName,
       createdAt: serverTimestamp()
     });
 
@@ -565,7 +563,7 @@ function listenWishes() {
 async function trackVisitor() {
   try {
     await addDoc(visitorsRef, {
-      guestName: decodeURIComponent(guest),
+      guestName: guestName,
       userAgent: navigator.userAgent,
       openedAt: serverTimestamp()
     });
