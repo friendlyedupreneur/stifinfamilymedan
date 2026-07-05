@@ -212,6 +212,9 @@
             <div class="form-grid two">
               <label><span>Musik</span><input id="musicUrl" class="readonly-url" placeholder="Upload musik melalui tab Media" readonly></label>
               <label><span>Closing Couple Names</span><input id="closingCoupleNames" placeholder="ROMEO & JULIET"></label>
+              <!-- Tambahan URL Preview untuk Cover & Hero -->
+              <label><span>Cover Image URL</span><input id="coverImageUrl" class="readonly-url" placeholder="Upload cover melalui tab Media" readonly></label>
+              <label><span>Hero Image URL</span><input id="heroImageUrl" class="readonly-url" placeholder="Upload hero melalui tab Media" readonly></label>
             </div>
             <label class="full-label"><span>Gallery Images</span><textarea id="galleryImages" class="tall-textarea readonly-url" placeholder="Upload gallery melalui tombol upload di bawah" readonly></textarea></label>
             <div class="upload-box">
@@ -222,6 +225,10 @@
                 </div>
               </div>
               <div class="upload-grid">
+                <!-- Tambahan Slot Upload Cover & Hero -->
+                <div class="upload-item"><label>Cover Image</label><input type="file" data-field="cover_image_url" data-name="cover.jpg" accept="image/*"></div>
+                <div class="upload-item"><label>Hero Image</label><input type="file" data-field="hero_image_url" data-name="hero.jpg" accept="image/*"></div>
+                
                 <div class="upload-item"><label>Foto Pria</label><input type="file" data-field="groom_photo_url" data-name="groom.jpg" accept="image/*"></div>
                 <div class="upload-item"><label>Foto Wanita</label><input type="file" data-field="bride_photo_url" data-name="bride.jpg" accept="image/*"></div>
                 <div class="upload-item"><label>Gallery 1</label><input type="file" data-field="gallery_images" data-index="0" data-name="gallery1.jpg" accept="image/*"></div>
@@ -250,8 +257,8 @@
         <section class="card">
           <h2>Generate Link Tamu</h2>
           <div class="form-grid two">
-            <label><span>Nama Tamu</span><input id="guestInput" placeholder="Contoh: Keluarga Andi"></label>
-            <label><span>Template Path</span><input id="linkTemplatePath" placeholder="/weddings/wedding_002/index.html"></label>
+            <label><span>Nama Tamu</span><input id="guestInput" placeholder="Contoh: Keluarga Budi"></label>
+            <label><span>URL Undangan Base</span><input id="linkTemplatePath" placeholder="https://stifinfamilymedan.com/reza-intan"></label>
           </div>
           <div class="row responsive-actions">
             <button id="generateLinkBtn" type="button">Generate Link</button>
