@@ -23,7 +23,7 @@ let visitorsRef;
 // --- AMBIL ID DARI PATH URL (UNTUK GITHUB PAGES CLEAN URL) ---
 // Mengambil bagian akhir URL (misal: /reza-intan akan menghasilkan "reza-intan")
 const pathSegments = window.location.pathname.split('/').filter(Boolean);
-const weddingId = pathSegments[pathSegments.length - 1] || 'wedding_002';
+const weddingId = pathSegments[pathSegments.length - 1] || 'wedding_001';
 
 // --- AMBIL NAMA TAMU DARI PARAMETER ?to= ---
 const params = new URLSearchParams(window.location.search);
