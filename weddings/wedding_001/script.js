@@ -171,8 +171,38 @@ function applyWeddingData(data) {
   }
 
   if (data.weddingDate) {
-    weddingDateTarget = new Date(`${data.weddingDate}T09:00:00`).getTime();
-  }
+
+    const [year, month, day] =
+        data.weddingDate.split("-").map(Number);
+
+    let hour = 9;
+    let minute = 0;
+
+    if (data.akadTime) {
+
+        const time =
+            data.akadTime.match(/\d{1,2}:\d{2}/);
+
+        if (time) {
+
+            [hour, minute] =
+                time[0].split(":").map(Number);
+
+        }
+
+    }
+
+    weddingDateTarget =
+        new Date(
+            year,
+            month - 1,
+            day,
+            hour,
+            minute,
+            0
+        ).getTime();
+
+}
 
   const groomIgBtn = document.getElementById("groomIgBtn");
   if (groomIgBtn && data.groomIgLink) {
@@ -576,16 +606,20 @@ function setCountdownValue(days, hours, minutes, seconds) {
 }
 
 function formatWeddingDate(dateString) {
-  if (!dateString) return "";
 
-  const date = new Date(`${dateString}T00:00:00`);
+    if (!dateString) return "";
 
-  return new Intl.DateTimeFormat("id-ID", {
-    weekday: "long",
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
-  }).format(date);
+    const [year, month, day] = dateString.split("-").map(Number);
+
+    const date = new Date(year, month - 1, day);
+
+    return new Intl.DateTimeFormat("id-ID", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+    }).format(date);
+
 }
 
 function setBackground(selector, url, fallback) {
