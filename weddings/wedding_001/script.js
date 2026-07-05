@@ -1,17 +1,21 @@
-import { db } from "./firebase-config.js";
-import {
-  doc,
-  getDoc,
-  collection,
-  addDoc,
-  serverTimestamp,
-  increment,
-  updateDoc,
-  query,
-  orderBy,
-  limit,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+let db;
+
+let doc;
+let getDoc;
+let collection;
+let addDoc;
+let serverTimestamp;
+let increment;
+let updateDoc;
+let query;
+let orderBy;
+let limit;
+let onSnapshot;
+
+let weddingRef;
+let rsvpRef;
+let wishesRef;
+let visitorsRef;
 
 // ==========================================
 // 1. INISIALISASI VARIABEL & PARAMETER URL
@@ -21,10 +25,6 @@ const weddingId = params.get("id") || "wedding_001";
 const guest = params.get("to") || "Bapak/Ibu/Saudara/i";
 
 // Referensi Firebase
-const weddingRef = doc(db, "weddings", weddingId);
-const rsvpRef = collection(db, "weddings", weddingId, "rsvp");
-const wishesRef = collection(db, "weddings", weddingId, "wishes");
-const visitorsRef = collection(db, "weddings", weddingId, "visitors");
 
 // Elemen DOM Utama
 const loader = document.getElementById("loader");
@@ -46,7 +46,49 @@ if (guestNameEl) {
 }
 
 // Mulai Aplikasi saat DOM siap
-document.addEventListener("DOMContentLoaded", initWedding);
+document.addEventListener("DOMContentLoaded", bootstrapWedding);
+
+async function bootstrapWedding() {
+
+    try {
+
+        const firebase = await window.WeddingFirebase.initFirebase();
+
+        db = firebase.db;
+
+        const firestore = firebase.modules.firestore;
+
+        doc = firestore.doc;
+        getDoc = firestore.getDoc;
+        collection = firestore.collection;
+        addDoc = firestore.addDoc;
+        serverTimestamp = firestore.serverTimestamp;
+        increment = firestore.increment;
+        updateDoc = firestore.updateDoc;
+        query = firestore.query;
+        orderBy = firestore.orderBy;
+        limit = firestore.limit;
+        onSnapshot = firestore.onSnapshot;
+
+        weddingRef = doc(db, "weddings", weddingId);
+        rsvpRef = collection(db, "weddings", weddingId, "rsvp");
+        wishesRef = collection(db, "weddings", weddingId, "wishes");
+        visitorsRef = collection(db, "weddings", weddingId, "visitors");
+
+        await initWedding();
+
+    } catch (e) {
+
+        console.error(e);
+
+        loader.innerHTML = `
+            <h3>Firebase gagal diinisialisasi.</h3>
+            <p>Lihat Console Browser.</p>
+        `;
+
+    }
+
+}
 
 // ==========================================
 // 2. FUNGSI UTAMA
