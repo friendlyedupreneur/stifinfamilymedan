@@ -761,8 +761,13 @@
   }
 
   function generateGuestLink() {
+    if (!state.currentWeddingId) {
+      showToast('Load wedding dulu untuk generate link.');
+      return;
+    }
+    
     const guestName = getValue('guestInput');
-    const baseUrl = getValue('linkTemplatePath'); // Contoh output HTML: https://stifinfamilymedan.com/reza-intan
+    const baseUrl = getValue('linkTemplatePath'); // Mengambil URL bersih dari input
 
     if (!baseUrl) {
       showToast('URL Undangan Base tidak boleh kosong.');
@@ -771,7 +776,7 @@
 
     let generatedLink = baseUrl;
 
-    // Jika ada input nama tamu, encode dan ubah %20 (spasi) menjadi +
+    // Jika kolom nama tamu diisi, encode dan ganti %20 (spasi) menjadi tanda +
     if (guestName) {
       const formattedName = encodeURIComponent(guestName).replace(/%20/g, '+');
       generatedLink = `${baseUrl}?to=${formattedName}`;
@@ -779,6 +784,14 @@
 
     setValue('guestLinkOutput', generatedLink);
     showToast('Link tamu berhasil dibuat ✨');
+  }
+
+  function applyTemplateChoice(templateId) {
+    const item = TEMPLATE_CATALOG[templateId] || TEMPLATE_CATALOG.wedding_002;
+    setValue('templateName', item.name);
+    setValue('templatePath', item.path);
+    // Panggil ulang fungsi header agar base URL tetap menggunakan format clean domain
+    updateActiveWeddingHeader();
   }
 
   function updateActiveWeddingHeader() {
@@ -791,16 +804,20 @@
     const path = data.template_path || getValue('templatePath') || getTemplatePath();
     const preview = buildUrl(path, state.currentWeddingId, 'Preview Admin');
     if (els.previewWeddingBtn) els.previewWeddingBtn.href = preview;
-    setValue('linkTemplatePath', path);
+    
+    // Konversi nama menjadi huruf kecil tanpa spasi
+    const groomSlug = (getValue('groomShortName') || data.groom_short_name || '').toLowerCase().trim().replace(/[^a-z0-9]/g, '');
+    const brideSlug = (getValue('brideShortName') || data.bride_short_name || '').toLowerCase().trim().replace(/[^a-z0-9]/g, '');
+    
+    // Buat URL bersih
+    let slug = state.currentWeddingId.toLowerCase();
+    if (groomSlug && brideSlug) {
+      slug = `${groomSlug}-${brideSlug}`;
+    }
+    
+    setValue('linkTemplatePath', `https://stifinfamilymedan.com/${slug}`);
   }
-
-  function applyTemplateChoice(templateId) {
-    const item = TEMPLATE_CATALOG[templateId] || TEMPLATE_CATALOG.wedding_002;
-    setValue('templateName', item.name);
-    setValue('templatePath', item.path);
-    setValue('linkTemplatePath', item.path);
-  }
-
+  
   function suggestNewWeddingId() {
     if (getValue('newWeddingId')) return;
     const templateId = getValue('newTemplateId') || 'wedding_002';
