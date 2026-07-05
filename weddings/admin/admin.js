@@ -29,7 +29,7 @@
     'akadDetail', 'receptionDetail', 'closingMessage', 'giftBank1', 'giftNumber1', 'giftName1',
     'giftType1', 'giftIcon1', 'giftBank2', 'giftNumber2', 'giftName2', 'giftType2', 'giftIcon2',
     'qrisImageUrl', 'giftDescription', 'qrisNote', 'giftThanks', 'musicUrl', 'closingCoupleNames',
-    'galleryImages', 'editorEmails', 'editorUids', 'maxEditors'
+    'galleryImages', 'editorEmails', 'editorUids', 'maxEditors', 'coverImage', 'heroImage'
   ];
 
   const els = {};
@@ -344,6 +344,8 @@
     setValue('editorEmails', arrayToLines(data.editorEmails || []));
     setValue('editorUids', arrayToLines(data.editorUids || []));
     setValue('maxEditors', data.maxEditors || window.WEDDING_MAX_EDITORS || 2);
+    setValue('coverImage', data.cover_image_url || data.coverImageUrl || '');
+    setValue('heroImage', data.hero_image_url || data.heroImageUrl || '');
   }
 
   function collectFormData() {
@@ -424,6 +426,8 @@
       editorEmails,
       editorUids,
       maxEditors,
+      cover_image_url: getValue('coverImage'),
+      hero_image_url: getValue('heroImage'),
       updatedAt: state.firebase.modules.firestore.serverTimestamp()
     };
 
@@ -593,6 +597,8 @@
 
   function updateLinkedMediaInput(field, url) {
     const map = {
+      cover_image_url: 'coverImage', // Tambahan baru
+      hero_image_url: 'heroImage',   // Tambahan baru
       groom_photo_url: 'groomPhotoUrl',
       bride_photo_url: 'bridePhotoUrl',
       qris_image_url: 'qrisImageUrl',
@@ -603,7 +609,7 @@
 
   function validateMediaFile(file, field) {
     const isAudioField = field === 'music_url';
-    const isImageField = ['groom_photo_url', 'bride_photo_url', 'qris_image_url', 'gallery_images'].includes(field);
+    const isImageField = ['cover_image_url', 'hero_image_url','groom_photo_url', 'bride_photo_url', 'qris_image_url', 'gallery_images'].includes(field);
     const maxImageSize = 7 * 1024 * 1024;
     const maxAudioSize = 15 * 1024 * 1024;
 
@@ -755,14 +761,23 @@
   }
 
   function generateGuestLink() {
-    if (!state.currentWeddingId) {
-      showToast('Load wedding dulu untuk generate link.');
+    const guestName = getValue('guestInput');
+    const baseUrl = getValue('linkTemplatePath'); // Contoh output HTML: https://stifinfamilymedan.com/reza-intan
+
+    if (!baseUrl) {
+      showToast('URL Undangan Base tidak boleh kosong.');
       return;
     }
-    const guestName = getValue('guestInput') || 'Bapak/Ibu/Saudara/i';
-    const path = getValue('linkTemplatePath') || getValue('templatePath') || getTemplatePath();
-    const url = buildUrl(path, state.currentWeddingId, guestName);
-    setValue('guestLinkOutput', url);
+
+    let generatedLink = baseUrl;
+
+    // Jika ada input nama tamu, encode dan ubah %20 (spasi) menjadi +
+    if (guestName) {
+      const formattedName = encodeURIComponent(guestName).replace(/%20/g, '+');
+      generatedLink = `${baseUrl}?to=${formattedName}`;
+    }
+
+    setValue('guestLinkOutput', generatedLink);
     showToast('Link tamu berhasil dibuat ✨');
   }
 
