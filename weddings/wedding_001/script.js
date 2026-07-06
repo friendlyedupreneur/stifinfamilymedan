@@ -52,12 +52,6 @@ let gyroAttached = false;
 let parallaxStarted = false;
 
 // Tulis Nama Tamu di Sampul
-//const guestNameEl = document.getElementById("guestName");
-// if (guestNameEl) {
-    // Kita pastikan mengambil teksnya saja (String), 
-    // bukan elemen HTML-nya.
-    // guestNameEl.textContent = guestName; 
-//}
 
 // HAPUS atau KOMENTARI baris yang lama, lalu ganti dengan ini:
 const guestNameEl = document.getElementById("guestName");
