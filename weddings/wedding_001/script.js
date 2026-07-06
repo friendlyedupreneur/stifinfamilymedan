@@ -54,7 +54,9 @@ let parallaxStarted = false;
 // Tulis Nama Tamu di Sampul
 const guestNameEl = document.getElementById("guestName");
 if (guestNameEl) {
-  guestNameEl.innerText = guestName;
+    // Kita pastikan mengambil teksnya saja (String), 
+    // bukan elemen HTML-nya.
+    guestNameEl.textContent = guestName; 
 }
 
 // Mulai Aplikasi saat DOM siap
