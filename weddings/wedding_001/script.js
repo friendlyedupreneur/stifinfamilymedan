@@ -52,11 +52,21 @@ let gyroAttached = false;
 let parallaxStarted = false;
 
 // Tulis Nama Tamu di Sampul
-const guestNameEl = document.getElementById("guestName");
-if (guestNameEl) {
+//const guestNameEl = document.getElementById("guestName");
+// if (guestNameEl) {
     // Kita pastikan mengambil teksnya saja (String), 
     // bukan elemen HTML-nya.
-    guestNameEl.textContent = guestName; 
+    // guestNameEl.textContent = guestName; 
+//}
+
+// HAPUS atau KOMENTARI baris yang lama, lalu ganti dengan ini:
+const guestNameEl = document.getElementById("guestName");
+const params = new URLSearchParams(window.location.search);
+const namaTamu = params.get('to') || "Bapak/Ibu/Saudara/i";
+
+if (guestNameEl) {
+    console.log("DEBUG: Nama yang akan ditampilkan adalah:", namaTamu);
+    guestNameEl.textContent = namaTamu;
 }
 
 // Mulai Aplikasi saat DOM siap
