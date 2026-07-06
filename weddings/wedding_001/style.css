@@ -353,7 +353,7 @@ button:disabled {
   height: 100%;
   border-radius: 104px; /* Menyesuaikan lengkungan luar */
   object-fit: cover;
-  object-position: center 30%; /* Fokus ke wajah, tidak kepotong */
+  object-position: center 0%; /* Fokus ke wajah, tidak kepotong */
 }
 
 .person h2 {
