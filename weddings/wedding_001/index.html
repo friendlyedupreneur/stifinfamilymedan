@@ -341,11 +341,18 @@
               </button>
             </div>
 
-            <div class="bank-card float-3d">
+           <div class="bank-card float-3d">
               <i class="fa-solid fa-building-columns bank-icon"></i>
               <h3 data-field="bankName2">Bank Mandiri</h3>
               <p class="account-number" id="norek2" data-field="bankNumber2">0987654321</p>
               <p class="account-name">a.n <strong data-field="bankHolder2">Intan</strong></p>
+              
+              <!-- Placeholder Barcode dari Firebase -->
+              <div id="qrWrapper2" style="display: none; margin: 15px auto; text-align: center;">
+                <img id="qrImage2" src="" alt="QR Code Bank" style="width: 100%; max-width: 150px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <p style="font-size: 0.8rem; margin-top: 5px; color: #666;">Scan QR untuk transfer</p>
+              </div>
+
               <button class="btn-copy" onclick="copyToClipboard('norek2')">
                 <i class="fa-regular fa-copy"></i>
                 Salin Nomor Rekening
