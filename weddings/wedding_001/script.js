@@ -156,6 +156,18 @@
     setImage("gallery3", data.gallery3, "/weddings/wedding_001/assets/gallery3.jpg");
     setImage("gallery4", data.gallery4, "/weddings/wedding_001/assets/gallery4.jpg");
 
+    // ==========================================
+    // TAMPILKAN QR CODE REKENING 2 (JIKA ADA)
+    // ==========================================
+    const qrWrapper2 = document.getElementById("qrWrapper2");
+    const qrImage2 = document.getElementById("qrImage2");
+
+    // INFO UNTUK BOS: Ganti 'bank2QrUrl' dengan nama field/kolom yang Bos pakai di Firebase!
+    if (qrWrapper2 && qrImage2 && data.scanQr) {
+      qrImage2.src = data.scanQr;
+      qrWrapper2.style.display = "block"; // Munculkan elemen jika data ada
+    }
+
     if (bgMusic) bgMusic.src = data.musicUrl || "/weddings/wedding_001/assets/music.mp3";
 
     const mapsBtn = document.getElementById("mapsBtn");
