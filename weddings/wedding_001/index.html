@@ -450,5 +450,19 @@
   
   <script src="/weddings/firebase-config.js"></script>
   <script src="/weddings/wedding_001/script.js" defer></script>
+
+  <!-- Modal QR Code (Lightbox) -->
+  <div id="qrModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; flex-direction: column;">
+    <!-- Tombol Close -->
+    <span id="closeQrModal" style="position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
+    
+    <!-- Gambar Fullscreen -->
+    <img id="qrModalImg" src="" alt="QR Code Full" style="max-width: 90%; max-height: 60%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+    
+    <!-- Tombol Download -->
+    <button id="downloadQrBtn" class="btn-primary" style="margin-top: 25px;">
+      <i class="fa-solid fa-download"></i> Simpan QR Code
+    </button>
+  </div>
 </body>
 </html>
