@@ -165,8 +165,8 @@
     const qrWrapper2 = document.getElementById("qrWrapper2");
     const qrImage2 = document.getElementById("qrImage2");
 
-    if (qrWrapper2 && qrImage2 && data.bank2QrUrl) {
-      qrImage2.src = data.bank2QrUrl;
+    if (qrWrapper2 && qrImage2 && data.scanQr) {
+      qrImage2.src = data.scanQr;
       qrImage2.style.cursor = "pointer"; // Ubah kursor jadi tangan saat di-hover
       qrWrapper2.style.display = "block"; 
 
@@ -179,7 +179,7 @@
       if (qrModal && qrModalImg && closeQrModal && downloadQrBtn) {
         // Saat gambar QR kecil di-tap
         qrImage2.addEventListener("click", () => {
-          qrModalImg.src = data.bank2QrUrl;
+          qrModalImg.src = data.scanQr;
           qrModal.style.display = "flex"; // Tampilkan modal
         });
 
@@ -201,7 +201,7 @@
           downloadQrBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengunduh...';
           
           try {
-            const response = await fetch(data.bank2QrUrl);
+            const response = await fetch(data.scanQr);
             const blob = await response.blob();
             const blobUrl = window.URL.createObjectURL(blob);
             
@@ -216,7 +216,7 @@
           } catch (error) {
             console.error("Gagal mengunduh gambar", error);
             // Fallback: buka di tab baru jika gagal download paksa
-            window.open(data.bank2QrUrl, '_blank');
+            window.open(data.scanQr, '_blank');
           } finally {
             downloadQrBtn.innerHTML = originalText; // Kembalikan teks tombol
           }
