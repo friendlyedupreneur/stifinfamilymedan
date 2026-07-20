@@ -1,17 +1,26 @@
 /* =========================================
-   1. CSS VARIABLES & RESET
+   1. CSS VARIABLES & RESET (UPGRADED)
    ========================================= */
 :root {
-  --primary: #8f8073;
-  --primary-dark: #5f554d;
-  --bg-color: #f7f5f2;
-  --card-bg: #ffffff;
-  --text-main: #4e4741;
-  --text-light: #8a827a;
-  --border-color: #ded7cf;
-  --soft-shadow: rgba(95, 85, 77, 0.08);
-  --medium-shadow: rgba(95, 85, 77, 0.16);
-  --deep-shadow: rgba(95, 85, 77, 0.35); /* Tambahan untuk 3D */
+  /* Warna Utama: Elegan, Hangat, dan Humble */
+  --primary: #9c8471;       /* Mocca kalem - untuk tombol & ikon */
+  --primary-dark: #4a3f35;  /* Espresso pekat - untuk Heading agar SANGAT JELAS */
+  
+  /* Background & Card: Bersih untuk kontras maksimal */
+  --bg-color: #fcfbf9;      /* Warm white - lebih cerah dari sebelumnya */
+  --card-bg: #ffffff;       /* Putih bersih */
+  
+  /* Teks: Dipertajam agar lebih readable (Aksesibilitas/UX) */
+  --text-main: #362f2a;     /* Coklat nyaris hitam - sangat jelas untuk paragraf */
+  --text-light: #756a61;    /* Abu kecoklatan - cukup gelap agar tidak samar */
+  
+  /* Elemen Pendukung */
+  --border-color: #e8e3dd;  /* Garis batas yang sangat halus */
+  
+  /* Shadow: Dibuat lebih transparan agar 3D terlihat bersih (clean UI) */
+  --soft-shadow: rgba(74, 63, 53, 0.05);
+  --medium-shadow: rgba(74, 63, 53, 0.12);
+  --deep-shadow: rgba(74, 63, 53, 0.22); 
 }
 
 * {
@@ -29,11 +38,12 @@ body {
   background: var(--bg-color);
   color: var(--text-main);
   overflow-x: hidden;
-  line-height: 1.7;
+  line-height: 1.75; /* Sedikit dilonggarkan agar teks paragraf lebih lega */
 }
 
 h1, h2, h3, .and, .arabic {
   font-family: 'Cormorant Garamond', serif;
+  color: var(--primary-dark); /* Memastikan semua heading pakai warna tegas */
 }
 
 .hidden {
@@ -200,17 +210,17 @@ button,
 .btn-primary {
   border: none;
   background: var(--primary);
-  color: white;
+  color: #ffffff; /* Pastikan putih murni */
   padding: 14px 28px;
   border-radius: 999px;
   font-weight: 600;
   font-size: 15px;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 10px 24px rgba(143, 128, 115, 0.28);
+  box-shadow: 0 8px 20px rgba(156, 132, 113, 0.3); /* Shadow diselaraskan dengan warna primary baru */
   transform-style: preserve-3d;
 }
 
