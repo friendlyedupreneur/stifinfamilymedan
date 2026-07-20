@@ -159,13 +159,69 @@
     // ==========================================
     // TAMPILKAN QR CODE REKENING 2 (JIKA ADA)
     // ==========================================
+    // ==========================================
+    // TAMPILKAN & KELOLA MODAL QR CODE 
+    // ==========================================
     const qrWrapper2 = document.getElementById("qrWrapper2");
     const qrImage2 = document.getElementById("qrImage2");
 
-    // INFO UNTUK BOS: Ganti 'bank2QrUrl' dengan nama field/kolom yang Bos pakai di Firebase!
-    if (qrWrapper2 && qrImage2 && data.scanQr) {
-      qrImage2.src = data.scanQr;
-      qrWrapper2.style.display = "block"; // Munculkan elemen jika data ada
+    if (qrWrapper2 && qrImage2 && data.bank2QrUrl) {
+      qrImage2.src = data.bank2QrUrl;
+      qrImage2.style.cursor = "pointer"; // Ubah kursor jadi tangan saat di-hover
+      qrWrapper2.style.display = "block"; 
+
+      // Logika Buka Modal Fullscreen
+      const qrModal = document.getElementById("qrModal");
+      const qrModalImg = document.getElementById("qrModalImg");
+      const closeQrModal = document.getElementById("closeQrModal");
+      const downloadQrBtn = document.getElementById("downloadQrBtn");
+
+      if (qrModal && qrModalImg && closeQrModal && downloadQrBtn) {
+        // Saat gambar QR kecil di-tap
+        qrImage2.addEventListener("click", () => {
+          qrModalImg.src = data.bank2QrUrl;
+          qrModal.style.display = "flex"; // Tampilkan modal
+        });
+
+        // Saat tombol silang (X) di-tap
+        closeQrModal.addEventListener("click", () => {
+          qrModal.style.display = "none"; // Sembunyikan modal
+        });
+
+        // Tutup modal jika area hitam di luar gambar di-tap
+        qrModal.addEventListener("click", (e) => {
+          if (e.target === qrModal) {
+            qrModal.style.display = "none";
+          }
+        });
+
+        // Logika Download Gambar (Bypass CORS Firebase)
+        downloadQrBtn.addEventListener("click", async () => {
+          const originalText = downloadQrBtn.innerHTML;
+          downloadQrBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengunduh...';
+          
+          try {
+            const response = await fetch(data.bank2QrUrl);
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = "intanrezaqr.jpg"; // Nama file tersimpan
+            document.body.appendChild(a);
+            a.click();
+            
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(blobUrl);
+          } catch (error) {
+            console.error("Gagal mengunduh gambar", error);
+            // Fallback: buka di tab baru jika gagal download paksa
+            window.open(data.bank2QrUrl, '_blank');
+          } finally {
+            downloadQrBtn.innerHTML = originalText; // Kembalikan teks tombol
+          }
+        });
+      }
     }
 
     if (bgMusic) bgMusic.src = data.musicUrl || "/weddings/wedding_001/assets/music.mp3";
