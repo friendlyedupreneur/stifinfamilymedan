@@ -127,34 +127,25 @@ h1, h2, h3, .and, .arabic {
   padding: 40px 24px;
 }
 
-.cover-front{
-
-    background:
-    linear-gradient(
-
-        rgba(255,255,255,.20),
-
-        rgba(255,255,255,.08)
-
-    );
-
-    backdrop-filter:blur(22px);
-    -webkit-backdrop-filter:blur(22px);
-
-    border:1px solid rgba(255,255,255,.22);
-
+/* Sisi Depan dan Belakang Kartu */
+.cover-front {
+  /* Diubah jadi Frosty White agar teks gelap kontras */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
 }
 
 .cover-back {
   background: var(--primary-dark);
-  transform: rotateY(180deg); /* Posisikan membelakangi cover depan */
+  transform: rotateY(180deg);
   border: 2px solid var(--primary);
   background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 8px);
 }
 
 .cover-content {
   text-align: center;
-  transform: translateZ(40px); /* Konten terlihat melayang sedikit di atas kartu */
+  transform: translateZ(40px);
 }
 
 .cover-content h1 {
@@ -162,43 +153,40 @@ h1, h2, h3, .and, .arabic {
   line-height: 1;
   margin: 15px 0;
   color: var(--primary-dark);
-  text-shadow: 2px 2px 10px rgba(255,255,255,0.8);
+  /* Text shadow dihilangkan agar teks tajam dan tidak blur/kotor */
+  text-shadow: none; 
 }
 
-.small {
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  font-size: 12px;
-  color: var(--text-light);
-}
-
-.date {
-  font-weight: 500;
-  margin-bottom: 24px;
-  color: var(--primary);
+/* Memaksa warna gelap di atas background putih/glass */
+.cover-content .small,
+.cover-content .date {
+  color: var(--primary-dark);
+  font-weight: 600;
 }
 
 .guest-box {
-   background:rgba(255,255,255,.12);
-   backdrop-filter:blur(12px);
-   border:1px solid rgba(255,255,255,.18);
+  background: rgba(255, 255, 255, 0.7); /* Background lebih solid */
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: 18px;
   padding: 18px;
   margin: 25px 0;
-  transform: translateZ(20px); /* Melayang */
+  transform: translateZ(20px);
   box-shadow: 0 10px 20px var(--soft-shadow);
+  color: var(--primary-dark);
 }
 
 .guest-box h3 {
   font-family: 'Poppins', sans-serif;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   margin: 5px 0;
+  color: var(--primary-dark);
 }
 
 .note {
   font-size: 11px;
-  opacity: 0.72;
+  opacity: 0.8;
   margin-top: 6px;
 }
 
@@ -278,8 +266,9 @@ button:disabled {
 .overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(95, 85, 77, 0.28), rgba(63, 56, 50, 0.82));
-  transform: translateZ(-1px) scale(1.1); /* Efek Parallax Background */
+  /* Overlay digelapkan sedikit agar teks putih pop-out */
+  background: linear-gradient(to bottom, rgba(40, 35, 30, 0.45), rgba(40, 35, 30, 0.85));
+  transform: translateZ(-1px) scale(1.1);
 }
 
 .hero-content {
@@ -295,13 +284,24 @@ button:disabled {
   font-size: 60px;
   line-height: 1;
   margin: 15px 0;
-  text-shadow: 0 4px 18px rgba(0,0,0,.25);
+  color: #ffffff;
+  /* Shadow dihitamkan agar memisahkan teks dari gambar di belakangnya */
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); 
+}
+
+/* Memaksa class ini jadi putih di hero section (menimpa warna global) */
+.hero-content .small,
+.hero-content .date {
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .scroll-down {
   margin-top: 40px;
   font-size: 14px;
-  opacity: 0.85;
+  opacity: 0.9;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .scroll-down i {
