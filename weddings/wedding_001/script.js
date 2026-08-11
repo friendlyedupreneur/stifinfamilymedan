@@ -141,6 +141,18 @@
     document.title = `Undangan Pernikahan | ${data.groomName || ""} & ${data.brideName || ""}`;
     data.weddingDateText = formatWeddingDate(data.weddingDate);
 
+    // Masukkan data Orang Tua Pria secara terpisah bertingkat
+  const groomFatherEl = document.getElementById("groomFatherText");
+  const groomMotherEl = document.getElementById("groomMotherText");
+  if (groomFatherEl) groomFatherEl.innerText = data.groomFather || "-";
+  if (groomMotherEl) groomMotherEl.innerText = data.groomMother || "-";
+
+  // Masukkan data Orang Tua Wanita secara terpisah bertingkat
+  const brideFatherEl = document.getElementById("brideFatherText");
+  const brideMotherEl = document.getElementById("brideMotherText");
+  if (brideFatherEl) brideFatherEl.innerText = data.brideFather || "-";
+  if (brideMotherEl) brideMotherEl.innerText = data.brideMother || "-";
+
     document.querySelectorAll("[data-field]").forEach(el => {
       const field = el.getAttribute("data-field");
       if (data[field] !== undefined && data[field] !== "") {
