@@ -116,6 +116,16 @@
       setupCountdown();
       setupEvents();
       listenWishes();
+      
+      onSnapshot(weddingRef, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const liveData = docSnapshot.data();
+          setText("statVisitors", liveData.totalVisitors || 0);
+          setText("statHadir", liveData.totalHadir || 0);
+          setText("statWishes", liveData.totalWishes || 0);
+        }
+      });
+      
       await trackVisitor();
 
       if (loader) loader.classList.add("hidden");
