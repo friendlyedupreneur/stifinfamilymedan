@@ -338,42 +338,69 @@ button:disabled {
   margin-bottom: 15px;
 }
 
-/* =========================================
-   7. COUPLE SECTION
+* =========================================
+   7. COUPLE SECTION (UPGRADED)
    ========================================= */
 .couple .container {
   display: grid;
   gap: 40px;
+  text-align: center;
 }
 
-/* Bingkai Lonjong Elegan */
+/* Bingkai Lonjong Elegan dengan Efek Modern */
 .img-wrapper {
   margin: 0 auto 20px auto;
-  width: 220px; 
-  height: 320px; 
-  border-radius: 110px; /* Setengah dari width */
+  width: 200px;  
+  height: 280px;  
+  border-radius: 100px; /* Bentuk kapsul/lonjong yang proporsional */
   padding: 8px;
   background: var(--card-bg);
   box-shadow: 0 15px 35px var(--soft-shadow);
   border: 2px solid var(--primary-light);
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efek interaktif saat kursor diarahkan atau ditekan di HP */
+.img-wrapper:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  border-color: var(--primary);
 }
 
 .img-wrapper img {
   width: 100%;
   height: 100%;
-  border-radius: 104px; /* Menyesuaikan lengkungan luar */
+  border-radius: 92px; /* Menyesuaikan lengkungan dalam */
   object-fit: cover;
-  object-position: center 0%; /* Fokus ke wajah, tidak kepotong */
+  object-position: center 20%; /* Sedikit diturunkan agar pas di wajah */
+  transition: transform 0.5s ease;
+}
+
+/* Zoom halus pada foto ketika di-hover */
+.img-wrapper:hover img {
+  transform: scale(1.05);
 }
 
 .person h2 {
-  margin-top: 10px;
-  font-size: 32px;
-  margin-bottom: 5px;
+  margin-top: 15px;
+  font-size: 28px;
+  font-family: 'Cormorant Garamond', serif; /* Memastikan konsisten dengan font elegan */
+  color: var(--primary-dark, #3f2a1f);
+  margin-bottom: 8px;
+}
+
+.person p {
+  font-size: 0.95rem;
+  color: var(--text-light, #666);
+  line-height: 1.6;
 }
 
 .social-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-top: 12px;
   color: var(--primary);
   text-decoration: none;
@@ -384,15 +411,17 @@ button:disabled {
 
 .social-link:hover {
   color: var(--primary-dark);
+  transform: translateX(3px);
 }
 
 .and {
-  font-size: 44px;
+  font-size: 40px;
   color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0.6;
+  margin: 10px 0;
 }
 
 /* =========================================
