@@ -142,14 +142,14 @@
     data.weddingDateText = formatWeddingDate(data.weddingDate);
 
     // Masukkan data Orang Tua Pria secara terpisah bertingkat
-  const groomFatherEl = document.getElementById("groomFatherText");
-  const groomMotherEl = document.getElementById("groomMotherText");
+  const groomFatherEl = document.getElementById("groomFather");
+  const groomMotherEl = document.getElementById("groomMother");
   if (groomFatherEl) groomFatherEl.innerText = data.groomFather || "-";
   if (groomMotherEl) groomMotherEl.innerText = data.groomMother || "-";
 
   // Masukkan data Orang Tua Wanita secara terpisah bertingkat
-  const brideFatherEl = document.getElementById("brideFatherText");
-  const brideMotherEl = document.getElementById("brideMotherText");
+  const brideFatherEl = document.getElementById("brideFather");
+  const brideMotherEl = document.getElementById("brideMother");
   if (brideFatherEl) brideFatherEl.innerText = data.brideFather || "-";
   if (brideMotherEl) brideMotherEl.innerText = data.brideMother || "-";
 
