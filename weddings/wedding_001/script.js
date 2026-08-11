@@ -522,11 +522,16 @@
     }
   }
   
-  function listenWishes() {
+   function listenWishes() {
     const q = query(wishesRef, orderBy("createdAt", "desc"), limit(30));
 
     onSnapshot(q, snapshot => {
       const list = document.getElementById("wishList");
+      
+      // Update otomatis jumlah total ucapan berdasarkan jumlah dokumen real
+      const totalWishesCount = snapshot.size; // atau gunakan snapshot.docs.length
+      setText("statWishes", totalWishesCount);
+
       if (!list) return;
 
       list.innerHTML = "";
