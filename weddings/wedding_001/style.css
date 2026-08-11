@@ -996,13 +996,22 @@ footer p {
 /* Animasi Khusus untuk Elemen di Dalam Kartu */
 .img-wrapper {
   margin: 0 auto;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
+  width: 200px;
+  height: 280px;
+  border-radius: 100px; /* Diubah kembali agar lonjong/kapsul */
   padding: 8px;
   background: var(--card-bg);
   box-shadow: 0 10px 25px var(--soft-shadow);
   transition: transform 0.5s ease;
+  overflow: hidden; /* Menjaga foto di dalam border */
+}
+
+.img-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 92px;
+  object-fit: cover;
+  object-position: center 20%;
 }
 
 .time-box {
