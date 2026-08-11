@@ -478,6 +478,7 @@
     button.innerText = "Mengirim...";
 
     try {
+      // 1. Simpan ucapan utama ke database (Prioritas Utama)
       await addDoc(wishesRef, {
         guestName: document.getElementById("wishName").value.trim(),
         message: document.getElementById("wishText").value.trim(),
@@ -485,23 +486,32 @@
         createdAt: serverTimestamp()
       });
 
-      await updateDoc(weddingRef, { totalWishes: increment(1) });
-
-      const statWishes = document.getElementById("statWishes");
-      if (statWishes) {
-        statWishes.innerText = parseInt(statWishes.innerText || 0, 10) + 1;
+      // 2. Update counter secara aman (Opsional/Safe Update agar tidak membatalkan pesan)
+      try {
+        await updateDoc(weddingRef, { totalWishes: increment(1) });
+        const statWishes = document.getElementById("statWishes");
+        if (statWishes) {
+          statWishes.innerText = parseInt(statWishes.innerText || 0, 10) + 1;
+        }
+      } catch (counterError) {
+        console.warn("Gagal update counter totalWishes (diabaikan agar pesan tetap sukses):", counterError);
       }
+
+      // Reset form dan berikan feedback sukses
       document.getElementById("wishText").value = "";
+      
+      // Opsional: Ganti alert dengan feedback yang lebih ramah jika diinginkan
+      // alert("Ucapan berhasil dikirim!");
 
     } catch (error) {
-      console.error(error);
+      console.error("Gagal mengirim ucapan:", error);
       alert("Gagal mengirim ucapan. Coba lagi ya.");
     } finally {
       button.innerText = originalText;
       button.disabled = false;
     }
   }
-
+  
   function listenWishes() {
     const q = query(wishesRef, orderBy("createdAt", "desc"), limit(30));
 
