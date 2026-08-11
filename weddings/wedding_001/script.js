@@ -116,15 +116,8 @@
       setupCountdown();
       setupEvents();
       listenWishes();
-      
-      onSnapshot(weddingRef, (docSnapshot) => {
-        if (docSnapshot.exists()) {
-          const liveData = docSnapshot.data();
-          setText("statVisitors", liveData.totalVisitors || 0);
-          setText("statHadir", liveData.totalHadir || 0);
-          setText("statWishes", liveData.totalWishes || 0);
-        }
-      });
+
+      listenStatsFromSubcollections();
       
       await trackVisitor();
 
@@ -526,12 +519,10 @@
     const q = query(wishesRef, orderBy("createdAt", "desc"), limit(30));
 
     onSnapshot(q, snapshot => {
-      const list = document.getElementById("wishList");
-      
-      // Update otomatis jumlah total ucapan berdasarkan jumlah dokumen real
-      const totalWishesCount = snapshot.size; // atau gunakan snapshot.docs.length
-      setText("statWishes", totalWishesCount);
+      // Update angka statistik ucapan langsung dari jumlah dokumen real
+      setText("statWishes", snapshot.size);
 
+      const list = document.getElementById("wishList");
       if (!list) return;
 
       list.innerHTML = "";
@@ -553,6 +544,26 @@
     });
   }
 
+function listenStatsFromSubcollections() {
+    // Listener untuk Statistik RSVP (menghitung total "Hadir" atau total data RSVP)
+    onSnapshot(rsvpRef, snapshot => {
+      let totalHadirCount = 0;
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        // Jika attendance bernilai 'hadir', jumlahkan berdasarkan guestCount atau 1
+        if (data.attendance === "hadir") {
+          totalHadirCount += Number(data.guestCount || 1);
+        }
+      });
+      setText("statHadir", totalHadirCount);
+    });
+
+    // Listener untuk Statistik Pengunjung dari sub-koleksi visitors
+    onSnapshot(visitorsRef, snapshot => {
+      setText("statVisitors", snapshot.size);
+    });
+  }
+  
   async function trackVisitor() {
     try {
       await addDoc(visitorsRef, {
