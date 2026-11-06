@@ -3,601 +3,452 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Rekomendasi Pelajar Berdasarkan STIFIn | STIFIn Family Medan</title>
-  <meta name="description" content="Temukan rekomendasi sekolah setelah SMP, jurusan kuliah, dan profesi berdasarkan Personality Genetic STIFIn anak." />
+  <meta name="description" content="Temukan rekomendasi sekolah setelah SMP, jurusan kuliah, dan profesi berdasarkan Personality Genetic STIFIn anak. Konsultasi STIFIn Family Medan." />
+  <meta name="theme-color" content="#1e40af" />
+  <link rel="canonical" href="https://stifinfamilymedan.example.com/rekomendasi-pelajar" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Rekomendasi Pelajar Berdasarkan STIFIn | STIFIn Family Medan" />
+  <meta property="og:description" content="Pilih PG anak (Si, Se, Ti, Te, Ii, Ie, Fi, Fe, In) dan lihat rekomendasi sekolah, jurusan kuliah, dan profesi yang sesuai." />
+  <meta property="og:url" content="https://stifinfamilymedan.example.com/rekomendasi-pelajar" />
+  <meta property="og:image" content="https://stifinfamilymedan.example.com/og-image.jpg" />
+  <meta property="og:locale" content="id_ID" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Rekomendasi Pelajar Berdasarkan STIFIn" />
+  <meta name="twitter:description" content="Temukan arah pendidikan & profesi anak berdasarkan Personality Genetic STIFIn." />
+
+  <!-- Favicon inline SVG -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231e40af'/%3E%3Ctext x='50' y='68' font-size='56' text-anchor='middle' fill='white' font-family='sans-serif'%3E%F0%9F%A7%AC%3C/text%3E%3C/svg%3E" />
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Rekomendasi Pelajar Berdasarkan STIFIn",
+    "description": "Rekomendasi sekolah, jurusan kuliah, dan profesi berdasarkan Personality Genetic STIFIn anak.",
+    "inLanguage": "id-ID",
+    "publisher": {
+      "@type": "Organization",
+      "name": "STIFIn Family Medan"
+    }
+  }
+  </script>
 
   <style>
-    :root {
-      --primary: #1e40af;
-      --primary-soft: #dbeafe;
-      --secondary: #facc15;
-      --dark: #0f172a;
-      --muted: #64748b;
-      --light: #f8fafc;
-      --white: #ffffff;
-      --border: #e2e8f0;
-      --shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
-      --radius-lg: 28px;
-      --radius-md: 18px;
-      --radius-sm: 12px;
-    }
+    @layer base, components, utilities;
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    @layer base {
+      :root {
+        --primary: #1e40af;
+        --primary-soft: #dbeafe;
+        --secondary: #facc15;
+        --dark: #0f172a;
+        --muted: #475569;
+        --light: #f8fafc;
+        --white: #ffffff;
+        --border: #e2e8f0;
+        --shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+        --radius-lg: 28px;
+        --radius-md: 18px;
+        --radius-sm: 12px;
 
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(250, 204, 21, 0.16), transparent 34%),
-        radial-gradient(circle at top right, rgba(30, 64, 175, 0.15), transparent 30%),
-        var(--light);
-      color: var(--dark);
-      line-height: 1.6;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .page {
-      width: min(1120px, calc(100% - 32px));
-      margin: 0 auto;
-    }
-
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 99;
-      backdrop-filter: blur(18px);
-      background: rgba(248, 250, 252, 0.82);
-      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-    }
-
-    .navbar-inner {
-      width: min(1120px, calc(100% - 32px));
-      margin: 0 auto;
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-    }
-
-    .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--primary), #38bdf8);
-      color: white;
-      box-shadow: 0 12px 25px rgba(30, 64, 175, 0.28);
-    }
-
-    .brand small {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 700;
-      margin-top: -3px;
-    }
-
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 16px;
-      border-radius: 999px;
-      background: var(--dark);
-      color: white;
-      font-weight: 800;
-      font-size: 14px;
-      box-shadow: 0 14px 26px rgba(15, 23, 42, 0.18);
-    }
-
-    .hero {
-      padding: 64px 0 34px;
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 34px;
-      align-items: center;
-    }
-
-    .badge {
-      width: fit-content;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 14px;
-      border-radius: 999px;
-      background: white;
-      border: 1px solid var(--border);
-      color: var(--primary);
-      font-weight: 900;
-      font-size: 13px;
-      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
-      margin-bottom: 18px;
-    }
-
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 68px);
-      line-height: 0.98;
-      letter-spacing: -0.06em;
-      margin-bottom: 20px;
-    }
-
-    .hero h1 span {
-      color: var(--primary);
-      position: relative;
-    }
-
-    .hero p {
-      font-size: clamp(16px, 2.3vw, 20px);
-      color: var(--muted);
-      max-width: 630px;
-      margin-bottom: 28px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .btn {
-      border: 0;
-      cursor: pointer;
-      border-radius: 999px;
-      padding: 14px 20px;
-      font-weight: 900;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      transition: 0.25s ease;
-      font-size: 15px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), #2563eb);
-      color: white;
-      box-shadow: 0 18px 34px rgba(30, 64, 175, 0.28);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 22px 42px rgba(30, 64, 175, 0.33);
-    }
-
-    .btn-secondary {
-      background: white;
-      color: var(--dark);
-      border: 1px solid var(--border);
-    }
-
-    .btn-secondary:hover {
-      transform: translateY(-2px);
-      border-color: #bfdbfe;
-    }
-
-    .hero-card {
-      position: relative;
-      background: rgba(255, 255, 255, 0.86);
-      border: 1px solid rgba(226, 232, 240, 0.95);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      overflow: hidden;
-    }
-
-    .hero-card::before {
-      content: "";
-      position: absolute;
-      width: 180px;
-      height: 180px;
-      border-radius: 999px;
-      background: rgba(250, 204, 21, 0.22);
-      top: -70px;
-      right: -70px;
-    }
-
-    .mini-title {
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 14px;
-    }
-
-    .path-card {
-      position: relative;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 12px;
-    }
-
-    .path-card strong {
-      display: block;
-      font-size: 18px;
-      margin-bottom: 3px;
-    }
-
-    .path-card span {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .floating-stat {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 12px;
-      align-items: center;
-      background: var(--dark);
-      color: white;
-      padding: 15px;
-      border-radius: 20px;
-      margin-top: 14px;
-    }
-
-    .floating-stat b {
-      font-size: 26px;
-      line-height: 1;
-      color: var(--secondary);
-    }
-
-    section {
-      padding: 42px 0;
-    }
-
-    .section-head {
-      text-align: center;
-      max-width: 760px;
-      margin: 0 auto 26px;
-    }
-
-    .section-head h2 {
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.08;
-      letter-spacing: -0.04em;
-      margin-bottom: 12px;
-    }
-
-    .section-head p {
-      color: var(--muted);
-      font-size: 17px;
-    }
-
-    .pg-grid {
-      display: grid;
-      grid-template-columns: repeat(9, 1fr);
-      gap: 10px;
-      margin-top: 22px;
-    }
-
-    .pg-btn {
-      min-height: 82px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-weight: 950;
-      font-size: 22px;
-      transition: 0.22s ease;
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
-    }
-
-    .pg-btn small {
-      font-size: 11px;
-      color: var(--muted);
-      font-weight: 800;
-      margin-top: 3px;
-    }
-
-    .pg-btn:hover,
-    .pg-btn.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-      transform: translateY(-3px);
-      box-shadow: 0 18px 35px rgba(30, 64, 175, 0.22);
-    }
-
-    .pg-btn:hover small,
-    .pg-btn.active small {
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .result-shell {
-      margin-top: 24px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .result-top {
-      background:
-        linear-gradient(135deg, rgba(30, 64, 175, 0.98), rgba(37, 99, 235, 0.9)),
-        var(--primary);
-      color: white;
-      padding: 28px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 18px;
-      align-items: center;
-    }
-
-    .result-top h3 {
-      font-size: clamp(26px, 4vw, 40px);
-      letter-spacing: -0.04em;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .result-top p {
-      color: rgba(255, 255, 255, 0.82);
-      max-width: 700px;
-    }
-
-    .result-code {
-      width: 88px;
-      height: 88px;
-      border-radius: 26px;
-      display: grid;
-      place-items: center;
-      background: rgba(255, 255, 255, 0.16);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      font-size: 34px;
-      font-weight: 1000;
-    }
-
-    .result-body {
-      padding: 24px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .info-card {
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 20px;
-      background: linear-gradient(180deg, #ffffff, #f8fafc);
-    }
-
-    .info-card .icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: var(--primary-soft);
-      margin-bottom: 14px;
-      font-size: 20px;
-    }
-
-    .info-card h4 {
-      font-size: 17px;
-      margin-bottom: 10px;
-    }
-
-    .info-card ul {
-      padding-left: 18px;
-      color: var(--muted);
-      font-weight: 650;
-    }
-
-    .info-card li {
-      margin-bottom: 7px;
-    }
-
-    .note-box {
-      grid-column: 1 / -1;
-      padding: 20px;
-      border-radius: 22px;
-      border: 1px dashed #93c5fd;
-      background: #eff6ff;
-      color: #1e3a8a;
-      font-weight: 750;
-    }
-
-    .trust-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .trust-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 22px;
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
-    }
-
-    .trust-card b {
-      font-size: 32px;
-      color: var(--primary);
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .trust-card span {
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .cta {
-      padding: 28px;
-      border-radius: var(--radius-lg);
-      background:
-        radial-gradient(circle at top right, rgba(250, 204, 21, 0.26), transparent 32%),
-        linear-gradient(135deg, #0f172a, #1e293b);
-      color: white;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 20px;
-      align-items: center;
-      box-shadow: var(--shadow);
-      margin-bottom: 48px;
-    }
-
-    .cta h2 {
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.05;
-      letter-spacing: -0.04em;
-      margin-bottom: 10px;
-    }
-
-    .cta p {
-      color: rgba(255, 255, 255, 0.78);
-      max-width: 720px;
-      font-size: 17px;
-    }
-
-    .btn-wa {
-      background: #22c55e;
-      color: white;
-      min-width: 210px;
-      box-shadow: 0 18px 34px rgba(34, 197, 94, 0.22);
-    }
-
-    footer {
-      color: var(--muted);
-      text-align: center;
-      padding: 24px 0 38px;
-      font-size: 14px;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    @media (max-width: 920px) {
-      .hero {
-        grid-template-columns: 1fr;
-        padding-top: 42px;
+        --pg-si-bg: #7f1d1d;
+        --pg-se-bg: #f9a8d4;
+        --pg-ti-bg: #1f2937;
+        --pg-te-bg: #d1d5db;
+        --pg-ii-bg: #1e3a8a;
+        --pg-ie-bg: #93c5fd;
+        --pg-fi-bg: #166534;
+        --pg-fe-bg: #86efac;
+        --pg-in-bg: #facc15;
       }
 
-      .pg-grid {
-        grid-template-columns: repeat(3, 1fr);
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(250, 204, 21, 0.16), transparent 34%),
+          radial-gradient(circle at top right, rgba(30, 64, 175, 0.15), transparent 30%),
+          var(--light);
+        color: var(--dark);
+        line-height: 1.6;
       }
 
-      .result-body,
-      .trust-grid {
-        grid-template-columns: 1fr;
-      }
+      a { color: inherit; text-decoration: none; }
 
-      .cta,
-      .result-top {
-        grid-template-columns: 1fr;
-      }
-
-      .result-code {
-        width: 72px;
-        height: 72px;
-        font-size: 28px;
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after {
+          animation-duration: 0.001ms !important;
+          transition-duration: 0.001ms !important;
+        }
       }
     }
 
-    @media (max-width: 520px) {
-      .page,
+    @layer components {
+      .page { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+
+      .skip-link {
+        position: absolute; left: 12px; top: -60px;
+        padding: 10px 16px; border-radius: 10px;
+        background: var(--dark); color: white; font-weight: 800;
+        z-index: 200; transition: top 0.2s ease;
+      }
+      .skip-link:focus { top: 12px; }
+
+      .navbar {
+        position: sticky; top: 0; z-index: 99;
+        backdrop-filter: blur(18px);
+        background: rgba(248, 250, 252, 0.82);
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      }
       .navbar-inner {
-        width: min(100% - 22px, 1120px);
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto; min-height: 72px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
       }
-
-      .navbar-inner {
-        min-height: 66px;
-      }
-
+      .brand { display: flex; align-items: center; gap: 12px; font-weight: 900; letter-spacing: -0.02em; }
       .brand-mark {
-        width: 38px;
-        height: 38px;
+        width: 42px; height: 42px; border-radius: 14px;
+        display: grid; place-items: center;
+        background: linear-gradient(135deg, var(--primary), #38bdf8);
+        color: white; box-shadow: 0 12px 25px rgba(30, 64, 175, 0.28);
       }
-
-      .brand div {
-        font-size: 14px;
-      }
+      .brand small { display: block; font-size: 12px; color: var(--muted); font-weight: 700; margin-top: -3px; }
 
       .nav-cta {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 11px 16px; border-radius: 999px;
+        background: var(--dark); color: white;
+        font-weight: 800; font-size: 14px;
+        box-shadow: 0 14px 26px rgba(15, 23, 42, 0.18);
+      }
+      .nav-cta--mobile {
         display: none;
+        width: 44px; height: 44px; padding: 0; justify-content: center;
       }
 
       .hero {
-        padding-top: 34px;
+        padding: 64px 0 34px;
+        display: grid; grid-template-columns: 1.1fr 0.9fr;
+        gap: 34px; align-items: center;
       }
+      .badge {
+        width: fit-content; display: inline-flex; align-items: center; gap: 8px;
+        padding: 9px 14px; border-radius: 999px;
+        background: white; border: 1px solid var(--border);
+        color: var(--primary); font-weight: 900; font-size: 13px;
+        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+        margin-bottom: 18px;
+      }
+      .hero h1 {
+        font-size: clamp(36px, 6vw, 68px);
+        line-height: 0.98; letter-spacing: -0.06em;
+        margin-bottom: 20px;
+      }
+      .hero h1 span { color: var(--primary); }
+      .hero p {
+        font-size: clamp(16px, 2.3vw, 20px);
+        color: var(--muted); max-width: 630px; margin-bottom: 28px;
+      }
+      .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 
-      .hero-actions .btn {
-        width: 100%;
+      .btn {
+        border: 0; cursor: pointer; border-radius: 999px;
+        padding: 14px 20px; font-weight: 900;
+        display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+        transition: 0.25s ease; font-size: 15px;
       }
+      .btn:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), #2563eb);
+        color: white; box-shadow: 0 18px 34px rgba(30, 64, 175, 0.28);
+      }
+      .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 22px 42px rgba(30, 64, 175, 0.33); }
+      .btn-secondary {
+        background: white; color: var(--dark); border: 1px solid var(--border);
+      }
+      .btn-secondary:hover { transform: translateY(-2px); border-color: #bfdbfe; }
+
+      .hero-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.86);
+        border: 1px solid rgba(226, 232, 240, 0.95);
+        box-shadow: var(--shadow); border-radius: var(--radius-lg);
+        padding: 24px; overflow: hidden;
+      }
+      .hero-card::before {
+        content: ""; position: absolute;
+        width: 180px; height: 180px; border-radius: 999px;
+        background: rgba(250, 204, 21, 0.22);
+        top: -70px; right: -70px;
+      }
+      .mini-title {
+        font-size: 13px; color: var(--muted); font-weight: 900;
+        text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px;
+      }
+      .path-card {
+        position: relative; background: white;
+        border: 1px solid var(--border); border-radius: 20px;
+        padding: 18px; margin-bottom: 12px;
+      }
+      .path-card strong { display: block; font-size: 18px; margin-bottom: 3px; }
+      .path-card span { color: var(--muted); font-size: 14px; }
+
+      .floating-stat {
+        display: grid; grid-template-columns: auto 1fr;
+        gap: 12px; align-items: center;
+        background: var(--dark); color: white;
+        padding: 15px; border-radius: 20px; margin-top: 14px;
+      }
+      .floating-stat b { font-size: 26px; line-height: 1; color: var(--secondary); }
+
+      section { padding: 42px 0; }
+      .section-head { text-align: center; max-width: 760px; margin: 0 auto 26px; }
+      .section-head h2 {
+        font-size: clamp(28px, 4vw, 44px);
+        line-height: 1.08; letter-spacing: -0.04em; margin-bottom: 12px;
+      }
+      .section-head p { color: var(--muted); font-size: 17px; }
 
       .pg-grid {
-        gap: 8px;
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 12px; margin-top: 22px;
       }
-
       .pg-btn {
-        min-height: 76px;
-        border-radius: 16px;
+        min-height: 92px;
+        background: white; border: 2px solid var(--border);
+        border-radius: 18px; cursor: pointer;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        font-weight: 900; font-size: 22px;
+        transition: 0.22s ease;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+        color: var(--dark);
+        position: relative;
+        overflow: hidden;
+        padding: 12px;
+      }
+      .pg-btn::before {
+        content: ""; position: absolute; inset: 0;
+        background: var(--pg-color, var(--primary));
+        opacity: 0; transition: opacity 0.22s ease;
+      }
+      .pg-btn > * { position: relative; z-index: 1; }
+      .pg-btn .pg-code {
+        font-size: 26px; line-height: 1; letter-spacing: -0.02em;
+      }
+      .pg-btn .pg-name {
+        font-size: 12px; font-weight: 700;
+        color: var(--muted); margin-top: 4px;
+        text-align: center;
+      }
+      .pg-btn:hover,
+      .pg-btn.active {
+        border-color: var(--pg-color, var(--primary));
+        transform: translateY(-3px);
+        box-shadow: 0 18px 35px rgba(15, 23, 42, 0.16);
+      }
+      .pg-btn:hover::before,
+      .pg-btn.active::before { opacity: 1; }
+      .pg-btn:hover .pg-code, .pg-btn.active .pg-code,
+      .pg-btn:hover .pg-name, .pg-btn.active .pg-name {
+        color: var(--pg-text, white);
       }
 
-      .result-body,
-      .result-top,
-      .hero-card,
+      .result-shell {
+        margin-top: 24px; background: white;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow); overflow: hidden;
+      }
+      .result-top {
+        background: linear-gradient(135deg, rgba(30, 64, 175, 0.98), rgba(37, 99, 235, 0.9));
+        color: white; padding: 28px;
+        display: grid; grid-template-columns: 1fr auto;
+        gap: 18px; align-items: center;
+        transition: background 0.4s ease;
+      }
+      .result-top h3 {
+        font-size: clamp(26px, 4vw, 40px);
+        letter-spacing: -0.04em; line-height: 1; margin-bottom: 8px;
+      }
+      .result-top p { color: rgba(255, 255, 255, 0.85); max-width: 700px; }
+      .result-code {
+        width: 88px; height: 88px; border-radius: 26px;
+        display: grid; place-items: center;
+        background: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        font-size: 32px; font-weight: 1000;
+      }
+
+      .result-body {
+        padding: 24px; display: grid;
+        grid-template-columns: repeat(3, 1fr); gap: 16px;
+      }
+      .result-body.hidden { display: none; }
+
+      .result-placeholder {
+        padding: 28px; text-align: center;
+        color: var(--muted);
+      }
+      .result-placeholder.hidden { display: none; }
+      .result-placeholder-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 12px; margin-top: 20px;
+      }
+      .result-placeholder-card {
+        padding: 20px; border-radius: 18px;
+        border: 1px dashed var(--border);
+        background: #f8fafc; font-weight: 700;
+        font-size: 14px;
+      }
+      .result-placeholder-card .ico {
+        font-size: 24px; margin-bottom: 8px;
+        display: block;
+      }
+
+      .info-card {
+        border: 1px solid var(--border); border-radius: 22px;
+        padding: 20px; background: linear-gradient(180deg, #ffffff, #f8fafc);
+        animation: fadeUp 0.35s ease both;
+      }
+      .info-card .icon {
+        width: 42px; height: 42px; border-radius: 14px;
+        display: grid; place-items: center;
+        background: var(--primary-soft); margin-bottom: 14px;
+        font-size: 20px;
+      }
+      .info-card h4 { font-size: 17px; margin-bottom: 10px; }
+      .info-card ul { padding-left: 18px; color: var(--muted); font-weight: 600; }
+      .info-card li { margin-bottom: 7px; }
+
+      .note-box {
+        grid-column: 1 / -1; padding: 20px;
+        border-radius: 22px; border: 1px dashed #93c5fd;
+        background: #eff6ff; color: #1e3a8a; font-weight: 600;
+      }
+      .note-box strong { display: block; margin-bottom: 6px; }
+
+      .result-actions {
+        grid-column: 1 / -1;
+        display: flex; justify-content: flex-end; gap: 10px;
+        margin-top: 4px;
+      }
+
+      .trust-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      }
+      .trust-card {
+        background: white; border: 1px solid var(--border);
+        border-radius: 24px; padding: 22px;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+      }
+      .trust-card b { font-size: 32px; color: var(--primary); display: block; margin-bottom: 5px; }
+      .trust-card span { color: var(--muted); font-weight: 600; }
+
       .cta {
-        padding: 20px;
+        padding: 28px; border-radius: var(--radius-lg);
+        background:
+          radial-gradient(circle at top right, rgba(250, 204, 21, 0.26), transparent 32%),
+          linear-gradient(135deg, #0f172a, #1e293b);
+        color: white; display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 20px; align-items: center;
+        box-shadow: var(--shadow); margin-bottom: 48px;
+      }
+      .cta h2 {
+        font-size: clamp(28px, 4vw, 44px);
+        line-height: 1.05; letter-spacing: -0.04em; margin-bottom: 10px;
+      }
+      .cta p { color: rgba(255, 255, 255, 0.82); max-width: 720px; font-size: 17px; }
+      .btn-wa {
+        background: #22c55e; color: white; min-width: 210px;
+        box-shadow: 0 18px 34px rgba(34, 197, 94, 0.22);
+      }
+      .btn-wa:hover { transform: translateY(-2px); }
+
+      footer { color: var(--muted); text-align: center; padding: 24px 0 38px; font-size: 14px; }
+      footer a { text-decoration: underline; }
+
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
-      section {
-        padding: 34px 0;
+      @media (max-width: 920px) {
+        .hero { grid-template-columns: 1fr; padding-top: 42px; }
+        .pg-grid { grid-template-columns: repeat(2, 1fr); }
+        .result-body, .trust-grid { grid-template-columns: 1fr; }
+        .result-placeholder-grid { grid-template-columns: 1fr; }
+        .cta, .result-top { grid-template-columns: 1fr; }
+        .result-code { width: 72px; height: 72px; font-size: 26px; }
+      }
+
+      @media (max-width: 520px) {
+        .page, .navbar-inner { width: min(100% - 22px, 1120px); }
+        .navbar-inner { min-height: 66px; }
+        .brand-mark { width: 38px; height: 38px; }
+        .brand div { font-size: 14px; }
+        .nav-cta { display: none; }
+        .nav-cta--mobile {
+          display: inline-flex; align-items: center; justify-content: center;
+          width: 42px; height: 42px; border-radius: 12px;
+          background: var(--dark); color: white; font-size: 18px;
+        }
+        .hero { padding-top: 34px; }
+        .hero-actions .btn { width: 100%; }
+        .pg-grid { gap: 10px; }
+        .pg-btn { min-height: 88px; border-radius: 16px; }
+        .pg-btn .pg-code { font-size: 22px; }
+        .pg-btn .pg-name { font-size: 11px; }
+        .result-body, .result-top, .hero-card, .cta { padding: 20px; }
+        section { padding: 34px 0; }
+        .result-actions { flex-direction: column; }
+        .result-actions .btn { width: 100%; }
+      }
+    }
+
+    @layer utilities {
+      .sr-only {
+        position: absolute; width: 1px; height: 1px;
+        padding: 0; margin: -1px; overflow: hidden;
+        clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
       }
     }
   </style>
 </head>
 
 <body>
-  <nav class="navbar">
+  <a class="skip-link" href="#main">Lewati ke konten utama</a>
+
+  <nav class="navbar" aria-label="Navigasi utama">
     <div class="navbar-inner">
-      <a href="#" class="brand" aria-label="STIFIn Family Medan">
-        <span class="brand-mark">🧬</span>
+      <a href="#" class="brand" aria-label="STIFIn Family Medan — beranda">
+        <span class="brand-mark" aria-hidden="true">🧬</span>
         <div>
           STIFIn Family Medan
           <small>Rekomendasi Pelajar</small>
         </div>
       </a>
 
-      <a class="nav-cta" href="#cek-pg">Cek PG Anak 🚀</a>
+      <a class="nav-cta" href="#cek-pg">Cek PG Anak <span aria-hidden="true">🚀</span></a>
+      <a class="nav-cta--mobile" href="#cek-pg" aria-label="Cek PG anak">
+        <span aria-hidden="true">🚀</span>
+      </a>
     </div>
   </nav>
 
-  <main class="page">
+  <main id="main" class="page">
     <header class="hero">
       <div>
-        <div class="badge">🎓 Untuk Orang Tua & Pelajar SMP</div>
+        <div class="badge"><span aria-hidden="true">🎓</span> Untuk Orang Tua & Pelajar SMP</div>
         <h1>Bingung Anak Setelah SMP Harus <span>ke Mana?</span></h1>
         <p>
           Temukan gambaran rekomendasi SMA/SMK/MA, jurusan kuliah, dan profesi masa depan
@@ -605,12 +456,12 @@
         </p>
 
         <div class="hero-actions">
-          <a href="#cek-pg" class="btn btn-primary">Mulai Cek Rekomendasi ✨</a>
+          <a href="#cek-pg" class="btn btn-primary">Mulai Cek Rekomendasi <span aria-hidden="true">✨</span></a>
           <a href="#konsultasi" class="btn btn-secondary">Konsultasi Promotor</a>
         </div>
       </div>
 
-      <aside class="hero-card" aria-label="Alur rekomendasi pelajar">
+      <aside class="hero-card" aria-label="Alur rekomendasi">
         <div class="mini-title">Alur rekomendasi</div>
         <div class="path-card">
           <strong>1. Pilih PG Anak</strong>
@@ -632,55 +483,81 @@
       </aside>
     </header>
 
-    <section id="cek-pg">
+    <section id="cek-pg" aria-labelledby="cek-pg-title">
       <div class="section-head">
-        <h2>Pilih Personality Genetic Anak</h2>
+        <h2 id="cek-pg-title">Pilih Personality Genetic Anak</h2>
         <p>
           Pilih salah satu PG anak untuk melihat rekomendasi awal. Hasil ini dapat menjadi bahan diskusi
           sebelum menentukan sekolah, jurusan, atau rencana pendidikan berikutnya.
         </p>
       </div>
 
-      <div class="pg-grid" id="pgGrid"></div>
+      <div class="pg-grid" id="pgGrid" role="group" aria-label="Tombol pilihan Personality Genetic"></div>
 
-      <div class="result-shell" id="resultShell">
-        <div class="result-top">
+      <div class="result-shell" id="resultShell" aria-live="polite">
+        <div class="result-top" id="resultTop">
           <div>
-            <h3 id="resultTitle">Pilih PG anak dulu, Bos 😄</h3>
+            <h3 id="resultTitle">Yuk, pilih PG anak dulu</h3>
             <p id="resultSubtitle">
               Setelah PG dipilih, rekomendasi sekolah, jurusan kuliah, dan profesi akan tampil otomatis di sini.
             </p>
           </div>
-          <div class="result-code" id="resultCode">?</div>
+          <div class="result-code" id="resultCode" aria-hidden="true">?</div>
+        </div>
+
+        <div class="result-placeholder" id="resultPlaceholder">
+          <strong style="display:block;color:var(--dark);margin-bottom:4px">Belum ada PG yang dipilih.</strong>
+          Pilih salah satu PG di atas untuk melihat gambaran arah pendidikan dan profesi.
+          <div class="result-placeholder-grid">
+            <div class="result-placeholder-card">
+              <span class="ico" aria-hidden="true">🏫</span>
+              Rekomendasi setelah SMP
+            </div>
+            <div class="result-placeholder-card">
+              <span class="ico" aria-hidden="true">🎓</span>
+              Jurusan kuliah sesuai
+            </div>
+            <div class="result-placeholder-card">
+              <span class="ico" aria-hidden="true">💼</span>
+              Profesi yang relevan
+            </div>
+          </div>
         </div>
 
         <div class="result-body hidden" id="resultBody">
           <article class="info-card">
-            <div class="icon">🏫</div>
+            <div class="icon" aria-hidden="true">🏫</div>
             <h4>Rekomendasi Setelah SMP</h4>
             <ul id="schoolList"></ul>
           </article>
 
           <article class="info-card">
-            <div class="icon">🎓</div>
+            <div class="icon" aria-hidden="true">🎓</div>
             <h4>Jurusan Kuliah Sesuai</h4>
             <ul id="majorList"></ul>
           </article>
 
           <article class="info-card">
-            <div class="icon">💼</div>
+            <div class="icon" aria-hidden="true">💼</div>
             <h4>Profesi yang Relevan</h4>
             <ul id="professionList"></ul>
           </article>
 
           <div class="note-box" id="noteBox"></div>
+
+          <div class="result-actions">
+            <button type="button" class="btn btn-secondary" id="resetBtn">Pilih PG Lain</button>
+            <a class="btn btn-primary" id="waResultBtn" href="#" target="_blank" rel="noopener">
+              Konsultasikan PG Ini <span aria-hidden="true">💬</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
-    <section>
+    <section aria-labelledby="why-title">
       <div class="section-head">
-        <h2>Kenapa Perlu Dipetakan Sejak Dini?</h2>
+        <h2 id="why-title">Kenapa Perlu Dipetakan Sejak Dini?</h2>
         <p>
           Karena pilihan sekolah dan jurusan bukan hanya soal nilai, tetapi juga soal kecocokan cara belajar,
           daya tahan proses, minat alami, dan arah potensi anak.
@@ -703,10 +580,10 @@
       </div>
     </section>
 
-    <section id="konsultasi">
+    <section id="konsultasi" aria-labelledby="konsultasi-title">
       <div class="cta">
         <div>
-          <h2>Masih ragu menentukan arah pendidikan anak?</h2>
+          <h2 id="konsultasi-title">Masih ragu menentukan arah pendidikan anak?</h2>
           <p>
             Rekomendasi di halaman ini adalah gambaran awal. Untuk membaca potensi anak lebih dalam,
             konsultasikan hasil STIFIn bersama promotor STIFIn Family Medan.
@@ -720,158 +597,325 @@
           target="_blank"
           rel="noopener"
         >
-          Konsultasi WhatsApp 💬
+          Konsultasi WhatsApp <span aria-hidden="true">💬</span>
         </a>
       </div>
     </section>
   </main>
 
   <footer>
-    ©️ <span id="year"></span> STIFIn Family Medan. Halaman rekomendasi ini bersifat edukatif dan perlu dikonsultasikan lebih lanjut.
+    © <span id="year"></span> STIFIn Family Medan. Halaman rekomendasi ini bersifat edukatif dan perlu dikonsultasikan lebih lanjut.
   </footer>
 
   <script>
-    const recommendations = [
-      {
-        pg: "Si",
-        name: "Sensing introvert",
-        intelligence: "MQ - Memory Quotient",
-        schools: ["SMA IPS", "SMA Bahasa", "MA Humaniora", "SMK Administrasi Perkantoran"],
-        majors: ["Pendidikan Bahasa", "Sastra", "Administrasi", "Hukum", "Perpustakaan dan Arsip"],
-        professions: ["Guru", "Admin Profesional", "Sekretaris", "Penulis", "Arsiparis"],
-        note: "Si cenderung kuat pada ingatan, ketelitian, urutan, dan konsistensi. Cocok diarahkan ke bidang yang membutuhkan dokumentasi, hafalan, prosedur, dan kerapian kerja."
-      },
-      {
-        pg: "Se",
-        name: "Sensing extrovert",
-        intelligence: "PQ - Physical Quotient",
-        schools: ["SMK Tata Boga", "SMK Perhotelan", "SMK Teknik Praktik", "SMA Olahraga"],
-        majors: ["Keolahragaan", "Perhotelan", "Tata Boga", "Teknik Terapan", "Manajemen Event"],
-        professions: ["Atlet", "Chef", "Trainer", "Teknisi Lapangan", "Event Organizer"],
-        note: "Se biasanya lebih hidup saat belajar lewat praktik langsung, gerak, aksi nyata, dan pengalaman lapangan. Cocok dengan bidang yang tidak hanya duduk dan teori."
-      },
-      {
-        pg: "Ti",
-        name: "Thinking introvert",
-        intelligence: "TQ - Technical Quotient",
-        schools: ["SMA IPA", "SMK Teknik", "SMK Komputer", "Sekolah berbasis riset dan teknologi"],
-        majors: ["Teknik Informatika", "Sistem Informasi", "Teknik Mesin", "Teknik Elektro", "Data Science"],
-        professions: ["Programmer", "Engineer", "Analis Sistem", "Teknisi Ahli", "Data Analyst"],
-        note: "Ti kuat pada analisis teknis, pemecahan masalah, dan kerja mandiri yang membutuhkan kedalaman. Cocok diarahkan ke bidang teknologi, engineering, dan sistem."
-      },
-      {
-        pg: "Te",
-        name: "Thinking extrovert",
-        intelligence: "LQ - Logical Quotient",
-        schools: ["SMA IPA", "SMA Unggulan", "SMK Akuntansi", "SMK Bisnis dan Manajemen"],
-        majors: ["Akuntansi", "Manajemen", "Ekonomi", "Teknik Industri", "Administrasi Bisnis"],
-        professions: ["Manager", "Konsultan", "Akuntan", "Project Leader", "Entrepreneur"],
-        note: "Te kuat pada logika, target, struktur, dan pengambilan keputusan. Cocok dengan bidang yang membutuhkan kepemimpinan, hitungan, strategi, dan hasil terukur."
-      },
-      {
-        pg: "Ii",
-        name: "Intuiting introvert",
-        intelligence: "CQ - Creative Quotient",
-        schools: ["SMA IPA Kreatif", "SMA IPS Kreatif", "Sekolah berbasis riset", "Sekolah berbasis karya"],
-        majors: ["Desain", "Arsitektur", "Psikologi", "Filsafat", "Riset dan Pengembangan"],
-        professions: ["Konseptor", "Desainer", "Peneliti", "Creative Director", "Strategic Planner"],
-        note: "Ii kuat pada ide, konsep, imajinasi, dan gambaran masa depan. Cocok diarahkan ke bidang yang memberi ruang berpikir mendalam dan menciptakan gagasan baru."
-      },
-      {
-        pg: "Ie",
-        name: "Intuiting extrovert",
-        intelligence: "Spa-Q - Spatial Quotient",
-        schools: ["SMK Multimedia", "SMK Desain Visual", "SMA IPA", "SMA Seni dan Kreatif"],
-        majors: ["DKV", "Arsitektur", "Animasi", "Film", "UI/UX Design"],
-        professions: ["Desainer Grafis", "Animator", "Arsitek", "Videografer", "UI/UX Designer"],
-        note: "Ie kuat pada visual, ruang, peluang, dan eksplorasi ide. Cocok dengan bidang kreatif visual, desain, media, arsitektur, dan karya digital."
-      },
-      {
-        pg: "Fi",
-        name: "Feeling introvert",
-        intelligence: "EQ - Emotional Quotient",
-        schools: ["SMA IPS", "MA", "SMA Humaniora", "Sekolah sosial-kemanusiaan"],
-        majors: ["Psikologi", "Bimbingan Konseling", "Keperawatan", "Pendidikan", "Kesejahteraan Sosial"],
-        professions: ["Psikolog", "Konselor", "Perawat", "Guru BK", "HRD"],
-        note: "Fi kuat pada kedalaman rasa, empati personal, dan kepekaan terhadap kondisi batin orang lain. Cocok di bidang pendampingan, pendidikan, dan pelayanan manusia."
-      },
-      {
-        pg: "Fe",
-        name: "Feeling extrovert",
-        intelligence: "Soc-Q - Social Quotient",
-        schools: ["SMA IPS", "SMA Bahasa", "SMK Public Relation", "SMK Pemasaran"],
-        majors: ["Ilmu Komunikasi", "Public Relation", "Marketing", "Pendidikan", "Hubungan Internasional"],
-        professions: ["MC", "Public Relation", "Sales", "Trainer", "Content Creator"],
-        note: "Fe kuat pada komunikasi, suasana sosial, persuasi, dan membangun hubungan. Cocok diarahkan ke bidang yang banyak berinteraksi dengan manusia."
-      },
-      {
-        pg: "In",
-        name: "Insting",
-        intelligence: "AQ - Adversity/Adaptive Quotient",
-        schools: ["SMA Fleksibel", "MA", "SMA berbasis karakter", "SMK Pariwisata atau Seni"],
-        majors: ["Ilmu Agama", "Seni", "Musik", "Pariwisata", "Manajemen Event"],
-        professions: ["Musisi", "Ustadz/Pembimbing", "Mediator", "Event Organizer", "Entrepreneur"],
-        note: "In cenderung adaptif, spontan, dan mudah menyesuaikan diri. Cocok pada bidang yang dinamis, membutuhkan intuisi keadaan, harmoni, dan fleksibilitas tinggi."
+    (function () {
+      "use strict";
+
+      // ============ DATA ============
+      const recommendations = [
+        {
+          pg: "Si",
+          name: "Sensing introvert",
+          shortLabel: "Sensing introvert",
+          intelligence: "MQ - Memory Quotient",
+          color: "#7f1d1d",
+          textOnColor: "#ffffff",
+          schools: ["SMA IPS", "SMA Bahasa", "MA Humaniora", "SMK Administrasi Perkantoran"],
+          majors: ["Pendidikan Bahasa", "Sastra", "Administrasi", "Hukum", "Perpustakaan dan Arsip"],
+          professions: ["Guru", "Admin Profesional", "Sekretaris", "Penulis", "Arsiparis"],
+          learningStyle: "Belajar optimal lewat hafalan, urutan langkah, dokumentasi, dan latihan berulang.",
+          why: "Si kuat pada ingatan, ketelitian, dan konsistensi.",
+          note: "Si cenderung kuat pada ingatan, ketelitian, urutan, dan konsistensi. Cocok diarahkan ke bidang yang membutuhkan dokumentasi, hafalan, prosedur, dan kerapian kerja."
+        },
+        {
+          pg: "Se",
+          name: "Sensing extrovert",
+          shortLabel: "Sensing extrovert",
+          intelligence: "PQ - Physical Quotient",
+          color: "#f9a8d4",
+          textOnColor: "#3f0f2e",
+          schools: ["SMK Tata Boga", "SMK Perhotelan", "SMK Teknik Praktik", "SMA Olahraga"],
+          majors: ["Keolahragaan", "Perhotelan", "Tata Boga", "Teknik Terapan", "Manajemen Event"],
+          professions: ["Atlet", "Chef", "Trainer", "Teknisi Lapangan", "Event Organizer"],
+          learningStyle: "Belajar paling hidup lewat praktik langsung, gerak, aksi nyata, dan pengalaman lapangan.",
+          why: "Se kuat pada aksi, gerak, dan praktik langsung.",
+          note: "Se biasanya lebih hidup saat belajar lewat praktik langsung, gerak, aksi nyata, dan pengalaman lapangan. Cocok dengan bidang yang tidak hanya duduk dan teori."
+        },
+        {
+          pg: "Ti",
+          name: "Thinking introvert",
+          shortLabel: "Thinking introvert",
+          intelligence: "TQ - Technical Quotient",
+          color: "#1f2937",
+          textOnColor: "#ffffff",
+          schools: ["SMA IPA", "SMK Teknik", "SMK Komputer", "Sekolah berbasis riset dan teknologi"],
+          majors: ["Teknik Informatika", "Sistem Informasi", "Teknik Mesin", "Teknik Elektro", "Data Science"],
+          professions: ["Programmer", "Engineer", "Analis Sistem", "Teknisi Ahli", "Data Analyst"],
+          learningStyle: "Belajar optimal saat bisa menganalisis sendiri, memecahkan masalah, dan mengeksplorasi detail teknis.",
+          why: "Ti kuat pada analisis teknis dan pemecahan masalah mandiri.",
+          note: "Ti kuat pada analisis teknis, pemecahan masalah, dan kerja mandiri yang membutuhkan kedalaman. Cocok diarahkan ke bidang teknologi, engineering, dan sistem."
+        },
+        {
+          pg: "Te",
+          name: "Thinking extrovert",
+          shortLabel: "Thinking extrovert",
+          intelligence: "LQ - Logical Quotient",
+          color: "#d1d5db",
+          textOnColor: "#111827",
+          schools: ["SMA IPA", "SMA Unggulan", "SMK Akuntansi", "SMK Bisnis dan Manajemen"],
+          majors: ["Akuntansi", "Manajemen", "Ekonomi", "Teknik Industri", "Administrasi Bisnis"],
+          professions: ["Manager", "Konsultan", "Akuntan", "Project Leader", "Entrepreneur"],
+          learningStyle: "Belajar efektif lewat target, struktur, hitungan, dan hasil yang terukur.",
+          why: "Te kuat pada logika, target, dan pengambilan keputusan.",
+          note: "Te kuat pada logika, target, struktur, dan pengambilan keputusan. Cocok dengan bidang yang membutuhkan kepemimpinan, hitungan, strategi, dan hasil terukur."
+        },
+        {
+          pg: "Ii",
+          name: "Intuiting introvert",
+          shortLabel: "Intuiting introvert",
+          intelligence: "CQ - Creative Quotient",
+          color: "#1e3a8a",
+          textOnColor: "#ffffff",
+          schools: ["SMA IPA Kreatif", "SMA IPS Kreatif", "Sekolah berbasis riset", "Sekolah berbasis karya"],
+          majors: ["Desain", "Arsitektur", "Psikologi", "Filsafat", "Riset dan Pengembangan"],
+          professions: ["Konseptor", "Desainer", "Peneliti", "Creative Director", "Strategic Planner"],
+          learningStyle: "Belajar optimal saat diberi ruang berpikir mendalam dan menciptakan gagasan baru.",
+          why: "Ii kuat pada ide, konsep, dan imajinasi.",
+          note: "Ii kuat pada ide, konsep, imajinasi, dan gambaran masa depan. Cocok diarahkan ke bidang yang memberi ruang berpikir mendalam dan menciptakan gagasan baru."
+        },
+        {
+          pg: "Ie",
+          name: "Intuiting extrovert",
+          shortLabel: "Intuiting extrovert",
+          intelligence: "Spa-Q - Spatial Quotient",
+          color: "#93c5fd",
+          textOnColor: "#0c2a5c",
+          schools: ["SMK Multimedia", "SMK Desain Visual", "SMA IPA", "SMA Seni dan Kreatif"],
+          majors: ["DKV", "Arsitektur", "Animasi", "Film", "UI/UX Design"],
+          professions: ["Desainer Grafis", "Animator", "Arsitek", "Videografer", "UI/UX Designer"],
+          learningStyle: "Belajar optimal lewat visual, ruang, eksplorasi ide, dan karya digital.",
+          why: "Ie kuat pada visual, ruang, dan eksplorasi ide.",
+          note: "Ie kuat pada visual, ruang, peluang, dan eksplorasi ide. Cocok dengan bidang kreatif visual, desain, media, arsitektur, dan karya digital."
+        },
+        {
+          pg: "Fi",
+          name: "Feeling introvert",
+          shortLabel: "Feeling introvert",
+          intelligence: "EQ - Emotional Quotient",
+          color: "#166534",
+          textOnColor: "#ffffff",
+          schools: ["SMA IPS", "MA", "SMA Humaniora", "Sekolah sosial-kemanusiaan"],
+          majors: ["Psikologi", "Bimbingan Konseling", "Keperawatan", "Pendidikan", "Kesejahteraan Sosial"],
+          professions: ["Psikolog", "Konselor", "Perawat", "Guru BK", "HRD"],
+          learningStyle: "Belajar optimal lewat kedalaman rasa, empati personal, dan kepekaan batin.",
+          why: "Fi kuat pada empati personal dan kepekaan batin.",
+          note: "Fi kuat pada kedalaman rasa, empati personal, dan kepekaan terhadap kondisi batin orang lain. Cocok di bidang pendampingan, pendidikan, dan pelayanan manusia."
+        },
+        {
+          pg: "Fe",
+          name: "Feeling extrovert",
+          shortLabel: "Feeling extrovert",
+          intelligence: "Soc-Q - Social Quotient",
+          color: "#86efac",
+          textOnColor: "#14532d",
+          schools: ["SMA IPS", "SMA Bahasa", "SMK Public Relation", "SMK Pemasaran"],
+          majors: ["Ilmu Komunikasi", "Public Relation", "Marketing", "Pendidikan", "Hubungan Internasional"],
+          professions: ["MC", "Public Relation", "Sales", "Trainer", "Content Creator"],
+          learningStyle: "Belajar optimal lewat interaksi, diskusi, dan membangun hubungan sosial.",
+          why: "Fe kuat pada komunikasi, persuasi, dan hubungan sosial.",
+          note: "Fe kuat pada komunikasi, suasana sosial, persuasi, dan membangun hubungan. Cocok diarahkan ke bidang yang banyak berinteraksi dengan manusia."
+        },
+        {
+          pg: "In",
+          name: "Insting",
+          shortLabel: "Insting",
+          intelligence: "AQ - Altruist Quotient",
+          color: "#facc15",
+          textOnColor: "#422006",
+          schools: ["SMA Fleksibel", "MA", "SMA berbasis karakter", "SMK Pariwisata atau Seni"],
+          majors: ["Ilmu Agama", "Seni", "Musik", "Pariwisata", "Manajemen Event"],
+          professions: ["Musisi", "Ustadz/Pembimbing", "Mediator", "Event Organizer", "Entrepreneur"],
+          learningStyle: "Belajar optimal lewat fleksibilitas, intuisi situasi, dan penyesuaian diri.",
+          why: "In cenderung adaptif, spontan, dan mudah menyesuaikan diri.",
+          note: "In cenderung adaptif, spontan, dan mudah menyesuaikan diri. Cocok pada bidang yang dinamis, membutuhkan intuisi keadaan, harmoni, dan fleksibilitas tinggi."
+        }
+      ];
+
+      const WA_NUMBER = "6281238173518";
+
+      // ============ DOM ============
+      const pgGrid = document.getElementById("pgGrid");
+      const resultTop = document.getElementById("resultTop");
+      const resultTitle = document.getElementById("resultTitle");
+      const resultSubtitle = document.getElementById("resultSubtitle");
+      const resultCode = document.getElementById("resultCode");
+      const resultBody = document.getElementById("resultBody");
+      const resultPlaceholder = document.getElementById("resultPlaceholder");
+      const schoolList = document.getElementById("schoolList");
+      const majorList = document.getElementById("majorList");
+      const professionList = document.getElementById("professionList");
+      const noteBox = document.getElementById("noteBox");
+      const resetBtn = document.getElementById("resetBtn");
+      const waResultBtn = document.getElementById("waResultBtn");
+      const waButton = document.getElementById("waButton");
+
+      // ============ HELPERS ============
+      function renderList(target, items) {
+        target.innerHTML = items.map(item => `<li>${item}</li>`).join("");
       }
-    ];
 
-    const pgGrid = document.getElementById("pgGrid");
-    const resultTitle = document.getElementById("resultTitle");
-    const resultSubtitle = document.getElementById("resultSubtitle");
-    const resultCode = document.getElementById("resultCode");
-    const resultBody = document.getElementById("resultBody");
-    const schoolList = document.getElementById("schoolList");
-    const majorList = document.getElementById("majorList");
-    const professionList = document.getElementById("professionList");
-    const noteBox = document.getElementById("noteBox");
+      function trackEvent(name, data) {
+        // Hook untuk analytics (GA4 / Plausible / Umami / dataLayer).
+        // Contoh: window.dataLayer?.push({ event: name, ...data });
+        if (typeof window !== "undefined" && Array.isArray(window.dataLayer)) {
+          window.dataLayer.push({ event: name, ...data });
+        }
+        // console.debug("[track]", name, data);
+      }
 
-    function renderList(target, items) {
-      target.innerHTML = items.map(item => `<li>${item}</li>`).join("");
-    }
+      function updateURL(pg) {
+        const url = new URL(window.location.href);
+        if (pg) url.searchParams.set("pg", pg);
+        else url.searchParams.delete("pg");
+        window.history.replaceState({}, "", url);
+      }
 
-    function selectPG(pg) {
-      const data = recommendations.find(item => item.pg === pg);
-      if (!data) return;
+      function readURL() {
+        return new URL(window.location.href).searchParams.get("pg");
+      }
 
-      document.querySelectorAll(".pg-btn").forEach(button => {
-        button.classList.toggle("active", button.dataset.pg === pg);
-      });
-
-      resultTitle.textContent = `${data.pg} - ${data.name}`;
-      resultSubtitle.textContent = `${data.intelligence}. Berikut rekomendasi awal untuk arah pendidikan dan profesi anak.`;
-      resultCode.textContent = data.pg;
-
-      renderList(schoolList, data.schools);
-      renderList(majorList, data.majors);
-      renderList(professionList, data.professions);
-      noteBox.textContent = data.note;
-
-      resultBody.classList.remove("hidden");
-
-      const waText = encodeURIComponent(
-        `Halo STIFIn Family Medan, saya ingin konsultasi rekomendasi pelajar untuk PG ${data.pg} - ${data.name}.`
-      );
-      document.getElementById("waButton").href = `https://wa.me/6281238173518?text=${waText}`;
-    }
-
-    function initPGButtons() {
-      pgGrid.innerHTML = recommendations.map(item => `
-        <button class="pg-btn" type="button" data-pg="${item.pg}" aria-label="Pilih ${item.pg} ${item.name}">
-          ${item.pg}
-          <small>${item.name.replace(" introvert", "i").replace(" extrovert", "e")}</small>
-        </button>
-      `).join("");
-
-      pgGrid.querySelectorAll(".pg-btn").forEach(button => {
-        button.addEventListener("click", () => {
-          selectPG(button.dataset.pg);
-          document.getElementById("resultShell").scrollIntoView({ behavior: "smooth", block: "start" });
+      function setButtonActive(pg) {
+        document.querySelectorAll(".pg-btn").forEach(btn => {
+          const active = btn.dataset.pg === pg;
+          btn.classList.toggle("active", active);
+          btn.setAttribute("aria-pressed", active ? "true" : "false");
         });
-      });
-    }
+      }
 
-    document.getElementById("year").textContent = new Date().getFullYear();
-    initPGButtons();
+      // ============ ACTIONS ============
+      function selectPG(pg, opts = {}) {
+        const data = recommendations.find(item => item.pg === pg);
+        if (!data) return;
+
+        setButtonActive(pg);
+
+        resultTitle.textContent = `${data.pg} — ${data.name}`;
+        resultSubtitle.textContent = `${data.intelligence}. Berikut rekomendasi awal untuk arah pendidikan dan profesi anak.`;
+        resultCode.textContent = data.pg;
+        resultTop.style.background = `linear-gradient(135deg, ${data.color}, ${shade(data.color, -18)})`;
+        resultCode.style.color = data.textOnColor;
+
+        renderList(schoolList, data.schools);
+        renderList(majorList, data.majors);
+        renderList(professionList, data.professions);
+
+        noteBox.innerHTML = `
+          <strong>Cara belajar & kenapa cocok:</strong>
+          ${data.learningStyle} ${data.note}
+        `;
+
+        resultPlaceholder.classList.add("hidden");
+        resultBody.classList.remove("hidden");
+
+        // Reset animasi
+        resultBody.querySelectorAll(".info-card").forEach(card => {
+          card.style.animation = "none";
+          // eslint-disable-next-line no-unused-expressions
+          card.offsetHeight; // reflow
+          card.style.animation = "";
+        });
+
+        const waText = encodeURIComponent(
+          `Halo STIFIn Family Medan, saya ingin konsultasi rekomendasi pelajar untuk PG ${data.pg} - ${data.name}.`
+        );
+        waResultBtn.href = `https://wa.me/${WA_NUMBER}?text=${waText}`;
+
+        updateURL(pg);
+        trackEvent("select_pg", { pg: data.pg, name: data.name });
+
+        if (opts.scroll !== false) {
+          requestAnimationFrame(() => {
+            document.getElementById("resultShell").scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        }
+      }
+
+      function resetPG() {
+        setButtonActive(null);
+        resultTitle.textContent = "Yuk, pilih PG anak dulu";
+        resultSubtitle.textContent = "Setelah PG dipilih, rekomendasi sekolah, jurusan kuliah, dan profesi akan tampil otomatis di sini.";
+        resultCode.textContent = "?";
+        resultCode.style.color = "";
+        resultTop.style.background = "";
+        resultBody.classList.add("hidden");
+        resultPlaceholder.classList.remove("hidden");
+        updateURL(null);
+        trackEvent("reset_pg", {});
+      }
+
+      // Utility: turunkan/naikkan terang warna hex
+      function shade(hex, percent) {
+        const f = parseInt(hex.slice(1), 16);
+        const t = percent < 0 ? 0 : 255;
+        const p = Math.abs(percent) / 100;
+        const R = f >> 16, G = (f >> 8) & 0x00ff, B = f & 0x0000ff;
+        return "#" + (0x1000000 +
+          (Math.round((t - R) * p) + R) * 0x10000 +
+          (Math.round((t - G) * p) + G) * 0x100 +
+          (Math.round((t - B) * p) + B)
+        ).toString(16).slice(1);
+      }
+
+      // ============ INIT ============
+      function initPGButtons() {
+        pgGrid.innerHTML = recommendations.map(item => `
+          <button
+            class="pg-btn"
+            type="button"
+            data-pg="${item.pg}"
+            aria-label="Pilih ${item.pg} — ${item.name}"
+            aria-pressed="false"
+            style="--pg-color:${item.color};--pg-text:${item.textOnColor};"
+          >
+            <span class="pg-code" aria-hidden="true">${item.pg}</span>
+            <span class="pg-name">${item.shortLabel}</span>
+          </button>
+        `).join("");
+
+        pgGrid.querySelectorAll(".pg-btn").forEach(button => {
+          button.addEventListener("click", () => {
+            const pg = button.dataset.pg;
+            const isActive = button.classList.contains("active");
+            if (isActive) {
+              resetPG();
+            } else {
+              selectPG(pg);
+            }
+          });
+        });
+      }
+
+      resetBtn.addEventListener("click", () => {
+        resetPG();
+        document.getElementById("cek-pg").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      waResultBtn.addEventListener("click", () => {
+        trackEvent("click_wa_result", {});
+      });
+      waButton.addEventListener("click", () => {
+        trackEvent("click_wa_main", {});
+      });
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+      initPGButtons();
+
+      // Restore dari URL
+      const initialPG = readURL();
+      if (initialPG && recommendations.some(r => r.pg === initialPG)) {
+        selectPG(initialPG, { scroll: false });
+      }
+    })();
   </script>
 </body>
 </html>
