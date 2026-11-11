@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cooking Sprint</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:radial-gradient(circle at top,#ff4b4b,#8b0000 45%,#150000);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{max-width:480px;margin:auto;padding:20px 16px 120px}
+
+    .back-btn{
+      background:rgba(255,255,255,.14);
+      border:none;color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#ffdada;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:18px;
+      padding:14px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:24px}
+    .stat span{font-size:12px;color:#ffdada}
+
+    .game-box{
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:28px;
+      padding:22px 18px;
+      text-align:center;
+    }
+
+    .customer{
+      font-size:58px;
+      margin-bottom:10px;
+    }
+
+    .order-title{
+      font-size:15px;
+      color:#ffdada;
+      margin-bottom:8px;
+    }
+
+    .order{
+      font-size:38px;
+      margin-bottom:16px;
+    }
+
+    .ingredients{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .ing-btn{
+      border:none;
+      border-radius:18px;
+      background:white;
+      color:#9b0000;
+      padding:16px 8px;
+      font-size:30px;
+      font-weight:bold;
+    }
+
+    .ing-btn:active{transform:scale(.94)}
+
+    .selected{
+      margin-top:18px;
+      min-height:55px;
+      background:rgba(0,0,0,.18);
+      border-radius:18px;
+      padding:12px;
+      font-size:30px;
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .action-btn{
+      border:none;
+      border-radius:18px;
+      padding:15px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .serve{background:#fff;color:#9b0000}
+    .clear{background:rgba(255,255,255,.16);color:white}
+
+    .hint{
+      text-align:center;
+      margin-top:14px;
+      color:#ffdada;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.82);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#1c0000;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#ffdada;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:#ff2d2d;
+      color:white;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🍳 Cooking Sprint</h1>
+      <p>Susun bahan sesuai pesanan pelanggan sebelum waktu habis.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="time">45</h2><span>Waktu</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+    </div>
+
+    <div class="game-box">
+      <div class="customer">👩‍🍳</div>
+      <div class="order-title">Pesanan:</div>
+      <div class="order" id="order">🍞🥩🧀</div>
+
+      <div class="ingredients" id="ingredients"></div>
+
+      <div class="selected" id="selected">Pilih bahan...</div>
+
+      <div class="actions">
+        <button class="action-btn clear" onclick="clearSelection()">Ulang</button>
+        <button class="action-btn serve" onclick="serveOrder()">Sajikan</button>
+      </div>
+    </div>
+
+    <div class="hint">
+      Tap bahan sesuai urutan pesanan. Benar dapat score, salah waktu berkurang.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2>🔥 Selesai!</h2>
+      <p>Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="restartGame()">Main Lagi</button>
+    </div>
+  </div>
+
+  <script>
+    const allIngredients = ["🍞","🥩","🧀","🥬","🍅","🥚","🍗","🍟","🌶️"];
+
+    const recipes = [
+      ["🍞","🥩","🧀"],
+      ["🍞","🥬","🍅"],
+      ["🍗","🍟","🌶️"],
+      ["🍞","🥚","🧀"],
+      ["🥩","🥬","🌶️"],
+      ["🍞","🍗","🍅"],
+      ["🥚","🥬","🧀","🍅"],
+      ["🍞","🥩","🥚","🌶️"]
+    ];
+
+    let score = 0;
+    let time = 45;
+    let level = 1;
+    let currentRecipe = [];
+    let selected = [];
+    let timerLoop;
+
+    const scoreEl = document.getElementById("score");
+    const timeEl = document.getElementById("time");
+    const levelEl = document.getElementById("level");
+    const orderEl = document.getElementById("order");
+    const ingredientsEl = document.getElementById("ingredients");
+    const selectedEl = document.getElementById("selected");
+    const gameOver = document.getElementById("gameOver");
+    const finalScore = document.getElementById("finalScore");
+
+    function shuffle(arr){
+      return arr.sort(() => Math.random() - 0.5);
+    }
+
+    function newOrder(){
+      selected = [];
+      selectedEl.innerText = "Pilih bahan...";
+
+      currentRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+      orderEl.innerText = currentRecipe.join("");
+
+      ingredientsEl.innerHTML = "";
+
+      shuffle([...allIngredients]).forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "ing-btn";
+        btn.innerText = item;
+        btn.onclick = () => chooseIngredient(item);
+        ingredientsEl.appendChild(btn);
+      });
+    }
+
+    function chooseIngredient(item){
+      if(selected.length >= currentRecipe.length) return;
+
+      selected.push(item);
+      selectedEl.innerText = selected.join("");
+    }
+
+    function clearSelection(){
+      selected = [];
+      selectedEl.innerText = "Pilih bahan...";
+    }
+
+    function serveOrder(){
+      const correct = selected.join("") === currentRecipe.join("");
+
+      if(correct){
+        score += 10 + level;
+        level++;
+
+        if(level % 3 === 0 && time < 45){
+          time += 4;
+        }
+      } else {
+        score -= 5;
+        time -= 4;
+        if(score < 0) score = 0;
+      }
+
+      scoreEl.innerText = score;
+      levelEl.innerText = level;
+      timeEl.innerText = time;
+
+      if(time <= 0){
+        endGame();
+        return;
+      }
+
+      newOrder();
+    }
+
+    function startTimer(){
+      timerLoop = setInterval(() => {
+        time--;
+        timeEl.innerText = time;
+
+        if(time <= 0){
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function endGame(){
+      clearInterval(timerLoop);
+      finalScore.innerText = score;
+      gameOver.style.display = "flex";
+    }
+
+    function restartGame(){
+      score = 0;
+      time = 45;
+      level = 1;
+
+      scoreEl.innerText = score;
+      timeEl.innerText = time;
+      levelEl.innerText = level;
+      gameOver.style.display = "none";
+
+      newOrder();
+      startTimer();
+    }
+
+    newOrder();
+    startTimer();
+  </script>
+</body>
+</html>
