@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Factory Fix</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+
+    body{
+      background:radial-gradient(circle at top,#ff4b4b,#8b0000 45%,#150000);
+      color:white;
+      min-height:100vh;
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    .container{max-width:480px;margin:auto;padding:20px 16px 120px}
+
+    .back-btn{
+      background:rgba(255,255,255,.14);
+      border:none;color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .title{text-align:center;margin-bottom:16px}
+    .title h1{font-size:34px;margin-bottom:8px}
+    .title p{font-size:14px;color:#ffdada;line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:18px;
+      padding:14px;
+      text-align:center;
+    }
+
+    .stat h2{font-size:24px}
+    .stat span{font-size:12px;color:#ffdada}
+
+    .machine{
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:28px;
+      padding:22px 18px;
+      text-align:center;
+    }
+
+    .machine-icon{
+      font-size:76px;
+      margin-bottom:10px;
+      animation:shake 1s infinite;
+    }
+
+    @keyframes shake{
+      0%,100%{transform:translateX(0)}
+      25%{transform:translateX(-3px)}
+      50%{transform:translateX(3px)}
+      75%{transform:translateX(-2px)}
+    }
+
+    .problem-label{
+      color:#ffdada;
+      font-size:14px;
+      margin-bottom:8px;
+    }
+
+    .problem{
+      font-size:22px;
+      font-weight:bold;
+      margin-bottom:18px;
+    }
+
+    .tools{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+    }
+
+    .tool-btn{
+      border:none;
+      border-radius:18px;
+      background:white;
+      color:#9b0000;
+      padding:16px 10px;
+      font-size:15px;
+      font-weight:bold;
+      line-height:1.35;
+    }
+
+    .tool-btn span{
+      display:block;
+      font-size:30px;
+      margin-bottom:6px;
+    }
+
+    .tool-btn:active{transform:scale(.94)}
+
+    .feedback{
+      min-height:34px;
+      margin-top:16px;
+      font-weight:bold;
+      color:#fff;
+    }
+
+    .hint{
+      text-align:center;
+      margin-top:14px;
+      color:#ffdada;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .game-over{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.82);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:99;
+    }
+
+    .popup{
+      width:100%;
+      max-width:380px;
+      background:#1c0000;
+      border-radius:28px;
+      padding:28px 22px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .popup h2{font-size:32px;margin-bottom:12px}
+    .popup p{color:#ffdada;line-height:1.6;margin-bottom:22px}
+
+    .restart{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:16px;
+      background:#ff2d2d;
+      color:white;
+      font-size:16px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Kembali</button>
+
+    <div class="title">
+      <h1>🔧 Factory Fix</h1>
+      <p>Perbaiki mesin berdasarkan tanda kerusakan yang muncul.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><h2 id="score">0</h2><span>Score</span></div>
+      <div class="stat"><h2 id="time">45</h2><span>Waktu</span></div>
+      <div class="stat"><h2 id="level">1</h2><span>Level</span></div>
+    </div>
+
+    <div class="machine">
+      <div class="machine-icon" id="machineIcon">⚙️</div>
+      <div class="problem-label">Kerusakan:</div>
+      <div class="problem" id="problem">Mesin Berasap</div>
+
+      <div class="tools" id="tools"></div>
+
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div class="hint">
+      Pilih alat yang paling tepat. Jawaban benar memperbaiki mesin dan naik level.
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="popup">
+      <h2>🔥 Selesai!</h2>
+      <p>Score kamu:<br><br>
+        <span id="finalScore" style="font-size:42px;font-weight:bold;">0</span>
+      </p>
+      <button class="restart" onclick="restartGame()">Main Lagi</button>
+    </div>
+  </div>
+
+  <script>
+    const fixes = [
+      {
+        icon:"🔥",
+        problem:"Mesin Terlalu Panas",
+        answer:"cooler",
+        tools:[
+          {id:"cooler", icon:"❄️", name:"Pendingin"},
+          {id:"hammer", icon:"🔨", name:"Pukul Mesin"},
+          {id:"oil", icon:"🛢️", name:"Oli"},
+          {id:"wire", icon:"🔌", name:"Kabel"}
+        ]
+      },
+      {
+        icon:"⚡",
+        problem:"Kabel Konslet",
+        answer:"wire",
+        tools:[
+          {id:"wire", icon:"🔌", name:"Ganti Kabel"},
+          {id:"water", icon:"💧", name:"Siram Air"},
+          {id:"hammer", icon:"🔨", name:"Pukul Mesin"},
+          {id:"oil", icon:"🛢️", name:"Tambah Oli"}
+        ]
+      },
+      {
+        icon:"🛢️",
+        problem:"Gear Macet",
+        answer:"oil",
+        tools:[
+          {id:"oil", icon:"🛢️", name:"Tambah Oli"},
+          {id:"cooler", icon:"❄️", name:"Pendingin"},
+          {id:"wire", icon:"🔌", name:"Kabel"},
+          {id:"paint", icon:"🎨", name:"Cat Mesin"}
+        ]
+      },
+      {
+        icon:"🔩",
+        problem:"Baut Longgar",
+        answer:"wrench",
+        tools:[
+          {id:"wrench", icon:"🔧", name:"Kencangkan Baut"},
+          {id:"oil", icon:"🛢️", name:"Tambah Oli"},
+          {id:"water", icon:"💧", name:"Siram Air"},
+          {id:"paint", icon:"🎨", name:"Cat Mesin"}
+        ]
+      },
+      {
+        icon:"💨",
+        problem:"Filter Tersumbat",
+        answer:"filter",
+        tools:[
+          {id:"filter", icon:"🧽", name:"Bersihkan Filter"},
+          {id:"hammer", icon:"🔨", name:"Pukul Mesin"},
+          {id:"wire", icon:"🔌", name:"Kabel Baru"},
+          {id:"paint", icon:"🎨", name:"Cat Mesin"}
+        ]
+      },
+      {
+        icon:"🚨",
+        problem:"Alarm Error",
+        answer:"reset",
+        tools:[
+          {id:"reset", icon:"🔁", name:"Reset Sistem"},
+          {id:"oil", icon:"🛢️", name:"Tambah Oli"},
+          {id:"water", icon:"💧", name:"Siram Air"},
+          {id:"hammer", icon:"🔨", name:"Pukul Mesin"}
+        ]
+      }
+    ];
+
+    let score = 0;
+    let time = 45;
+    let level = 1;
+    let currentFix = null;
+    let timerLoop;
+    let locked = false;
+
+    const scoreEl = document.getElementById("score");
+    const timeEl = document.getElementById("time");
+    const levelEl = document.getElementById("level");
+    const machineIcon = document.getElementById("machineIcon");
+    const problemEl = document.getElementById("problem");
+    const toolsEl = document.getElementById("tools");
+    const feedback = document.getElementById("feedback");
+    const gameOver = document.getElementById("gameOver");
+    const finalScore = document.getElementById("finalScore");
+
+    function shuffle(arr){
+      return arr.sort(() => Math.random() - 0.5);
+    }
+
+    function newProblem(){
+      locked = false;
+      feedback.innerText = "";
+
+      currentFix = fixes[Math.floor(Math.random() * fixes.length)];
+
+      machineIcon.innerText = currentFix.icon;
+      problemEl.innerText = currentFix.problem;
+
+      toolsEl.innerHTML = "";
+
+      shuffle([...currentFix.tools]).forEach(tool => {
+        const btn = document.createElement("button");
+        btn.className = "tool-btn";
+        btn.innerHTML = `<span>${tool.icon}</span>${tool.name}`;
+        btn.onclick = () => chooseTool(tool.id);
+        toolsEl.appendChild(btn);
+      });
+    }
+
+    function chooseTool(toolId){
+      if(locked) return;
+      locked = true;
+
+      if(toolId === currentFix.answer){
+        score += 15 + level;
+        level++;
+        feedback.innerText = "✅ Mesin berhasil diperbaiki!";
+
+        if(level % 3 === 0 && time < 45){
+          time += 4;
+        }
+      } else {
+        score -= 5;
+        time -= 5;
+        feedback.innerText = "❌ Alat tidak tepat!";
+
+        if(score < 0) score = 0;
+      }
+
+      scoreEl.innerText = score;
+      levelEl.innerText = level;
+      timeEl.innerText = time;
+
+      if(time <= 0){
+        endGame();
+        return;
+      }
+
+      setTimeout(newProblem, 700);
+    }
+
+    function startTimer(){
+      timerLoop = setInterval(() => {
+        time--;
+        timeEl.innerText = time;
+
+        if(time <= 0){
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function endGame(){
+      clearInterval(timerLoop);
+      locked = true;
+      finalScore.innerText = score;
+      gameOver.style.display = "flex";
+    }
+
+    function restartGame(){
+      score = 0;
+      time = 45;
+      level = 1;
+      locked = false;
+
+      scoreEl.innerText = score;
+      timeEl.innerText = time;
+      levelEl.innerText = level;
+
+      gameOver.style.display = "none";
+
+      clearInterval(timerLoop);
+      newProblem();
+      startTimer();
+    }
+
+    newProblem();
+    startTimer();
+  </script>
+</body>
+</html>
