@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memuat Undangan...</title>
+  <title>Memuat Halaman...</title>
   <style>
     /* Animasi loading elegan biar tamu tidak melihat kedipan kasar */
     body { background: #10131f; color: #ffffff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
@@ -17,7 +17,7 @@
   <script>
     (async () => {
       // 1. Tentukan jalur ke template utama yang Bos gunakan
-      const templatePath = '/weddings/wedding_001/index.html';
+      const templatePath = '/stifinfamilyappv2.html';
       
       try {
         // 2. Ambil isi file template secara diam-diam lewat background fetch
@@ -32,7 +32,7 @@
         document.close();
       } catch (error) {
         console.error(error);
-        document.body.innerHTML = '<h3 style="text-align:center;">Undangan tidak dapat dimuat atau tidak ditemukan.</h3>';
+        document.body.innerHTML = '<h3 style="text-align:center;">Halaman tidak dapat dimuat atau tidak ditemukan.</h3>';
       }
     })();
   </script>
