@@ -693,7 +693,9 @@ img.materialboxed:hover { transform: scale(1.03); }
 }
 
 
-/* ======== D. FAQ ACCORDION ======== */
+/* ============================================================
+   D. FAQ ACCORDION — V2 (Plus/Minus + Smooth Twist)
+   ============================================================ */
 #faq {
   padding: 60px 20px;
   background: #fff;
@@ -717,21 +719,30 @@ img.materialboxed:hover { transform: scale(1.03); }
   max-width: 800px;
   margin: 0 auto;
 }
-/* Override Materialize Collapsible default */
+
+/* Override Materialize Collapsible */
 .faq-wrapper .collapsible {
   border: none;
   box-shadow: none;
+  margin: 0;
 }
 .faq-wrapper .collapsible li {
   margin-bottom: 12px;
   border-radius: 12px !important;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  background: #fff;
 }
 .faq-wrapper .collapsible li:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
+/* Elevation saat aktif/open */
+.faq-wrapper .collapsible li.active {
+  box-shadow: 0 6px 20px rgba(0, 122, 204, 0.15);
+}
+
+/* Header */
 .faq-wrapper .collapsible-header {
   background: #fff !important;
   border: none !important;
@@ -742,19 +753,47 @@ img.materialboxed:hover { transform: scale(1.03); }
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: background 0.2s ease;
+  transition: background 0.25s ease, color 0.25s ease;
+  user-select: none;
 }
 .faq-wrapper .collapsible-header:hover {
   background: #f0f7ff !important;
 }
-.faq-wrapper .collapsible-header i {
+.faq-wrapper .collapsible-header.active {
+  background: linear-gradient(90deg, #e8f2ff, #f5faff) !important;
   color: #007acc;
-  margin-right: 0 !important;
-  transition: transform 0.3s ease;
+  border-left: 4px solid #007acc;
+  padding-left: 18px !important;
 }
-.faq-wrapper .collapsible-header.active i {
+
+/* Ikon pertanyaan (❓) */
+.faq-wrapper .collapsible-header .faq-q-icon {
+  color: #007acc;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+/* Ikon +/− di kanan */
+.faq-wrapper .collapsible-header .faq-toggle-icon {
+  margin-left: auto;
+  color: #007acc;
+  font-size: 26px !important;
+  font-weight: 300;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s ease;
+  flex-shrink: 0;
+  line-height: 1;
+}
+/* Saat open, ikon + rotate 180° (efek halus, bukan swap) */
+.faq-wrapper .collapsible-header.active .faq-toggle-icon {
   transform: rotate(180deg);
+  color: #fff;
+  background: #007acc;
+  border-radius: 50%;
+  padding: 2px;
+  font-size: 20px !important;
 }
+
+/* Body */
 .faq-wrapper .collapsible-body {
   background: #fafbfc;
   border-bottom: 1px solid #eef2f6;
@@ -763,14 +802,19 @@ img.materialboxed:hover { transform: scale(1.03); }
   padding: 18px 22px !important;
   margin: 0;
   color: #555;
-  line-height: 1.7;
+  line-height: 1.75;
   font-size: 0.95rem;
 }
+
+/* Mobile */
 @media (max-width: 768px) {
   #faq .section-title { font-size: 1.5rem; }
   .faq-wrapper .collapsible-header {
     padding: 15px 18px !important;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
+  }
+  .faq-wrapper .collapsible-header .faq-toggle-icon {
+    font-size: 22px !important;
   }
   .faq-wrapper .collapsible-body p {
     padding: 15px 18px !important;
