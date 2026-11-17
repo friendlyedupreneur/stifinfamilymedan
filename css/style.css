@@ -511,3 +511,18 @@ img.materialboxed {
   cursor: zoom-in;
 }
 img.materialboxed:hover { transform: scale(1.03); }
+
+.ramadhan-card {
+  display: block;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #064e3b, #166534);
+  color: #fff;
+  border-radius: 16px;
+  padding: 18px;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,.2);
+}
+.ramadhan-highlight {
+  font-weight: 800;
+  color: #fde68a;
+}
