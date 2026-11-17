@@ -526,3 +526,254 @@ img.materialboxed:hover { transform: scale(1.03); }
   font-weight: 800;
   color: #fde68a;
 }
+
+/* ============================================================
+   FASE 2 — KONVERSI & UX UPGRADE
+   ============================================================ */
+
+/* ======== A. STICKY WHATSAPP FLOATING BUTTON ======== */
+.wa-float {
+  position: fixed;
+  bottom: 90px;          /* di atas sticky register */
+  right: 20px;
+  z-index: 998;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: wa-pulse 2s infinite;
+}
+.wa-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 28px rgba(37, 211, 102, 0.6);
+  animation: none;
+}
+.wa-float svg {
+  width: 32px;
+  height: 32px;
+  fill: #fff;
+}
+@keyframes wa-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+  70%  { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+@media (max-width: 768px) {
+  .wa-float {
+    width: 54px;
+    height: 54px;
+    bottom: 85px;
+    right: 15px;
+  }
+  .wa-float svg { width: 28px; height: 28px; }
+}
+
+
+/* ======== B. STICKY REGISTER UPGRADE (harga + layout) ======== */
+.sticky-register a {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 56px !important;
+  padding: 0 28px !important;
+  line-height: 1.2 !important;
+  text-transform: none !important;
+  letter-spacing: 0.3px !important;
+  gap: 2px;
+}
+.sticky-register .sr-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+.sticky-register .sr-price {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+@media (max-width: 768px) {
+  .sticky-register a {
+    height: 50px !important;
+    padding: 0 22px !important;
+  }
+  .sticky-register .sr-title { font-size: 13px; }
+  .sticky-register .sr-price { font-size: 10px; }
+}
+
+
+/* ======== C. SECTION CARA KERJA ======== */
+#cara-kerja {
+  padding: 60px 20px;
+  background: linear-gradient(180deg, #f9f9f9 0%, #ffffff 100%);
+  text-align: center;
+}
+#cara-kerja .section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #333;
+  margin-bottom: 10px;
+}
+#cara-kerja .section-subtitle {
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto 50px;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.steps-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.step-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px 25px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.step-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+.step-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #0c457e, #007acc);
+}
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0c457e, #007acc);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 16px rgba(0, 122, 204, 0.3);
+}
+.step-icon {
+  font-size: 42px !important;
+  color: #007acc;
+  margin-bottom: 12px;
+}
+.step-card h5 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0c457e;
+  margin: 10px 0 12px;
+}
+.step-card p {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+@media (max-width: 768px) {
+  .steps-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  #cara-kerja .section-title { font-size: 1.5rem; }
+  .step-card { padding: 25px 20px; }
+}
+
+
+/* ======== D. FAQ ACCORDION ======== */
+#faq {
+  padding: 60px 20px;
+  background: #fff;
+}
+#faq .section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #333;
+  text-align: center;
+  margin-bottom: 10px;
+}
+#faq .section-subtitle {
+  color: #666;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 40px;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.faq-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+/* Override Materialize Collapsible default */
+.faq-wrapper .collapsible {
+  border: none;
+  box-shadow: none;
+}
+.faq-wrapper .collapsible li {
+  margin-bottom: 12px;
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease;
+}
+.faq-wrapper .collapsible li:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+.faq-wrapper .collapsible-header {
+  background: #fff !important;
+  border: none !important;
+  padding: 18px 22px !important;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #0c457e;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s ease;
+}
+.faq-wrapper .collapsible-header:hover {
+  background: #f0f7ff !important;
+}
+.faq-wrapper .collapsible-header i {
+  color: #007acc;
+  margin-right: 0 !important;
+  transition: transform 0.3s ease;
+}
+.faq-wrapper .collapsible-header.active i {
+  transform: rotate(180deg);
+}
+.faq-wrapper .collapsible-body {
+  background: #fafbfc;
+  border-bottom: 1px solid #eef2f6;
+}
+.faq-wrapper .collapsible-body p {
+  padding: 18px 22px !important;
+  margin: 0;
+  color: #555;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+@media (max-width: 768px) {
+  #faq .section-title { font-size: 1.5rem; }
+  .faq-wrapper .collapsible-header {
+    padding: 15px 18px !important;
+    font-size: 0.92rem;
+  }
+  .faq-wrapper .collapsible-body p {
+    padding: 15px 18px !important;
+    font-size: 0.9rem;
+  }
+}
