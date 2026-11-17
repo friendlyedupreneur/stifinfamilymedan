@@ -910,45 +910,60 @@
   });
   </script>
 
-  <!-- JS -->
+    <!-- JS -->
   <script>
-    // Materialize Sidenav
-    const sidenav = document.querySelectorAll(".sidenav");
-    M.Sidenav.init(sidenav);
+    // Tunggu DOM siap
+    document.addEventListener('DOMContentLoaded', function() {
 
-    // Materialize Slider
-    const slider = document.querySelectorAll(".slider");
-    M.Slider.init(slider, {
-      indicators: false,
-      height: 600,
-      transition: 600,
-      interval: 6000,
+      // Debug — cek komponen Materialize tersedia
+      console.log('=== Materialize Components ===');
+      console.log('M:',            typeof M);
+      console.log('M.Sidenav:',    typeof (M && M.Sidenav));
+      console.log('M.Slider:',     typeof (M && M.Slider));
+      console.log('M.Collapsible:',typeof (M && M.Collapsible));
+
+      // 1. Sidenav
+      if (M && M.Sidenav) {
+        M.Sidenav.init(document.querySelectorAll('.sidenav'));
+      }
+
+      // 2. Slider
+      if (M && M.Slider) {
+        M.Slider.init(document.querySelectorAll('.slider'), {
+          indicators: false,
+          height: 600,
+          transition: 600,
+          interval: 6000,
+        });
+      }
+
+      // 3. Collapsible (FAQ) — paling penting
+      if (M && M.Collapsible) {
+        M.Collapsible.init(document.querySelectorAll('.collapsible'), {
+          accordion: true
+        });
+        console.log('✅ FAQ Collapsible initialized');
+      } else {
+        console.error('❌ M.Collapsible UNDEFINED — cek materialize.min.js path!');
+      }
+
+      // 4. AOS
+      if (typeof AOS !== 'undefined') {
+        AOS.init({ once: true });
+      }
+
     });
 
-    // Materialize Scrollspy
-
-    // AOS (Animate on Scroll)
-    AOS.init({
-      once: true, 
-    });
-
-    // FAQ Collapsible
-       // FAQ Collapsible — accordion mode (1 open at a time)
-    const collapsibles = document.querySelectorAll('.collapsible');
-    M.Collapsible.init(collapsibles, {
-      accordion: true
-    });
-
-function scrollGallery(direction) {
-  const gallery = document.querySelector('.gallery-scroll');
-  const scrollAmount = 300;
-
-  if (direction === 'left') {
-    gallery.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-  } else {
-    gallery.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-  }
-}
+    // Gallery scroll (global function untuk onclick)
+    window.scrollGallery = function(direction) {
+      const gallery = document.querySelector('.gallery-scroll');
+      if (!gallery) return;
+      const amount = 300;
+      gallery.scrollBy({
+        left: direction === 'left' ? -amount : amount,
+        behavior: 'smooth'
+      });
+    };
   </script>
 
 </body>
