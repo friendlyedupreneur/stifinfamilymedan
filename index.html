@@ -982,6 +982,152 @@
           });
         }
       }
+
+          // --- 8. PROMO POPUP (Muncul setelah 3 detik, sekali per sesi) ---
+      const promoPopup = document.getElementById('promoPopup');
+      const promoClose = document.getElementById('promoClose');
+      const promoSKip = document.getElementById('promoSKip');
+
+      // Cek: sudah pernah lihat promo?
+      const promoSeen = sessionStorage.getItem('promoTesSeen');
+
+      function showPromoPopup() {
+        if (!promoPopup || promoSeen) return;
+        promoPopup.classList.add('show');
+        promoPopup.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('promo-popup-open');
+        sessionStorage.setItem('promoTesSeen', '1');
+      }
+
+      function hidePromoPopup() {
+        if (!promoPopup) return;
+        promoPopup.classList.remove('show');
+        promoPopup.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('promo-popup-open');
+      }
+
+      // Munculkan setelah 3 detik
+      setTimeout(showPromoPopup, 3000);
+
+      // Event listener
+      if (promoClose) promoClose.addEventListener('click', hidePromoPopup);
+      if (promoSKip) {
+        promoSKip.addEventListener('click', function(e) {
+          e.preventDefault();
+          hidePromoPopup();
+        });
+      }
+
+      // Klik overlay (background) juga close
+      if (promoPopup) {
+        promoPopup.addEventListener('click', function(e) {
+          if (e.target === promoPopup) hidePromoPopup();
+        });
+      }
+
+      // ESC key close
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && promoPopup && promoPopup.classList.contains('show')) {
+          hidePromoPopup();
+        }
+      });
+
+      // --- 9. COUNTDOWN "Sabtu & Minggu, Nov-Des 2026" ---
+      // Logika: Setiap minggu, hitung mundur ke Minggu 23:59.
+      // Periode berlaku tgl 1 Nov 2026 s.d. 31 Des 2026.
+      function updatePromoCountdown() {
+        const now = new Date();
+        
+        // Tentukan akhir periode: 31 Des 2026 23:59
+        const periodEnd = new Date('2026-12-31T23:59:59');
+        
+        // Kalau sudah lewat periode, sembunyikan countdown
+        if (now > periodEnd) {
+          const el = document.getElementById('cdDaysPopup');
+          if (el) el.parentElement.parentElement.innerHTML = '<p style="text-align:center;color:#ef4444;font-weight:600;">Promo telah berakhir</p>';
+          return;
+        }
+
+        // Tentukan target mingguan: minggu ini hari Minggu 23:59
+        // getDay(): 0=Minggu, 1=Senin, ..., 6=Sabtu
+        const dayOfWeek = now.getDay();
+        const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+        const target = new Date(now);
+        target.setDate(now.getDate() + daysUntilSunday);
+        target.setHours(23, 59, 59, 0);
+
+        const diff = target - now;
+        if (diff <= 0) return;
+
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+
+        const pad = (n) => String(n).padStart(2, '0');
+        
+        const daysEl = document.getElementById('cdDaysPopup');
+        const hoursEl = document.getElementById('cdHoursPopup');
+        const minsEl = document.getElementById('cdMinsPopup');
+        const secsEl = document.getElementById('cdSecsPopup');
+        
+        if (daysEl) daysEl.textContent = pad(d);
+        if (hoursEl) hoursEl.textContent = pad(h);
+        if (minsEl) minsEl.textContent = pad(m);
+        if (secsEl) secsEl.textContent = pad(s);
+      }
+
+      setInterval(updatePromoCountdown, 1000);
+      updatePromoCountdown();
   </script>
+
+    <!-- ============================================================ -->
+  <!-- POPUP IKLAN PROMO "TES 3 GRATIS 1" -->
+  <!-- ============================================================ -->
+  <div class="promo-popup-overlay" id="promoPopup" aria-hidden="true">
+    <div class="promo-popup-box" role="dialog" aria-modal="true" aria-labelledby="promoTitle">
+      
+      <!-- Tombol Close -->
+      <button class="promo-popup-close" id="promoClose" aria-label="Tutup promo">×</button>
+
+      <!-- Gambar Banner (Boss ganti src-nya) -->
+      <div class="promo-popup-image">
+        <img src="img/promo-tes-banner.webp" 
+             alt="Promo Tes 3 Gratis 1 - STIFIn Family Medan" 
+             loading="eager">
+        <div class="promo-popup-ribbon">PROMO TERBATAS</div>
+      </div>
+
+      <!-- Konten Popup -->
+      <div class="promo-popup-content">
+        <div class="promo-popup-badge">🔥 Khusus Sabtu & Minggu</div>
+        <h3 id="promoTitle" class="promo-popup-title">
+          Tes 3 <span>Gratis 1</span>
+        </h3>
+        <p class="promo-popup-desc">
+          Daftarkan <strong>3 anggota keluarga</strong> untuk Tes STIFIn, 
+          dan dapatkan <strong>1 tes GRATIS</strong> untuk anggota ke-4. 
+          Berlaku periode <strong>November – Desember 2026</strong>.
+        </p>
+
+        <!-- Countdown mini -->
+        <div class="promo-popup-countdown">
+          <div class="countdown-item"><span id="cdDaysPopup">00</span><small>Hari</small></div>
+          <div class="countdown-item"><span id="cdHoursPopup">00</span><small>Jam</small></div>
+          <div class="countdown-item"><span id="cdMinsPopup">00</span><small>Menit</small></div>
+          <div class="countdown-item"><span id="cdSecsPopup">00</span><small>Detik</small></div>
+        </div>
+
+        <!-- CTA -->
+        <a href="promo-tes.html" class="promo-popup-btn">
+          🎁 Ambil Promo Sekarang
+        </a>
+        <a href="#" class="promo-popup-skip" id="promoSKip">
+          Nanti saja, saya lihat-lihat dulu
+        </a>
+      </div>
+
+    </div>
+  </div>
 </body>
 </html>
