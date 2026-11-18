@@ -856,6 +856,55 @@
     <p class="flow-text" style="padding: 20px 0;">&copy; 2026 STIFIn Family Medan</p>
   </footer>
 
+   <!-- ============================================================ -->
+  <!-- POPUP IKLAN PROMO "TES 3 GRATIS 1" -->
+  <!-- ============================================================ -->
+  <div class="promo-popup-overlay" id="promoPopup" aria-hidden="true">
+    <div class="promo-popup-box" role="dialog" aria-modal="true" aria-labelledby="promoTitle">
+      
+      <!-- Tombol Close -->
+      <button class="promo-popup-close" id="promoClose" aria-label="Tutup promo">×</button>
+
+      <!-- Gambar Banner (Boss ganti src-nya) -->
+      <div class="promo-popup-image">
+        <img src="img/promo-tes-banner.webp" 
+             alt="Promo Tes 3 Gratis 1 - STIFIn Family Medan" 
+             loading="eager">
+        <div class="promo-popup-ribbon">PROMO TERBATAS</div>
+      </div>
+
+      <!-- Konten Popup -->
+      <div class="promo-popup-content">
+        <div class="promo-popup-badge">🔥 Khusus Sabtu & Minggu</div>
+        <h3 id="promoTitle" class="promo-popup-title">
+          Tes 3 <span>Gratis 1</span>
+        </h3>
+        <p class="promo-popup-desc">
+          Daftarkan <strong>3 anggota keluarga</strong> untuk Tes STIFIn, 
+          dan dapatkan <strong>1 tes GRATIS</strong> untuk anggota ke-4. 
+          Berlaku periode <strong>November – Desember 2026</strong>.
+        </p>
+
+        <!-- Countdown mini -->
+        <div class="promo-popup-countdown">
+          <div class="countdown-item"><span id="cdDaysPopup">00</span><small>Hari</small></div>
+          <div class="countdown-item"><span id="cdHoursPopup">00</span><small>Jam</small></div>
+          <div class="countdown-item"><span id="cdMinsPopup">00</span><small>Menit</small></div>
+          <div class="countdown-item"><span id="cdSecsPopup">00</span><small>Detik</small></div>
+        </div>
+
+        <!-- CTA -->
+        <a href="promo-tes.html" class="promo-popup-btn">
+          🎁 Ambil Promo Sekarang
+        </a>
+        <a href="#" class="promo-popup-skip" id="promoSKip">
+          Nanti saja, saya lihat-lihat dulu
+        </a>
+      </div>
+
+    </div>
+  </div>
+
   <!-- JS Libraries (Gunakan CDN Materialize) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
@@ -943,6 +992,9 @@
       }, { threshold: 0.3 });
       const heroSection = document.querySelector('.hero-new');
       if (heroSection) heroObserver.observe(heroSection);
+
+      setInterval(updatePromoCountdown, 1000);
+        updatePromoCountdown();
 
     });
 
@@ -1094,57 +1146,6 @@
         if (secsEl) secsEl.textContent = pad(s);
       }
 
-      setInterval(updatePromoCountdown, 1000);
-      updatePromoCountdown();
   </script>
-
-    <!-- ============================================================ -->
-  <!-- POPUP IKLAN PROMO "TES 3 GRATIS 1" -->
-  <!-- ============================================================ -->
-  <div class="promo-popup-overlay" id="promoPopup" aria-hidden="true">
-    <div class="promo-popup-box" role="dialog" aria-modal="true" aria-labelledby="promoTitle">
-      
-      <!-- Tombol Close -->
-      <button class="promo-popup-close" id="promoClose" aria-label="Tutup promo">×</button>
-
-      <!-- Gambar Banner (Boss ganti src-nya) -->
-      <div class="promo-popup-image">
-        <img src="img/promo-tes-banner.webp" 
-             alt="Promo Tes 3 Gratis 1 - STIFIn Family Medan" 
-             loading="eager">
-        <div class="promo-popup-ribbon">PROMO TERBATAS</div>
-      </div>
-
-      <!-- Konten Popup -->
-      <div class="promo-popup-content">
-        <div class="promo-popup-badge">🔥 Khusus Sabtu & Minggu</div>
-        <h3 id="promoTitle" class="promo-popup-title">
-          Tes 3 <span>Gratis 1</span>
-        </h3>
-        <p class="promo-popup-desc">
-          Daftarkan <strong>3 anggota keluarga</strong> untuk Tes STIFIn, 
-          dan dapatkan <strong>1 tes GRATIS</strong> untuk anggota ke-4. 
-          Berlaku periode <strong>November – Desember 2026</strong>.
-        </p>
-
-        <!-- Countdown mini -->
-        <div class="promo-popup-countdown">
-          <div class="countdown-item"><span id="cdDaysPopup">00</span><small>Hari</small></div>
-          <div class="countdown-item"><span id="cdHoursPopup">00</span><small>Jam</small></div>
-          <div class="countdown-item"><span id="cdMinsPopup">00</span><small>Menit</small></div>
-          <div class="countdown-item"><span id="cdSecsPopup">00</span><small>Detik</small></div>
-        </div>
-
-        <!-- CTA -->
-        <a href="promo-tes.html" class="promo-popup-btn">
-          🎁 Ambil Promo Sekarang
-        </a>
-        <a href="#" class="promo-popup-skip" id="promoSKip">
-          Nanti saja, saya lihat-lihat dulu
-        </a>
-      </div>
-
-    </div>
-  </div>
 </body>
 </html>
