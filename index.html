@@ -983,12 +983,12 @@
         }
       }
 
-          // --- 8. PROMO POPUP (Muncul setelah 3 detik, sekali per sesi) ---
+                // --- 8. PROMO POPUP (Muncul setelah scroll 1 layar penuh, sekali per sesi) ---
       const promoPopup = document.getElementById('promoPopup');
       const promoClose = document.getElementById('promoClose');
       const promoSKip = document.getElementById('promoSKip');
 
-      // Cek: sudah pernah lihat promo?
+      // Cek: sudah pernah lihat promo di sesi ini?
       const promoSeen = sessionStorage.getItem('promoTesSeen');
 
       function showPromoPopup() {
@@ -997,6 +997,9 @@
         promoPopup.setAttribute('aria-hidden', 'false');
         document.body.classList.add('promo-popup-open');
         sessionStorage.setItem('promoTesSeen', '1');
+        
+        // Hapus event listener agar tidak terus-terusan ngecek scroll setelah muncul
+        window.removeEventListener('scroll', handleScrollTrigger);
       }
 
       function hidePromoPopup() {
@@ -1006,10 +1009,24 @@
         document.body.classList.remove('promo-popup-open');
       }
 
-      // Munculkan setelah 3 detik
-      setTimeout(showPromoPopup, 3000);
+      // Fungsi untuk mendeteksi scroll
+      function handleScrollTrigger() {
+        // Ambil tinggi 1 layar (viewport)
+        const viewportHeight = window.innerHeight;
+        
+        // Jika user sudah scroll melewati 1 layar penuh (atau 80% layar)
+        // Kita pakai 0.8 (80%) agar tidak terlalu jauh ke bawah
+        if (window.scrollY > (viewportHeight * 0.8)) {
+          showPromoPopup();
+        }
+      }
 
-      // Event listener
+      // Pasang event listener scroll (hanya jika belum pernah lihat)
+      if (!promoSeen && promoPopup) {
+        window.addEventListener('scroll', handleScrollTrigger, { passive: true });
+      }
+
+      // Event listener untuk menutup popup
       if (promoClose) promoClose.addEventListener('click', hidePromoPopup);
       if (promoSKip) {
         promoSKip.addEventListener('click', function(e) {
