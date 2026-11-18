@@ -1077,3 +1077,248 @@ img.materialboxed:hover { transform: scale(1.03); }
   #scroll-progress { top: 56px; }
 }
 
+/* ============================================================
+   POPUP IKLAN PROMO "TES 3 GRATIS 1"
+   ============================================================ */
+
+.promo-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 20, 40, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.promo-popup-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.promo-popup-box {
+  position: relative;
+  background: #fff;
+  border-radius: 24px;
+  max-width: 880px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.promo-popup-overlay.show .promo-popup-box {
+  transform: scale(1) translateY(0);
+}
+
+/* Tombol Close */
+.promo-popup-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+}
+.promo-popup-close:hover {
+  background: #ef4444;
+  transform: rotate(90deg);
+}
+
+/* Bagian Gambar */
+.promo-popup-image {
+  position: relative;
+  background: linear-gradient(135deg, #065f46, #16a34a);
+  overflow: hidden;
+  min-height: 280px;
+}
+.promo-popup-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.promo-popup-ribbon {
+  position: absolute;
+  top: 20px;
+  left: -35px;
+  background: #fbbf24;
+  color: #78350f;
+  font-weight: 800;
+  font-size: 12px;
+  padding: 6px 50px;
+  transform: rotate(-45deg);
+  letter-spacing: 1px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Bagian Konten */
+.promo-popup-content {
+  padding: 40px 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.promo-popup-badge {
+  display: inline-block;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+  align-self: flex-start;
+}
+
+.promo-popup-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+  margin: 0 0 14px;
+}
+.promo-popup-title span {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.promo-popup-desc {
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+/* Countdown */
+.promo-popup-countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.countdown-item {
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 10px 4px;
+  text-align: center;
+}
+.countdown-item span {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0c457e;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.countdown-item small {
+  font-size: 0.7rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* CTA Button */
+.promo-popup-btn {
+  display: block;
+  text-align: center;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 16px 24px;
+  border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.promo-popup-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(22, 163, 74, 0.5);
+}
+
+.promo-popup-skip {
+  display: block;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  margin-top: 12px;
+  transition: color 0.2s;
+}
+.promo-popup-skip:hover {
+  color: #64748b;
+}
+
+/* Body scroll lock saat popup terbuka */
+body.promo-popup-open {
+  overflow: hidden;
+}
+
+/* ========== MOBILE ========== */
+@media (max-width: 768px) {
+  .promo-popup-overlay {
+    padding: 10px;
+    align-items: flex-start;
+    padding-top: 30px;
+    overflow-y: auto;
+  }
+  .promo-popup-box {
+    grid-template-columns: 1fr;
+    max-height: none;
+    max-width: 420px;
+    margin: auto;
+  }
+  .promo-popup-image {
+    min-height: 200px;
+    max-height: 220px;
+  }
+  .promo-popup-content {
+    padding: 25px 22px 30px;
+  }
+  .promo-popup-title {
+    font-size: 1.6rem;
+  }
+  .promo-popup-desc {
+    font-size: 0.85rem;
+  }
+  .countdown-item span {
+    font-size: 1.15rem;
+  }
+  .countdown-item small {
+    font-size: 0.6rem;
+  }
+  .promo-popup-btn {
+    padding: 14px 20px;
+    font-size: 0.9rem;
+  }
+  .promo-popup-close {
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+  }
+}
