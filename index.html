@@ -101,25 +101,59 @@
   </ul>
 
   <!-- ========== FASE 3: HERO SECTION BARU ========== -->
-  <section class="hero-new">
-    <div class="hero-content">
-      <div class="hero-badge">
-        <span class="pulse-dot"></span>
-        <span>⭐ Promotor STIFIn Terpercaya di Medan</span>
+   <!-- HERO: TEXT-ONLY SLIDER -->
+  <section class="hero-slider-section">
+    <!-- Pattern Background (CSS Only) -->
+    <div class="hero-bg-pattern"></div>
+    
+    <div class="container hero-container">
+      <div class="slider-wrapper">
+        <ul class="slides text-slider">
+          
+          <!-- SLIDE 1: ANAK SEKOLAH -->
+          <li class="slide-item slide-blue">
+            <div class="slide-content">
+              <div class="hero-badge"><span class="pulse-dot"></span> 🎓 Untuk Anak Sekolah</div>
+              <h1>Temukan Cara Belajar<br><span class="text-highlight">Terbaik Anak Anda</span></h1>
+              <p class="hero-subtitle">Hindari salah jurusan sejak dini. Kenali bakat dan potensi alaminya agar belajar jadi lebih menyenangkan.</p>
+              <div class="hero-cta-group">
+                <a href="#paket" class="btn-hero btn-hero-primary">🎯 Daftar Tes Anak</a>
+                <a href="https://wa.me/6281238173518?text=Halo%20Kak%2C%20saya%20tertarik%20konsultasi%20Tes%20Anak" target="_blank" rel="noopener" class="btn-hero btn-hero-outline">💬 Tanya Dulu</a>
+              </div>
+            </div>
+          </li>
+
+          <!-- SLIDE 2: PERSONAL / COUPLE -->
+          <li class="slide-item slide-green">
+            <div class="slide-content">
+              <div class="hero-badge"><span class="pulse-dot"></span> 💑 Untuk Pasangan</div>
+              <h1>Pahami Dirimu &<br><span class="text-highlight">Pasanganmu Lebih Dalam</span></h1>
+              <p class="hero-subtitle">Bangun hubungan yang lebih harmonis dengan memahami cara berpikir, komunikasi, dan bahasa cinta satu sama lain.</p>
+              <div class="hero-cta-group">
+                <a href="#paket" class="btn-hero btn-hero-primary">🌟 Daftar Paket Couple</a>
+                <a href="https://wa.me/6281238173518?text=Halo%20Kak%2C%20saya%20tertarik%20Tes%20Couple" target="_blank" rel="noopener" class="btn-hero btn-hero-outline">💬 Konsultasi</a>
+              </div>
+            </div>
+          </li>
+
+          <!-- SLIDE 3: KELUARGA / ORGANISASI -->
+          <li class="slide-item slide-purple">
+            <div class="slide-content">
+              <div class="hero-badge"><span class="pulse-dot"></span> 👨‍👩‍👧‍👦 Untuk Keluarga & Tim</div>
+              <h1>Sinergi Sempurna<br><span class="text-highlight">Dalam Keluarga & Organisasi</span></h1>
+              <p class="hero-subtitle">Petakan peran setiap anggota keluarga atau tim sesuai bakatnya. Ciptakan lingkungan yang saling mendukung dan minim konflik.</p>
+              <div class="hero-cta-group">
+                <a href="#paket" class="btn-hero btn-hero-primary">💎 Daftar Paket Family</a>
+                <a href="https://wa.me/6281238173518?text=Halo%20Kak%2C%20saya%20tertarik%20Tes%20Family" target="_blank" rel="noopener" class="btn-hero btn-hero-outline">💬 Tanya Dulu</a>
+              </div>
+            </div>
+          </li>
+
+        </ul>
       </div>
-      <h1>
-        Kenali Potensi Anak<br>
-        Sejak Dini — <span class="highlight">Hindari Salah Jurusan</span>
-      </h1>
-      <p class="hero-subtitle">
-        STIFIn membantu Anda menemukan cara belajar, bakat, dan arah masa depan anak yang tepat.
-        Akurat 95%, praktis, dan sudah dipercaya ribuan keluarga Indonesia.
-      </p>
-      <div class="hero-cta-group">
-        <a href="#paket" class="btn-hero btn-hero-primary">🎯 Daftar Sekarang</a>
-        <a href="https://wa.me/6281238173518?text=Halo%20Kak%2C%20saya%20tertarik%20konsultasi%20Tes%20STIFIn%20Medan" target="_blank" rel="noopener" class="btn-hero btn-hero-wa">💬 Konsultasi Gratis</a>
-      </div>
-      <div class="hero-stats">
+
+      <!-- Stats / Social Proof di Bawah Slider -->
+      <div class="hero-stats-wrapper">
         <div class="stat-item"><span class="stat-number">1.200+</span><span class="stat-label">Keluarga Medan</span></div>
         <div class="stat-item"><span class="stat-number">95%</span><span class="stat-label">Tingkat Akurasi</span></div>
         <div class="stat-item"><span class="stat-number">5+</span><span class="stat-label">Tahun Pengalaman</span></div>
@@ -919,6 +953,35 @@
       const amount = 300;
       gallery.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
     };
+
+          // --- 7. Hero Text Slider ---
+      const slides = document.querySelectorAll('.slide-item');
+      let currentSlide = 0;
+      let slideInterval;
+
+      function showSlide(index) {
+        slides.forEach(s => s.classList.remove('active'));
+        slides[index].classList.add('active');
+      }
+
+      function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+      }
+
+      if (slides.length > 0) {
+        showSlide(0); // Tampilkan slide pertama
+        slideInterval = setInterval(nextSlide, 5000); // Ganti tiap 5 detik
+        
+        // Pause if user hovers (biar user sempat baca)
+        const sliderSection = document.querySelector('.hero-slider-section');
+        if (sliderSection) {
+          sliderSection.addEventListener('mouseenter', () => clearInterval(slideInterval));
+          sliderSection.addEventListener('mouseleave', () => {
+            slideInterval = setInterval(nextSlide, 5000);
+          });
+        }
+      }
   </script>
 </body>
 </html>
