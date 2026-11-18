@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promo Spesial Tes 3 Gratis 1 — STIFIn Family Medan</title>
+  <meta name="description" content="Promo terbatas! Daftarkan 3 anggota keluarga Tes STIFIn, dapatkan 1 GRATIS. Khusus Sabtu & Minggu, November-Desember 2026.">
+  <meta name="theme-color" content="#065f46">
+
+  <!-- OG -->
+  <meta property="og:title" content="Promo Spesial Tes 3 Gratis 1 — STIFIn Medan">
+  <meta property="og:description" content="Daftar 3, gratis 1. Khusus Sabtu & Minggu, Nov-Des 2026.">
+  <meta property="og:image" content="https://stifinfamilymedan.com/img/promo-tes-banner.webp">
+  <meta property="og:url" content="https://stifinfamilymedan.com/promo-tes.html">
+  <meta property="og:type" content="website">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/img/logosfm.png" type="image/png">
+
+  <!-- CSS -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="css/style.css?v=3">
+
+  <style>
+    /* ============================================
+       STYLE KHUSUS HALAMAN PROMO
+       ============================================ */
+    body.promo-page {
+      background: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    /* Hero Promo */
+    .promo-hero {
+      position: relative;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 40%, #16a34a 100%);
+      color: #fff;
+      padding: 60px 20px 80px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .promo-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+    .promo-hero::after {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .promo-hero .container {
+      position: relative;
+      z-index: 2;
+    }
+
+    .promo-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+      margin-bottom: 30px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .promo-back:hover { color: #fde68a; }
+
+    /* Badge FOMO */
+    .promo-fomo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(90deg, #dc2626, #f97316);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 10px 20px;
+      border-radius: 999px;
+      margin-bottom: 24px;
+      animation: fomo-pulse 1.5s infinite;
+      box-shadow: 0 8px 24px rgba(220, 38, 38, 0.4);
+    }
+    @keyframes fomo-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    .promo-hero h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin: 0 0 24px;
+      letter-spacing: -0.02em;
+    }
+    .promo-hero h1 .strike {
+      text-decoration: line-through;
+      color: rgba(255,255,255,0.5);
+      font-weight: 600;
+      font-size: 0.7em;
+    }
+    .promo-hero h1 .free {
+      display: inline-block;
+      background: linear-gradient(90deg, #fde68a, #fbbf24);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3s infinite;
+    }
+    @keyframes shine {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.3); }
+    }
+
+    .promo-hero .lead {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: rgba(255,255,255,0.95);
+      line-height: 1.7;
+      max-width: 620px;
+      margin: 0 0 36px;
+    }
+
+    /* Countdown Besar */
+    .promo-countdown-big {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      max-width: 480px;
+      margin-bottom: 36px;
+    }
+    .promo-countdown-big .cd-box {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 14px;
+      padding: 16px 8px;
+      text-align: center;
+    }
+    .promo-countdown-big .cd-num {
+      display: block;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      color: #fde68a;
+      line-height: 1;
+      margin-bottom: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+    .promo-countdown-big .cd-label {
+      font-size: 0.7rem;
+      opacity: 0.85;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    /* CTA Hero */
+    .promo-cta-hero {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(90deg, #fbbf24, #f59e0b);
+      color: #78350f;
+      font-weight: 900;
+      font-size: 1.05rem;
+      padding: 20px 42px;
+      border-radius: 60px;
+      text-decoration: none;
+      box-shadow: 0 12px 32px rgba(251, 191, 36, 0.5);
+      transition: all 0.3s ease;
+      animation: cta-bounce 2s infinite;
+    }
+    .promo-cta-hero:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(251, 191, 36, 0.7);
+      animation: none;
+    }
+    @keyframes cta-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* Section Umum */
+    .promo-section {
+      padding: 80px 20px;
+    }
+    .promo-section.alt {
+      background: #fff;
+    }
+    .promo-section-title {
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      font-weight: 800;
+      color: #0f172a;
+      text-align: center;
+      margin: 0 0 14px;
+    }
+    .promo-section-sub {
+      color: #64748b;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 50px;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    /* Benefit Grid */
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .benefit-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+      border-top: 4px solid #16a34a;
+    }
+    .benefit-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+    }
+    .benefit-card i {
+      font-size: 48px !important;
+      color: #16a34a;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .benefit-card h5 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 10px;
+    }
+    .benefit-card p {
+      font-size: 0.9rem;
+      color: #64748b;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Paket Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .pricing-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 36px 28px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+      position: relative;
+      transition: transform 0.3s;
+    }
+    .pricing-card.featured {
+      background: linear-gradient(135deg, #065f46, #16a34a);
+      color: #fff;
+      transform: scale(1.05);
+      box-shadow: 0 20px 50px rgba(22, 163, 74, 0.4);
+    }
+    .pricing-card.featured .price-original {
+      color: rgba(255,255,255,0.5);
+    }
+    .pricing-card.featured .price-final {
+      color: #fde68a;
+    }
+    .pricing-card.featured h4,
+    .pricing-card.featured .pricing-desc,
+    .pricing-card.featured ul li {
+      color: #fff;
+    }
+    .pricing-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fbbf24;
+      color: #78350f;
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(251,191,36,0.4);
+    }
+    .pricing-card h4 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin: 0 0 8px;
+      color: #0f172a;
+    }
+    .pricing-desc {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+    .pricing-price {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed rgba(0,0,0,0.1);
+    }
+    .pricing-card.featured .pricing-price {
+      border-bottom-color: rgba(255,255,255,0.2);
+    }
+    .price-original {
+      font-size: 0.9rem;
+      text-decoration: line-through;
+      color: #94a3b8;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .price-final {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #16a34a;
+      display: block;
+      line-height: 1;
+    }
+    .price-save {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-top: 8px;
+    }
+    .pricing-card.featured .price-save {
+      background: #fde68a;
+      color: #78350f;
+    }
+    .pricing-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px;
+    }
+    .pricing-card ul li {
+      padding: 8px 0;
+      font-size: 0.9rem;
+      color: #475569;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .pricing-card ul li i {
+      color: #16a34a;
+      font-size: 18px !important;
+      flex-shrink: 0;
+    }
+    .pricing-card.featured ul li i {
+      color: #fde68a;
+    }
+    .pricing-btn {
+      display: block;
+      text-align: center;
+      padding: 14px;
+      border-radius: 50px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .pricing-btn.primary {
+      background: #16a34a;
+      color: #fff;
+    }
+    .pricing-btn.primary:hover {
+      background: #15803d;
+      transform: translateY(-2px);
+    }
+    .pricing-card.featured .pricing-btn {
+      background: #fbbf24;
+      color: #78350f;
+    }
+    .pricing-card.featured .pricing-btn:hover {
+      background: #f59e0b;
+    }
+
+    /* Cara Klaim */
+    .steps-promo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .step-promo {
+      text-align: center;
+      padding: 30px 20px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    .step-promo::before {
+      content: attr(data-step);
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #065f46, #16a34a);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      box-shadow: 0 6px 16px rgba(22, 163, 74, 0.4);
+    }
+    .step-promo i {
+      font-size: 42px !important;
+      color: #16a34a;
+      margin: 10px 0 14px;
+      display: block;
+    }
+    .step-promo h6 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 8px;
+    }
+    .step-promo p {
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* FAQ Promo */
+    .faq-promo-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .faq-promo-wrapper .collapsible {
+      border: none;
+      box-shadow: none;
+    }
+    .faq-promo-wrapper .collapsible li {
+      margin-bottom: 12px;
+      border-radius: 12px !important;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: #fff;
+    }
+    .faq-promo-wrapper .collapsible-header {
+      padding: 18px 22px !important;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: none !important;
+      cursor: pointer;
+    }
+    .faq-promo-wrapper .collapsible-header i {
+      color: #16a34a;
+      pointer-events: none;
+    }
+    .faq-promo-wrapper .collapsible-header .toggle-icon {
+      margin-left: auto;
+      transition: transform 0.3s;
+    }
+    .faq-promo-wrapper .collapsible-header.active .toggle-icon {
+      transform: rotate(180deg);
+    }
+    .faq-promo-wrapper .collapsible-body {
+      background: #fafbfc;
+      border: none !important;
+    }
+    .faq-promo-wrapper .collapsible-body p {
+      padding: 18px 22px !important;
+      margin: 0;
+      color: #475569;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    /* Footer Promo */
+    .promo-footer {
+      background: #0f172a;
+      color: #fff;
+      padding: 40px 20px 30px;
+      text-align: center;
+    }
+    .promo-footer a {
+      color: #fde68a;
+    }
+    .promo-footer .footer-links {
+      margin: 16px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      font-size: 0.9rem;
+    }
+    .promo-footer .footer-links a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .promo-footer .footer-links a:hover { color: #fde68a; }
+    .promo-footer .copyright {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Floating WA khusus promo */
+    .promo-wa-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #25D366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.5);
+      z-index: 999;
+      animation: wa-pulse 2s infinite;
+    }
+    .promo-wa-float svg {
+      width: 32px; height: 32px; fill: #fff;
+    }
+    @keyframes wa-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+      70% { box-shadow: 0 0 0 18px rgba(37, 211, 102, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .promo-hero { min-height: auto; padding: 40px 16px 60px; }
+      .promo-section { padding: 60px 16px; }
+      .promo-countdown-big { max-width: 100%; }
+      .promo-cta-hero { width: 100%; justify-content: center; font-size: 0.95rem; padding: 18px 24px; }
+      .pricing-card.featured { transform: scale(1); }
+      .promo-wa-float { bottom: 20px; right: 16px; width: 54px; height: 54px; }
+      .promo-wa-float svg { width: 28px; height: 28px; }
+    }
+  </style>
+</head>
+<body class="promo-page">
+
+  <!-- HERO PROMO -->
+  <section class="promo-hero">
+    <div class="container">
+      <a href="index.html" class="promo-back">
+        <i class="material-icons" style="font-size:18px;">arrow_back</i>
+        Kembali ke Beranda
+      </a>
+
+      <div class="promo-fomo">
+        🔥 PROMO TERBATAS — Khusus Sabtu & Minggu
+      </div>
+
+      <h1>
+        Tes STIFIn <span class="strike">Rp 750rb</span><br>
+        Daftar 3, <span class="free">Gratis 1!</span>
+      </h1>
+
+      <p class="lead">
+        Beri kesempatan keluarga Anda mengenal potensi terbaiknya. 
+        Daftarkan <strong>3 anggota keluarga</strong> untuk Tes STIFIn, 
+        dan anggota ke-4 <strong>GRATIS</strong>. 
+        Khusus periode <strong>November & Desember 2026</strong>, hanya di hari <strong>Sabtu & Minggu</strong>.
+      </p>
+
+      <!-- Countdown Besar -->
+      <div class="promo-countdown-big" id="promoCountdownBig">
+        <div class="cd-box"><span class="cd-num" id="cdDays">00</span><span class="cd-label">Hari</span></div>
+        <div class="cd-box"><span class="cd-num" id="cdHours">00</span><span class="cd-label">Jam</span></div>
+        <div class="cd-box"><span class="cd-num" id="cdMins">00</span><span class="cd-label">Menit</span></div>
+        <div class="cd-box"><span class="cd-num" id="cdSecs">00</span><span class="cd-label">Detik</span></div>
+      </div>
+
+      <a href="https://wa.me/6281238173518?text=Halo%20Kak%2C%20saya%20mau%20klaim%20Promo%20Tes%203%20Gratis%201%20STIFIn%20Medan" 
+         target="_blank" rel="noopener" class="promo-cta-hero">
+        🎁 Klaim Promo via WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- BENEFIT -->
+  <section class="promo-section alt">
+    <div class="container">
+      <h2 class="promo-section-title">Kenapa Harus Ambil Promo Ini?</h2>
+      <p class="promo-section-sub">
+        Bukan cuma hemat. Anda juga memberi anak & keluarga bekal masa depan yang lebih baik.
+      </p>
+
+      <div class="benefit-grid">
+        <div class="benefit-card">
+          <i class="material-icons">savings</i>
+          <h5>Hemat Hingga Rp 750.000</h5>
+          <p>Daftar 3 tes, dapat 1 tes gratis. Setara dengan potongan 25% langsung.</p>
+        </div>
+        <div class="benefit-card">
+          <i class="material-icons">family_restroom</i>
+          <h5>Keluarga Lebih Harmonis</h5>
+          <p>Pahami karakter tiap anggota keluarga, hindari salah paham & komunikasi yang bikin konflik.</p>
+        </div>
+        <div class="benefit-card">
+          <i class="material-icons">school</i>
+          <h5>Anak Tepat Jurusan</h5>
+          <p>Ketahui cara belajar, bakat, dan jurusan yang paling cocok untuk masa depan anak.</p>
+        </div>
+        <div class="benefit-card">
+          <i class="material-icons">trending_up</i>
+          <h5>Investasi Jangka Panjang</h5>
+          <p>Hasil tes berlaku seumur hidup. Sekali bayar, bermanfaat untuk perjalanan hidup keluarga.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARA KERJA PROMO -->
+  <section class="promo-section">
+    <div class="container">
+      <h2 class="promo-section-title">Cara Klaim Promo</h2>
+      <p class="promo-section-sub">Hanya 3 langkah mudah. Bisa langsung dari rumah Anda.</p>
+
+      <div class="steps-promo">
+        <div class="step-promo" data-step="1">
+          <i class="material-icons">chat</i>
+          <h6>Chat WhatsApp</h6>
+          <p>Klik tombol promo, chat tim kami, sebutkan "Promo Tes 3 Gratis 1".</p>
+        </div>
+        <div class="step-promo" data-step="2">
+          <i class="material-icons">event_available</i>
+          <h6>Pilih Jadwal</h6>
+          <p>Tentukan jadwal tes. Bisa di hari Sabtu atau Minggu, sesuai periode promo.</p>
+        </div>
+        <div class="step-promo" data-step="3">
+          <i class="material-icons">verified</i>
+          <h6>Tes & Terima Laporan</h6>
+          <p>Lakukan tes 4 orang (3 bayar, 1 gratis). Laporan lengkap + konsultasi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAKET PRICING -->
+  <section class="promo-section alt">
+    <div class="container">
+      <h2 class="promo-section-title">Pilih Paket Promo Terbaik</h2>
+      <p class="promo-section-sub">Harga transparan. Tanpa biaya tersembunyi. Promo terbatas.</p>
+
+      <div class="pricing-grid">
+        <!-- Paket 1: Couple -->
+        <div class="pricing-card">
+          <h4>Couple</h4>
+          <p class="pricing-desc">1-2 orang, harga lebih hemat</p>
+          <div class="pricing-price">
+            <span class="price-original">Rp 750.000</span>
+            <span class="price-final">Rp 600rb</span>
+            <span class="price-save">Hemat 20%</span>
+          </div>
+          <ul>
+            <li><i class="material-icons">check_circle</i> Tes STIFIn lengkap</li>
+            <li><i class="material-icons">check_circle</i> Sertifikat + Map</li>
+            <li><i class="material-icons">check_circle</i> Konsultasi 1-on-1</li>
+            <li><i class="material-icons">check_circle</i> Buku saku + ebook</li>
+          </ul>
+          <a href="https://wa.me/6281238173518?text=Halo%20Kak%2C%20saya%20mau%20ambil%20paket%20Couple%20Promo" 
+             target="_blank" class="pricing-btn primary">Pilih Paket</a>
+        </div>
+
+        <!-- Paket 2: Family (FEATURED) -->
+        <div class="pricing-card featured">
+          <div class="pricing-badge">⭐ PALING LARIS</div>
+          <h4>Family + Gratis 1</h4>
+          <p class="pricing-desc">Daftar 3, anggota ke-4 GRATIS</p>
+          <div class="pricing-price">
+            <span class="price-original">Rp 3.000.000</span>
+            <span class="price-final">Rp 1.800.000</span>
+            <span class="price-save">Hemat 40%</span>
+          </div>
+          <ul>
+            <li><i class="material-icons">check_circle</i> 4x Tes STIFIn (3 bayar, 1 gratis)</li>
+            <li><i class="material-icons">check_circle</i> 4x Sertifikat + Map</li>
+            <li><i class="material-icons">check_circle</i> 4x Konsultasi 1-on-1</li>
+            <li><i class="material-icons">check_circle</i> 4x Buku saku + ebook</li>
+            <li><i class="material-icons">check_circle</i> Grup komunitas WA</li>
+          </ul>
+          <a href="https://wa.me/6281238173518?text=Halo%20Kak%2C%20saya%20mau%20ambil%20Promo%20Tes%203%20Gratis%201%20(Family)" 
+             target="_blank" class="pricing-btn primary">Ambil Promo</a>
+        </div>
+
+        <!-- Paket 3: Corporate -->
+        <div class="pricing-card">
+          <h4>Organisasi / Tim</h4>
+          <p class="pricing-desc">5+ orang, harga spesial</p>
+          <div class="pricing-price">
+            <span class="price-original">Mulai Rp 500.000</span>
+            <span class="price-final">Custom</span>
+          </div>
+          <ul>
+            <li><i class="material-icons">check_circle</i> Tes STIFIn 5+ orang</li>
+            <li><i class="material-icons">check_circle</i> Laporan individu + tim</li>
+            <li><i class="material-icons">check_circle</i> Sesi presentasi tim</li>
+            <li><i class="material-icons">check_circle</i> Analisis dinamika tim</li>
+          </ul>
+          <a href="https://wa.me/6281238173518?text=Halo%20Kak%2C%20saya%20mau%20tanya%20paket%20untuk%20organisasi" 
+             target="_blank" class="pricing-btn primary">Hubungi Kami</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="promo-section">
+    <div class="container">
+      <h2 class="promo-section-title">Pertanyaan Umum</h2>
+      <p class="promo-section-sub">Belum yakin? Cek jawaban di bawah ini.</p>
+
+      <div class="faq-promo-wrapper">
+        <ul class="collapsible" data-collapsible="accordion">
+          <li>
+            <div class="collapsible-header">
+              <i class="material-icons">help_outline</i>
+              Bagaimana cara klaim Promo "Tes 3 Gratis 1"?
+              <i class="material-icons toggle-icon">expand_more</i>
+            </div>
+            <div class="collapsible-body">
+              <p>Cukup chat WhatsApp kami, sebutkan "Promo Tes 3 Gratis 1". Tim akan verifikasi kuota dan jadwal. Promo hanya berlaku untuk tes di hari Sabtu & Minggu, periode November-Desember 2026.</p>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header">
+              <i class="material-icons">help_outline</i>
+              Apakah bisa digunakan untuk 3 orang yang berbeda keluarga?
+              <i class="material-icons toggle-icon">expand_more</i>
+            </div>
+            <div class="collapsible-body">
+              <p>Bisa. Promo tidak harus satu keluarga inti. Selama 3 orang mendaftar bersamaan, orang ke-4 otomatis gratis. Cocok untuk keluarga besar, sahabat, atau rekan kerja.</p>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header">
+              <i class="material-icons">help_outline</i>
+              Apakah ada batas kuota per hari?
+              <i class="material-icons toggle-icon">expand_more</i>
+            </div>
+            <div class="collapsible-body">
+              <p>Ya. Kami membatasi <strong>5 klaim promo per Sabtu/Minggu</strong> untuk menjaga kualitas layanan. Disarankan booking lebih awal via WhatsApp.</p>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header">
+              <i class="material-icons">help_outline</i>
+              Apakah berlaku juga untuk home visit?
+              <i class="material-icons toggle-icon">expand_more</i>
+            </div>
+            <div class="collapsible-body">
+              <p>Bisa. Home visit tersedia untuk area Medan dan sekitarnya. Ada biaya transportasi tambahan yang menyesuaikan lokasi (dikonfirmasi via WhatsApp).</p>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header">
+              <i class="material-icons">help_outline</i>
+              Bagaimana kalau saya hanya ingin tes 1 orang?
+              <i class="material-icons toggle-icon">expand_more</i>
+            </div>
+            <div class="collapsible-body">
+              <p>Tetap bisa! Untuk 1 orang gunakan Paket Couple (Rp 600.000) atau hubungi kami untuk info paket terbaik. Promo "Tes 3 Gratis 1" khusus untuk pendaftaran 3 orang sekaligus.</p>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header">
+              <i class="material-icons">help_outline</i>
+              Apakah hasil tes bisa dipakai berkali-kali?
+              <i class="material-icons toggle-icon">expand_more</i>
+            </div>
+            <div class="collapsible-body">
+              <p>Hasil tes STIFIn berlaku seumur hidup karena memetakan potensi genetik. Yang bisa diperbarui adalah konsultasi (misal untuk anak yang beranjak remaja).</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA PENUTUP -->
+  <section class="promo-section" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 40%, #16a34a 100%); color: #fff; text-align: center;">
+    <div class="container">
+      <h2 style="font-size: clamp(1.6rem, 4vw, 2.5rem); font-weight: 900; margin: 0 0 16px;">
+        Jangan Sampai Kehabisan!
+      </h2>
+      <p style="max-width: 600px; margin: 0 auto 32px; font-size: 1rem; opacity: 0.95; line-height: 1.7;">
+        Kuota promo terbatas setiap minggunya. Amankan slot keluarga Anda sekarang sebelum kehabisan.
+      </p>
+      <a href="https://wa.me/6281238173518?text=Halo%20Kak%2C%20saya%20mau%20klaim%20Promo%20Tes%203%20Gratis%201%20STIFIn%20Medan" 
+         target="_blank" rel="noopener" class="promo-cta-hero">
+        🎁 Klaim Promo Sekarang
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="promo-footer">
+    <p style="margin: 0 0 4px; font-weight: 700;">STIFIn Family Medan</p>
+    <p style="margin: 0; font-size: 0.9rem; opacity: 0.7;">Promo Spesial November - Desember 2026</p>
+    <div class="footer-links">
+      <a href="index.html">Beranda</a>
+      <a href="index.html#paket">Paket</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="https://wa.me/6281238173518" target="_blank">WhatsApp</a>
+    </div>
+    <p class="copyright">&copy; 2026 STIFIn Family Medan. All rights reserved.</p>
+  </footer>
+
+  <!-- Floating WA -->
+  <a href="https://wa.me/6281238173518?text=Halo%20Kak%2C%20saya%20mau%20klaim%20Promo%20Tes%203%20Gratis%201%20STIFIn%20Medan" 
+     class="promo-wa-float" target="_blank" rel="noopener" aria-label="Chat WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  </a>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // Init Collapsible FAQ
+      if (window.M && M.Collapsible) {
+        M.Collapsible.init(document.querySelectorAll('.collapsible'), { accordion: true });
+      }
+
+      // ===== COUNTDOWN: Setiap minggu, hitung ke Minggu 23:59, batas akhir 31 Des 2026 =====
+      function updateCountdown() {
+        const now = new Date();
+        const periodEnd = new Date('2026-12-31T23:59:59');
+        
+        if (now > periodEnd) {
+          const el = document.getElementById('promoCountdownBig');
+          if (el) el.innerHTML = '<p style="text-align:center;color:#fde68a;font-weight:700;padding:16px;background:rgba(0,0,0,0.2);border-radius:14px;">Promo telah berakhir. Terima kasih!</p>';
+          return;
+        }
+
+        const dayOfWeek = now.getDay();
+        const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+        const target = new Date(now);
+        target.setDate(now.getDate() + daysUntilSunday);
+        target.setHours(23, 59, 59, 0);
+
+        const diff = target - now;
+        if (diff <= 0) return;
+
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+
+        const pad = (n) => String(n).padStart(2, '0');
+        document.getElementById('cdDays').textContent = pad(d);
+        document.getElementById('cdHours').textContent = pad(h);
+        document.getElementById('cdMins').textContent = pad(m);
+        document.getElementById('cdSecs').textContent = pad(s);
+      }
+
+      setInterval(updateCountdown, 1000);
+      updateCountdown();
+
+    });
+  </script>
+</body>
+</html>
