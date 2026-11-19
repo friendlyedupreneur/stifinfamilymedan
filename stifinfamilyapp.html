@@ -1,69 +1,1808 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a1a12">
+<meta name="description" content="Kenali STIFIn Family, aplikasi untuk memahami potensi diri dan keluarga.">
+
+<link rel="canonical" href="https://stifinfamily.example.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="STIFIn Family — Kenali Potensi, Tumbuhkan Harmoni">
+<meta property="og:description" content="Ruang digital untuk mengenal potensi diri dan keluarga.">
+<meta property="og:image" content="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.stifinfamily.stifinfamilyapp">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a1a12'/><text x='50' y='68' font-size='52' font-family='Arial' font-weight='900' fill='%23c9ed83' text-anchor='middle'>SF</text></svg>">
+
+<title>STIFIn Family App | Grow Together</title>
+
+<style>
 /* ============================================================
-   UPGRADE 3D PARALLAX & MAGNETIC BUTTON
+   1. DESIGN TOKENS
    ============================================================ */
+:root {
+  /* Palette */
+  --dark: #0a1a12;
+  --dark-2: #10251d;
+  --green: #234b35;
+  --green-2: #2f6344;
+  --lime: #c9ed83;
+  --lime-bright: #d9f99d;
+  --lime-deep: #84cc16;
+  --cream: #f6f6ef;
+  --cream-2: #ecefe2;
+  --white: #ffffff;
+  --muted: #647269;
+  --ink: #17251e;
 
-/* ===== 1. 3D PARALLAX MOCKUP ===== */
+  /* Accents */
+  --accent-glow: 0 0 60px #c9ed8355;
+  --grad-lime: linear-gradient(135deg, #d9f99d 0%, #84cc16 100%);
+  --grad-dark: linear-gradient(180deg, #0a1a12 0%, #10251d 100%);
+  --grad-hero: radial-gradient(ellipse 80% 60% at 20% 0%, #2f634455 0%, transparent 50%),
+               radial-gradient(ellipse 60% 50% at 100% 100%, #84cc1622 0%, transparent 50%),
+               linear-gradient(180deg, #0a1a12 0%, #10251d 100%);
+
+  /* Radii */
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-xl: 34px;
+
+  /* Shadows */
+  --sh-sm: 0 4px 14px #0a1a120a;
+  --sh-md: 0 15px 40px #0a1a1218;
+  --sh-lg: 0 30px 80px #0a1a1230;
+  --sh-glow: 0 0 0 1px #c9ed8322, 0 10px 40px #c9ed8322;
+
+  /* Motion */
+  --ease: cubic-bezier(.22,1,.36,1);
+  --ease-out: cubic-bezier(.16,1,.3,1);
+  --dur: .6s;
+
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ============================================================
+   2. RESET & BASE
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Noise overlay global (subtle) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: .035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+
+.container { width: min(1180px, calc(100% - 40px)); margin: auto; position: relative; z-index: 2; }
+
+/* Gradient text utility */
+.grad-text {
+  background: var(--grad-lime);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ============================================================
+   3. NAVBAR (Glass 2.0)
+   ============================================================ */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all .4s var(--ease);
+}
+.nav-wrap {
+  padding: 12px 0;
+  transition: padding .4s var(--ease);
+}
+.nav {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 12px 0 20px;
+  background: #ffffff0d;
+  border: 1px solid #ffffff1a;
+  border-radius: 999px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 8px 32px #0003, inset 0 1px 0 #ffffff14;
+  color: white;
+  margin-top: 12px;
+}
+header.scrolled .nav {
+  background: #0a1a12d9;
+  box-shadow: 0 8px 32px #0006, inset 0 1px 0 #ffffff14;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: .5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+}
+.logo b {
+  background: var(--grad-lime);
+  color: var(--dark);
+  padding: 7px 9px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: var(--accent-glow);
+}
+
+.links { display: flex; gap: 28px; font-size: 13px; font-weight: 500; }
+.links a { position: relative; padding: 4px 0; transition: color .2s; }
+.links a::after {
+  content: '';
+  position: absolute; left: 0; bottom: -2px;
+  width: 0; height: 2px;
+  background: var(--grad-lime);
+  border-radius: 2px;
+  transition: width .3s var(--ease);
+}
+.links a:hover { color: var(--lime); }
+.links a:hover::after { width: 100%; }
+
+/* Theme toggle */
+.theme-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid #ffffff1a;
+  background: #ffffff0d;
+  color: white;
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: all .3s var(--ease);
+  font-size: 16px;
+}
+.theme-btn:hover { background: #ffffff1a; transform: rotate(20deg); }
+
+/* ============================================================
+   4. BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: var(--grad-lime);
+  color: var(--dark);
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: .2px;
+  transition: all .35s var(--ease);
+  position: relative;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px #84cc1633, inset 0 1px 0 #ffffff80;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, #ffffff80 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform .8s var(--ease);
+}
+.btn:hover::before { transform: translateX(100%); }
+.btn:hover { transform: translateY(-3px); box-shadow: 0 14px 34px #84cc1655, inset 0 1px 0 #ffffff80; }
+.btn:active { transform: translateY(-1px); }
+
+.btn-ghost {
+  background: #ffffff0d;
+  color: white;
+  border: 1px solid #ffffff26;
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+}
+.btn-ghost:hover { background: #ffffff1a; box-shadow: 0 8px 24px #0004; }
+
+/* ============================================================
+   5. HERO (Animated Mesh + Cursor Glow)
+   ============================================================ */
+.hero {
+  background: var(--grad-hero);
+  color: white;
+  padding: 80px 0 120px;
+  position: relative;
+  overflow: hidden;
+  margin-top: -100px;
+  padding-top: 170px;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#ffffff06 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff06 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #c9ed8333 0%, transparent 70%);
+  top: -100px; right: -100px;
+  animation: blob 18s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes blob {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(-40px, 40px) scale(1.1); }
+  66% { transform: translate(40px, -30px) scale(.95); }
+}
+
+/* Cursor glow */
+.cursor-glow {
+  position: absolute;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #c9ed8322 0%, transparent 60%);
+  pointer-events: none;
+  transition: transform .15s ease-out;
+  top: 0; left: 0;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  opacity: 0;
+}
+.hero:hover .cursor-glow { opacity: 1; }
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 60px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #ffffff0d;
+  border: 1px solid #ffffff1f;
+  border-radius: 999px;
+  color: var(--lime);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+.tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--lime);
+  box-shadow: 0 0 12px var(--lime);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(1.4); }
+}
+
+.hero h1 {
+  font-size: clamp(44px, 6.2vw, 76px);
+  line-height: .98;
+  margin: 26px 0 22px;
+  letter-spacing: -.04em;
+  font-weight: 700;
+}
+.hero h1 span { color: var(--lime); display: inline-block; position: relative; }
+.hero h1 span::after {
+  content: '';
+  position: absolute;
+  bottom: 6%; left: 0; right: 0;
+  height: 12px;
+  background: #c9ed8333;
+  border-radius: 4px;
+  z-index: -1;
+}
+.hero p {
+  color: #c8d6ca;
+  font-size: 17px;
+  max-width: 540px;
+  line-height: 1.65;
+}
+.actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
+
+/* Trust chips below CTA */
+.hero-chips {
+  display: flex; gap: 18px; flex-wrap: wrap;
+  margin-top: 32px;
+  font-size: 12px;
+  color: #b8c8bb;
+}
+.hero-chips span { display: inline-flex; align-items: center; gap: 6px; }
+.hero-chips span::before {
+  content: '✓';
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #c9ed8322;
+  color: var(--lime);
+  display: grid; place-items: center;
+  font-size: 10px; font-weight: 800;
+}
+
+/* ============================================================
+   6. MOCKUP HP — 3D TILT
+   ============================================================ */
+.mockup-wrap {
+  perspective: 1200px;
+  display: grid;
+  place-items: center;
+}
+.mockup {
+  background: linear-gradient(180deg, #f8faf5 0%, #eef3e7 100%);
+  color: var(--ink);
+  border: 8px solid #1a2e22;
+  border-radius: 42px;
+  padding: 22px 20px 26px;
+  width: 290px;
+  box-shadow:
+    0 60px 120px #0008,
+    0 0 0 2px #ffffff14,
+    inset 0 1px 0 #ffffffcc;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .3s ease-out;
+  will-change: transform;
+}
+/* Notch */
+.mockup::before {
+  content: '';
+  position: absolute;
+  top: 10px; left: 50%;
+  transform: translateX(-50%);
+  width: 90px; height: 22px;
+  background: #1a2e22;
+  border-radius: 20px;
+  z-index: 3;
+}
+
+.mockup-header {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px;
+  color: #647269; margin-top: 20px;
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 0 0 #4ade8080;
+  animation: livepulse 2s infinite;
+}
+@keyframes livepulse {
+  0% { box-shadow: 0 0 0 0 #4ade8080; }
+  70% { box-shadow: 0 0 0 8px #4ade8000; }
+  100% { box-shadow: 0 0 0 0 #4ade8000; }
+}
+
+.mock-banner {
+  background: linear-gradient(135deg, #10251d 0%, #234b35 100%);
+  color: white;
+  padding: 18px;
+  border-radius: 18px;
+  margin: 14px 0;
+  position: relative;
+  overflow: hidden;
+}
+.mock-banner::after {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 80px; height: 80px;
+  background: radial-gradient(circle, #c9ed8344 0%, transparent 70%);
+}
+.mock-banner small {
+  font-size: 9px; letter-spacing: 1.5px;
+  opacity: .7; font-weight: 600;
+}
+.mock-banner strong {
+  display: block; font-family: var(--font-display);
+  font-size: 20px; line-height: 1.15; margin: 4px 0;
+}
+
+.mock-label { font-size: 11px; font-weight: 700; color: #3d4f43; }
+
+.xp {
+  background: linear-gradient(180deg, #e8f1df 0%, #dde9d3 100%);
+  padding: 14px;
+  border-radius: 16px;
+  margin: 12px 0;
+  border: 1px solid #ffffff;
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 8px #10251d0a;
+}
+.xp small { font-size: 9px; letter-spacing: 1.2px; color: #647269; font-weight: 700; }
+.xp strong {
+  font-family: var(--font-display);
+  font-size: 24px; color: #3d713d;
+  display: inline-block; letter-spacing: -.02em;
+}
+.xp-bar {
+  height: 7px; background: #c8d9bc; border-radius: 99px;
+  margin-top: 10px; overflow: hidden;
+  box-shadow: inset 0 1px 2px #0001;
+}
+.xp-bar span {
+  display: block; height: 100%; width: 0;
+  background: linear-gradient(90deg, #84cc16, #4ade80, #c9ed83);
+  border-radius: 99px;
+  transition: width 2s var(--ease);
+  position: relative;
+}
+.xp-bar span::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, #ffffff66, transparent);
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+.task {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1px solid #e2e8d9;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.task:last-child { border-bottom: none; }
+.task b { margin-left: auto; color: #3d713d; font-size: 11px; font-weight: 700; }
+.tick {
+  display: inline-grid; place-items: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid #b8cbaa;
+  font-size: 11px; color: transparent;
+  transition: all .4s var(--ease);
+  flex-shrink: 0;
+}
+.tick.done {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  border-color: #22c55e;
+  color: white;
+  box-shadow: 0 4px 12px #4ade8055;
+  transform: scale(1.05);
+}
+
+.float-badge {
+  position: absolute;
+  background: #ffffff;
+  border: 1px solid #e3e9df;
+  padding: 9px 13px;
+  border-radius: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 12px 32px #0004, 0 0 0 1px #ffffff;
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+}
+.badge-1 { top: 20%; right: -36px; transform: translateZ(40px); animation: floaty 5s ease-in-out infinite; }
+.badge-2 { bottom: 20%; left: -40px; transform: translateZ(40px); animation: floaty 6s ease-in-out infinite -.8s; }
+@keyframes floaty {
+  0%,100% { transform: translateZ(40px) translateY(0); }
+  50% { transform: translateZ(40px) translateY(-10px); }
+}
+
+/* ============================================================
+   7. MARQUEE TICKER
+   ============================================================ */
+.ticker {
+  background: var(--dark);
+  color: #ffffffb3;
+  padding: 18px 0;
+  overflow: hidden;
+  border-top: 1px solid #ffffff0d;
+  border-bottom: 1px solid #ffffff0d;
+  position: relative;
+  z-index: 2;
+}
+.ticker::before, .ticker::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 100px;
+  z-index: 2;
+  pointer-events: none;
+}
+.ticker::before { left: 0; background: linear-gradient(90deg, var(--dark), transparent); }
+.ticker::after { right: 0; background: linear-gradient(-90deg, var(--dark), transparent); }
+.ticker-track {
+  display: flex;
+  gap: 48px;
+  width: max-content;
+  animation: scroll 30s linear infinite;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.ticker-track span { display: inline-flex; align-items: center; gap: 12px; }
+.ticker-track span::after { content: '✦'; color: var(--lime); font-size: 14px; }
+@keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ============================================================
+   8. SECTIONS
+   ============================================================ */
+.section { padding: 100px 0; position: relative; }
+.section-tight { padding: 70px 0; }
+
+.center { text-align: center; max-width: 720px; margin: 0 auto 56px; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px;
+  color: #5c843d;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  background: #5c843d10;
+  border-radius: 99px;
+  margin-bottom: 8px;
+}
+.eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--lime-deep);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--lime-deep);
+}
+.section h2 {
+  font-size: clamp(32px, 4.2vw, 50px);
+  margin: 12px 0 14px;
+}
+.muted { color: var(--muted); font-size: 15.5px; }
+
+/* ============================================================
+   9. INTRO (Split Quote)
+   ============================================================ */
+.intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.quote {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f4e8 100%);
+  padding: 40px;
+  border-radius: var(--r-xl);
+  font-family: var(--font-display);
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -.02em;
+  position: relative;
+  border: 1px solid #e3ecd6;
+  box-shadow: var(--sh-md);
+}
+.quote::before {
+  content: '"';
+  position: absolute;
+  top: -12px; left: 24px;
+  font-family: Georgia, serif;
+  font-size: 90px;
+  color: var(--lime-deep);
+  opacity: .25;
+  line-height: 1;
+}
+.quote em {
+  color: #3d713d;
+  font-style: normal;
+  background: linear-gradient(180deg, transparent 60%, #c9ed8355 60%);
+  padding: 0 2px;
+}
+
+/* ============================================================
+   10. FEATURES — BENTO GRID
+   ============================================================ */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(180px, auto);
+  gap: 16px;
+}
+.bento-item {
+  background: white;
+  border: 1px solid #e3e9df;
+  border-radius: var(--r-lg);
+  padding: 28px;
+  transition: all .45s var(--ease);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bento-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, #c9ed830d, transparent 60%);
+  opacity: 0;
+  transition: opacity .4s;
+}
+.bento-item:hover {
+  transform: translateY(-4px);
+  border-color: #c9ed83;
+  box-shadow: 0 20px 40px #10251d10, 0 0 0 1px #c9ed83;
+}
+.bento-item:hover::before { opacity: 1; }
+
+.bento-item .icon {
+  width: 48px; height: 48px;
+  display: grid; place-items: center;
+  font-size: 22px;
+  background: linear-gradient(135deg, #f0f7e6 0%, #e2efd0 100%);
+  border-radius: 14px;
+  border: 1px solid #ffffff;
+  box-shadow: 0 4px 12px #84cc1618;
+  margin-bottom: 8px;
+}
+.bento-item h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  margin: 0;
+  letter-spacing: -.01em;
+}
+.bento-item p { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+
+/* Bento spans */
+.bento-item.large {
+  grid-column: span 2;
+  grid-row: span 2;
+  background: linear-gradient(135deg, #10251d 0%, #234b35 100%);
+  color: white;
+}
+.bento-item.large h3 { color: var(--lime); font-size: 24px; }
+.bento-item.large p { color: #c8d6ca; font-size: 14px; }
+.bento-item.large .icon { background: #ffffff14; border-color: #ffffff26; color: var(--lime); }
+.bento-item.large::before { background: radial-gradient(circle at 30% 30%, #c9ed8322, transparent 60%); opacity: 1; }
+.bento-item.large::after {
+  content: '';
+  position: absolute;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #c9ed8322, transparent 70%);
+  bottom: -60px; right: -60px;
+  pointer-events: none;
+}
+
+.bento-item.wide { grid-column: span 2; }
+
+/* ============================================================
+   11. STEPS (dark)
+   ============================================================ */
+.dark { background: var(--dark); color: white; position: relative; overflow: hidden; }
+.dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, #234b35 0%, transparent 70%);
+  pointer-events: none;
+}
+.dark .muted { color: #a5b8a9; }
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.step {
+  border: 1px solid #ffffff1a;
+  border-radius: var(--r-lg);
+  padding: 32px;
+  position: relative;
+  background: #ffffff05;
+  backdrop-filter: blur(10px);
+  transition: all .4s var(--ease);
+  overflow: hidden;
+}
+.step::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--grad-lime);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .5s var(--ease);
+}
+.step:hover {
+  background: #ffffff0a;
+  border-color: #c9ed8355;
+  transform: translateY(-4px);
+}
+.step:hover::before { transform: scaleX(1); }
+.step small {
+  color: var(--lime);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+.step h3 { font-family: var(--font-display); font-size: 22px; margin: 12px 0 8px; }
+.step p { color: #a5b8a9; font-size: 13.5px; }
+
+/* ============================================================
+   12. AUDIENCE
+   ============================================================ */
+.audience {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.aud {
+  background: white;
+  padding: 26px 22px;
+  border-radius: var(--r-md);
+  border: 1px solid #e3e9df;
+  transition: all .35s var(--ease);
+  font-size: 30px;
+}
+.aud:hover {
+  border-color: var(--lime-deep);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px #10251d10;
+}
+.aud strong {
+  display: block; margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: -.01em;
+}
+.aud small { color: var(--muted); font-size: 12px; line-height: 1.4; display: block; margin-top: 4px; }
+
+/* ============================================================
+   13. STATS + TESTIMONIALS
+   ============================================================ */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.stat {
+  background: linear-gradient(135deg, #ffffff, #f6f9f0);
+  border: 1px solid #e3e9df;
+  border-radius: var(--r-lg);
+  padding: 32px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.stat::after {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, #c9ed8322, transparent 70%);
+  pointer-events: none;
+}
+.stat strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 700;
+  color: #3d713d;
+  letter-spacing: -.03em;
+  line-height: 1;
+}
+.stat small {
+  color: var(--muted); font-size: 12.5px;
+  display: block; margin-top: 8px;
+  font-weight: 500;
+}
+.testi { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.testi blockquote {
+  background: white;
+  border: 1px solid #e3e9df;
+  padding: 28px;
+  border-radius: var(--r-md);
+  font-size: 15px;
+  line-height: 1.6;
+  position: relative;
+  transition: all .35s var(--ease);
+}
+.testi blockquote::before {
+  content: '"';
+  position: absolute;
+  top: 8px; left: 20px;
+  font-family: Georgia, serif;
+  font-size: 60px;
+  color: var(--lime-deep);
+  opacity: .3;
+  line-height: 1;
+}
+.testi blockquote:hover { border-color: var(--lime-deep); transform: translateY(-3px); box-shadow: var(--sh-md); }
+.testi cite {
+  display: block; margin-top: 16px;
+  font-size: 12.5px; color: #3d713d; font-style: normal; font-weight: 700;
+}
+.testi cite::before { content: '— '; }
+
+/* ============================================================
+   14. DOWNLOAD (CTA Block)
+   ============================================================ */
+.download {
+  background: var(--dark);
+  color: white;
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+.download::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 60% at 20% 50%, #84cc1633 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 80% 50%, #c9ed8322 0%, transparent 60%);
+  pointer-events: none;
+}
+.download-grid {
+  display: grid;
+  grid-template-columns: 1.3fr .7fr;
+  gap: 60px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.download h2 {
+  font-size: clamp(36px, 4.8vw, 58px);
+  line-height: 1.05;
+  margin: 16px 0 20px;
+}
+.download .eyebrow { background: #c9ed831a; color: var(--lime); }
+.download p { color: #c8d6ca; font-size: 16px; max-width: 520px; }
+
+.qr {
+  background: white;
+  border-radius: var(--r-lg);
+  padding: 18px;
+  text-align: center;
+  box-shadow: 0 30px 80px #0008, 0 0 0 8px #ffffff10;
+  transform: rotate(2deg);
+  transition: transform .4s var(--ease);
+}
+.qr:hover { transform: rotate(0deg) scale(1.02); }
+.qr img { width: 170px; height: 170px; border-radius: 8px; }
+.qr small {
+  font-family: var(--font-mono);
+  font-weight: 600; font-size: 10px;
+  letter-spacing: 2px; color: #3d713d;
+  display: block; margin-top: 10px;
+}
+
+/* ============================================================
+   15. FAQ
+   ============================================================ */
+.faq {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.faq details {
+  background: white;
+  border: 1px solid #e3e9df;
+  border-radius: var(--r-md);
+  padding: 22px 24px;
+  transition: all .3s var(--ease);
+}
+.faq details[open] {
+  border-color: var(--lime-deep);
+  box-shadow: 0 15px 40px #84cc1615;
+}
+.faq summary {
+  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 15.5px;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  letter-spacing: -.01em;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary span {
+  transition: transform .3s var(--ease);
+  color: #578039; font-weight: 900;
+  font-size: 22px; line-height: 1;
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  background: #f0f7e6;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.faq details[open] summary span {
+  transform: rotate(45deg);
+  background: var(--grad-lime);
+  color: var(--dark);
+}
+.faq details p {
+  font-size: 13.5px; color: var(--muted);
+  margin-top: 14px; line-height: 1.6;
+  padding-top: 14px;
+  border-top: 1px solid #eef2e8;
+}
+
+/* ============================================================
+   16. FOOTER
+   ============================================================ */
+footer {
+  background: var(--dark);
+  color: white;
+  padding: 40px 0;
+  border-top: 1px solid #ffffff0d;
+}
+footer .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+footer .logo { font-size: 15px; }
+footer small { color: #7a8a7e; font-size: 12.5px; display: block; margin-top: 4px; }
+footer a { color: var(--lime); font-size: 13px; font-weight: 600; }
+footer a:hover { text-decoration: underline; }
+
+/* ============================================================
+   17. SCROLL REVEAL
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ============================================================
+   18. THEME: LIGHT MODE (default) / DARK MODE (toggle)
+   ============================================================ */
+body.light-mode {
+  --cream: #f6f6ef;
+  --ink: #17251e;
+}
+
+/* ============================================================
+   21. MOCKUP APP UI (BERANDA)
+   ============================================================ */
+.mockup {
+  background: #f8faf5;
+  border: 8px solid #1a2e22;
+  border-radius: 40px;
+  padding: 20px 16px 0; /* padding bottom 0 agar bottom nav nempel */
+  width: 300px;
+  box-shadow: 0 50px 100px #0008, 0 0 0 2px #ffffff14, inset 0 1px 0 #ffffffcc;
+  position: relative;
+  overflow: hidden; /* Penting: agar tidak meluber */
+  display: flex;
+  flex-direction: column;
+  height: 600px; /* Tinggi fix untuk mensimulasikan layar HP */
+}
+.mockup::before {
+  content: '';
+  position: absolute;
+  top: 10px; left: 50%;
+  transform: translateX(-50%);
+  width: 90px; height: 20px;
+  background: #1a2e22;
+  border-radius: 20px;
+  z-index: 10;
+}
+
+/* Top Bar */
+.app-topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 12px; margin-bottom: 16px; color: #17251e;
+}
+.app-title { font-family: var(--font-display); font-weight: 700; font-size: 20px; }
+.app-icons { display: flex; gap: 12px; align-items: center; color: #647269; }
+.trophy-icon { font-size: 16px; }
+
+/* Profile */
+.app-profile {
+  display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px;
+}
+.avatar-wrap {
+  width: 42px; height: 42px; border-radius: 50%;
+  overflow: hidden; border: 2px solid #fff; box-shadow: 0 2px 6px #0001; flex-shrink: 0;
+}
+.avatar { width: 100%; height: 100%; object-fit: cover; }
+.profile-info { flex: 1; }
+.profile-name { font-weight: 700; font-size: 13.5px; color: #10251d; display: flex; align-items: center; gap: 4px; }
+.verified { background: #3b82f6; color: white; font-size: 8px; width: 12px; height: 12px; display: grid; place-items: center; border-radius: 50%; }
+.profile-greet { font-size: 11px; color: #647269; margin-top: 2px; }
+.profile-stats { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 10px; font-weight: 600; }
+.badge-level { background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; }
+.xp-text { color: #10251d; }
+.mini-xp-bar { height: 4px; width: 40px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+.mini-xp-bar span { display: block; height: 100%; width: 40%; background: #84cc16; border-radius: 99px; }
+.badge-coin { background: #fef3c7; color: #b45309; padding: 2px 6px; border-radius: 99px; margin-left: auto; display: flex; align-items: center; gap: 2px; }
+
+/* Check-in Card */
+.app-checkin {
+  background: #fff; border-radius: 16px; padding: 12px; margin-bottom: 16px;
+  box-shadow: 0 4px 12px #10251d05; border: 1px solid #e3e9df;
+}
+.checkin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.checkin-title-wrap { display: flex; gap: 10px; align-items: center; }
+.icon-cal { background: #e0f2fe; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 8px; font-size: 14px; }
+.checkin-title { font-weight: 700; font-size: 12px; color: #10251d; }
+.checkin-sub { font-size: 10px; color: #647269; }
+.chevron { font-size: 20px; color: #94a3b8; line-height: 1; }
+.checkin-days { display: flex; justify-content: space-between; text-align: center; }
+.day { display: flex; flex-direction: column; gap: 2px; font-size: 10px; color: #94a3b8; }
+.day b { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; font-weight: 600; color: #475569; }
+.day.checked b { background: #22c55e; color: white; }
+.day.today b { border: 1px solid #3b82f6; color: #3b82f6; }
+
+/* ============================================================
+   STIFIn Types (Orbit Stabil)
+   ============================================================ */
+.app-types { display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; flex: 1; justify-content: center; }
+.types-title { font-weight: 800; font-size: 13px; align-self: flex-start; color: #10251d; margin-bottom: 4px; }
+
+.orbit-container {
+  position: relative; width: 170px; height: 170px; display: grid; place-items: center;
+}
+.orbit-ring {
+  position: absolute; width: 130px; height: 130px; border: 1px solid #cbd5e1; border-radius: 50%;
+}
+.orbit-center {
+  width: 44px; height: 44px; background: white; border-radius: 50%;
+  box-shadow: 0 4px 12px #0001; display: grid; place-items: center; z-index: 5;
+}
+.orbit-center img { width: 32px; height: 32px; }
+
+/* Animasi Orbit */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes counter-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+.orbit-node {
+  position: absolute; width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 800; font-size: 12px; color: white;
+  box-shadow: 0 4px 10px #0002;
+  top: 50%; left: 50%; margin: -15px 0 0 -15px;
+  animation: spin 16s linear infinite;
+  z-index: 2;
+}
+/* Teks di dalam tidak ikut berputar agar selalu tegak lurus */
+.orbit-node::before {
+  content: attr(data-label); position: absolute;
+  width: 100%; height: 100%; display: grid; place-items: center;
+  animation: counter-spin 16s linear infinite;
+}
+
+/* Posisi sudut (72 derajat antar titik) */
+.node-in { background: #fbbf24; transform: rotate(0deg) translateY(-65px); }
+.node-i  { background: #3b82f6; transform: rotate(72deg) translateY(-65px); }
+.node-f  { background: #22c55e; transform: rotate(144deg) translateY(-65px); }
+.node-s  { background: #ef4444; transform: rotate(216deg) translateY(-65px); }
+.node-t  { background: #334155; transform: rotate(288deg) translateY(-65px); }
+
+/* Override animasi untuk masing-masing titik karena posisi awalnya beda */
+.node-in { animation-name: orbit-in; }
+.node-i  { animation-name: orbit-i; }
+.node-f  { animation-name: orbit-f; }
+.node-s  { animation-name: orbit-s; }
+.node-t  { animation-name: orbit-t; }
+
+@keyframes orbit-in { 0% { transform: rotate(0deg) translateY(-65px); } 100% { transform: rotate(360deg) translateY(-65px); } }
+@keyframes orbit-i  { 0% { transform: rotate(72deg) translateY(-65px); } 100% { transform: rotate(432deg) translateY(-65px); } }
+@keyframes orbit-f  { 0% { transform: rotate(144deg) translateY(-65px); } 100% { transform: rotate(504deg) translateY(-65px); } }
+@keyframes orbit-s  { 0% { transform: rotate(216deg) translateY(-65px); } 100% { transform: rotate(576deg) translateY(-65px); } }
+@keyframes orbit-t  { 0% { transform: rotate(288deg) translateY(-65px); } 100% { transform: rotate(648deg) translateY(-65px); } }
+
+/* Sembunyikan teks asli, pakai ::before */
+.orbit-node { font-size: 0; } 
+
+/* ============================================================
+   Bottom Nav (Sesuai Referensi)
+   ============================================================ */
+.app-bottom-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 8px; margin: 0 -16px; background: white;
+  border-top: 1px solid #e3e9df; border-radius: 0 0 32px 32px;
+  margin-top: auto;
+}
+.nav-item { 
+  display: flex; flex-direction: column; align-items: center; gap: 4px; 
+  font-size: 9px; font-weight: 600; color: #94a3b8; flex: 1;
+}
+.nav-item span { transition: color 0.3s; }
+.nav-item.active { color: #0284c7; }
+
+/* Icon active pakai pill biru */
+.nav-pill {
+  background: #e0f2fe; color: #0284c7;
+  width: 44px; height: 26px; border-radius: 99px;
+  display: grid; place-items: center;
+  margin-bottom: 2px;
+}
+.nav-item svg { width: 18px; height: 18px; }
+
+/* Artikel & Tabs */
+.app-artikel { padding-bottom: 12px; }
+.artikel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.artikel-title { font-weight: 800; font-size: 13px; color: #10251d; display: flex; align-items: center; gap: 4px; }
+.artikel-title span { font-weight: 400; color: #647269; }
+.artikel-link { font-size: 10px; color: #0ea5e9; font-weight: 600; }
+.artikel-tabs { display: flex; gap: 6px; }
+.tab { padding: 6px 10px; border-radius: 99px; font-size: 10px; font-weight: 600; color: #647269; background: #e2e8f0; }
+.tab.active { background: #0ea5e9; color: white; }
+
+/* Bottom Nav */
+.app-bottom-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 6px; margin: 0 -16px; background: white;
+  border-top: 1px solid #e3e9df; border-radius: 0 0 32px 32px;
+  margin-top: auto; /* Dorong ke bawah */
+}
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 8.5px; font-weight: 600; color: #94a3b8; }
+.nav-item.active { color: #0369a1; }
+.nav-item svg { width: 18px; height: 18px; }
+
+/* ============================================================
+   19. RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .bento { grid-template-columns: repeat(2, 1fr); }
+  .bento-item.large, .bento-item.wide { grid-column: span 2; }
+  .hero-grid, .intro, .download-grid { grid-template-columns: 1fr; }
+  .download-grid { text-align: center; }
+  .qr { justify-self: center; }
+}
+@media (max-width: 760px) {
+  .links { display: none; }
+  .nav { padding: 0 8px 0 14px; height: 56px; }
+  .mockup-wrap { margin-top: 40px; }
+  .features, .bento { grid-template-columns: 1fr; }
+  .bento-item.large, .bento-item.wide { grid-column: span 1; }
+  .steps { grid-template-columns: 1fr; }
+  .audience { grid-template-columns: 1fr 1fr; }
+  .faq { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: 1fr; }
+  .testi { grid-template-columns: 1fr; }
+  .hero { padding: 140px 0 80px; }
+  .section { padding: 70px 0; }
+  .cursor-glow { display: none; }
+  .badge-1, .badge-2 { display: none; }
+  .float-badge { display: none; }
+    .mockup {
+    height: 520px; /* Dikurangi agar tidak terlalu panjang di layar HP */
+    width: 270px;
+  }
+  .orbit-container { transform: scale(0.85); }
+}
+@media (max-width: 450px) {
+  .audience { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 38px; }
+}
+
+/* ============================================================
+   20. REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ticker-track { animation: none; }
+}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "STIFIn Family",
+  "operatingSystem": "Android",
+  "applicationCategory": "LifestyleApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "IDR" },
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "1200" }
+}
+</script>
+</head>
+
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<header id="header">
+  <div class="container nav-wrap">
+    <div class="nav">
+      <a class="logo" href="#top"><b>SF</b> STIFIn FAMILY</a>
+      <nav class="links">
+        <a href="#tentang">Tentang</a>
+        <a href="#fitur">Fitur</a>
+        <a href="#manfaat">Untuk Siapa</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="theme-btn" id="themeBtn" aria-label="Ganti tema">☾</button>
+        <a class="btn" href="https://play.google.com/store/apps/details?id=com.stifinfamily.stifinfamilyapp" target="_blank" rel="noopener" style="padding:10px 18px;font-size:12.5px">
+          Download ↗
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <div class="container hero-grid">
+    <div>
+      <div class="tag reveal">Kenali diri, pahami keluarga</div>
+      <h1 class="reveal">Setiap orang punya cara unik untuk <span>bertumbuh.</span></h1>
+      <p class="reveal">STIFIn Family adalah ruang digital untuk mengenal potensi diri dan keluarga, memahami perbedaan, serta membangun kebiasaan positif bersama.</p>
+      <div class="actions reveal">
+        <a class="btn" href="https://play.google.com/store/apps/details?id=com.stifinfamily.stifinfamilyapp" target="_blank" rel="noopener">
+          <span>▶</span> Download di Google Play
+        </a>
+        <a class="btn btn-ghost" href="#fitur">Jelajahi Fitur ↓</a>
+      </div>
+      <div class="hero-chips reveal">
+        <span>Gratis diunduh</span>
+        <span>Android</span>
+        <span>Bahasa Indonesia</span>
+      </div>
+    </div>
+
+    <div class="mockup-wrap reveal">
+  <div class="mockup" id="mockup">
+    <!-- TOP BAR -->
+    <div class="app-topbar">
+      <div class="app-title">STIFIn Family App</div>
+      <div class="app-icons">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span class="trophy-icon">🏆</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+    </div>
+
+    <!-- PROFILE CARD -->
+    <div class="app-profile">
+      <div class="avatar-wrap">
+        <img src="https://i.pravatar.cc/150?img=11" alt="Avatar" class="avatar">
+      </div>
+      <div class="profile-info">
+        <div class="profile-name">
+          Reza STIFIn <span class="verified">✓</span>
+        </div>
+        <div class="profile-greet">Selamat malam 👋</div>
+        <div class="profile-stats">
+          <span class="badge-level">Lv 1</span>
+          <span class="xp-text">370 XP</span>
+          <div class="mini-xp-bar"><span></span></div>
+          <span class="badge-coin">🪙 2.0K</span>
+        </div>
+      </div>
+    </div>
+
+        <!-- DAILY CHECK-IN (Diringkas) -->
+    <div class="app-checkin">
+      <div class="checkin-header" style="margin-bottom: 0;">
+        <div class="checkin-title-wrap">
+          <span class="icon-cal">📅</span>
+          <div>
+            <div class="checkin-title">Daily Check-in</div>
+            <div class="checkin-sub">Tap untuk check-in hari ini</div>
+          </div>
+        </div>
+        <span class="chevron">›</span>
+      </div>
+    </div>
+
+    <!-- STIFIn TYPES (Orbit Presisi) -->
+    <div class="app-types">
+      <div class="types-title">STIFIn Types</div>
+      <div class="orbit-container">
+        <!-- Ring & Center -->
+        <div class="orbit-ring"></div>
+        <div class="orbit-center">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23fff'/%3E%3Ccircle cx='35' cy='35' r='12' fill='%23ef4444'/%3E%3Ccircle cx='65' cy='35' r='12' fill='%233b82f6'/%3E%3Ccircle cx='50' cy='65' r='12' fill='%2322c55e'/%3E%3C/svg%3E" alt="logo">
+        </div>
+        
+        <!-- 5 Nodes -->
+        <div class="orbit-node node-in">In</div>
+        <div class="orbit-node node-i">I</div>
+        <div class="orbit-node node-f">F</div>
+        <div class="orbit-node node-s">S</div>
+        <div class="orbit-node node-t">T</div>
+      </div>
+    </div>
+
+    <!-- ARTIKEL (Hanya Judul, tanpa tab) -->
+    <div class="app-artikel" style="margin-top: 10px;">
+      <div class="artikel-header">
+        <div class="artikel-title">Artikel <span>→</span></div>
+        <div class="artikel-link">Lihat semua</div>
+      </div>
+      <div class="artikel-tabs">
+        <div class="tab active">Artikel</div>
+        <div class="tab">Game</div>
+        <div class="tab">Komunitas</div>
+        <div class="tab">Kelas</div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV (Sesuai Gambar) -->
+    <div class="app-bottom-nav">
+      <div class="nav-item active">
+        <div class="nav-pill">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <span>Home</span>
+      </div>
+      <div class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Highlight</span>
+      </div>
+      <div class="nav-item">
+        <!-- Ikon Kepala + Tanda Tanya -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8v3.5a2.5 2.5 0 0 0 2.5 2.5h1V21a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-5h1a2.5 2.5 0 0 0 2.5-2.5V10a8 8 0 0 0-8-8z"/><path d="M9.5 11.5a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        <span>STIFIn</span>
+      </div>
+      <div class="nav-item">
+        <!-- Ikon Topi Wisuda -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        <span>Promotor</span>
+      </div>
+      <div class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        <span>Lainnya</span>
+      </div>
+    </div>
+
+    <!-- STIFIn TYPES -->
+    <div class="app-types">
+      <div class="types-title">STIFIn Types</div>
+      <div class="orbit-container">
+        <!-- Center -->
+        <div class="orbit-center">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" fill="#fff"/>
+            <circle cx="12" cy="8" r="3" fill="#ef4444"/>
+            <circle cx="8" cy="16" r="3" fill="#3b82f6"/>
+            <circle cx="16" cy="16" r="3" fill="#22c55e"/>
+          </svg>
+        </div>
+        <!-- Nodes -->
+        <div class="orbit-node node-in" style="--delay: 0s">In</div>
+        <div class="orbit-node node-i" style="--delay: -2s">I</div>
+        <div class="orbit-node node-f" style="--delay: -4s">F</div>
+        <div class="orbit-node node-s" style="--delay: -6s">S</div>
+        <div class="orbit-node node-t" style="--delay: -8s">T</div>
+        <!-- Orbit Ring -->
+        <div class="orbit-ring"></div>
+      </div>
+    </div>
+
+    <!-- ARTIKEL & TABS -->
+    <div class="app-artikel">
+      <div class="artikel-header">
+        <div class="artikel-title">Artikel <span>→</span></div>
+        <div class="artikel-link">Lihat semua</div>
+      </div>
+      <div class="artikel-tabs">
+        <div class="tab active">Artikel</div>
+        <div class="tab">Game</div>
+        <div class="tab">Komunitas</div>
+        <div class="tab">Kelas</div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="app-bottom-nav">
+      <div class="nav-item active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </div>
+      <div class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Highlight</span>
+      </div>
+      <div class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>STIFIn</span>
+      </div>
+      <div class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+        <span>Promotor</span>
+      </div>
+      <div class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        <span>Lainnya</span>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+</section>
+
+<!-- ===== TICKER ===== -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span>STIFIn Family</span><span>Grow Together</span><span>Kenali Potensi</span><span>Tumbuhkan Harmoni</span><span>Challenge Harian</span><span>XP & Progres</span>
+    <span>STIFIn Family</span><span>Grow Together</span><span>Kenali Potensi</span><span>Tumbuhkan Harmoni</span><span>Challenge Harian</span><span>XP & Progres</span>
+  </div>
+</div>
+
+<!-- ===== TENTANG ===== -->
+<section class="section" id="tentang">
+  <div class="container intro">
+    <div class="reveal">
+      <div class="eyebrow">Mengapa STIFIn Family?</div>
+      <h2>Memahami perbedaan adalah awal hubungan yang lebih baik.</h2>
+      <p class="muted">Setiap anggota keluarga memiliki karakter, kebutuhan, dan pendekatan yang bisa berbeda. Dengan belajar memahami perbedaan, komunikasi dan proses tumbuh bersama dapat menjadi lebih bermakna.</p>
+    </div>
+    <div class="quote reveal">
+      Bukan tentang menyamakan semua orang. Tetapi tentang <em>memahami cara terbaik</em> untuk mendampingi setiap pribadi.
+    </div>
+  </div>
+</section>
+
+<!-- ===== FITUR (BENTO) ===== -->
+<section class="section" id="fitur" style="background: linear-gradient(180deg, var(--cream) 0%, #f0f4e8 100%)">
+  <div class="container">
+    <div class="center reveal">
+      <div class="eyebrow">Jelajahi aplikasi</div>
+      <h2>Satu aplikasi, banyak ruang untuk bertumbuh.</h2>
+      <p class="muted">Kenali fitur STIFIn Family dan manfaatkan sebagai teman perjalanan belajar keluarga.</p>
+    </div>
+    <div class="bento">
+      <article class="bento-item large reveal">
+        <div class="icon">🧠</div>
+        <h3>Profil STIFIn</h3>
+        <p>Ruang untuk mengenal profil diri dan memahami keunikan mesin kecerdasan dalam keluarga. Temukan potensi alami setiap anggota keluarga dengan pendekatan yang terstruktur.</p>
+      </article>
+      <article class="bento-item wide reveal">
+        <div class="icon">🎯</div>
+        <h3>Challenge Harian</h3>
+        <p>Tantangan sederhana untuk membangun kebiasaan positif setiap hari.</p>
+      </article>
+      <article class="bento-item reveal">
+        <div class="icon">⚡</div>
+        <h3>XP & Progres</h3>
+        <p>Pantau progres dengan sistem poin yang memotivasi.</p>
+      </article>
+      <article class="bento-item reveal">
+        <div class="icon">📚</div>
+        <h3>Artikel</h3>
+        <p>Wawasan seputar STIFIn dan pengasuhan.</p>
+      </article>
+      <article class="bento-item reveal">
+        <div class="icon">💞</div>
+        <h3>Ruang Pasangan</h3>
+        <p>Perspektif baru dalam hubungan.</p>
+      </article>
+      <article class="bento-item wide reveal">
+        <div class="icon">🔔</div>
+        <h3>Informasi & Aktivitas</h3>
+        <p>Dapatkan informasi, pengumuman, dan kabar kegiatan yang tersedia di aplikasi.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STEPS ===== -->
+<section class="section dark">
+  <div class="container">
+    <div class="center reveal">
+      <div class="eyebrow">Mulai perjalananmu</div>
+      <h2>Mulai dari langkah kecil.</h2>
+      <p class="muted">Tiga langkah sederhana untuk menjelajahi STIFIn Family.</p>
+    </div>
+    <div class="steps">
+      <article class="step reveal"><small>01 / DOWNLOAD</small><h3>Pasang Aplikasi</h3><p>Unduh STIFIn Family melalui Google Play Store di perangkat Android.</p></article>
+      <article class="step reveal"><small>02 / KENALI</small><h3>Lengkapi Profil</h3><p>Masuk ke aplikasi dan lengkapi informasi akun serta profil yang diperlukan.</p></article>
+      <article class="step reveal"><small>03 / BERTUMBUH</small><h3>Jelajahi & Praktikkan</h3><p>Mulai membaca, mengikuti tantangan, dan menerapkan insight dalam keseharian.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AUDIENCE ===== -->
+<section class="section" id="manfaat">
+  <div class="container">
+    <div class="center reveal">
+      <div class="eyebrow">Dibangun untuk perjalanan keluarga</div>
+      <h2>Siapa yang bisa menjelajahinya?</h2>
+      <p class="muted">Teman belajar bagi siapa pun yang ingin memahami diri dan orang-orang terdekat.</p>
+    </div>
+    <div class="audience">
+      <div class="aud reveal">👨‍👩‍👧‍👦<strong>Orang Tua</strong><small>Mendampingi anak dengan lebih memahami.</small></div>
+      <div class="aud reveal">🎒<strong>Pelajar</strong><small>Mengenal potensi dan kebiasaan belajar.</small></div>
+      <div class="aud reveal">💑<strong>Pasangan</strong><small>Menghargai perbedaan dalam hubungan.</small></div>
+      <div class="aud reveal">🚀<strong>Pendidik & Profesional</strong><small>Memperluas wawasan pengembangan diri.</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS & TESTI ===== -->
+<section class="section" style="background:#fff">
+  <div class="container">
+    <div class="center reveal">
+      <div class="eyebrow">Kata mereka</div>
+      <h2>Keluarga yang sudah mulai bertumbuh.</h2>
+    </div>
+    <div class="stats">
+      <div class="stat reveal"><strong data-count="10000" data-suffix="K+">0</strong><small>Keluarga terhubung</small></div>
+      <div class="stat reveal"><strong data-count="50000" data-suffix="K+">0</strong><small>Challenge selesai</small></div>
+      <div class="stat reveal"><strong>4.8<span style="color:#f59e0b">★</span></strong><small>Rating Play Store</small></div>
+    </div>
+    <div class="testi">
+      <blockquote class="reveal">Sekarang saya lebih paham cara mendampingi anak, bukan memaksakan cara saya.<cite>Ibu Rina, Surabaya</cite></blockquote>
+      <blockquote class="reveal">Fitur challenge-nya bikin kami sekeluarga punya ritual baru tiap malam.<cite>Pak Dimas, Jakarta</cite></blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DOWNLOAD ===== -->
+<section class="download">
+  <div class="container download-grid">
+    <div class="reveal">
+      <div class="eyebrow">Saatnya mulai</div>
+      <h2>Kenali Potensi.<br>Bangun Keluarga yang Bertumbuh.</h2>
+      <p>Download STIFIn Family dan mulai jelajahi pengalaman belajar serta pengembangan diri bersama keluarga.</p>
+      <br>
+      <a class="btn" href="https://play.google.com/store/apps/details?id=com.stifinfamily.stifinfamilyapp" target="_blank" rel="noopener">
+        Download STIFIn Family ↗
+      </a>
+    </div>
+    <div class="qr reveal">
+      <img alt="QR Code Google Play STIFIn Family" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.stifinfamily.stifinfamilyapp" loading="lazy">
+      <small>SCAN UNTUK DOWNLOAD</small>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="center reveal">
+      <div class="eyebrow">Pertanyaan umum</div>
+      <h2>Yang sering ingin diketahui.</h2>
+    </div>
+    <div class="faq">
+      <details class="reveal">
+        <summary>Apakah STIFIn Family gratis? <span>+</span></summary>
+        <p>Cek informasi harga dan fitur yang tersedia langsung di aplikasi. Sebagian pengalaman dapat memiliki ketentuan akses tersendiri.</p>
+      </details>
+      <details class="reveal">
+        <summary>Di mana saya bisa mengunduhnya? <span>+</span></summary>
+        <p>Aplikasi dapat diunduh melalui Google Play Store menggunakan tombol atau QR Code pada halaman ini.</p>
+      </details>
+      <details class="reveal">
+        <summary>Apakah aplikasi menggantikan tes STIFIn? <span>+</span></summary>
+        <p>Aplikasi merupakan sarana pendamping informasi dan aktivitas. Untuk layanan tes dan konsultasi, hubungi promotor STIFIn.</p>
+      </details>
+      <details class="reveal">
+        <summary>Bagaimana jika butuh bantuan? <span>+</span></summary>
+        <p>Gunakan kanal kontak resmi STIFIn Family yang tercantum pada website atau media sosial pengelola.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div>
+      <div class="logo"><b>SF</b> STIFIn FAMILY</div>
+      <small>© <span id="year"></span> STIFIn Family. Kenali potensi, tumbuhkan harmoni.</small>
+    </div>
+    <a href="https://play.google.com/store/apps/details?id=com.stifinfamily.stifinfamilyapp" target="_blank" rel="noopener">Buka Google Play ↗</a>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+
+/* ===== TAHUN ===== */
+$('#year').textContent = new Date().getFullYear();
+
+/* ===== NAVBAR SCROLL ===== */
+const header = $('#header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+/* ===== SCROLL REVEAL ===== */
+if ('IntersectionObserver' in window) {
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  $$('.reveal').forEach(el => revealIO.observe(el));
+} else {
+  $$('.reveal').forEach(el => el.classList.add('visible'));
+}
+
+/* ===== XP COUNTER + BAR ===== */
+const counter = $('#xp-counter');
+const fill = $('#xp-fill');
+let xpStarted = false;
+if (counter && fill && 'IntersectionObserver' in window) {
+  const xpIO = new IntersectionObserver(([e]) => {
+    if (e.isIntersecting && !xpStarted) {
+      xpStarted = true;
+      let n = 0;
+      const t = setInterval(() => {
+        n += 10;
+        if (n >= 250) {
+          counter.textContent = '+250 XP';
+          clearInterval(t);
+        } else {
+          counter.textContent = `+${n} XP`;
+        }
+      }, 60);
+      setTimeout(() => { fill.style.width = '78%'; }, 400);
+    }
+  }, { threshold: 0.4 });
+  xpIO.observe(counter);
+}
+
+/* ===== TICK ANIMATION ===== */
+$$('[data-tick]').forEach((el, i) => {
+  setTimeout(() => {
+    el.classList.add('done');
+    el.textContent = '✓';
+  }, 1200 + i * 600);
+});
+
+/* ===== FAQ ACCORDION ===== */
+$$('.faq details').forEach(d => {
+  d.addEventListener('toggle', () => {
+    if (d.open) {
+      $$('.faq details').forEach(o => { if (o !== d) o.open = false; });
+    }
+  });
+});
+
+/* ===== STAT COUNTER ANIMATION ===== */
+function animateCount(el) {
+  const target = parseInt(el.dataset.count, 10);
+  const suffix = el.dataset.suffix || '';
+  const duration = 1800;
+  const start = performance.now();
+  function tick(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const val = Math.floor(target * ease);
+    if (target >= 1000) {
+      el.textContent = Math.floor(val / 1000) + suffix;
+    } else {
+      el.textContent = val + suffix;
+    }
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+if ('IntersectionObserver' in window) {
+  const statIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !e.target.dataset.done) {
+        e.target.dataset.done = '1';
+        animateCount(e.target);
+        statIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  $$('[data-count]').forEach(el => statIO.observe(el));
+}
+
+/* ===== 3D TILT MOCKUP ===== */
 const mockup = $('#mockup');
-const parallaxLayers = $$('.parallax-layer');
-
 if (mockup && window.matchMedia('(hover: hover)').matches) {
   const wrap = mockup.parentElement;
-  
   wrap.addEventListener('mousemove', (e) => {
     const r = wrap.getBoundingClientRect();
-    // Hitung posisi -0.5 s/d 0.5
     const x = (e.clientX - r.left) / r.width - 0.5;
     const y = (e.clientY - r.top) / r.height - 0.5;
-
-    // Rotasi bodi HP (lebih halus)
-    mockup.style.transform = `rotateY(${x * 15}deg) rotateX(${-y * 15}deg) scale(1.02)`;
-
-    // Geser layer di dalam HP (Efek Parallax)
-    parallaxLayers.forEach(layer => {
-      let speed = 15; // default speed
-      if (layer.classList.contains('layer-front')) speed = 30; // depan lebih cepat
-      if (layer.classList.contains('layer-back')) speed = 5;   // belakang lebih lambat
-
-      layer.style.transform = `translate3d(${x * speed}px, ${y * speed}px, 0)`;
-    });
+    mockup.style.transform = `rotateY(${x * 12}deg) rotateX(${-y * 12}deg)`;
   });
-
   wrap.addEventListener('mouseleave', () => {
-    mockup.style.transform = 'rotateY(0) rotateX(0) scale(1)';
-    parallaxLayers.forEach(layer => {
-      layer.style.transform = 'translate3d(0, 0, 0)';
-    });
+    mockup.style.transform = 'rotateY(0) rotateX(0)';
   });
 }
 
-/* ===== 2. MAGNETIC BUTTON & GLOW ===== */
-const magneticBtns = $$('.btn-magnetic');
-
-magneticBtns.forEach(btn => {
-  btn.addEventListener('mousemove', (e) => {
-    const rect = btn.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    // Efek magnet (tarik tombol ke arah kursor)
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const distanceX = x - centerX;
-    const distanceY = y - centerY;
-    
-    // Kekuatan tarikan (makin besar angkanya makin jauh tarikannya)
-    const moveX = distanceX * 0.2;
-    const moveY = distanceY * 0.2;
-
-    btn.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
-    
-    // Efek glow kursor pada tombol
-    btn.style.setProperty('--x', `${x}px`);
-    btn.style.setProperty('--y', `${y}px`);
+/* ===== CURSOR GLOW ===== */
+const glow = $('#cursorGlow');
+const hero = $('.hero');
+if (glow && hero && window.matchMedia('(hover: hover)').matches) {
+  hero.addEventListener('mousemove', (e) => {
+    const r = hero.getBoundingClientRect();
+    glow.style.transform = `translate(${e.clientX - r.left}px, ${e.clientY - r.top}px) translate(-50%, -50%)`;
   });
+}
 
-  btn.addEventListener('mouseleave', () => {
-    // Kembali ke posisi semula dengan animasi spring
-    btn.style.transform = 'translate(0px, 0px) scale(1)';
-  });
+/* ===== THEME TOGGLE ===== */
+const themeBtn = $('#themeBtn');
+const root = document.documentElement;
+const saved = localStorage.getItem('theme') || 'dark';
+document.body.classList.toggle('light-mode', saved === 'light');
+themeBtn.textContent = saved === 'light' ? '☀' : '☾';
+
+themeBtn.addEventListener('click', () => {
+  const isLight = document.body.classList.toggle('light-mode');
+  themeBtn.textContent = isLight ? '☀' : '☾';
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
 });
+</script>
+
+</body>
+</html>
