@@ -1,0 +1,69 @@
+/* ============================================================
+   UPGRADE 3D PARALLAX & MAGNETIC BUTTON
+   ============================================================ */
+
+/* ===== 1. 3D PARALLAX MOCKUP ===== */
+const mockup = $('#mockup');
+const parallaxLayers = $$('.parallax-layer');
+
+if (mockup && window.matchMedia('(hover: hover)').matches) {
+  const wrap = mockup.parentElement;
+  
+  wrap.addEventListener('mousemove', (e) => {
+    const r = wrap.getBoundingClientRect();
+    // Hitung posisi -0.5 s/d 0.5
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+
+    // Rotasi bodi HP (lebih halus)
+    mockup.style.transform = `rotateY(${x * 15}deg) rotateX(${-y * 15}deg) scale(1.02)`;
+
+    // Geser layer di dalam HP (Efek Parallax)
+    parallaxLayers.forEach(layer => {
+      let speed = 15; // default speed
+      if (layer.classList.contains('layer-front')) speed = 30; // depan lebih cepat
+      if (layer.classList.contains('layer-back')) speed = 5;   // belakang lebih lambat
+
+      layer.style.transform = `translate3d(${x * speed}px, ${y * speed}px, 0)`;
+    });
+  });
+
+  wrap.addEventListener('mouseleave', () => {
+    mockup.style.transform = 'rotateY(0) rotateX(0) scale(1)';
+    parallaxLayers.forEach(layer => {
+      layer.style.transform = 'translate3d(0, 0, 0)';
+    });
+  });
+}
+
+/* ===== 2. MAGNETIC BUTTON & GLOW ===== */
+const magneticBtns = $$('.btn-magnetic');
+
+magneticBtns.forEach(btn => {
+  btn.addEventListener('mousemove', (e) => {
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    // Efek magnet (tarik tombol ke arah kursor)
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const distanceX = x - centerX;
+    const distanceY = y - centerY;
+    
+    // Kekuatan tarikan (makin besar angkanya makin jauh tarikannya)
+    const moveX = distanceX * 0.2;
+    const moveY = distanceY * 0.2;
+
+    btn.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
+    
+    // Efek glow kursor pada tombol
+    btn.style.setProperty('--x', `${x}px`);
+    btn.style.setProperty('--y', `${y}px`);
+  });
+
+  btn.addEventListener('mouseleave', () => {
+    // Kembali ke posisi semula dengan animasi spring
+    btn.style.transform = 'translate(0px, 0px) scale(1)';
+  });
+});
